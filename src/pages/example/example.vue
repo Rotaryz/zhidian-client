@@ -1,6 +1,8 @@
 <template>
   <article>
-    <div class="hello">Hello MpVue</div>
+    <div class="hello">
+      <a href="/pages/two">to two</a>
+    </div>
   </article>
 </template>
 
