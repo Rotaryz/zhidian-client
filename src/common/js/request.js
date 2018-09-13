@@ -1,16 +1,17 @@
 import Fly from 'flyio'
 import { showLoading, hideLoading } from './wechat'
 import { baseURL, TIME_OUT, ERR_OK, ERR_NO } from 'api/config'
+import wx from './wx'
 
 const fly = new Fly()
 
 // 公共请求头
-const COMMON_HEADER = () => {
-  return ''
-}
+const COMMON_HEADER = {}
 
 // 请求拦截器
 fly.interceptors.request.use((request) => {
+  request.headers['Authorization'] = wx.getStorageSync('token')
+  request.headers['Current-Employee'] = wx.getStorageSync('employeeId') || 100001
   return request
 })
 
@@ -84,7 +85,7 @@ export default {
     }
     return fly.post(url, data, {
       timeout: TIME_OUT,
-      headers: COMMON_HEADER()
+      headers: COMMON_HEADER
     }).then((response) => {
       return checkStatus(response)
     }).then((res) => {
@@ -97,7 +98,7 @@ export default {
     }
     return fly.get(url, params, {
       timeout: TIME_OUT,
-      headers: COMMON_HEADER()
+      headers: COMMON_HEADER
     }).then((response) => {
       return checkStatus(response)
     }).then((res) => {
@@ -110,7 +111,7 @@ export default {
     }
     return fly.put(url, data, {
       timeout: TIME_OUT,
-      headers: COMMON_HEADER()
+      headers: COMMON_HEADER
     }).then((response) => {
       return checkStatus(response)
     }).then((res) => {
@@ -123,7 +124,7 @@ export default {
     }
     return fly.delete(url, data, {
       timeout: TIME_OUT,
-      headers: COMMON_HEADER()
+      headers: COMMON_HEADER
     }).then((response) => {
       return checkStatus(response)
     }).then((res) => {

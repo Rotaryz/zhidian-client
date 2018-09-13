@@ -1,11 +1,13 @@
 const env = process.env.NODE_ENV
+const version = `/v1`
 
 const DEV = {
   api: 'dev'
 }
 
 const TEST = {
-  api: 'test'
+  api: 'https://ws-api.jkweixin.net' + version,
+  image: 'https://img.jkweixin.net/defaults'
 }
 
 const PROD = {
