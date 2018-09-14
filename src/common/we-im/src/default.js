@@ -32,5 +32,18 @@ export default {
       }
       tmp.selType = value
     }
+  },
+  // 是否登录
+  isLogin: {
+    default: false,
+    get() {
+      return tmp.isLogin
+    },
+    set(value) {
+      if (typeof (value) !== 'boolean') {
+        console.error(`isLogin：${value} is invalid`)
+      }
+      tmp.isLogin = value
+    }
   }
 }
