@@ -27,7 +27,7 @@
   import { Im } from 'api'
   import { ERR_OK } from 'api/config'
   // import WebIm from 'common/we-im'
-  import WEIM from 'common/we-im/src/main'
+  import WEIM from 'common/we-im'
 
   // const webimHandler = new WebIm({})
   const w = new WEIM({hello: 22})
@@ -36,7 +36,7 @@
     methods: {
       async sdkLogout() {
         let res = await w.sdkLogout()
-        console.log(res, '00)ashdkadajhdgajd-=-=-')
+        console.log(res, 'ashdkadajhdgajd-=-=-')
       },
       async getC2CMsgList() {
         let account = 'e101251'
@@ -55,7 +55,7 @@
       },
       async gettest() {
         let res = await w.getRecentContact()
-        console.log(res, '---------ashdakjsdhasjdahsjdasa------')
+        console.log(res, 'ashdakjsdhasjdahsjdasa')
       },
       async sendCustomTest() {
         let userInfo = wx.getStorageSync('userInfo')

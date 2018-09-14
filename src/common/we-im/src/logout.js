@@ -10,8 +10,9 @@ export default function() {
   self.sdkLogout = async () => {
     try {
       if (self.loginInfo) {
-        await self._sdkLogout()
+        let res = await self._sdkLogout()
         console.warn('登出成功')
+        return res
       } else {
         console.warn('登出失败')
       }
