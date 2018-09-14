@@ -1,6 +1,21 @@
 import webim from '../lib/webim'
 
 export default {
+  // 发送消息
+  sendMsg(msg, context) {
+    const self = context
+    return new Promise((resolve, reject) => {
+      webim.sendMsg(msg, resp => {
+        if (self.selType === webim.SESSION_TYPE.C2C) {
+          resolve(resp)
+        }
+        webim.Log.info('发消息成功')
+      }, err => {
+        webim.Log.error('发消息失败:' + err.ErrorInfo)
+        reject(err)
+      })
+    })
+  },
   // 发送消息(聊天消息)
   onSendMsg(msg, msgToId, context) {
     let self = context
@@ -26,22 +41,25 @@ export default {
       let msg = new webim.Msg(self.selSess, isSend, seq, random, msgTime, self.loginInfo.identifier, subType, self.loginInfo.identifierNick)
       let textObj = new webim.Msg.Elem.Text(msgtosend)
       msg.addText(textObj)
-      return msg
+      resolve(msg)
     })
   },
-  // 发送消息
-  sendMsg(msg, context) {
-    const self = context
+  // 发送自定义消息
+  onSendCustomMsg(ops, msgToId, context) {
+    let self = context
     return new Promise((resolve, reject) => {
-      webim.sendMsg(msg, resp => {
-        if (self.selType === webim.SESSION_TYPE.C2C) {
-          resolve(resp)
-        }
-        webim.Log.info('发消息成功')
-      }, err => {
-        webim.Log.error('发消息失败:' + err.ErrorInfo)
-        reject(err)
-      })
+      if (!self.selSess || self.selSess.id !== msgToId) {
+        self.selSess = new webim.Session(self.selType, msgToId)
+      }
+      let isSend = true // 是否为自己发送
+      let seq = -1 // 消息序列，-1表示sdk自动生成，用于去重
+      let random = Math.round(Math.random() * 4294967296) // 消息随机数，用于去重
+      let msgTime = Math.round(new Date().getTime() / 1000) // 消息时间戳
+      let subType = webim.C2C_MSG_SUB_TYPE.COMMON
+      let msg = new webim.Msg(self.selSess, isSend, seq, random, msgTime, self.loginInfo.identifier, subType, self.loginInfo.identifierNick)
+      let customObj = new webim.Msg.Elem.Custom(ops.data, ops.desc, ops.ext)
+      msg.addCustom(customObj)
+      resolve(msg)
     })
   }
 }

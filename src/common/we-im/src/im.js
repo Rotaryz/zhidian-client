@@ -106,6 +106,12 @@ class Im {
   async sendMsg(msg) {
     await Send.sendMsg(msg, this)
   }
+
+  // 发送自定义消息
+  async onSendCustomMsg (ops, msgToId) {
+    let msg = await Send.onSendCustomMsg(ops, msgToId, this)
+    await Send.sendMsg(msg, this)
+  }
 }
 
 export default Im

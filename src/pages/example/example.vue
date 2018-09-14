@@ -6,32 +6,53 @@
       <h1 @click="loginIM">im-login</h1>
       <hr>
       <h2 @click="sendTest">sendMsg</h2>
+      <hr>
+      <h3 @click="sendCustomTest">sendCustomTest</h3>
     </div>
   </article>
 </template>
 
 <script type="text/ecmascript-6">
   import * as wechat from 'common/js/wechat'
-  import {Im} from 'api'
-  import {ERR_OK} from 'api/config'
+  import { Im } from 'api'
+  import { ERR_OK } from 'api/config'
   import WebIm from 'common/we-im'
+
   const webimHandler = new WebIm({})
   export default {
     methods: {
-      async sendTest() {
+      async sendCustomTest() {
         let userInfo = wx.getStorageSync('userInfo')
         let account = userInfo.im_account
-        let descMsg = Object.assign({}, 'ahsdkjahsdjahskdass', { log_type: 1 })
-        let code = 60013
+        account = 'e101251'
+        let descMsg = Object.assign({}, { log_type: 20 })
+        let code = 20005
         let desc = JSON.stringify(descMsg)
         let ext = code.toString()
-        let data = JSON.stringify({})
+        let data = JSON.stringify({url: 'http://img.zcool.cn/community/0117e2571b8b246ac72538120dd8a4.jpg@1280w_1l_2o_100sh.jpg'})
         let option = {
           desc,
           data,
           ext
         }
         webimHandler.onSendCustomMsg(option, account)
+      },
+      async sendTest() {
+        let userInfo = wx.getStorageSync('userInfo')
+        let account = userInfo.im_account
+        account = 'e101251'
+        webimHandler.onSendMsg('hello', account)
+        // let descMsg = Object.assign({}, 'ahsdkjahsdjahskdass', { log_type: 1 })
+        // let code = 60013
+        // let desc = JSON.stringify(descMsg)
+        // let ext = code.toString()
+        // let data = JSON.stringify({})
+        // let option = {
+        //   desc,
+        //   data,
+        //   ext
+        // }
+        // webimHandler.onSendCustomMsg(option, account)
       },
       async loginIM() {
         let userInfo = wx.getStorageSync('userInfo')
