@@ -18,11 +18,13 @@ class Im {
         'ProfileItem': [
           {
             'Tag': 'Tag_Profile_IM_Nick',
-            'Value': userInfo.identifierNick ? userInfo.identifierNick : userInfo.identifier
+            // 'Value': userInfo.identifierNick ? userInfo.identifierNick : userInfo.identifier
+            'Value': ''
           },
           {
             'Tag': 'Tag_Profile_IM_Image',
-            'Value': avatar || ' '
+            // 'Value': avatar || ' '
+            'Value': undefined
           }
         ]
       }
@@ -35,7 +37,11 @@ class Im {
 
   // 监听连接状态回调变化事件
   onConnNotify(resp) {
-    Base.onConnNotify(resp)
+    try {
+      Base.onConnNotify(resp)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   // 监听新消息(私聊(包括普通消息、全员推送消息)，普通群(非直播聊天室)消息)事件
@@ -99,18 +105,30 @@ class Im {
   }
 
   async onSendMsg(msg, msgToId) {
-    msg = await Send.onSendMsg(msg, msgToId, this)
-    await Send.sendMsg(msg, this)
+    try {
+      msg = await Send.onSendMsg(msg, msgToId, this)
+      await Send.sendMsg(msg, this)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   async sendMsg(msg) {
-    await Send.sendMsg(msg, this)
+    try {
+      await Send.sendMsg(msg, this)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   // 发送自定义消息
   async onSendCustomMsg (ops, msgToId) {
-    let msg = await Send.onSendCustomMsg(ops, msgToId, this)
-    await Send.sendMsg(msg, this)
+    try {
+      let msg = await Send.onSendCustomMsg(ops, msgToId, this)
+      await Send.sendMsg(msg, this)
+    } catch (e) {
+      console.error(e)
+    }
   }
 }
 
