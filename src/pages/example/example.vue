@@ -26,32 +26,36 @@
   import * as wechat from 'common/js/wechat'
   import { Im } from 'api'
   import { ERR_OK } from 'api/config'
-  import WebIm from 'common/we-im'
+  // import WebIm from 'common/we-im'
+  import WEIM from 'common/we-im/src/main'
 
-  const webimHandler = new WebIm({})
+  // const webimHandler = new WebIm({})
+  const w = new WEIM({hello: 22})
+  console.log(w)
   export default {
     methods: {
       async sdkLogout() {
-        let res = await webimHandler.sdkLogout()
-        console.log(res, 'ashdkadajhdgajd-=-=-')
+        let res = await w.sdkLogout()
+        console.log(res, '00)ashdkadajhdgajd-=-=-')
       },
       async getC2CMsgList() {
-        let account = 'e101092'
-        let res = await webimHandler.getC2CMsgList(account)
+        let account = 'e101251'
+        let res = await w.getC2CMsgList(account)
         console.log(res, '=========asdaksdads------------')
       },
       async initUnread() {
         let data = [{employee: {im_account: 'e101092'}}]
-        let list = await webimHandler.initUnread(data)
+        let list = await w.initUnread(data)
         console.log(list, '=------------asdbakjdabkdajds')
       },
       async getAnyUnread() {
         let account = 'e101092'
-        let read = await webimHandler.getAnyUnread(account)
+        let read = await w.getAnyUnread(account)
         console.log(read, '=========12313131321')
       },
       async gettest() {
-        await webimHandler.getRecentContact()
+        let res = await w.getRecentContact()
+        console.log(res, '---------ashdakjsdhasjdahsjdasa------')
       },
       async sendCustomTest() {
         let userInfo = wx.getStorageSync('userInfo')
@@ -67,13 +71,13 @@
           data,
           ext
         }
-        webimHandler.onSendCustomMsg(option, account)
+        w.onSendCustomMsg(option, account)
       },
       async sendTest() {
         let userInfo = wx.getStorageSync('userInfo')
         let account = userInfo.im_account
         account = 'e101251'
-        webimHandler.onSendMsg('hello', account)
+        w.onSendMsg('hello', account)
         // let descMsg = Object.assign({}, 'ahsdkjahsdjahskdass', { log_type: 1 })
         // let code = 60013
         // let desc = JSON.stringify(descMsg)
@@ -104,10 +108,10 @@
             // 监听事件
             let listeners = {
               'onConnNotify': (resp) => {
-                webimHandler.onConnNotify(resp)
+                w.onConnNotify(resp)
               }, // 选填
               'onMsgNotify': async (msg) => {
-                let res = await webimHandler.onMsgNotify(msg)
+                let res = await w.onMsgNotify(msg)
                 console.error(res)
               }, // 监听新消息(私聊(包括普通消息和全员推送消息)，普通群(非直播聊天室)消息)事件，必填
               'onGroupSystemNotifys': (msg) => {
@@ -120,7 +124,7 @@
             }
 
             let avatar = userInfo.avatar
-            await webimHandler.sdkLogin(loginInfo, listeners, options, avatar)
+            await w.sdkLogin(loginInfo, listeners, options, avatar)
           }
         })
       },
