@@ -8,6 +8,16 @@
       <h2 @click="sendTest">sendMsg</h2>
       <hr>
       <h3 @click="sendCustomTest">sendCustomTest</h3>
+      <hr>
+      <h3 @click="gettest">getRecentContact</h3>
+      <hr>
+      <h4 @click="getAnyUnread">getAnyUnread</h4>
+      <hr>
+      <h4 @click="initUnread">initUnread</h4>
+      <hr>
+      <h4 @click="getC2CMsgList">getC2CMsgList</h4>
+      <hr>
+      <h4 @click="sdkLogout">sdkLogout</h4>
     </div>
   </article>
 </template>
@@ -21,11 +31,33 @@
   const webimHandler = new WebIm({})
   export default {
     methods: {
+      async sdkLogout() {
+        let res = await webimHandler.sdkLogout()
+        console.log(res, 'ashdkadajhdgajd-=-=-')
+      },
+      async getC2CMsgList() {
+        let account = 'e101092'
+        let res = await webimHandler.getC2CMsgList(account)
+        console.log(res, '=========asdaksdads------------')
+      },
+      async initUnread() {
+        let data = [{employee: {im_account: 'e101092'}}]
+        let list = await webimHandler.initUnread(data)
+        console.log(list, '=------------asdbakjdabkdajds')
+      },
+      async getAnyUnread() {
+        let account = 'e101092'
+        let read = await webimHandler.getAnyUnread(account)
+        console.log(read, '=========12313131321')
+      },
+      async gettest() {
+        await webimHandler.getRecentContact()
+      },
       async sendCustomTest() {
         let userInfo = wx.getStorageSync('userInfo')
         let account = userInfo.im_account
         account = 'e101251'
-        let descMsg = Object.assign({}, { log_type: 20 })
+        let descMsg = Object.assign({}, {log_type: 20})
         let code = 20005
         let desc = JSON.stringify(descMsg)
         let ext = code.toString()

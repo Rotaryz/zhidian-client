@@ -17,7 +17,7 @@ export default {
     })
   },
   // 发送消息(聊天消息)
-  onSendMsg(msg, msgToId, context) {
+  formatTextMsg(msg, msgToId, context) {
     let self = context
     let msgtosend = msg
     let msgLen = webim.Tool.getStrBytes(msg)
@@ -45,7 +45,7 @@ export default {
     })
   },
   // 发送自定义消息
-  onSendCustomMsg(ops, msgToId, context) {
+  formatCustomMsg(ops, msgToId, context) {
     let self = context
     return new Promise((resolve, reject) => {
       if (!self.selSess || self.selSess.id !== msgToId) {
