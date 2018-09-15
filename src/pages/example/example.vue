@@ -20,19 +20,22 @@
       <hr>
       <h4 @click="sdkLogout">sdkLogout</h4>
     </div>
+    <toast ref="toast"></toast>
   </article>
 </template>
 
 <script type="text/ecmascript-6">
-  import * as wechat from 'common/js/wechat'
+  import Vue from 'vue'
   import { Im } from 'api'
-  import { ERR_OK } from 'api/config'
-  // import WebIm from 'common/we-im'
-  import WEIM from 'common/we-im'
-
-  // const webimHandler = new WebIm({})
-  const w = new WEIM({hello: 22})
+  import Toast from 'components/toast/toast'
+  let self = new Vue()
+  const w = self.webimHandler
+  const ERR_OK = self.ERR_OK
+  const wechat = self.wechat
   export default {
+    components: {
+      Toast
+    },
     onLoad() {
     },
     onUnload() {
@@ -40,6 +43,10 @@
     onReady() {
     },
     onShow() {
+      console.log(this)
+      setTimeout(() => {
+        this.$refs.toast.show('test')
+      }, 2000)
     },
     methods: {
       async sdkLogout() {

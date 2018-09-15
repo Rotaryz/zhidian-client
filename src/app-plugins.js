@@ -1,4 +1,9 @@
 import Vue from 'vue'
+import WeIM from 'common/we-im'
+import {ERR_OK} from 'api/config'
+import * as wechat from 'common/js/wechat'
+import wx from 'wx'
+
 // // 不需要自动重置data数据的页面
 const unResetPage = [
   'pages/page-a',
@@ -21,6 +26,12 @@ const somePlugin = {
         }
       }
     })
+    if (!Vue.prototype.webimHandler) {
+      Vue.prototype.webimHandler = new WeIM()
+    }
+    Vue.prototype.ERR_OK = ERR_OK
+    Vue.prototype.wechat = wechat
+    Vue.prototype.wx = wx
   }
 }
 // 使用插件

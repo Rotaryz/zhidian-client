@@ -28,8 +28,6 @@
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-  @import "~common/stylus/variable"
-  @import '~common/stylus/mixin'
   .toast
     position: fixed
     z-index: 99999
