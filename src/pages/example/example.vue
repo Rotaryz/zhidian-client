@@ -2,6 +2,7 @@
   <article>
     <div class="hello">
       <a href="/pages/two">to two</a>
+      <a href="/pages/page-a">to page-a</a>
       <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">登录小程序</button>
       <h1 @click="loginIM">im-login</h1>
       <hr>
@@ -31,8 +32,15 @@
 
   // const webimHandler = new WebIm({})
   const w = new WEIM({hello: 22})
-  console.log(w)
   export default {
+    onLoad() {
+    },
+    onUnload() {
+    },
+    onReady() {
+    },
+    onShow() {
+    },
     methods: {
       async sdkLogout() {
         let res = await w.sdkLogout()

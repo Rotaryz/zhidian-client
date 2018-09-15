@@ -28,8 +28,6 @@ export default function() {
     })
   }
   self.sdkLogin = async (userInfo, listeners, options, avatar) => {
-    if (self.isLogin) return // 判断是否已经登录
-    console.error('登录中')
     try {
       self.loginInfo = userInfo
       const profileOptions = {
@@ -46,7 +44,6 @@ export default function() {
       }
       await self._sdkLogin(userInfo, listeners, options)
       await self._setProfilePortrait(profileOptions)
-      self.isLogin = true
       return self
     } catch (e) {
       self.handleException(e)

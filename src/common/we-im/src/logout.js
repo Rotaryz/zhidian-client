@@ -12,7 +12,6 @@ export default function() {
       if (self.loginInfo) {
         let res = await self._sdkLogout()
         console.warn('登出成功')
-        self.isLogin = false
         return res
       } else {
         console.warn('登出失败')
