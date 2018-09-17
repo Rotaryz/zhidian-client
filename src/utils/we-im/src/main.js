@@ -1,4 +1,4 @@
-import { validator } from './utils'
+import { validator } from './utils/index'
 import webim from '../lib/webim'
 import DEFAULT from './default'
 import login from './login'

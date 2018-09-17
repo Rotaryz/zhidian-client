@@ -46,6 +46,7 @@ module.exports = {
       'api': resolve('src/api'),
       'common': resolve('src/common'),
       'wx': resolve('src/common/js/wx'),
+      'utils': resolve('src/utils'),
       'flyio': 'flyio/dist/npm/wx'
     },
     symlinks: false,
