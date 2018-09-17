@@ -23,6 +23,8 @@
       <h1 @click="choosePic()">选择图片</h1>
       <h1 @click="choosePic('one')">选择图片one</h1>
       <h1 @click="choosePic('two')">选择图片two</h1>
+      <hr>
+      <a href="/pages/z-exp-test">画图去</a>
     </div>
     <toast ref="toast"></toast>
   </article>
