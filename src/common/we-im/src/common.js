@@ -3,7 +3,7 @@ export default function() {
   const {webim} = self
   // 错误处理
   self.handleException = err => {
-    console.log(err)
+    console.error(err)
   }
   // 读取用户资料 昵称 头像
   self.getCustomerMsg = (fromAccount) => {
