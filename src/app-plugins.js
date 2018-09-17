@@ -1,16 +1,13 @@
 import Vue from 'vue'
-import WeIM from 'common/we-im'
-import {ERR_OK} from 'api/config'
-import * as wechat from 'common/js/wechat'
 import wx from 'wx'
+import WeIM from 'common/we-im'
+import {ERR_OK, baseURL} from 'api/config'
+import * as wechat from 'common/js/wechat'
 import * as cos from 'common/we-cos/upload'
 import * as cosFileType from 'common/we-cos/fileConfig'
 
 // // 不需要自动重置data数据的页面
-const unResetPage = [
-  'pages/page-a',
-  'pages/example'
-]
+const unResetPage = []
 // 定义插件
 const somePlugin = {
   install: function () {
@@ -35,6 +32,7 @@ const somePlugin = {
       Vue.prototype.webimHandler = new WeIM()
     }
     Vue.prototype.ERR_OK = ERR_OK
+    Vue.prototype.imageUrl = baseURL.image
     Vue.prototype.wechat = wechat
     Vue.prototype.wx = wx
     Vue.prototype.cos = cos

@@ -2,7 +2,8 @@ const env = process.env.NODE_ENV
 const version = `/v1`
 
 const DEV = {
-  api: 'dev'
+  api: 'https://ws-api.jerryf.cn',
+  image: 'https://img.jerryf.cn/defaults'
 }
 
 const TEST = {
@@ -11,7 +12,8 @@ const TEST = {
 }
 
 const PROD = {
-  api: 'prod'
+  api: 'https://ws-api.jkweixin.com' + version,
+  image: 'https://img.jkweixin.com/defaults'
 }
 
 export const baseURL = env === 'production' ? PROD : env === 'test' ? TEST : DEV

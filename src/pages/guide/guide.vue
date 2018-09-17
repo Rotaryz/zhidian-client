@@ -1,5 +1,6 @@
 <template>
-  <article>
+  <article class="te">
+    <h1>{{imageUrl}}</h1>
   </article>
 </template>
 
@@ -7,13 +8,15 @@
   export default {
     data() {
       return {
+        imageUrl: this.imageUrl
       }
     }
   }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-  @import "~common/stylus/variable"
   @import "~common/stylus/mixin"
 
+  .te
+    background :$color-test
 </style>
