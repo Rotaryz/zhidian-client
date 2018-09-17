@@ -1,6 +1,7 @@
 <template>
   <article class="te">
     <h1>{{imageUrl}}</h1>
+    <div class="btn"></div>
   </article>
 </template>
 
@@ -15,8 +16,14 @@
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-  @import "~common/stylus/mixin"
+  @import "~common/stylus/private"
 
   .te
-    background :$color-test
+    fill-box(fixed)
+    background :$color-text
+    font-size :$font-size-30
+    .btn
+      width :200px
+      height :45px
+      button-normal-style(black)
 </style>

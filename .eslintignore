@@ -1,5 +1,5 @@
 build/*.js
 config/*.js
-src/common/we-im/lib/**/*
+src/utils/we-im/lib/**/*
+src/utils/we-cos/libs/**/*
 src/components/mpvue-cropper/**/*
-src/common/we-cos/libs/**/*
