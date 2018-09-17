@@ -13,9 +13,26 @@ $color-1F1F1F = #1F1F1F
 $color-6E6E6E = #6E6E6E
 $color-B1B1B1 = #B1B1B1
 $color-D2D2D2 = #D2D2D2
+$color-CCCCCC = #CCCCCC
+$color-BC4949 = #BC4949
+$color-A82525 = #A82525
+$color-FFFFFF = #FFFFFF
 
-button-normal-style()
+// 常规按钮
+normal-button-style(height = 41px, type = normal)
+  font-family: $font-family-medium
+  font-size: $font-size-16
+  color: $color-FFFFFF
   background-image: linear-gradient(90deg, $color-EB5C5C 0%, $color-D32F2F 100%)
   border-radius: 6px
+  text-align :center
+  line-height : height
+  if (type == click)
+    background-image: linear-gradient(90deg, $color-BC4949 0%, $color-A82525 100%)
+    color: $color-CCCCCC
+  else if (type == un-click )
+    opacity : 0.6
+
+
 
 

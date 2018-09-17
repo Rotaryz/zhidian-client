@@ -1,7 +1,7 @@
 <template>
   <article class="te">
     <h1>{{imageUrl}}</h1>
-    <div class="btn"></div>
+    <div class="btn">确定</div>
   </article>
 </template>
 
@@ -25,5 +25,5 @@
     .btn
       width :200px
       height :45px
-      button-normal-style(black)
+      button-style(45px)
 </style>
