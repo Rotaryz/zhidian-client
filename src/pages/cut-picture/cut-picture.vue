@@ -81,7 +81,7 @@
         this.wechat.showLoading('正在裁切图片')
         try {
           let filePaths = await wecropper.getCropperImage()
-          let res = await this.cos.uploadFiles(this.cosFileType.image, [filePaths])
+          let res = await this.cos.uploadFiles(this.cosFileType.IMAGE_TYPE, [filePaths])
           this.wechat.hideLoading()
           this.pageBack()
           console.log(res)

@@ -3,6 +3,6 @@ export const application = ''
 
 // 文件类型
 export const fileType = {
-  image: 0,
-  video: 1
+  IMAGE_TYPE: 0,
+  VIDEO_TYPE: 1
 }
