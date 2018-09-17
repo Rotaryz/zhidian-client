@@ -2,3 +2,4 @@ build/*.js
 config/*.js
 src/common/we-im/lib/**/*
 src/components/mpvue-cropper/**/*
+src/common/we-cos/libs/**/*

@@ -42,7 +42,8 @@
       return {
         cropperOpt: null,
         src: null,
-        show: false
+        show: false,
+        confirmFlag: false
       }
     },
     onLoad(option) {
@@ -70,14 +71,27 @@
       },
       cancel() {
         // todo something
+        this.pageBack()
       },
       async confirm() {
-        try {
-          let src = await wecropper.getCropperImage()
-          this.wechat.previewImage({urls: [src]})
-        } catch (e) {
-          console.error('获取图片失败')
+        if (this.confirmFlag) {
+          return
         }
+        this.confirmFlag = true
+        this.wechat.showLoading('正在裁切图片')
+        try {
+          let filePaths = await wecropper.getCropperImage()
+          let res = await this.cos.uploadFiles(this.cosFileType.image, [filePaths])
+          this.wechat.hideLoading()
+          this.pageBack()
+          console.log(res)
+        } catch (e) {
+          this.confirmFlag = false
+          console.error('获取图片失败', e)
+        }
+      },
+      pageBack(number = 1) {
+        this.wx.navigateBack({delta: number})
       }
     }
   }

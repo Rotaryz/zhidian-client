@@ -41,6 +41,7 @@
       Toast
     },
     onLoad() {
+      console.log(this.cos)
     },
     onUnload() {
     },
