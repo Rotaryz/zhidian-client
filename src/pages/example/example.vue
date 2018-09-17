@@ -19,6 +19,10 @@
       <h4 @click="getC2CMsgList">getC2CMsgList</h4>
       <hr>
       <h4 @click="sdkLogout">sdkLogout</h4>
+      <hr>
+      <h1 @click="choosePic()">选择图片</h1>
+      <h1 @click="choosePic('one')">选择图片one</h1>
+      <h1 @click="choosePic('two')">选择图片two</h1>
     </div>
     <toast ref="toast"></toast>
   </article>
@@ -43,12 +47,16 @@
     onReady() {
     },
     onShow() {
-      console.log(this)
-      setTimeout(() => {
-        this.$refs.toast.show('test')
-      }, 2000)
+      // setTimeout(() => {
+      //   this.$refs.toast.show('test')
+      // }, 2000)
     },
     methods: {
+      async choosePic(type) {
+        let src = await this.wechat.chooseImage()
+        getApp().globalData.imgUrl = src.tempFilePaths
+        this.wx.navigateTo({url: `/pages/cut-picture?cutType=${type}`})
+      },
       async sdkLogout() {
         let res = await w.sdkLogout()
         console.log(res, 'ashdkadajhdgajd-=-=-')
