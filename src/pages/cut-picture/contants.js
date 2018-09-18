@@ -24,31 +24,5 @@ export const CUT_CONFIG = {
       width: width * 0.7,
       height: width * 0.7
     }
-  },
-  one: {
-    id: 'cropper',
-    width: width,
-    height: height - 0.2 * width,
-    scale: 2.5,
-    zoom: 8,
-    cut: {
-      x: (width - width * 0.7) / 2,
-      y: (height - width * 0.7) / 2,
-      width: width * 0.3,
-      height: width * 0.7
-    }
-  },
-  two: {
-    id: 'cropper',
-    width: width,
-    height: height - 0.2 * width,
-    scale: 2.5,
-    zoom: 8,
-    cut: {
-      x: (width - width * 0.7) / 2,
-      y: (height - width * 0.7) / 2,
-      width: width * 0.5,
-      height: width * 0.7
-    }
   }
 }

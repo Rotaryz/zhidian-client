@@ -16,7 +16,7 @@
     },
     methods: {
       test() {
-        this.showToast('askjdhakdhashd')
+        this.$showToast('askjdhakdhashd')
       }
     }
   }
@@ -26,7 +26,7 @@
   @import "~common/stylus/private"
   .te
     fill-box(fixed)
-    font-size :$font-size-12
+    font-size :$font-size-18
     .btn
       width :200px
       height :45px
