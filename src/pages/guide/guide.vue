@@ -1,15 +1,15 @@
 <template>
   <article class="guide">
-    <scroll></scroll>
+    <guide-header></guide-header>
   </article>
 </template>
 
 <script type="text/ecmascript-6">
-  import Scroll from 'components/scroll/scroll'
+  import GuideHeader from 'components/guide-header/guide-header'
 
   export default {
     components: {
-      Scroll
+      GuideHeader
     },
     data() {
       return {}
@@ -28,5 +28,5 @@
   @import "~common/stylus/private"
 
   .guide
-    height :100vh
+    min-height :100vh
 </style>

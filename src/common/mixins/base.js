@@ -13,7 +13,8 @@ function _entryType (options) {
 export default {
   data() {
     return {
-      formId: ''
+      formId: '',
+      imageUrl: this.$imageUrl
     }
   },
   methods: {
