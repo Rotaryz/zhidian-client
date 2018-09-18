@@ -1,10 +1,14 @@
 <template>
     <scroll-view class="scroll-components" scroll-y @scroll="scrollHandle">
-      <div class="top"></div>
-      <div class="down">
-        <div class="nav-bar-top"></div>
+      <div class="top">
+        <slot name="top"></slot>
       </div>
-      <section class="nav-bar" :style="navStyle"></section>
+      <div class="down">
+        <slot name="down"></slot>
+      </div>
+      <section class="nav-bar" :style="navStyle">
+        <slot name="nav"></slot>
+      </section>
     </scroll-view>
 </template>
 
@@ -27,8 +31,10 @@
         if (this.isGetTop) {
           this._getTopHeight()
           this.isGetTop = false
+          setTimeout(() => {
+            this.isGetTop = true
+          }, 10000)
         }
-        console.log(e.target.scrollTop)
         let scrollTop = e.target.scrollTop
         if (scrollTop >= this.topHeight && this.topHeight) {
           this.navStyle = 'opacity: 1'
@@ -40,7 +46,6 @@
         Selector.select(this.selector, '.top')
         Selector.exec(this.selector, res => {
           this.topHeight = res[0].height
-          console.log(this.topHeight)
         })
       }
     }
