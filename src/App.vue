@@ -10,7 +10,7 @@
     },
     onShow(options) {
       console.log('onshow', options)
-      console.log(this.entryType(options))
+      console.log(this.$entryType(options))
       console.log(resolvePageDetail(options.path), checkIsTabPage, resolveQrCode)
     },
     onReady() {

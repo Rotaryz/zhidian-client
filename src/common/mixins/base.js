@@ -17,17 +17,17 @@ export default {
     }
   },
   methods: {
-    showToast(title, duration = 1500, mask = true, icon = 'none') {
+    $showToast(title, duration = 1500, mask = true, icon = 'none') {
       if (!title) return
-      this.wx.showToast({title, icon, duration, mask})
+      this.$wx.showToast({title, icon, duration, mask})
     },
-    openSetting() {
+    $openSetting() {
       // todo
     },
-    getFormId(e) {
+    $getFormId(e) {
       this.formId = e.mp.detail.formId
     },
-    entryType(options) {
+    $entryType(options) {
       return _entryType(options)
     }
   }

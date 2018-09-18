@@ -18,22 +18,22 @@
   export default {
     data() {
       return {
-        imgUrl: this.imageUrl
+        imgUrl: this.$imageUrl
       }
     },
     methods: {
       test() {
-        this.showToast('masd')
+        this.$showToast('masd')
       },
       async onGotUserInfo(e) {
         let res = e.mp.detail
         if (res.errMsg !== 'getUserInfo:ok') {
-          this.openSetting()
+          this.$openSetting()
           return
         }
         let iv = res.iv
         let encryptedData = res.encryptedData
-        let resCode = await this.wechat.login()
+        let resCode = await this.$wechat.login()
         let code = resCode.code
         let data = {
           iv,
@@ -42,16 +42,16 @@
         }
         try {
           res = await Jwt.getToken(data)
-          this.wechat.hideLoading()
-          if (res.error !== this.ERR_Ok) {
-            this.showToast(res.message)
+          this.$wechat.hideLoading()
+          if (res.error !== this.$ERR_Ok) {
+            this.$showToast(res.message)
             return
           }
           const {userInfo, token} = [res.customer_info, res.access_token]
-          this.wx.setStorageSync('userInfo', userInfo)
-          this.wx.setStorageSync('token', token)
+          this.$wx.setStorageSync('userInfo', userInfo)
+          this.$wx.setStorageSync('token', token)
         } catch (e) {
-          e && this.showToast(e.msg)
+          e && this.$showToast(e.msg)
         }
       }
     }

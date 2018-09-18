@@ -9,7 +9,7 @@
   export default {
     data() {
       return {
-        imageUrl: this.imageUrl
+        imageUrl: this.$imageUrl
       }
     },
     onLoad() {
@@ -24,10 +24,8 @@
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
-
   .te
     fill-box(fixed)
-    background :$color-text
     font-size :$font-size-12
     .btn
       width :200px

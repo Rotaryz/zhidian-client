@@ -32,15 +32,15 @@ const somePlugin = {
       }
     })
     Vue.mixin(base)
-    if (!Vue.prototype.webimHandler) {
-      Vue.prototype.webimHandler = new WeIM()
+    if (!Vue.prototype.$webimHandler) {
+      Vue.prototype.$webimHandler = new WeIM()
     }
-    Vue.prototype.ERR_OK = ERR_OK
-    Vue.prototype.imageUrl = baseURL.image
-    Vue.prototype.wechat = wechat
-    Vue.prototype.wx = wx
-    Vue.prototype.cos = cos
-    Vue.prototype.cosFileType = cosFileType
+    Vue.prototype.$ERR_OK = ERR_OK
+    Vue.prototype.$imageUrl = baseURL.image
+    Vue.prototype.$wechat = wechat
+    Vue.prototype.$wx = wx
+    Vue.prototype.$cos = cos
+    Vue.prototype.$cosFileType = cosFileType
   }
 }
 // 使用插件
