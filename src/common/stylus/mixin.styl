@@ -80,7 +80,7 @@ fill-box($pos = absolute)
   bottom: 0
   left: 0
 
-border-top-1px($color = #ECEDF1)
+border-top-1px($color = #ECEDF1, $style = 'solid')
   position: relative
   &:before
     content: ""
@@ -88,10 +88,10 @@ border-top-1px($color = #ECEDF1)
     top: 0
     left: 0
     width: 100%
-    border-top: 1px solid $color
+    border-top: 1px $style $color
     transform: scaleY(.5) translateZ(0)
 
-border-right-1px($color = #ECEDF1)
+border-right-1px($color = #ECEDF1, $style = 'solid')
   position: relative
   &:after
     content: ""
@@ -100,9 +100,9 @@ border-right-1px($color = #ECEDF1)
     right: 0
     height: 100%
     transform: scaleX(.5) translateZ(0)
-    border-right: 1px solid $color
+    border-right: 1px $style $color
 
-border-bottom-1px($color = #ECEDF1)
+border-bottom-1px($color = #ECEDF1, $style = 'solid')
   position: relative
   &:after
     content: ""
@@ -111,9 +111,9 @@ border-bottom-1px($color = #ECEDF1)
     right: 0
     width: 100%
     transform: scaleY(.5) translateZ(0)
-    border-bottom: 1px solid $color
+    border-bottom: 1px $style $color
 
-border-left-1px($color = #ECEDF1)
+border-left-1px($color = #ECEDF1, $style = 'solid')
   position: relative
   &:after
     content: ""
@@ -122,7 +122,7 @@ border-left-1px($color = #ECEDF1)
     left: 0
     height: 100%
     transform: scaleX(.5) translateZ(0)
-    border-left: 1px solid $color
+    border-left: 1px $style $color
 
 border-1px($color = #ECEDF1, $radius = 2px, $style = solid)
   position: relative
