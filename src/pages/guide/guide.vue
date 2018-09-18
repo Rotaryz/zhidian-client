@@ -20,10 +20,7 @@
 
   .te
     fill-box(fixed)
-    background :$color-text
-    font-size :$font-size-30
+    font-size: $font-size-30
     .btn
-      width :200px
-      height :45px
-      button-style(45px)
+      share-button-style()
 </style>
