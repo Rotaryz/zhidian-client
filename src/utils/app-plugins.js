@@ -5,6 +5,7 @@ import {ERR_OK, baseURL} from 'api/config'
 import * as wechat from 'common/js/wechat'
 import * as cos from './we-cos/upload'
 import * as cosFileType from './we-cos/fileConfig'
+import base from 'common/mixins/base'
 
 // // 不需要自动重置data数据的页面
 const unResetPage = []
@@ -15,7 +16,7 @@ const somePlugin = {
       onUnload() {
         // 清除mpvue的wathcers
         this._watchers = []
-        this._watcher.teardown()
+        this._watcher && this._watcher.teardown()
         // 重置页面组件的data数据
         if (!this.$mp) return
         // 重置页面的data数据
@@ -28,6 +29,7 @@ const somePlugin = {
         }
       }
     })
+    Vue.mixin([base])
     if (!Vue.prototype.webimHandler) {
       Vue.prototype.webimHandler = new WeIM()
     }

@@ -11,6 +11,8 @@
       return {
         imageUrl: this.imageUrl
       }
+    },
+    onLoad() {
     }
   }
 </script>
@@ -21,7 +23,7 @@
   .te
     fill-box(fixed)
     background :$color-text
-    font-size :$font-size-30
+    font-size :$font-size-12
     .btn
       width :200px
       height :45px

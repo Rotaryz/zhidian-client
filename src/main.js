@@ -24,34 +24,34 @@ export default {
       navigationBarTextStyle: 'black'
     },
     tabBar: {
-      color: '#828AA2',
-      selectedColor: '#F94C5F',
-      backgroundColor: '#F8F8F8',
+      color: '#323232',
+      selectedColor: '#D32F2F',
+      backgroundColor: '#FFFFFF',
       borderStyle: 'black',
       list: [
         {
           pagePath: 'pages/guide',
           text: '导购',
-          iconPath: '/static/img/icon-pinkan_tab@2x.png',
-          selectedIconPath: '/static/img/icon-pinkan2_tab@2x.png'
+          iconPath: '/static/img/icon-guide.png',
+          selectedIconPath: '/static/img/icon-guide_select.png'
         },
         {
           pagePath: 'pages/shop',
           text: '门店',
-          iconPath: '/static/img/icon-goods_tab_un@2x.png',
-          selectedIconPath: '/static/img/icon-goods_tab@2x.png'
+          iconPath: '/static/img/icon-shoptab.png',
+          selectedIconPath: '/static/img/icon-shoptab_select.png'
         },
         {
           pagePath: 'pages/dynamic',
           text: '动态',
-          iconPath: '/static/img/icon-dynamic_tab_un@2x.png',
-          selectedIconPath: '/static/img/icon-dynamic_tab@2x.png'
+          iconPath: '/static/img/icon-dynamic.png',
+          selectedIconPath: '/static/img/icon-dynamic_select.png'
         },
         {
           pagePath: 'pages/mine',
           text: '我的',
-          iconPath: '/static/img/icon-my_tab_un@2x.png',
-          selectedIconPath: '/static/img/icon-my_tab@2x.png'
+          iconPath: '/static/img/icon-my.png',
+          selectedIconPath: '/static/img/icon-my_select.png'
         }
       ]
     }
