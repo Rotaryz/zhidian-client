@@ -49,3 +49,46 @@ export function formatTimeYMD (date = now, str = '-') {
 
   return `${t1}`
 }
+
+/**
+ * 记录当前页面栈详细
+ */
+export function resolvePageDetail (url, options) {
+  // 拼接url的参数
+  let urlWithArgs = '/' + url + '?'
+  for (let key in options) {
+    let value = options[key]
+    if (value) {
+      urlWithArgs += key + '=' + value + '&'
+    }
+  }
+  urlWithArgs = urlWithArgs.substring(0, urlWithArgs.length - 1)
+  return urlWithArgs
+}
+
+/**
+ * 判断是否为tab页面
+ * @param path
+ * @returns {*}
+ */
+export function checkIsTabPage (path) {
+  const TAB_REG = /(pages\/guide)|(pages\/shop)|(pages\/dynamic)|(pages\/mine)/
+  return TAB_REG.test(path)
+}
+
+/**
+ * 解析永久二维码参数
+ * @param scene
+ * @returns {{}}
+ */
+export function resolveQrCode (scene) {
+  if (!scene) {
+    return {}
+  }
+  let params = {}
+  let strs = scene.split('&')
+  for (let i = 0; i < strs.length; i++) {
+    params[strs[i].split('=')[0]] = unescape(strs[i].split('=')[1])
+  }
+  return params
+}

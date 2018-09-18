@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <img :src="imgUrl + '/ws-image/pic-logo@2x.png'" v-if="imgUrl" class="login-logo">
-    <div class="login-title">当销冠 用智推</div>
+    <div class="login-title" @click="test">当销冠 用智推</div>
     <img :src="imgUrl + '/ws-image/pic-WeChat authorization_radar@2x.png'" v-if="imgUrl" class="login-icon">
     <form class="btn-box" report-submit @submit="getFormId">
       <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo" class="login-btn" hover-class="none" formType="submit">
@@ -13,6 +13,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import { Jwt } from 'api'
+
   export default {
     data() {
       return {
@@ -20,126 +22,41 @@
       }
     },
     methods: {
-      onGotUserInfo() {
+      test() {
+        this.showToast('masd')
+      },
+      async onGotUserInfo(e) {
+        let res = e.mp.detail
+        if (res.errMsg !== 'getUserInfo:ok') {
+          this.openSetting()
+          return
+        }
+        let iv = res.iv
+        let encryptedData = res.encryptedData
+        let resCode = await this.wechat.login()
+        let code = resCode.code
+        let data = {
+          iv,
+          encrypted_data: encryptedData,
+          code
+        }
+        try {
+          res = await Jwt.getToken(data)
+          this.wechat.hideLoading()
+          if (res.error !== this.ERR_Ok) {
+            this.showToast(res.message)
+            return
+          }
+          const {userInfo, token} = [res.customer_info, res.access_token]
+          this.wx.setStorageSync('userInfo', userInfo)
+          this.wx.setStorageSync('token', token)
+        } catch (e) {
+          e && this.showToast(e.msg)
+        }
       }
     }
   }
 </script>
-<!--<script type="text/ecmascript-6">-->
-  <!--import * as wechat from 'common/js/wechat'-->
-  <!--import {Im} from 'api'-->
-  <!--// import { baseURL, ERR_OK } from 'api/config'-->
-  <!--// import {mapGetters} from 'vuex'-->
-  <!--import {chackTabPage} from 'common/js/util'-->
-  <!--// import base from 'common/mixins/base'-->
-  <!--// const LOGINPAGE = '/pages/login/login'-->
-  <!--// const INDEX = '/pages/poster/poster'-->
-  <!--export default {-->
-    <!--// mixins: [base],-->
-    <!--name: 'LogIn',-->
-    <!--data() {-->
-      <!--return {-->
-        <!--imgUrl: this.imageUrl,-->
-        <!--authorizationCount: 1,-->
-        <!--formId: ''-->
-      <!--}-->
-    <!--},-->
-    <!--onLoad() {-->
-      <!--wx.setStorageSync('errPage', '/pages/login/login')-->
-    <!--},-->
-    <!--onUnload() {-->
-      <!--this.authorizationCount = 1-->
-      <!--this.formId = ''-->
-      <!--wx.setStorageSync('errPage', '')-->
-    <!--},-->
-    <!--methods: {-->
-      <!--async _authorization() {-->
-        <!--const wxUser = await wechat.getUserInfo()-->
-        <!--let resCode = await wechat.login()-->
-        <!--let code = resCode.code-->
-        <!--const data = {-->
-          <!--code,-->
-          <!--iv: wxUser.iv,-->
-          <!--encryptedData: wxUser.encryptedData,-->
-          <!--weixin: 'jike-weishang'-->
-        <!--}-->
-        <!--let Json = await Im.getToken(data)-->
-        <!--if (Json.error !== ERR_OK && this.authorizationCount <= 5) {-->
-          <!--this.authorizationCount++-->
-          <!--await this._authorization()-->
-          <!--return-->
-        <!--} else if (Json.error !== ERR_OK && this.authorizationCount > 5) {-->
-          <!--wx.showToast({title: '登录失败，请重新登录', icon: 'none', duration: 1000})-->
-          <!--return false-->
-        <!--}-->
-        <!--this.authorizationCount = 1-->
-        <!--const res = Json.data-->
-        <!--let token = res.access_token-->
-        <!--let userInfo = res.customer_info-->
-        <!--return {-->
-          <!--token,-->
-          <!--userInfo-->
-        <!--}-->
-      <!--},-->
-      <!--async onGotUserInfo(e) {-->
-        <!--let res = e.mp.detail-->
-        <!--if (res.errMsg !== 'getUserInfo:ok') return-->
-        <!--let iv = res.iv-->
-        <!--let encryptedData = res.encryptedData-->
-        <!--let resCode = await wechat.login()-->
-        <!--let code = resCode.code-->
-        <!--let data = {-->
-          <!--iv,-->
-          <!--encryptedData,-->
-          <!--code,-->
-          <!--weixin: 'jike-weishang'-->
-        <!--}-->
-        <!--Im.getToken(data).then(async (resData) => {-->
-          <!--if (resData.error === ERR_OK) {-->
-            <!--let resMsg = resData.data-->
-            <!--let userInfo, token-->
-            <!--if (resMsg.unauthorized) {-->
-              <!--let resMsgJson = await this._authorization()-->
-              <!--userInfo = resMsgJson.userInfo-->
-              <!--token = resMsgJson.token-->
-            <!--} else {-->
-              <!--userInfo = resMsg.customer_info-->
-              <!--token = resMsg.access_token-->
-            <!--}-->
-            <!--wx.setStorageSync('userInfo', userInfo)-->
-            <!--wx.setStorageSync('token', token)-->
-            <!--if (this.formId) {-->
-              <!--Im.getFormId({ form_ids: [this.formId] }, false)-->
-            <!--}-->
-            <!--this.loginIm().then((res) => {-->
-              <!--let isLoginPage = this.targetPage.indexOf(LOGINPAGE)-->
-              <!--if (isLoginPage !== -1) {-->
-                <!--wx.switchTab({url: INDEX})-->
-              <!--} else {-->
-                <!--if (chackTabPage(this.targetPage)) {-->
-                  <!--wx.switchTab({url: this.targetPage})-->
-                <!--} else {-->
-                  <!--wx.redirectTo({url: this.targetPage})-->
-                <!--}-->
-              <!--}-->
-            <!--})-->
-          <!--} else {-->
-            <!--wx.showToast({title: '登录失败，请重新登录', icon: 'none', duration: 1000})-->
-          <!--}-->
-          <!--wechat.hideLoading()-->
-        <!--})-->
-      <!--},-->
-      <!--getFormId(e) {-->
-        <!--this.formId = e.mp.detail.formId-->
-      <!--}-->
-    <!--},-->
-    <!--computed: {-->
-      <!--...mapGetters([-->
-        <!--'targetPage'-->
-      <!--])-->
-    <!--}-->
-  <!--}-->
-<!--</script>-->
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"

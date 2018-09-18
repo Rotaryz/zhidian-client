@@ -1,7 +1,7 @@
 <template>
   <article class="te">
     <h1>{{imageUrl}}</h1>
-    <div class="btn">确定</div>
+    <div @click="test">确定</div>
   </article>
 </template>
 
@@ -13,6 +13,11 @@
       }
     },
     onLoad() {
+    },
+    methods: {
+      test() {
+        this.showToast('askjdhakdhashd')
+      }
     }
   }
 </script>

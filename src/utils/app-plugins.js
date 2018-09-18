@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import wx from 'wx'
 import WeIM from './we-im/index'
-import {ERR_OK, baseURL} from 'api/config'
+import { ERR_OK, baseURL } from 'api/config'
 import * as wechat from 'common/js/wechat'
 import * as cos from './we-cos/upload'
 import * as cosFileType from './we-cos/fileConfig'
@@ -13,6 +13,8 @@ const unResetPage = []
 const somePlugin = {
   install: function () {
     Vue.mixin({
+      methods: {
+      },
       onUnload() {
         // 清除mpvue的wathcers
         this._watchers = []
@@ -29,7 +31,7 @@ const somePlugin = {
         }
       }
     })
-    Vue.mixin([base])
+    Vue.mixin(base)
     if (!Vue.prototype.webimHandler) {
       Vue.prototype.webimHandler = new WeIM()
     }
