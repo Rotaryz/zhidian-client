@@ -21,22 +21,19 @@
         确定
       </div>
     </div>
-    <toast ref="toast"></toast>
   </article>
 </template>
 
 <script type="text/ecmascript-6">
   import MpvueCropper from 'components/mpvue-cropper/mpvue-cropper'
   import { CUT_CONFIG } from './contants'
-  import Toast from 'components/toast/toast'
 
   let wecropper
 
   export default {
     name: 'CutPicture',
     components: {
-      MpvueCropper,
-      Toast
+      MpvueCropper
     },
     data() {
       return {

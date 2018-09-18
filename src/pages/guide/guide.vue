@@ -1,16 +1,18 @@
 <template>
-  <article class="te">
-    <h1>{{imageUrl}}</h1>
-    <div @click="test">确定</div>
+  <article class="guide">
+    <scroll></scroll>
   </article>
 </template>
 
 <script type="text/ecmascript-6">
+  import Scroll from 'components/scroll/scroll'
+
   export default {
+    components: {
+      Scroll
+    },
     data() {
-      return {
-        imageUrl: this.$imageUrl
-      }
+      return {}
     },
     onLoad() {
     },
@@ -24,11 +26,7 @@
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
-  .te
-    fill-box(fixed)
-    font-size :$font-size-18
-    .btn
-      width :200px
-      height :45px
-      button-style(45px)
+
+  .guide
+    height :100vh
 </style>
