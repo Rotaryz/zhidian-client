@@ -1,15 +1,18 @@
 <template>
   <article class="shop">
     <shop-header></shop-header>
+    <shop-content></shop-content>
   </article>
 </template>
 
 <script type="text/ecmascript-6">
   import ShopHeader from 'components/shop-header/shop-header'
+  import ShopContent from 'components/shop-content/shop-content'
 
   export default {
     components: {
-      ShopHeader
+      ShopHeader,
+      ShopContent
     },
     data() {
       return {}
