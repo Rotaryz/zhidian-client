@@ -1,16 +1,21 @@
 <template>
-  <article class="te">
-    <h1>{{imageUrl}}</h1>
-    <div @click="test">确定</div>
+  <article class="guide">
+    <guide-header></guide-header>
+    <guide-active></guide-active>
   </article>
 </template>
 
 <script type="text/ecmascript-6">
+  import GuideHeader from 'components/guide-header/guide-header'
+  import GuideActive from 'components/guide-active/guide-active'
+
   export default {
+    components: {
+      GuideHeader,
+      GuideActive
+    },
     data() {
-      return {
-        imageUrl: this.$imageUrl
-      }
+      return {}
     },
     onLoad() {
     },
@@ -24,11 +29,7 @@
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
-  .te
-    fill-box(fixed)
-    font-size :$font-size-18
-    .btn
-      width :200px
-      height :45px
-      button-style(45px)
+
+  .guide
+    min-height :100vh
 </style>
