@@ -19,12 +19,12 @@
           <div class="detail-title">数量</div>
           <div class="num-box">
             <div class="num-btn-box">
-              <img :src="imageUrl + '/zd-image/mine/icon-subtract@2x.png'" v-if="imageUrl && orderNum > 1" class="num-btn">
+              <img :src="imageUrl + '/zd-image/mine/icon-subtract@2x.png'" v-if="imageUrl && orderNum > 1" class="num-btn" @click="subNum">
               <img :src="imageUrl + '/zd-image/mine/icon-subtract_disable@2x.png'" v-if="imageUrl && orderNum <= 1" class="num-btn">
             </div>
             <div class="payment-num">{{orderNum}}</div>
             <div class="num-btn-box">
-              <img :src="imageUrl + '/zd-image/mine/icon-add@2x.png'" v-if="imageUrl" class="num-btn">
+              <img :src="imageUrl + '/zd-image/mine/icon-add@2x.png'" v-if="imageUrl" class="num-btn" @click.stop="addNum">
               <img :src="imageUrl + '/zd-image/mine/icon-add_disable@2x.png'" v-if="imageUrl && false" class="num-btn">
             </div>
           </div>
@@ -37,11 +37,11 @@
       <div class="phone-auth">
         <div class="detail-title">手机号码</div>
         <div class="phone-right">
-          <div class="phone-get-btn" v-if="false">
+          <button class="phone-get-btn" open-type="getPhoneNumber" @getphonenumber="getPhone">
             <span class="get-btn-txt">授权获取</span>
             <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" v-if="imageUrl" class="get-btn-icon">
-          </div>
-          <div class="phone-num">15164931877</div>
+          </button>
+          <div class="phone-num" v-if="false">15164931877</div>
         </div>
       </div>
       <div class="buy-btn-box">
@@ -56,13 +56,28 @@
     data () {
       return {
         imageUrl: this.$imageUrl,
-        orderShow: true,
+        orderShow: false,
         orderNum: 1
       }
     },
+    created() {
+      console.log(9898989898)
+    },
     methods: {
+      showOrder() {
+        this.orderShow = true
+      },
       hideOrder() {
         this.orderShow = false
+      },
+      addNum() {
+        this.orderNum++
+      },
+      subNum() {
+        this.orderNum--
+      },
+      getPhone(e) {
+        console.log(e)
       }
     }
   }
@@ -185,6 +200,7 @@
           font-size: $font-size-16
         .phone-right
           .phone-get-btn
+            reset-button()
             height: 30px
             padding-left: 10px
             display: flex
@@ -210,7 +226,7 @@
           font-size: $font-size-16
           font-family: $font-family-medium
           color: $color-white
-          button-style(normal, 22.5px)
+          button-style(un-click, 22.5px)
     .show.payment-content
       bottom: 0
 

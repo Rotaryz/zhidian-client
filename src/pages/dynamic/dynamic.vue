@@ -44,7 +44,7 @@
             </div>
           </div>
           <div class="likes-peo" v-if="item.live_log_like.length || item.live_log_comment.length">
-            <img src="./pic-trends_zan1@2x.png" class="likes-peo-bg" mode="widthFix">
+            <img :src="imageUrl + '/zd-image/dynamic/pic-trends_zan1@2x.png'" class="likes-peo-bg" mode="widthFix">
             <div class="peo-big-box">
               <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/ws-image/icon-like_show@2x.png'" class="like-icon">
               <div class="like-name">
@@ -52,7 +52,7 @@
               </div>
             </div>
             <div class="comment-peo" v-for="(com, comIdx) in item.live_log_comment" :key="comIdx"><span class="ro-peo-name">{{com.customer_name}}：</span><span class="comment-name">{{com.content}}</span></div>
-            <img src="./pic-trends_zan3@2x.png" class="likes-peo-bg" mode="widthFix">
+            <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan3@2x.png'" class="likes-peo-bg" mode="widthFix">
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@
             </div>
           </div>
           <div class="likes-peo" v-if="item.live_log_like.length || item.live_log_comment.length">
-            <img src="./pic-trends_zan1@2x.png" class="likes-peo-bg" mode="widthFix">
+            <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan1@2x.png'" class="likes-peo-bg" mode="widthFix">
             <div class="peo-big-box">
               <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/ws-image/icon-like_show@2x.png'" class="like-icon">
               <div class="like-name">
@@ -99,7 +99,7 @@
               </div>
             </div>
             <div class="comment-peo" v-for="(com, comIdx) in item.live_log_comment" :key="comIdx"><span class="ro-peo-name">{{com.customer_name}}：</span><span class="comment-name">{{com.content}}</span></div>
-            <img src="./pic-trends_zan3@2x.png" class="likes-peo-bg" mode="widthFix">
+            <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan3@2x.png'" class="likes-peo-bg" mode="widthFix">
           </div>
         </div>
       </div>
@@ -139,7 +139,7 @@
             </div>
           </div>
           <div class="likes-peo" v-if="item.live_log_like.length || item.live_log_comment.length">
-            <img src="./pic-trends_zan1@2x.png" class="likes-peo-bg" mode="widthFix">
+            <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan1@2x.png'" class="likes-peo-bg" mode="widthFix">
             <div class="peo-big-box">
               <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/ws-image/icon-like_show@2x.png'" class="like-icon">
               <div class="like-name">
@@ -147,7 +147,7 @@
               </div>
             </div>
             <div class="comment-peo" v-for="(com, comIdx) in item.live_log_comment" :key="comIdx"><span class="ro-peo-name">{{com.customer_name}}：</span><span class="comment-name">{{com.content}}</span></div>
-            <img src="./pic-trends_zan3@2x.png" class="likes-peo-bg" mode="widthFix">
+            <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan3@2x.png'" class="likes-peo-bg" mode="widthFix">
           </div>
         </div>
       </div>
@@ -176,17 +176,14 @@
       <div class="share-item last" @click="_closeCover">取消</div>
     </div>
     <!--</div>-->
-    <frozen ref="frozen"></frozen>
   </article>
 </template>
 
 <script type="text/ecmascript-6">
-  import {Dynamic, Im} from 'api'
+  import {Dynamic} from 'api'
   import {baseURL} from 'api/config'
   import base from 'common/mixins/base'
   import ConfirmMsg from 'components/confirm-msg/confirm-msg'
-  import Frozen from 'components/frozen/frozen'
-  import { mapActions, mapGetters } from 'vuex'
   import { resolveQrCode } from 'common/js/util'
 
   export default {
@@ -195,7 +192,7 @@
     data() {
       return {
         imageUrl: baseURL.image,
-        dynamicList: [1],
+        dynamicList: [],
         page: 1,
         loadMoreDy: true,
         myShopId: null,
@@ -216,62 +213,14 @@
         testImg: '', // 重要，勿删
         testShow: 0, // 重要，勿删
         isShowBox: true,
-        isMine: true,
-        imgArr: ['https://img.jerryf.cn/static_files/uploads/customerImages/2018/08/04/14/1533363194ul2N5mQ1.png?type=']
+        isMine: true
       }
     },
-    async onload() {
-      await this._getQuery()
-      this.loadMoreDy = true
-      this.dynamicList = []
-      this.page = 1
-      setTimeout(() => {
-        this._getList()
-        this.shopId = this.$wx.getStorageSync('employeeId') ? this.$wx.getStorageSync('employeeId') * 1 : ''
-        this.myShopId = this.$wx.getStorageSync('myShopId') ? this.$wx.getStorageSync('myShopId') * 1 : null
-        this._getDrawPosterInfo() // 获取画海报的信息
-      }, 500)
+    onLoad() {
+      this._getList()
     },
     onShow() {
       this.$wx.setNavigationBarTitle({ title: '动态' })
-      this._showFrozen()
-      if (this.shopId !== this.$wx.getStorageSync('employeeId') * 1) {
-        this._getDrawPosterInfo() // 获取画海报的信息
-        Im.checkHasShop(false).then((res) => {
-          if (res.error === this.$ERR_OK) {
-            if (res.data.is_shop) {
-              this.$wx.setStorageSync('myShopId', res.data.employee_id * 1)
-              this.myShopId = res.data.employee_id
-            }
-          } else {
-            this.showToast(res.message)
-          }
-        })
-      }
-      this.shopId = this.$wx.getStorageSync('employeeId') ? this.$wx.getStorageSync('employeeId') * 1 : ''
-      this.myShopId = this.$wx.getStorageSync('myShopId') ? this.$wx.getStorageSync('myShopId') * 1 : null
-      this.sendCustomMsg(30001)
-      if (this.isLoadDy) {
-        this.loadMoreDy = true
-        this.dynamicList = []
-        this.page = 1
-        this._getList()
-        this.setIsLoadDy(false)
-      }
-      this.$wx.getSetting({
-        success: (data) => {
-          if (data.authSetting['scope.writePhotosAlbum'] && this.activeInd !== 0) {
-            this.$wechat.showLoading('正在下载图片')
-            this._downImage()
-            this.activeInd = 0
-          } else if (!data.authSetting['scope.writePhotosAlbum']) {
-            this.showDown = false
-          }
-        }
-      })
-    },
-    onHide() {
-      this.$refs.frozen.cancel()
     },
     onReachBottom() {
       this.page++
@@ -292,7 +241,6 @@
       }
     },
     methods: {
-      ...mapActions(['setIsLoadDy', 'setShowType']),
       cancel() {
         this.isShowBox = true
       },
@@ -311,19 +259,6 @@
             this.$wx.setStorageSync('employeeId', params.e)
           }
         }
-      },
-      _showFrozen() {
-        clearTimeout(this.forzenTimer)
-        this.forzenTimer = setTimeout(() => {
-          clearTimeout(this.forzenTimer)
-          this.$refs.frozen.getType(this.isMine)
-          let frozen = this.$wx.getStorageSync('frozen')
-          if (!frozen) {
-            this.$refs.frozen.cancel()
-            return
-          }
-          this.$refs.frozen.show()
-        }, 500)
       },
       _getDrawPosterInfo() {
         const houseInfo = this.$wx.getStorageSync('houseInfo')
@@ -399,13 +334,14 @@
           return
         }
         Dynamic.liveLogs({ page: this.page }).then((res) => {
-          // this._showFrozen()
-          this.testShow = res.check_code ? 1 : 0
-          if (this.testShow) {
-            Im.getCount(1, false)
-          }
-          this.testImg = res.check_image_url ? res.check_image_url : ''
-          if (res.error === this.ERR_OK) {
+          // this.testShow = res.check_code ? 1 : 0
+          // if (this.testShow) {
+          //   Im.getCount(1, false)
+          // }
+          // this.testImg = res.check_image_url ? res.check_image_url : ''
+          console.log('getList')
+          if (res.error === this.$ERR_OK) {
+            console.log('success')
             this.$wechat.hideLoading()
             if (res.data.length) {
               res = res.data.map((item) => {
@@ -483,7 +419,6 @@
         })
       },
       _seeImage(index, image) {
-        this.setShowType(true)
         let imageArr = image.map(item => item.file_url)
         this.$wx.previewImage({
           current: imageArr[index], // 当前显示图片的http链接
@@ -580,15 +515,13 @@
       }
     },
     computed: {
-      ...mapGetters(['isLoadDy', 'isBoss']),
       isMine() {
         let status = this.myShopId && this.shopId && this.myShopId === this.shopId
         return status
       }
     },
     conponents: {
-      ConfirmMsg,
-      Frozen
+      ConfirmMsg
     }
   }
 </script>
@@ -713,8 +646,8 @@
         .peo-big-box
           width: 100%
           box-sizing: border-box
-          border-right-1px(rgba(0, 0, 0, 0.10))
-          border-left-1px(rgba(0, 0, 0, 0.10))
+          border-right-1px(rgba(0, 0, 0, 0.10), solid)
+          border-left-1px(rgba(0, 0, 0, 0.10), solid)
           background: #F9F9F9
           padding: 3px 0
           display: flex

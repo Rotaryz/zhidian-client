@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="img-content">
-          <img src="https://img.jkweixin.net/static_files/uploads/customerImages/2018/09/05/15/1536132525DzNyAa5g.png" class="img-item" mode="widthFix">
+          <img src="https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png" class="img-item" mode="widthFix">
         </div>
       </div>
     </div>

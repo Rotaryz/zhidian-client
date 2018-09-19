@@ -98,6 +98,7 @@ border-right-1px($color = #ECEDF1, $style = solid)
     position: absolute
     top: 0
     right: 0
+    width: 1px
     height: 100%
     transform: scaleX(.5) translateZ(0)
     border-right: 1px $style $color
@@ -115,11 +116,12 @@ border-bottom-1px($color = #ECEDF1, $style = solid)
 
 border-left-1px($color = #ECEDF1, $style = solid)
   position: relative
-  &:after
+  &:before
     content: ""
     position: absolute
     top: 0
     left: 0
+    width: 1px
     height: 100%
     transform: scaleX(.5) translateZ(0)
     border-left: 1px $style $color
