@@ -256,7 +256,7 @@
               height: 23px
               box-sizing: border-box
               border-radius: 50%
-              margin-right: -11px
+              margin-right: -4px
               .mine-serve-avatarBox-img
                 width: 23px
                 height: 23px
@@ -279,7 +279,7 @@
                     margin: 0 0.7px
             .more
               margin-top: 2px
-              margin-left: 20px
+              margin-left: 12px
               display: flex
               width: 12px
               justify-content: space-between

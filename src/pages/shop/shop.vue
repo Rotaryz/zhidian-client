@@ -1,6 +1,6 @@
 <template>
   <article class="shop">
-    <shop-header></shop-header>
+    <shop-header :shopInfo="shopInfo" :employee="employee"></shop-header>
     <shop-content></shop-content>
   </article>
 </template>
@@ -8,6 +8,7 @@
 <script type="text/ecmascript-6">
   import ShopHeader from 'components/shop-header/shop-header'
   import ShopContent from 'components/shop-content/shop-content'
+  import { Jwt } from 'api'
 
   export default {
     components: {
@@ -15,7 +16,35 @@
       ShopContent
     },
     data() {
-      return {}
+      return {
+        shopInfo: {},
+        employee: {}
+      }
+    },
+    async onShow() {
+      await this.getBaseInfo()
+    },
+    methods: {
+      async getBaseInfo() {
+        this.$wechat.showLoading()
+        await Promise.all([
+          this._getShopInfo(false)
+        ])
+        this.$wechat.hideLoading()
+      },
+      async _getShopInfo(loading) {
+        try {
+          let res = await Jwt.getShopInfo({}, loading)
+          if (res.error !== this.$ERR_OK) {
+            this.$showToast(res.message)
+            return
+          }
+          this.shopInfo = res.data
+          this.employee = res.data.employee
+        } catch (e) {
+          console.error(e)
+        }
+      }
     }
   }
 </script>

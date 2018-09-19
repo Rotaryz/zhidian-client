@@ -37,6 +37,16 @@
 </template>
 <script type="text/ecmascript-6">
   export default {
+    props: {
+      shopInfo: {
+        type: Object,
+        default: {}
+      },
+      employee: {
+        type: Object,
+        default: {}
+      }
+    },
     data() {
       return {
         url: this.$parent.$imageUrl + `/zd-image/test-img/5@1x.png`,

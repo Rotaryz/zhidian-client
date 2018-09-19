@@ -14,6 +14,6 @@ export default {
   // 获取店铺信息
   getShopInfo(data, loading) {
     const url = `/api/customer/shops/profile`
-    return request.post(url, data, loading)
+    return request.get(url, data, loading)
   }
 }
