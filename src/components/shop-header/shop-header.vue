@@ -8,7 +8,7 @@
         <img mode="aspectFill" class="pic" :src="url" alt="">
         <div class="button-pic">
           <img class="icon-pic" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-pic@2x.png'" alt="">
-          <div class="txt">66</div>
+          <span class="txt">66</span>
         </div>
       </div>
     </section>
@@ -46,28 +46,36 @@
     padding: 0 15px
     position: relative
     .media-wrapper
-      layout(row,block,nowrap)
-      justify-content :space-between
-      padding :18px 0 15px
+      layout(row, block, nowrap)
+      justify-content: space-between
+      padding: 18px 0 15px
       .item
         width: 44.66vw
-        height :33.33vw
+        height: 33.33vw
+        position: relative
         .pic
-          width :100%
-          height :100%
+          width: 100%
+          height: 100%
         .button-pic
+          position: absolute
+          right: 6px
+          bottom: 6px
           opacity: 0.4
-          height :20px
+          height: 20px
           background: $color-455A64
           border-radius: 20px
-          padding :5.5px 8.5px
-          layout(row,block,nowrap)
+          padding: 0 8.5px
+          layout(row, block, nowrap)
+          align-items :center
           .icon-pic
-            width :11.5px
-            height :10px
-            
-
-
+            width: 11.5px
+            height: 10px
+            margin-right: 3px
+          .txt
+            font-family: $font-family-bold
+            font-size: $font-size-12
+            color: $color-FFFFFF
+            line-height: 1.2
     .shop-name
       font-family: $font-family-medium
       font-size: $font-size-20
