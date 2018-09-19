@@ -25,6 +25,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import {Jwt} from 'api'
+
   export default {
     data() {
       return {
@@ -32,7 +34,7 @@
       }
     },
     created() {
-      console.log(this.$data)
+      // this._getShopInfo()
     },
     methods: {
       async editorAvatar() {
@@ -44,6 +46,15 @@
         } catch (e) {
           console.error(e)
         }
+      },
+      _getShopInfo() {
+        Jwt.getShopInfo().then(res => {
+          if (res.error !== this.$ERR_OK) {
+            this.$showToast(res.message)
+            return
+          }
+          console.log(res)
+        })
       }
     }
   }

@@ -11,7 +11,7 @@
     <!--砍价-->
     <ul class="active-wrapper" v-if="selectTab === 0">
       <li class="item-wrapper" v-for="(item,index) in '123'" :key="index">
-        <article class="top">
+        <article class="top" @click="goToDetail(item)">
           <div class="img-wrapper">
             <img class="img" mode="aspectFill" :src="url" alt="">
             <div class="tag cut">仅剩6份</div>
@@ -40,11 +40,12 @@
             <span class="shop-num">28人已成功砍价</span>
           </article>
           <article class="right-box">
-            <div class="jh-wrapper">
-              <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
+            <div class="jh-wrapper" @click="toLike(item)">
+              <img class="icon" v-if="imageUrl && isLike" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
+              <img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
               <div class="number">99</div>
             </div>
-            <div class="jh-wrapper">
+            <div class="jh-wrapper" @click="toShare(item)">
               <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">
               <div class="number">55</div>
             </div>
@@ -55,7 +56,7 @@
     <!--拼团-->
     <ul class="active-wrapper" v-if="selectTab === 1">
       <li class="item-wrapper" v-for="(item,index) in '123'" :key="index">
-        <article class="top">
+        <article class="top" @click="goToDetail(item)">
           <div class="img-wrapper">
             <img class="img" mode="aspectFill" :src="url" alt="">
             <div class="tag group">仅剩6份</div>
@@ -84,11 +85,12 @@
             <span class="shop-num">28人已成功砍价</span>
           </article>
           <article class="right-box">
-            <div class="jh-wrapper">
-              <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
+            <div class="jh-wrapper" @click="toLike(item)">
+              <img class="icon" v-if="imageUrl && isLike" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
+              <img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
               <div class="number">99</div>
             </div>
-            <div class="jh-wrapper">
+            <div class="jh-wrapper" @click="toShare(item)">
               <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">
               <div class="number">55</div>
             </div>
@@ -107,15 +109,26 @@
         url: this.$parent.$imageUrl + '/zd-image/test-img/4@1x.png',
         tabList,
         selectTab: 0,
-        header: [1, 1, 1]
+        header: [1, 1, 1],
+        isLike: false
       }
     },
     created() {
     },
     methods: {
       changeTab(index) {
-        if (this.selectTab === index) return
         this.selectTab = index
+      },
+      goToDetail() {
+        console.log(22)
+      },
+      toLike() {
+        console.log(111)
+        this.isLike = !this.isLike
+        console.log(this.isLike)
+      },
+      toShare() {
+        console.log(22222)
       }
     }
   }
@@ -183,7 +196,7 @@
               position: absolute
               top: 5px
               left: 0
-              padding :0 4px
+              padding: 0 4px
               height: 16px
               border-radius: 0 100px 100px 0
               font-family: $font-family-medium
@@ -286,7 +299,7 @@
             .jh-wrapper
               layout(row)
               &:first-child
-                margin-right :20px
+                margin-right: 20px
               .icon
                 height: 16px
                 width: 16px
@@ -294,7 +307,7 @@
                 font-family: $font-family-medium
                 font-size: $font-size-10
                 color: $color-99A0AA
-                position :relative
+                position: relative
                 top: -5px
-                margin-left :3.5px
+                margin-left: 3.5px
 </style>

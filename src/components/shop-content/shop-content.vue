@@ -8,7 +8,7 @@
         <div class="tab-line"></div>
       </div>
     </section>
-    <ul class="server-wrapper" v-show="selectTab === 0">
+    <ul class="server-wrapper" v-if="selectTab === 0">
       <li class="coupon-item" v-for="(item,index) in '12345'" :key="index">
         <div class="logo"><img class="logo-pic" mode="aspectFill" :src="url" alt=""></div>
         <article class="detail">
@@ -24,7 +24,7 @@
         </div>
       </li>
     </ul>
-    <section class="story-wrapper" v-show="selectTab === 1">
+    <section class="story-wrapper" v-if="selectTab === 1">
       <div class="video-wrapper">
         <video class="video" :src="storyData.video" objectFit="fill" :poster="storyData.video" :initial-time="1"></video>
       </div>
@@ -81,7 +81,7 @@
       return {
         url: this.$parent.$imageUrl + `/zd-image/test-img/4@1x.png`,
         tabList,
-        selectTab: 1,
+        selectTab: 0,
         header: [1, 1, 1],
         storyData
       }
@@ -90,7 +90,6 @@
     },
     methods: {
       changeTab(index) {
-        if (this.selectTab === index) return
         this.selectTab = index
       }
     }
