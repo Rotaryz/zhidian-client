@@ -55,7 +55,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  const url = `https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1537869795&di=e0aba314b1c2a60f8f88128198428d90&imgtype=jpg&er=1&src=http%3A%2F%2Fmypics.zhaopin.com%2Fpic%2F2014%2F3%2F1%2F5711D4D2D34C407BA2796F44A2136490.jpg`
+  const url = `/static/test-img/4@1x.png`
 
   const tabList = [{title: '砍价抢购'}, {title: '火爆拼团'}]
   export default {
