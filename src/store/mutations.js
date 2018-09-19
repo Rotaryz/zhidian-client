@@ -7,9 +7,6 @@ const mutations = {
   [types.SET_TARGET_PAGE](state, page) {
     state.targetPage = page
   },
-  [types.SET_DYNAMIC] (state, msg) {
-    state.isLoadDy = msg
-  },
   [types.SET_SHOW_TYPE] (state, boolean) {
     state.showType = boolean
   },
