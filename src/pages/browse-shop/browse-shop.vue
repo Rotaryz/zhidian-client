@@ -1,6 +1,5 @@
 <template>
   <div class="browse-shop">
-    <!--<scroll-view scroll-y class="browse-shop">-->
     <div class="browse-shop-small">
       <div class="browse-shop-item" v-for="(item, index) in browseShopList" :key="index" @click="_changeShop(item.id)">
         <img :src="item.image_url" class="browse-shop-logo">
@@ -8,12 +7,13 @@
         <img :src="image_url + '/zd-image/mine/icon-pressed@2x.png'" class="list-way">
       </div>
     </div>
-    <panel-end v-if="!more || browseShopList.length < 10 && browseShopList.length > 0"></panel-end>
-    <!--</scroll-view>-->
+    <panel-end></panel-end>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import PanelEnd from 'components/panel-end/panel-end'
+
   export default {
     name: 'browse-shop',
     data() {
@@ -39,6 +39,13 @@
     },
     created() {
       console.log(this.$imageUrl)
+    },
+    onReachBottom () {
+      this.page++
+      console.log(this.page)
+    },
+    components: {
+      PanelEnd
     }
   }
 </script>
@@ -50,11 +57,11 @@
     background: $color-background
 
   .browse-shop-small
-    margin-top: 10px
     padding: 0 15px
     box-sizing: border-box
     margin-bottom: 20px
     background: $color-FFFFFF
+    border-top-1px(rgba(153,160,170,.3))
 
   .browse-shop-item
     display: flex
@@ -64,7 +71,7 @@
     font-size: $font-size-16
     color: $color-1F1F1F
     font-family: $font-family-regular
-    border-bottom-1px(#99A0AA)
+    border-bottom-1px(rgba(153,160,170,.3))
     &:last-child
       border-none()
     .browse-shop-logo
