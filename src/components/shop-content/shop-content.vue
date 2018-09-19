@@ -8,17 +8,27 @@
         <div class="tab-line"></div>
       </div>
     </section>
+    <ul class="server-wrapper">
+      <li class="coupon-item">
+        <div class="logo"><img class="logo-pic" mode="aspectFill" :src="url" alt=""></div>
+        <article class="detail">
+          <div class="title">养发项目优惠券套餐</div>
+          <div class="money">
+            <div class="price">¥99</div>
+            <span class="old-price">599元</span>
+          </div>
+        </article>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  const url = `https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1537869795&di=e0aba314b1c2a60f8f88128198428d90&imgtype=jpg&er=1&src=http%3A%2F%2Fmypics.zhaopin.com%2Fpic%2F2014%2F3%2F1%2F5711D4D2D34C407BA2796F44A2136490.jpg`
-
-  const tabList = [{ title: '服务项目' }, { title: '品牌故事' }]
+  const tabList = [{title: '服务项目'}, {title: '品牌故事'}]
   export default {
     data() {
       return {
-        url,
+        url: this.$parent.$imageUrl + `/zd-image/test-img/4@1x.png`,
         tabList,
         selectTab: 0,
         header: [1, 1, 1]
@@ -77,4 +87,44 @@
           width: 65px
           background: $color-D32F2F
           border-radius: 3px
+    .server-wrapper
+      padding: 0 20px
+      .coupon-item
+        margin-top: 20px
+        layout(row, block, nowrap)
+        &:last-child
+          margin-bottom: 37.5px
+        .logo
+          width: 76px
+          height: 76px
+          border-radius: 2px
+          margin-right: 10px
+          .logo-pic
+            width: 100%
+            height: 100%
+        .detail
+          flex: 1
+          padding: 3px 0
+          layout()
+          justify-content: space-between
+          .title
+            font-size: $font-size-16
+            color: $color-1F1F1F
+            letter-spacing: 0.6px
+          .money
+            layout(row, block, nowrap)
+            align-items: flex-end
+            .price
+              font-family: $font-family-bold
+              font-size: 26px
+              color: #000028
+              &:first-letter
+                font-size: $font-size-12
+                margin-right: 3px
+            .old-price
+              margin: 0 7.5px
+              font-size: 15px
+              color: $color-99A0AA
+              text-decoration: line-through
+              vertical-align: bottom
 </style>

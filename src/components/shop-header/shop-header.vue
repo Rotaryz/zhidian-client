@@ -1,8 +1,11 @@
 <template>
   <div class="shop-header">
     <section class="media-wrapper">
-      <div class="item video">
-        <video class="pic" :src="video" objectFit="fill" :poster="video" :initial-time="1" :show-center-play-btn="false"></video>
+      <div class="item video" @click="playVideo">
+        <img mode="aspectFill" class="pic" :src="url" alt="">
+        <div class="video-mask">
+          <img class="icon-btn" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-video@2x.png'" alt="">
+        </div>
       </div>
       <div class="item pics">
         <img mode="aspectFill" class="pic" :src="url" alt="">
@@ -25,6 +28,7 @@
       <div class="line"></div>
       <img class="icon right" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-tel@2x.png'" alt="" @click="toMobile">
     </div>
+    <video class="my-video" id="my-video" :src="video"></video>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -37,26 +41,21 @@
       }
     },
     methods: {
+      playVideo() {
+        const ctx = this.$wx.createVideoContext('my-video')
+        ctx.requestFullScreen({direction: 90})
+        ctx.play()
+      },
       async toMap() {
         try {
+          this.$wechat.showLoading()
           const res = await this.$wechat.getLocation('gcj02')
           const {latitude, longitude, name = '国颐堂养发SPA馆（白云店', address = '广州市海珠区 TIT 创意园A9'} = res
           await this.$wechat.openLocation({latitude, longitude, name, address})
+          this.$wechat.hideLoading()
         } catch (e) {
           console.error(e)
         }
-        // this.$wx.getLocation({
-        //   type: 'gcj02', // 返回可以用于wx.openLocation的经纬度
-        //   success (res) {
-        //     const latitude = res.latitude
-        //     const longitude = res.longitude
-        //     self.$wx.openLocation({
-        //       latitude,
-        //       longitude,
-        //       scale: 18
-        //     })
-        //   }
-        // })
       },
       toMobile() {
         console.log(this.$wx)
@@ -68,6 +67,12 @@
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
+
+  .my-video
+    position: absolute
+    left: -200vw
+    top: 0
+
   .shop-header
     padding: 0 15px
     position: relative
@@ -79,6 +84,21 @@
         width: 44.66vw
         height: 33.33vw
         position: relative
+        border-radius: 2px
+        overflow: hidden
+        .video-mask
+          fill-box()
+          background: transparent
+          z-index: 2
+          layout()
+          justify-content: center
+          align-items: center
+          .icon-btn
+            width: 40px
+            height: 40px
+            border-radius: 50%
+            border: 1px solid $color-FFFFFF
+            box-sizing: border-box
         .pic
           width: 100%
           height: 100%
