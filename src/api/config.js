@@ -3,17 +3,20 @@ const version = ``
 
 const DEV = {
   api: 'https://zhidian-api.jerryf.cn',
-  image: 'https://img.jerryf.cn/defaults'
+  image: 'https://img.jerryf.cn/defaults',
+  upload: 'https://zhidian-api.jerryf.cn'
 }
 
 const TEST = {
   api: 'https://zhidian-api.jkweixin.net' + version,
-  image: 'https://img.jkweixin.net/defaults'
+  image: 'https://img.jkweixin.net/defaults',
+  upload: 'https://zhidian-api.jkweixin.net' + version
 }
 
 const PROD = {
   api: 'https://zhidian-api.jkweixin.com' + version,
-  image: 'https://img.jkweixin.com/defaults'
+  image: 'https://img.jkweixin.com/defaults',
+  upload: 'https://zhidian-api.jkweixin.com' + version
 }
 
 export const baseURL = env === 'production' ? PROD : env === 'test' ? TEST : DEV

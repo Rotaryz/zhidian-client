@@ -84,7 +84,7 @@
           console.log(res)
         } catch (e) {
           this.confirmFlag = false
-          console.error('获取图片失败', e)
+          e && this.$showToast(e.message)
         }
       },
       pageBack(number = 1) {
