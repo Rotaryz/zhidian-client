@@ -40,6 +40,10 @@
     created() {
       console.log(this.$imageUrl)
     },
+    onReachBottom () {
+      this.page++
+      console.log(this.page)
+    },
     components: {
       PanelEnd
     }
