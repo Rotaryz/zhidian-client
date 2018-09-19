@@ -5,15 +5,15 @@
       <div class="detail-title border-bottom-1px">门店信息</div>
       <div class="store-detail">
         <div class="store-left">
-          <div class="store-title">国颐堂养发SPA馆</div>
+          <div class="store-title">{{goodsDetail.shop_data ? goodsDetail.shop_data.name : ''}}</div>
           <div class="store-sub-title">距你340m，步行需要9分钟</div>
         </div>
         <div class="store-right">
-          <div class="right-icon-box">
+          <div class="right-icon-box" @click="showLocation">
             <img :src="imageUrl + '/zd-image/mine/icon-maps@2x.png'" v-if="imageUrl" class="right-icon">
           </div>
           <div class="meddle-line"></div>
-          <div class="right-icon-box">
+          <div class="right-icon-box" @click="callShop">
             <img :src="imageUrl + '/zd-image/mine/icon-tel@2x.png'" v-if="imageUrl" class="right-icon">
           </div>
         </div>
@@ -22,18 +22,18 @@
     <div class="f4-line"></div>
     <div class="store-container">
       <div class="detail-title border-bottom-1px">服务套餐</div>
-      <div class="service-detail">
+      <div class="service-detail" v-if="goodsDetail.detail_config && goodsDetail.detail_config.length">
         <div class="service-content border-bottom-1px">
-          <div class="service-item">
-            <span class="item-left">玫瑰瑜伽养发护理</span>
+          <div class="service-item" v-for="(item, index) in goodsDetail.detail_config" :key="index">
+            <span class="item-left">{{item.servie}}</span>
             <span class="item-right">
-              <span>1次</span>
-              <span>¥ 20</span>
+              <span>{{item.number}}次</span>
+              <span>¥ {{item.price}}</span>
             </span>
           </div>
         </div>
         <div class="img-content">
-          <img src="https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png" class="img-item" mode="widthFix">
+          <img :src="item.image ? item.image.url : ''" class="img-item" mode="widthFix" v-for="(item, index) in goodsDetail.goods_images" :key="index">
         </div>
       </div>
     </div>
@@ -43,7 +43,15 @@
       <div class="know-detail">
         <div class="know-item">
           <div class="know-title">有效期</div>
-          <div class="know-down">2016-01-01 至 2017-12-30（节假日通用）</div>
+          <div class="know-down">{{goodsDetail.start_at}} 至 {{goodsDetail.end_at}}</div>
+        </div>
+        <div class="know-item">
+          <div class="know-title">预约信息</div>
+          <div class="know-down">请提前2小时预约</div>
+        </div>
+        <div class="know-item">
+          <div class="know-title">温馨提示</div>
+          <div class="know-down">如需团购发票，请您在消费时向商家咨询</div>
         </div>
       </div>
     </div>
@@ -52,12 +60,27 @@
 
 <script type="text/ecmascript-6">
   export default {
+    props: ['goodsDetail'],
     data () {
       return {
         imageUrl: this.$imageUrl
       }
     },
     methods: {
+      showLocation() {
+        let data = {
+          longitude: this.goodsDetail.shop_data.longitude,
+          latitude: this.goodsDetail.shop_data.latitude,
+          address: this.goodsDetail.shop_data.shop_data,
+          name: this.goodsDetail.shop_data.name
+        }
+        wx.openLocation(data)
+      },
+      callShop() {
+        wx.makePhoneCall({
+          phoneNumber: this.goodsDetail.shop_data.telephone
+        })
+      }
     }
   }
 </script>
