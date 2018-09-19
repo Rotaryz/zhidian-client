@@ -5,7 +5,8 @@
     </div>
     <div class="dynamic-item" v-for="(item, index) in dynamicList" :key="index" v-if="!testShow && item.live_log_detail.length">
       <!-- 转发按钮-->
-      <img class="copy-item" @click="_goCopy(item.live_log_detail, item.content, item)" v-if="isMine && imageUrl" :src="imageUrl + '/ws-image/btn-share@2x.png'">
+      <!--<img class="copy-item" @click="_goCopy(item.live_log_detail, item.content, item)" v-if="isMine && imageUrl" :src="imageUrl + '/ws-image/btn-share@2x.png'">-->
+      <div class="copy-item"  @click="_goCopy(item.live_log_detail, item.content, item)" v-if="isMine && imageUrl">一键分享</div>
       <!-- 内容-->
       <div class="find-item img-one" v-if="item.live_log_detail[0].type === 1 && item.live_log_detail.length === 1">
         <div class="find-box">
@@ -13,7 +14,7 @@
             <div class="user">
               <!-- 头像-->
               <img class="header" mode="aspectFill" v-if="imageUrl" :src="!item.is_default ? item.employee_image_url: imageUrl + '/ws-image/pic-zanbo_logo@2x.png'">
-              <p class="nickname">{{!item.is_default ? item.employee_name : '赞播微商'}}</p>
+              <p class="nickname">{{!item.is_default ? item.employee_name : '赞播智店'}}</p>
             </div>
             <!--{{comment?'':'special'}}-->
             <text class="words">{{item.content}}</text>
@@ -28,7 +29,7 @@
           <div class="information">
             <div class="time">
               {{item.created_at}}
-              <p v-if="item.can_delete" class="del" @click="_delItem(index)">删除</p>
+              <p  class="del" @click="_delItem(index)">删除</p>
             </div>
             <div class="share" :class="{'share-active': item.show}">
               <div class="share-item comment" @click="_comment(item.id)">
@@ -61,7 +62,7 @@
           <div class="cainter">
             <div class="user">
               <img class="header" mode="aspectFill" v-if="imageUrl" :src="!item.is_default ? item.employee_image_url: imageUrl + '/ws-image/pic-zanbo_logo@2x.png'">
-              <p class="nickname">{{!item.is_default ? item.employee_name : '赞播微商'}}</p>
+              <p class="nickname">{{!item.is_default ? item.employee_name : '赞播智店'}}</p>
             </div>
             <text class="words">{{item.content}}</text>
             <div class="img-item-two">
@@ -108,7 +109,7 @@
           <div class="cainter">
             <div class="user">
               <img class="header" v-if="imageUrl" mode="aspectFill" :src="!item.is_default ? item.employee_image_url: imageUrl + '/ws-image/pic-zanbo_logo@2x.png'">
-              <p class="nickname">{{!item.is_default ? item.employee_name : '赞播微商'}}</p>
+              <p class="nickname">{{!item.is_default ? item.employee_name : '赞播智店'}}</p>
             </div>
             <!--{{comment?'':'special'}}"-->
             <text class="words">{{item.content}}</text>
@@ -152,7 +153,8 @@
         </div>
       </div>
     </div>
-    <navigator hover-class="none" v-if="isMine" url="/pages/edit-dynamic/edit-dynamic" class="new-dynamic">
+    <div v-if="!loadMoreDy" class="no-more"><div class="line"></div><div class="txt">再拉也没有了</div></div>
+    <navigator hover-class="none" v-if="isMine" url="edit-dynamic" class="new-dynamic">
       <img mode="widthFix" v-if="imageUrl" :src="imageUrl + '/ws-image/radar/icon-release_dynamic@2x.png'" class="new-dynamic-img">
     </navigator>
     <confirm-msg ref="confirm" @confirm="_sureDel" @cancel="cancel"></confirm-msg>
@@ -169,10 +171,11 @@
         <div class="down-image-btn" @click="_hideDown">确定</div>
       </div>
     </div>
+    <dynamic-share :item.sync="pictureObj" ref="dynamic" @drawDone="drawDone" :qrCodeUrlTmp.sync="qrCode"></dynamic-share>
     <!--<div class="bottom-box-big" :class="showCover ? 'bottom-box-big-show' : ''">-->
     <div class="bottom-box" :class="showCover ? 'show' : ''">
       <button open-type="share" hover-class="none" class="share-item">发给好友</button>
-      <div class="share-item border-top-1px" @click.stop="makePoster()">保存图片</div>
+      <div class="share-item border-top" @click.stop="makePoster()">生成图片 保存分享</div>
       <div class="share-item last" @click="_closeCover">取消</div>
     </div>
     <!--</div>-->
@@ -185,6 +188,7 @@
   import base from 'common/mixins/base'
   import ConfirmMsg from 'components/confirm-msg/confirm-msg'
   import { resolveQrCode } from 'common/js/util'
+  import DynamicShare from 'components/dynamic-share/dynamic-share'
 
   export default {
     mixins: [base],
@@ -216,8 +220,17 @@
         isMine: true
       }
     },
-    onLoad() {
-      this._getList()
+    async onLoad(option) {
+      // await this._getQuery(option)
+      this.loadMoreDy = true
+      this.dynamicList = []
+      this.page = 1
+      setTimeout(() => {
+        this._getList()
+        this.shopId = this.$wx.getStorageSync('employeeId') ? wx.getStorageSync('employeeId') * 1 : ''
+        this.myShopId = this.$wx.getStorageSync('myShopId') ? wx.getStorageSync('myShopId') * 1 : null
+        this._getDrawPosterInfo() // 获取画海报的信息
+      }, 500)
     },
     onShow() {
       this.$wx.setNavigationBarTitle({ title: '动态' })
@@ -244,14 +257,14 @@
       cancel() {
         this.isShowBox = true
       },
-      async _getQuery() {
+      async _getQuery(option) {
         // 分享进来的
-        let entryId = this.$route.query.employeeId
+        let entryId = option.shopId
         if (entryId) {
-          wx.setStorageSync('employeeId', entryId)
+          wx.setStorageSync('shopId', entryId)
         }
         // 二维码扫描进入 - 永久
-        let scene = this.$route.query.scene
+        let scene = option.scene
         if (scene) {
           let sceneMsg = decodeURIComponent(scene)
           const params = resolveQrCode(sceneMsg)
@@ -266,7 +279,7 @@
         let name = houseInfo.name || ''
         let qrCodeUrl = ''
         let defaultAvatar = baseURL.image + '/ws-image/pic-zanbo_logo@2x.png'
-        let defaultName = '赞播微商'
+        let defaultName = '赞播智店'
         let userInfo = this.$wx.getStorageSync('userInfo')
         const data = {
           'type': 'dynamic',
@@ -277,7 +290,7 @@
         }
         Dynamic.createMiniCode(data, false).then(res => {
           if (res.error !== this.$ERR_OK) {
-            // this.$refs.toast.show(res.message)
+            this.$showToast(res.message)
             return
           }
           qrCodeUrl = res.data.image_url || (baseURL.image + '/ws-image/pic-headshot@2x.png')
@@ -314,7 +327,7 @@
         this.pictureObj = null
       },
       makePoster() {
-        this.$refs.poster.action()
+        this.$refs.dynamic.action()
         this._closeCover()
       },
       _closeCover() {
@@ -333,15 +346,13 @@
         if (!this.loadMoreDy) {
           return
         }
-        Dynamic.liveLogs({ page: this.page }).then((res) => {
+        Dynamic.liveLogsList({ page: this.page }).then((res) => {
           // this.testShow = res.check_code ? 1 : 0
           // if (this.testShow) {
           //   Im.getCount(1, false)
           // }
           // this.testImg = res.check_image_url ? res.check_image_url : ''
-          console.log('getList')
           if (res.error === this.$ERR_OK) {
-            console.log('success')
             this.$wechat.hideLoading()
             if (res.data.length) {
               res = res.data.map((item) => {
@@ -382,7 +393,7 @@
       },
       // 下载图片
       _downItem(i) {
-        wx.downloadFile({
+        this.$wx.downloadFile({
           url: this.dynamicCopy[i].file_url,
           success: (res) => {
             this.downList.push(res.tempFilePath)
@@ -397,7 +408,7 @@
       },
       // 保存图片进相册
       _saveImgae(i) {
-        wx.saveImageToPhotosAlbum({
+        this.$wx.saveImageToPhotosAlbum({
           filePath: this.downList[i],
           success: (res) => {
             if (i >= this.downList.length - 1) {
@@ -489,22 +500,22 @@
             this.sendCustomMsg(30003)
             return
           }
-          this.showToast(res.message)
+          this.$showToast(res.message)
         })
       },
       // 是否确认删除
       _sureDel() {
-        // Live.delLogsList(this.dynamicList[this.delIndex].id).then((res) => {
-        //   if (res.error === ERR_OK) {
-        //     this.dynamicList.splice(this.delIndex, 1)
-        //     this.$refs.toast.show('删除动态成功')
-        //     this.$wechat.hideLoading()
-        //     return
-        //   }
-        //   this.$wechat.hideLoading()
-        //   this.isShowBox = false
-        //   this.$refs.toast.show(res.message)
-        // })
+        Dynamic.delLogs(this.dynamicList[this.delIndex].id).then((res) => {
+          if (res.error === this.$ERR_OK) {
+            this.dynamicList.splice(this.delIndex, 1)
+            this.$refs.toast.show('删除动态成功')
+            this.$wechat.hideLoading()
+            return
+          }
+          this.$wechat.hideLoading()
+          this.isShowBox = false
+          this.$refs.toast.show(res.message)
+        })
       },
       _showLong(index, status) {
         let showIdx = this.dynamicList.findIndex(item => item.show)
@@ -520,8 +531,9 @@
         return status
       }
     },
-    conponents: {
-      ConfirmMsg
+    components: {
+      ConfirmMsg,
+      DynamicShare
     }
   }
 </script>
@@ -537,8 +549,7 @@
     right: 14px
     top: 13px
     position: absolute
-    height: 25px
-    width: 94px
+    share-button-style()
 
   .find-item
     word-break: break-word
@@ -598,13 +609,14 @@
         justify-content: space-between
         align-items: center
         .del
-          color: #839FC0
+          color: $color-466889
           margin-left: 3.2vw
         .find-num, .time
           white-space: nowrap
           font-size: $font-size-12
           font-family: $font-family-regular
           color: $color-828AA2
+          color: $color-99A0AA
           display: flex
         .share
           display: flex
@@ -658,27 +670,27 @@
           height: 12.963px
         .like-name
           font-size: $font-size-14
-          color: #596C94
+          color: $color-466889
           margin-left: 5px
           z-index: 10
           line-height: 21px
           flex: 1
         .comment-peo
-          border-right-1px(rgba(0, 0, 0, 0.10))
-          border-left-1px(rgba(0, 0, 0, 0.10))
+          border-right-1px(rgba(0, 0, 0, 0.10), solid)
+          border-left-1px(rgba(0, 0, 0, 0.10), solid)
           padding: 0 10px
           width: 100%
           box-sizing: border-box
           background: #F9F9F9
           font-size: $font-size-14
           line-height: 22px
-          color: #596C94
+          color: $color-466889
           .ro-peo-name
             font-family: $font-family-medium
             white-space: nowrap
           .comment-name
             font-family: $font-family-regular
-            color: $color-374B63
+            color: $color-1F1F1F
 
 
 
@@ -834,24 +846,14 @@
       margin: 15px 0 19px
       line-height: 24px
     .down-image-btn
-      background: $color-F94C5F
       font-size: $font-size-14
       font-family: $font-family-regular
       color: $color-FFFFFF
-      box-shadow: 0 4px 16px 0 rgba(249, 76, 95, 0.30)
       border-radius: 50px
-      text-align: center
       line-height: 32px
       width: 100px
       height: 32px
-
-  .copy-item
-    z-index: 60
-    right: 14px
-    top: 13px
-    position: absolute
-    height: 25px
-    width: 94px
+      button-style(normal, 50px)
 
   /*转发*/
   .bottom-box-big
@@ -893,11 +895,32 @@
       &:before, &:after
         border: 0 none
         border-radius: 0
-      &:first-child
-        border-bottom-1px()
     .last
       margin-top: 10px
+    .border-top
+      border-top-1px($color-E0E2E5)
 
   .bottom-box.show
     bottom: 0
+  .no-more
+    font-size: 14px
+    color: $color-99A0AA
+    text-align: center
+    line-height: 28px
+    position: relative
+    height: 28px
+    margin: 10px auto
+    background: $color-FFFFFF
+    width: 94px
+    .txt
+      row-center()
+      top: 0
+      width: 94px
+      background: $color-FFFFFF
+    .line
+      width: 114px
+      height: 1px
+      background: $color-99A0AA
+      col-center()
+      row-center()
 </style>

@@ -9,6 +9,7 @@ export const setIsLoadDy = ({ commit, state }, msg) => {
 }
 
 export const setShowType = ({ commit, state }, boolean) => {
+  console.log('showtype')
   commit(types.SET_SHOW_TYPE, boolean)
 }
 
