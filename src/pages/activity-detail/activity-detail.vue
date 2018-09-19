@@ -82,7 +82,7 @@
       <div class="list-content" v-if="!kanList.length">
         <div class="nothing">暂无砍价信息~</div>
       </div>
-      <div class="list-foot border-top-1px" @click="showRule('group')">
+      <div class="list-foot border-top-1px" @click="showRule('bargain')">
         <div class="left">玩法详情</div>
         <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" v-if="imageUrl" class="right">
       </div>
@@ -99,7 +99,10 @@
           <div class="item-txt">客服</div>
         </div>
       </div>
-      <div class="right-box" @click="payOrderMsg">立即购买</div>
+      <div class="right-box" @click="payOrderMsg" v-if="false">¥ 90开团</div>
+      <div class="right-box" @click="payOrderMsg" v-if="false">去砍价</div>
+      <div class="right-box" @click="payOrderMsg">底价 ¥ 90立即购买</div>
+      <div class="right-box un-click">已抢光</div>
     </div>
     <payment ref="payment"></payment>
     <share ref="share"></share>
@@ -126,7 +129,7 @@
           minute: '00',
           second: '00'
         },
-        groupOrList: [1, 2, 3],
+        groupOrList: [],
         kanList: []
       }
     },
@@ -145,8 +148,8 @@
       payOrderMsg() {
         this.$refs.payment.showOrder()
       },
-      showRule() {
-        this.$refs.role.showModel()
+      showRule(type) {
+        this.$refs.role.showModel(type)
       }
     },
     components: {
@@ -442,4 +445,6 @@
         font-family: $font-family-medium
         color: $color-white
         button-style(normal, 22.5px)
+      .un-click.right-box
+        button-style(un-click, 22.5px)
 </style>
