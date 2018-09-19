@@ -6,6 +6,7 @@
         <img class="share-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share_dg@2x.png'" alt="">
         <div class="share-txt">分享</div>
       </button>
+      <img class="btn-editor" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-exchange@2x.png'" alt="">
     </section>
     <section class="content">
       <article class="top">
@@ -24,7 +25,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  const url = `https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1537869795&di=e0aba314b1c2a60f8f88128198428d90&imgtype=jpg&er=1&src=http%3A%2F%2Fmypics.zhaopin.com%2Fpic%2F2014%2F3%2F1%2F5711D4D2D34C407BA2796F44A2136490.jpg`
+  const url = `/static/test-img/1@1x.png`
   export default {
     data() {
       return {url}
@@ -50,6 +51,7 @@
         height: 100%
         width: 100%
       .share-btn
+        opacity: 0.8
         position: absolute
         right: 0
         top: 20px
@@ -65,6 +67,12 @@
           margin-left: 5px
           font-size: $font-size-14
           color: $color-FFFFFF
+      .btn-editor
+        position: absolute
+        bottom: 15px
+        right: 15px
+        width: 32px
+        height: 32px
     .content
       padding: 0 15px
       .top

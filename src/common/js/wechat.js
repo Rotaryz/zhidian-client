@@ -30,6 +30,12 @@ export function getLocation (type) {
   })
 }
 
+export function openLocation(data) {
+  return new Promise((resolve, reject) => {
+    wx.openLocation({...data, success: resolve, fail: reject})
+  })
+}
+
 export function showLoading (title = '加载中') {
   if (wx.showLoading) {
     wx.showLoading({
