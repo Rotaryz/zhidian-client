@@ -44,6 +44,9 @@
           <div class="phone-num">15164931877</div>
         </div>
       </div>
+      <div class="buy-btn-box">
+        <div class="buy-btn">立即购买</div>
+      </div>
     </div>
   </div>
 </template>
@@ -58,6 +61,9 @@
       }
     },
     methods: {
+      hideOrder() {
+        this.orderShow = false
+      }
     }
   }
 </script>
@@ -196,6 +202,15 @@
             font-family: $font-family-regular
             color: $color-1F1F1F
             font-size: $font-size-16
+      .buy-btn-box
+        padding: 15px 0
+        .buy-btn
+          height: 45px
+          line-height: 44px
+          font-size: $font-size-16
+          font-family: $font-family-medium
+          color: $color-white
+          button-style(normal, 22.5px)
     .show.payment-content
       bottom: 0
 

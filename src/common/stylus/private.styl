@@ -36,6 +36,15 @@ normal-button-style($type = normal, $width = 200px, $height = 41px, $radius = 6p
   else if ($type == un-click )
     opacity: 0.6
 
+button-style($type = normal, $radius = 6px)
+  background-image: linear-gradient(90deg, $color-EB5C5C 0%, $color-D32F2F 100%)
+  border-radius: $radius
+  text-align: center
+  if ($type == click)
+    background-image: linear-gradient(90deg, $color-BC4949 0%, $color-A82525 100%)
+  else if ($type == un-click )
+    opacity: 0.6
+
 // 功能按钮
 manager-button-style($type = normal, $width = 77px, $height = 29px)
   font-family: $font-family-regular
