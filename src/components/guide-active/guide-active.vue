@@ -9,7 +9,7 @@
       </div>
     </section>
     <ul class="active-wrapper">
-      <li class="item-wrapper">
+      <li class="item-wrapper" v-for="(item,index) in '123'" :key="index">
         <article class="top">
           <div class="img-wrapper">
             <img class="img" mode="aspectFill" :src="url" alt="">
@@ -29,7 +29,7 @@
         <div class="down">
           <article class="mine-serve-avatar-box">
             <div class="mine-serve-avatarBox-item" v-for="(items, idx) in header" :key="idx">
-              <img class="mine-serve-avatarBox-img">
+              <img class="mine-serve-avatarBox-img" :src="url">
             </div>
             <div class="more">
               <span class="more-item"></span>
@@ -55,13 +55,11 @@
 </template>
 
 <script type="text/ecmascript-6">
-  const url = `https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1537869795&di=e0aba314b1c2a60f8f88128198428d90&imgtype=jpg&er=1&src=http%3A%2F%2Fmypics.zhaopin.com%2Fpic%2F2014%2F3%2F1%2F5711D4D2D34C407BA2796F44A2136490.jpg`
-
   const tabList = [{title: '砍价抢购'}, {title: '火爆拼团'}]
   export default {
     data() {
       return {
-        url,
+        url: this.$parent.$imageUrl + '/zd-image/test-img/4@1x.png',
         tabList,
         selectTab: 0,
         header: [1, 1, 1]
@@ -199,7 +197,6 @@
               border-radius: 50%
               margin-right: -11px
               .mine-serve-avatarBox-img
-                background: $color-BC4949
                 width: 23px
                 height: 23px
                 border: 1.5px solid $color-FFFFFF
