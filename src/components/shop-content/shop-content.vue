@@ -9,15 +9,19 @@
       </div>
     </section>
     <ul class="server-wrapper">
-      <li class="coupon-item">
+      <li class="coupon-item" v-for="(item,index) in '12345'" :key="index">
         <div class="logo"><img class="logo-pic" mode="aspectFill" :src="url" alt=""></div>
         <article class="detail">
-          <div class="title">养发项目优惠券套餐</div>
+          <div class="title">养发项目优惠券套餐==养发项目优惠券套餐养发项目优惠券套餐养发项目优惠券套餐</div>
           <div class="money">
             <div class="price">¥99</div>
             <span class="old-price">599元</span>
           </div>
         </article>
+        <div class="btn-wrapper">
+          <div class="btn">购买</div>
+          <div class="txt">已售28份</div>
+        </div>
       </li>
     </ul>
   </div>
@@ -104,13 +108,14 @@
             height: 100%
         .detail
           flex: 1
-          padding: 3px 0
+          padding: 3px 10px 3px 0
           layout()
           justify-content: space-between
           .title
             font-size: $font-size-16
             color: $color-1F1F1F
             letter-spacing: 0.6px
+            no-wrap-plus()
           .money
             layout(row, block, nowrap)
             align-items: flex-end
@@ -127,4 +132,14 @@
               color: $color-99A0AA
               text-decoration: line-through
               vertical-align: bottom
+        .btn-wrapper
+          layout()
+          justify-content: center
+          align-items: center
+          .btn
+            normal-button-style(normal, 68px, 27px, 27px)
+          .txt
+            margin-top: 6px
+            font-size: $font-size-12
+            color: $color-99A0AA
 </style>

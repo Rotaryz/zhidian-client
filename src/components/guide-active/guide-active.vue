@@ -9,7 +9,7 @@
       </div>
     </section>
     <ul class="active-wrapper">
-      <li class="item-wrapper">
+      <li class="item-wrapper" v-for="(item,index) in '123'" :key="index">
         <article class="top">
           <div class="img-wrapper">
             <img class="img" mode="aspectFill" :src="url" alt="">
@@ -29,7 +29,7 @@
         <div class="down">
           <article class="mine-serve-avatar-box">
             <div class="mine-serve-avatarBox-item" v-for="(items, idx) in header" :key="idx">
-              <img class="mine-serve-avatarBox-img">
+              <img class="mine-serve-avatarBox-img" :src="url">
             </div>
             <div class="more">
               <span class="more-item"></span>
@@ -55,13 +55,11 @@
 </template>
 
 <script type="text/ecmascript-6">
-  const url = `/static/test-img/4@1x.png`
-
   const tabList = [{title: '砍价抢购'}, {title: '火爆拼团'}]
   export default {
     data() {
       return {
-        url,
+        url: this.$parent.$imageUrl + '/zd-image/test-img/4@1x.png',
         tabList,
         selectTab: 0,
         header: [1, 1, 1]
@@ -199,7 +197,6 @@
               border-radius: 50%
               margin-right: -11px
               .mine-serve-avatarBox-img
-                background: $color-BC4949
                 width: 23px
                 height: 23px
                 border: 1.5px solid $color-FFFFFF

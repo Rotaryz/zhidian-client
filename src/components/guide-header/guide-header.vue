@@ -6,7 +6,7 @@
         <img class="share-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share_dg@2x.png'" alt="">
         <div class="share-txt">分享</div>
       </button>
-      <img class="btn-editor" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-exchange@2x.png'" alt="">
+      <img class="btn-editor" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-exchange@2x.png'" alt="" @click="editorAvatar">
     </section>
     <section class="content">
       <article class="top">
@@ -25,13 +25,26 @@
 </template>
 
 <script type="text/ecmascript-6">
-  const url = `/static/test-img/1@1x.png`
   export default {
     data() {
-      return {url}
+      return {
+        url: this.$parent.$imageUrl + '/zd-image/test-img/1@1x.png' // todo
+      }
     },
     created() {
       console.log(this.$data)
+    },
+    methods: {
+      async editorAvatar() {
+        try {
+          let res = await this.$wechat.chooseImage()
+          let file = res.tempFilePaths[0]
+          getApp().globalData.imgUrl = file
+          this.$wx.navigateTo({url: '/pages/cut-picture?cutType=avatar'})
+        } catch (e) {
+          console.error(e)
+        }
+      }
     }
   }
 </script>

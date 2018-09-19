@@ -75,11 +75,11 @@
           return
         }
         this.confirmFlag = true
-        this.wechat.showLoading('正在裁切图片')
+        this.$wechat.showLoading('正在裁切图片')
         try {
           let filePaths = await wecropper.getCropperImage()
-          let res = await this.cos.uploadFiles(this.cosFileType.IMAGE_TYPE, [filePaths])
-          this.wechat.hideLoading()
+          let res = await this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, [filePaths])
+          this.$wechat.hideLoading()
           this.pageBack()
           console.log(res)
         } catch (e) {
@@ -88,7 +88,7 @@
         }
       },
       pageBack(number = 1) {
-        this.wx.navigateBack({delta: number})
+        this.$wx.navigateBack({delta: number})
       }
     }
   }
