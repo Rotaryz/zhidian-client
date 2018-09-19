@@ -12,7 +12,7 @@
 
 <script type="text/ecmascript-6">
   import wx from 'common/js/wx'
-
+  import { Shop } from 'api'
   export default {
     name: 'album',
     data() {
@@ -30,17 +30,52 @@
           {
             url: 'https://img.jerryf.cn/defaults/zd-image/test-img/3@1x.png'
           }
-        ]
+        ],
+        upMore: false,
+        page: 1
       }
     },
     created() {
     },
     mounted() {
       wx.setNavigationBarTitle({ title: '国颐堂' })
+      this.getImgList()
+    },
+    onReachBottom () {
+      this.page++
+      this.getMoreImgList()
     },
     methods: {
       previewImg(item) {
         wx.previewImage({urls: [item.url]})
+      },
+      getImgList() {
+        Shop.getMerchantsImg({page: this.page}).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_Ok) {
+            this.shopList = res.data
+            this._isUpList(res)
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
+      _isUpList (res) {
+        this.page++
+        if (this.upList.length >= res.meta.total * 1) {
+          this.upMore = true
+        }
+      },
+      getMoreImgList() {
+        if (this.upMore) return
+        Shop.getMerchantsImg({page: this.page}).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_Ok) {
+            this.shopList.push(res.data)
+          } else {
+            this.$showToast(res.message)
+          }
+        })
       }
     }
   }

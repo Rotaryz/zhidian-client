@@ -3,6 +3,7 @@
 import im from './im'
 import jwt from './jwt'
 import dynamic from './dynamic'
+import shop from './shop'
 
 // 雷达消息im
 export const Im = im
@@ -12,3 +13,6 @@ export const Jwt = jwt
 
 // 动态
 export const Dynamic = dynamic
+
+// 商家
+export const Shop = shop
