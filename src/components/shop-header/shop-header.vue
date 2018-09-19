@@ -2,7 +2,7 @@
   <div class="shop-header">
     <section class="media-wrapper">
       <div class="item video">
-        <img class="pic" :src="url" alt="">
+        <video class="pic" :src="video" objectFit="fill" :poster="video" :initial-time="1" :show-center-play-btn="false"></video>
       </div>
       <div class="item pics">
         <img mode="aspectFill" class="pic" :src="url" alt="">
@@ -21,20 +21,46 @@
     <div class="explain address">广州市海珠区 TIT 创意园A9</div>
     <div class="distance">距你340m，步行需要9分钟</div>
     <div class="btn-group">
-      <img class="icon left">
+      <img class="icon left" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-maps@2x.png'" alt="" @click="toMap">
       <div class="line"></div>
-      <img class="icon right">
+      <img class="icon right" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-tel@2x.png'" alt="" @click="toMobile">
     </div>
   </div>
 </template>
-
 <script type="text/ecmascript-6">
-  const url = `/static/test-img/5@1x.png`
   export default {
     data() {
       return {
-        url,
+        url: this.$parent.$imageUrl + `/zd-image/test-img/5@1x.png`,
+        video: 'http://14.29.86.17/vlive.qqvideo.tc.qq.com/AuOCHUj_W0--tQeJANCWNmtOqXc5ZjplRKBdW5LSw1Vk/m0200c2wagp.p201.1.mp4?level=0&vkey=9897261EB2D341D0AEF807E49A29F6FBA9B95815912FB21A55F674FB72A98A91BD1BB9C0943FC026576483868EF21587F2B80F5B90A0BDF1D1822E3226EF18EB9E0F52091D20F7215F0001FE81470D37574F42D2BF747672150194DF8DB2B914DBD40C2104BCEE4EA88B8F9EC423B8344581AC018693EC79&sdtfrom=&fmt=shd&platform=10901&locid=97f27211-cd66-44cd-ad0c-56244cbde333&size=2562617&ocid=350887852',
         stars: [1, 1, 1, 1, 1]
+      }
+    },
+    methods: {
+      async toMap() {
+        try {
+          const res = await this.$wechat.getLocation('gcj02')
+          const {latitude, longitude, name = '国颐堂养发SPA馆（白云店', address = '广州市海珠区 TIT 创意园A9'} = res
+          await this.$wechat.openLocation({latitude, longitude, name, address})
+        } catch (e) {
+          console.error(e)
+        }
+        // this.$wx.getLocation({
+        //   type: 'gcj02', // 返回可以用于wx.openLocation的经纬度
+        //   success (res) {
+        //     const latitude = res.latitude
+        //     const longitude = res.longitude
+        //     self.$wx.openLocation({
+        //       latitude,
+        //       longitude,
+        //       scale: 18
+        //     })
+        //   }
+        // })
+      },
+      toMobile() {
+        console.log(this.$wx)
+        this.$wx.makePhoneCall && this.$wx.makePhoneCall({phoneNumber: '15197865308'})
       }
     }
   }
@@ -66,7 +92,7 @@
           border-radius: 20px
           padding: 0 8.5px
           layout(row, block, nowrap)
-          align-items :center
+          align-items: center
           .icon-pic
             width: 11.5px
             height: 10px
@@ -119,6 +145,5 @@
       .icon
         width: 22px
         height: 22px
-        background: $color-D32F2F
         margin: 0 15px
 </style>
