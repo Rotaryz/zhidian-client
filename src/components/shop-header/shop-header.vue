@@ -17,7 +17,11 @@
     </section>
     <div class="shop-name">国颐堂养发SPA馆（白云店）</div>
     <div class="evaluate">
-      <img class="star" v-for="(item,idx) in stars" :key="idx">
+      <div class="star" v-for="(item, idx) in stars" :key="idx">
+        <img class="star-icon" mode="widthFix" v-if="imageUrl && item === 0.5" :src="imageUrl + '/zd-image/1.1/icon-halfstar@2x.png'" alt="">
+        <img class="star-icon" mode="widthFix" v-if="imageUrl && item === 1" :src="imageUrl + '/zd-image/1.1/icon-star@2x.png'" alt="">
+        <img class="star-icon" mode="widthFix" v-if="imageUrl && item === 0" :src="imageUrl + '/zd-image/1.1/icon-greystar@2x.png'" alt="">
+      </div>
       <span class="txt">大众点评</span>
     </div>
     <div class="explain open-time">营业时间：11:00-21:00</div>
@@ -37,7 +41,7 @@
       return {
         url: this.$parent.$imageUrl + `/zd-image/test-img/5@1x.png`,
         video: 'http://14.29.86.17/vlive.qqvideo.tc.qq.com/AuOCHUj_W0--tQeJANCWNmtOqXc5ZjplRKBdW5LSw1Vk/m0200c2wagp.p201.1.mp4?level=0&vkey=9897261EB2D341D0AEF807E49A29F6FBA9B95815912FB21A55F674FB72A98A91BD1BB9C0943FC026576483868EF21587F2B80F5B90A0BDF1D1822E3226EF18EB9E0F52091D20F7215F0001FE81470D37574F42D2BF747672150194DF8DB2B914DBD40C2104BCEE4EA88B8F9EC423B8344581AC018693EC79&sdtfrom=&fmt=shd&platform=10901&locid=97f27211-cd66-44cd-ad0c-56244cbde333&size=2562617&ocid=350887852',
-        stars: [1, 1, 1, 1, 1]
+        stars: [1, 1, 1, 0.5, 0]
       }
     },
     methods: {
@@ -133,8 +137,11 @@
         width: 15px
         height: 15px
         margin-right: 3.4px
-        background: $color-D32F2F
         border-radius: 4px
+        .star-icon
+          width: 100%
+          height: 100%
+          display :block
       .txt
         margin-left: 3px
         font-size: $font-size-12

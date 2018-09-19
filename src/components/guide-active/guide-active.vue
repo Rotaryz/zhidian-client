@@ -8,12 +8,13 @@
         <div class="tab-line"></div>
       </div>
     </section>
-    <ul class="active-wrapper">
+    <!--砍价-->
+    <ul class="active-wrapper" v-if="selectTab === 0">
       <li class="item-wrapper" v-for="(item,index) in '123'" :key="index">
         <article class="top">
           <div class="img-wrapper">
             <img class="img" mode="aspectFill" :src="url" alt="">
-            <div class="tag">仅剩6份</div>
+            <div class="tag cut">仅剩6份</div>
           </div>
           <div class="title-wrapper">
             <div class="explain-wrapper">
@@ -23,6 +24,50 @@
             <div class="money-wrapper">
               <div class="money">¥99</div>
               <div class="button">开始砍价</div>
+            </div>
+          </div>
+        </article>
+        <div class="down">
+          <article class="mine-serve-avatar-box">
+            <div class="mine-serve-avatarBox-item" v-for="(items, idx) in header" :key="idx">
+              <img class="mine-serve-avatarBox-img" :src="url">
+            </div>
+            <div class="more">
+              <span class="more-item"></span>
+              <span class="more-item"></span>
+              <span class="more-item"></span>
+            </div>
+            <span class="shop-num">28人已成功砍价</span>
+          </article>
+          <article class="right-box">
+            <div class="jh-wrapper">
+              <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
+              <div class="number">99</div>
+            </div>
+            <div class="jh-wrapper">
+              <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">
+              <div class="number">55</div>
+            </div>
+          </article>
+        </div>
+      </li>
+    </ul>
+    <!--拼团-->
+    <ul class="active-wrapper" v-if="selectTab === 1">
+      <li class="item-wrapper" v-for="(item,index) in '123'" :key="index">
+        <article class="top">
+          <div class="img-wrapper">
+            <img class="img" mode="aspectFill" :src="url" alt="">
+            <div class="tag group">仅剩6份</div>
+          </div>
+          <div class="title-wrapper">
+            <div class="explain-wrapper">
+              <div class="title">国颐堂皇家养发SPA</div>
+              <div class="explain">砍价最低9.9元包邮</div>
+            </div>
+            <div class="money-wrapper">
+              <div class="money">¥99</div>
+              <div class="button">开始拼团</div>
             </div>
           </div>
         </article>
@@ -138,15 +183,18 @@
               position: absolute
               top: 5px
               left: 0
-              width: 44px
+              padding :0 4px
               height: 16px
-              background: $color-FFA807
               border-radius: 0 100px 100px 0
               font-family: $font-family-medium
               font-size: $font-size-10
               color: $color-FFFFFF
               line-height: @height
               text-align: center
+              &.group
+                background-image: linear-gradient(116deg, #FFD411 0%, #FFA807 95%)
+              &.cut
+                background-image: linear-gradient(116deg, #FF86BF 0%, #FF6C86 95%)
           .title-wrapper
             line-height: 1.1
             position: relative
