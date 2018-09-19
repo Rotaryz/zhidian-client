@@ -21,10 +21,32 @@
         if (this.showCover) {
           return
         }
+        let contentAnimation = wx.createAnimation({
+          duration: 200,
+          timingFunction: 'linear',
+          delay: 0
+        })
+        contentAnimation.translateY(0).step()
+        this.contentAnimation = contentAnimation.export()
         this.showCover = true
+        setTimeout(() => {
+          contentAnimation.translateY(-142).step()
+          this.contentAnimation = contentAnimation.export()
+        }, 200)
       },
       closeCover() {
-        this.showCover = false
+        let contentAnimation = wx.createAnimation({
+          duration: 200,
+          timingFunction: 'linear',
+          delay: 0
+        })
+        contentAnimation.translateY(0).step()
+        this.contentAnimation = contentAnimation.export()
+        setTimeout(() => {
+          contentAnimation.translateY(-142).step()
+          this.contentAnimation = contentAnimation.export()
+          this.showCover = false
+        }, 200)
       },
       friendShare() {
         this.$emit('friendShare')
@@ -37,9 +59,8 @@
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-  @import "~common/stylus/variable"
-  @import '~common/stylus/mixin'
-  @import '~common/stylus/base'
+  @import "~common/stylus/private"
+  @import "~common/stylus/base"
 
   .share
     width: 100vw
@@ -47,6 +68,7 @@
     position: fixed
     left: 0
     top: 0
+    z-index: 50
     background: rgba(32, 32, 46, 0)
     .bottom-box
       position: fixed
@@ -54,7 +76,7 @@
       left: 0
       bottom: -142px
       right: 0
-      background: $color-F0F2F5
+      background: $color-F4F5F7
       box-shadow: 0 -4px 12px 0 rgba(43, 43, 145, 0.07)
       .share-item
         width: 100%

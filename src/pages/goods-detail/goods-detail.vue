@@ -19,27 +19,42 @@
         </div>
       </div>
       <div class="goods-msg-right">
-        <div class="right-box-container">
+        <div class="right-box-container" @click="showShareModel">
           <span class="msg-right-txt">0人分享</span>
           <img :src="imageUrl + '/zd-image/mine/icon-share@2x.png'" v-if="imageUrl" class="msg-right-icon">
         </div>
       </div>
     </div>
     <detail-content ref="detailContent"></detail-content>
+    <div class="pay-order-bottom border-top-1px">
+      <div class="left-box">
+        <div class="left-item">
+          <img :src="imageUrl + '/zd-image/mine/icon-shop_xq@2x.png'" v-if="imageUrl" class="item-icon">
+          <div class="item-txt">进店铺</div>
+        </div>
+        <div class="left-item">
+          <img :src="imageUrl + '/zd-image/mine/icon-service@2x.png'" v-if="imageUrl" class="item-icon">
+          <div class="item-txt">客服</div>
+        </div>
+      </div>
+      <div class="right-box" @click="payOrderMsg">立即购买</div>
+    </div>
     <payment ref="payment"></payment>
+    <share ref="share"></share>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import DetailContent from 'components/detail-content/detail-content'
   import Payment from 'components/payment/payment'
+  import Share from 'components/share/share'
   export default {
     data() {
       return {
         imageUrl: this.$imageUrl,
-        bannerImgs: [{image: {url: 'https://img.jkweixin.net/static_files/uploads/customerImages/2018/09/05/15/1536132525DzNyAa5g.png'}},
-          {image: {url: 'https://img.jkweixin.net/static_files/uploads/customerImages/2018/09/05/15/1536132525DzNyAa5g.png'}},
-          {image: {url: 'https://img.jkweixin.net/static_files/uploads/customerImages/2018/09/05/15/1536132525DzNyAa5g.png'}}],
+        bannerImgs: [{image: {url: 'https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png'}},
+          {image: {url: 'https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png'}},
+          {image: {url: 'https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png'}}],
         currentNum: 1
       }
     },
@@ -51,11 +66,18 @@
       },
       bannerChange(e) {
         this.currentNum = e.mp.detail.current * 1 + 1
+      },
+      showShareModel() {
+        this.$refs.share.show()
+      },
+      payOrderMsg() {
+        this.$refs.payment.showOrder()
       }
     },
     components: {
       DetailContent,
-      Payment
+      Payment,
+      Share
     }
   }
 </script>
@@ -64,6 +86,7 @@
   @import "~common/stylus/private"
   .goods-detail
     background: $color-white
+    padding-bottom: 70px
     .banner-box
       width: 100vw
       height: 75vw
@@ -155,4 +178,44 @@
             width: 16px
             height: 16px
 
+    .pay-order-bottom
+      width: 100vw
+      height: 60px
+      position: fixed
+      left: 0
+      bottom: 0
+      z-index: 20
+      background: $color-white
+      display: flex
+      align-items: center
+      .left-box
+        width: 110px
+        display: flex
+        align-items: center
+        .left-item
+          flex: 1
+          display: flex
+          font-size: 0
+          height: 100%
+          flex-direction: column
+          align-items: center
+          justify-content: center
+          .item-icon
+            width: 22px
+            height: 22px
+            margin-bottom: 4px
+          .item-txt
+            font-size: $font-size-10
+            font-family: $font-family-regular
+            color: $color-455A64
+      .right-box
+        flex: 1
+        overflow: hidden
+        margin-right: 10px
+        height: 45px
+        line-height: 44px
+        font-size: $font-size-16
+        font-family: $font-family-medium
+        color: $color-white
+        button-style(normal, 22.5px)
 </style>
