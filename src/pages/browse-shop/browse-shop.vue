@@ -13,6 +13,7 @@
 
 <script type="text/ecmascript-6">
   import PanelEnd from 'components/panel-end/panel-end'
+  import { Shop } from 'api'
 
   export default {
     name: 'browse-shop',
@@ -33,16 +34,49 @@
           }
         ],
         page: 1,
-        more: true,
+        upMore: false,
         image_url: this.$imageUrl
       }
     },
     created() {
       console.log(this.$imageUrl)
     },
+    mounted() {
+      this.getBrowserList()
+    },
     onReachBottom () {
       this.page++
-      console.log(this.page)
+      this.getMoreBrowserList()
+    },
+    methods: {
+      getBrowserList() {
+        Shop.getBrowseShop({page: this.page}).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_Ok) {
+            this.browseShopList = res.data
+            this._isUpList(res)
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
+      _isUpList (res) {
+        this.page++
+        if (this.upList.length >= res.meta.total * 1) {
+          this.upMore = true
+        }
+      },
+      getMoreBrowserList() {
+        if (this.upMore) return
+        Shop.getMerchantsImg({page: this.page}).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_Ok) {
+            this.shopList.push(res.data)
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      }
     },
     components: {
       PanelEnd
