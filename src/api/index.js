@@ -32,6 +32,3 @@ export const Guide = guide
 
 // 顾客
 export const Customer = customer
-
-// 门店
-export const Shop = shop

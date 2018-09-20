@@ -12,7 +12,7 @@
 
 <script type="text/ecmascript-6">
   import wx from 'common/js/wx'
-  import { Shop } from 'api'
+  import { Shop, Guide } from 'api'
   export default {
     name: 'album',
     data() {
@@ -23,7 +23,7 @@
       }
     },
     onShow() {
-      wx.setNavigationBarTitle({ title: '国颐堂' })
+      this.getMerchantsTitle()
       this.getImgList()
     },
     onReachBottom () {
@@ -59,6 +59,16 @@
           if (res.error === this.$ERR_OK) {
             this.shopList.push(res.data)
             this._isUpList(res)
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
+      getMerchantsTitle() {
+        Guide.getShopInfo().then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            wx.setNavigationBarTitle({title: res.data.name})
           } else {
             this.$showToast(res.message)
           }
