@@ -1,34 +1,101 @@
 <template>
-  <scroll-view scroll-y class="order-list">
-    <div class="order-item">
+  <div class="order-list">
+    <div class="order-item" @click="_goDetail(item.id)" v-for="(item, index) in orderList" :key="index">
       <div class="order-shop">
         <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-shop_order@2x.png'" class="home">
         <p class="order-name">
-          爱撒娇是客服哈手机看啥都看房间爱离开宿舍
+          {{item.shop_data.name}}
           <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
         </p>
-        <p class="order-status">代付款</p>
+        <p class="order-status">{{item.status_str}}</p>
       </div>
-      <div class="order-msg">
-        <img src="" class="order-pic">
+      <div class="order-msg" v-for="(items, idx) in item.order_details" :key="idx">
+        <img :src="items.goods_image_url" mode="aspectFill" class="order-pic">
         <div class="shop-content">
-          <p class="shop-name">sadfsagfdjkaglkdfg;lkaj;lkgjklsdahgklhdsglhsdlgahlasafasfasfassafafasasshfjk</p>
-          <p class="money">总计：<span class="price">¥99</span></p>
+          <p class="shop-name">{{items.goods_title}}</p>
+          <p class="money">总计：<span class="price">¥{{item.total}}</span></p>
         </div>
       </div>
       <div class="order-status">
-        <div class="order-type">砍价</div>
-        <div class="btn">去付款</div>
+        <div class="order-type">{{item.order_type}}</div>
+        <div class="btn" @click.stop="_goUse(item)">{{manager[item.status]}}</div>
       </div>
     </div>
-  </scroll-view>
+    <div class="block"></div>
+    <panel-end v-if="showEnd"></panel-end>
+  </div>
 </template>
 
 <script>
+  import { Order } from 'api'
+  import PanelEnd from 'components/panel-end/panel-end'
+
+  const MANAGER = { payment: '付款', waiting_received: '去使用', finish: '查看订单', close: '查看订单', refund: '退款进度', waiting_groupon: '拼团详情', success_groupon: '去使用', fail_groupon: '退款进度' }
   export default {
     name: 'order-list',
     data() {
-      return {}
+      return {
+        orderList: [],
+        page: 1,
+        status: '',
+        length: 0,
+        manager: MANAGER
+      }
+    },
+    computed: {
+      showEnd() {
+        return this.orderList.length > 0 && (this.length === this.orderList.length || this.orderList.length < 15)
+      }
+    },
+    async onLoad(option) {
+      console.log(option)
+      this.status = option.status || ''
+      await this._getOrderList()
+    },
+    async onReachBottom() {
+      this.page++
+      if (this.length === this.orderList.length) {
+        return
+      }
+      await this._getOrderList()
+    },
+    methods: {
+      _goDetail(id) {
+        wx.navigateTo({
+          url: `/pages/order-detail?id=${id}`
+        })
+      },
+      _goUse(item) {
+        let status = item.status
+        switch (status) {
+          case 'payment': // 付款
+            break
+          default: // 跳转订单详情
+            wx.navigateTo({
+              url: `/pages/order-detail?id=${item.id}`
+            })
+            break
+        }
+      },
+      async _getOrderList() {
+        let res = await Order.customerOrder({ limit: 10, page: this.page, status: this.status })
+        if (res.error !== this.$ERR_OK) {
+          this.$showToast(res.message)
+          this.$wechat.hideLoading()
+          return
+        }
+        this.length = res.meta.total
+        if (this.page === 1) {
+          this.orderList = res.data
+        } else {
+          this.orderList = this.orderList.concat(res.data)
+        }
+        console.log(this.orderList)
+        this.$wechat.hideLoading()
+      }
+    },
+    components: {
+      PanelEnd
     }
   }
 </script>
@@ -37,10 +104,14 @@
   @import "~common/stylus/private"
   .order-list
     word-break: break-all
-    height: 100vh
+    min-height: 100vh
     background: $color-background
     box-sizing: border-box
     font-family: $font-family-regular
+    padding-top: 15px
+    .block
+      height: 15px
+      background: $color-background
     .order-item
       width: 92vw
       box-sizing: border-box
@@ -50,6 +121,8 @@
       background: $color-FFFFFF
       box-shadow: 0 0 10px 0 rgba(141, 151, 158, 0.20)
       border-radius: 6px
+      &:first-child
+        margin-top: 0
       .order-shop
         display: flex
         position: relative
@@ -59,13 +132,14 @@
           width: 18px
           height: 18px
         .order-name
+          min-height: $font-size-16
           font-family: $font-family-medium
           font-size: $font-size-16
           color: $color-1F1F1F
           margin-left: 5px
           position: relative
           padding-right: 15.5px
-          width: 65%
+          max-width: 65%
           no-wrap()
           .way
             col-center()

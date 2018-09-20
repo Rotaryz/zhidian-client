@@ -1,8 +1,8 @@
 <template>
   <div class="browse-shop">
     <div class="browse-shop-small">
-      <div class="browse-shop-item" v-for="(item, index) in browseShopList" :key="index" @click="_changeShop(item.id)">
-        <img :src="item.image_url" class="browse-shop-logo">
+      <div class="browse-shop-item" v-for="(item, index) in browseList" :key="index">
+        <img :src="item.employee.avatar" class="browse-shop-logo">
         <span class="browse-shop-name">{{item.name}}</span>
         <img :src="image_url + '/zd-image/mine/icon-pressed@2x.png'" class="list-way">
       </div>
@@ -13,39 +13,24 @@
 
 <script type="text/ecmascript-6">
   import PanelEnd from 'components/panel-end/panel-end'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'browse-shop',
     data() {
       return {
-        browseShopList: [
-          {
-            image_url: 'https://img.jerryf.cn/defaults/zd-image/mine/icon-success@2x.png',
-            name: 'eleven丶小店'
-          },
-          {
-            image_url: 'https://img.jerryf.cn/defaults/zd-image/mine/icon-success@2x.png',
-            name: 'eleven丶小店'
-          },
-          {
-            image_url: 'https://img.jerryf.cn/defaults/zd-image/mine/icon-success@2x.png',
-            name: 'eleven丶小店'
-          }
-        ],
         page: 1,
-        more: true,
+        upMore: false,
         image_url: this.$imageUrl
       }
     },
-    created() {
-      console.log(this.$imageUrl)
-    },
-    onReachBottom () {
-      this.page++
-      console.log(this.page)
-    },
+    mounted() {},
+    methods: {},
     components: {
       PanelEnd
+    },
+    computed: {
+      ...mapGetters(['browseList'])
     }
   }
 </script>
