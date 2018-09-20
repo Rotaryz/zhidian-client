@@ -68,11 +68,11 @@
     position: fixed
     left: 0
     top: 0
-    z-index: 50
+    z-index: 110
     background: rgba(32, 32, 46, 0)
     .bottom-box
       position: fixed
-      z-index: 100
+      z-index: 120
       left: 0
       bottom: -142px
       right: 0
