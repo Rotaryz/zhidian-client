@@ -12,6 +12,7 @@
     },
     created() {
       console.log('created')
+      // console.log(this.$store)
     },
     onLaunch() {
       console.log('onlaunch')
@@ -19,8 +20,8 @@
     onShow(options) {
       this._saveTargetPage(options)
       this._resolveQrCode(options)
-      this._resolveOptions(options)
       this._decideEntryType(options)
+      this._checkIsConnect(options)
     },
     onReady() {
       console.log('onready')
@@ -47,11 +48,14 @@
       },
       _resolveQrCode(options) {
         const qrCodeParams = options.query.scene
-        if (!qrCodeParams) return
+        if (!qrCodeParams) {
+          this._resolveOptions(options)
+          return
+        }
         let sceneMsg = decodeURIComponent(qrCodeParams)
         let params = resolveQrCode(sceneMsg)
         const fromMsgStr = params.f
-        this.employeeId = params.e
+        this.shopId = params.s
         if (fromMsgStr) {
           let fromTypeStr = fromMsgStr.slice(0, 1)
           switch (fromTypeStr) {
@@ -77,21 +81,27 @@
       _resolveOptions(options) {
         this.fromType = options.query.fromType ? options.query.fromType : ''
         this.fromId = options.query.fromId ? options.query.fromId : ''
-        this.employeeId = options.query.employeeId ? options.query.employeeId : ''
+        this.shopId = options.query.shopId ? options.query.shopId : ''
       },
       _decideEntryType(options) {
         const source = this.$entryType(options)
         console.log(source)
       },
       _checkIsConnect() {
-        if (this.employeeId) {
-          this.$wx.setStorageSync('employeeId', this.employeeId)
+        if (this.shopId) {
+          wx.setStorageSync('shopId', this.shopId)
         } else {
-          let employeeId = this.$wx.getStorageSync('employeeId')
-          !employeeId && this.$wx.setStroageSync('employeeId', 100001)
+          let shopId = wx.getStorageSync('shopId')
+          !shopId && wx.setStorageSync('shopId', 12)
         }
-        // let token = wx.getStorageSync('token')
-        // let userInfo = wx.getStorageSync('userInfo')
+        let token = wx.getStorageSync('token')
+        let userInfo = wx.getStorageSync('userInfo')
+        if (!token || !userInfo) {
+          wx.reLaunch({ url: `/pages/login` })
+        } else {
+          // this.loginIm().then((res) => {
+          // })
+        }
       }
     }
   }

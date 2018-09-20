@@ -22,9 +22,11 @@
       }
     },
     onLoad() {
+      console.log(this.$store)
     },
     async onShow() {
       await this.getBaseInfo()
+      console.log(this.$store, '--00-0')
     },
     methods: {
       async getBaseInfo() {

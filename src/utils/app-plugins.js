@@ -43,5 +43,6 @@ const somePlugin = {
     Vue.prototype.$cosFileType = cosFileType
   }
 }
+// console.log(somePlugin)
 // 使用插件
 Vue.use(somePlugin)
