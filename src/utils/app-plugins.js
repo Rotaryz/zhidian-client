@@ -12,7 +12,7 @@ import { role } from 'common/js/contants'
 // // 不需要自动重置data数据的页面
 const unResetPage = []
 // 定义插件
-const somePlugin = {
+const AppPlugin = {
   install: function () {
     Vue.mixin({
       methods: {},
@@ -47,4 +47,4 @@ const somePlugin = {
   }
 }
 // 使用插件
-Vue.use(somePlugin)
+Vue.use(AppPlugin)

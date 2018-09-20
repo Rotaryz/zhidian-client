@@ -1,7 +1,7 @@
 <template>
   <article class="shop">
     <shop-header :shopInfo="shopInfo" :employee="employee"></shop-header>
-    <shop-content :goodsList="goodsList"></shop-content>
+    <shop-content :goodsList="goodsList" @changeTab="changeTab"></shop-content>
   </article>
 </template>
 
@@ -19,13 +19,29 @@
       return {
         shopInfo: {},
         employee: {},
-        goodsList: []
+        goodsList: [],
+        page: 1,
+        more: true
       }
     },
     async onShow() {
       await this.getBaseInfo()
     },
+    async onReachBottom() {
+      if (!this.more) return
+      this.page++
+      await this._getGoodsList()
+      this.$wechat.hideLoading()
+    },
     methods: {
+      async changeTab(index) {
+        if (index === 0) {
+          this.page = 1
+          this.more = true
+          await this._getGoodsList()
+          this.$wechat.hideLoading()
+        }
+      },
       async getBaseInfo() {
         this.$wechat.showLoading()
         await Promise.all([
@@ -48,15 +64,20 @@
         }
       },
       async _getGoodsList() {
+        if (!this.more) return
         try {
-          let res = await Shop.getGoodsList()
+          let res = await Shop.getGoodsList({page: this.page})
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return
           }
-          console.log(res)
-          this.goodsList = res.data
-          console.log(this.goodsList)
+          if (this.page === 1) {
+            this.goodsList = res.data
+          } else {
+            let arr = this.goodsList.concat(res.data)
+            this.goodsList = arr
+          }
+          this.more = this.goodsList.length < res.meta.total
         } catch (e) {
           console.error(e)
         }

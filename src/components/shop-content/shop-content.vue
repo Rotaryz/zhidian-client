@@ -97,6 +97,7 @@
     methods: {
       changeTab(index) {
         this.selectTab = index
+        this.$emit('changeTab', index)
       },
       toGoodsDetail(item) {
         this.$wx.navigateTo({url: `/pages/goods-detail?goodsId=${item.goods_id}`})
