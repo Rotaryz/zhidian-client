@@ -8,7 +8,7 @@
 <script type="text/ecmascript-6">
   import ShopHeader from 'components/shop-header/shop-header'
   import ShopContent from 'components/shop-content/shop-content'
-  import { Jwt } from 'api'
+  import { Guide } from 'api'
 
   export default {
     components: {
@@ -34,7 +34,7 @@
       },
       async _getShopInfo(loading) {
         try {
-          let res = await Jwt.getShopInfo({}, loading)
+          let res = await Guide.getShopInfo({}, loading)
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return
