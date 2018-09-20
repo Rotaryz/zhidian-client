@@ -40,7 +40,7 @@ export default function chooseFiles(fileType, count = 9, showProcess, processCal
   return new Promise((resolve, reject) => {
     fileController(fileType, count).then((filePaths) => {
       showProcess && showProcess()
-      let type = fileType === IMAGE_TYPE ? 'image' : 'video'
+      let type = fileType === VIDEO_TYPE ? 'video' : 'image'
       let requests = filePaths.map((filePath) => {
         return Upload.getUploadParam().then((res) => {
           if (res.error !== ERR_OK) {
@@ -79,7 +79,7 @@ export default function chooseFiles(fileType, count = 9, showProcess, processCal
 export function uploadFiles(fileType, filePaths, showProcess, processCallBack) {
   return new Promise((resolve, reject) => {
     showProcess && showProcess()
-    let type = fileType === IMAGE_TYPE ? 'image' : 'video'
+    let type = fileType === VIDEO_TYPE ? 'video' : 'image'
     let requests = filePaths.map((filePath) => {
       return Upload.getUploadParam().then((res) => {
         if (res.error !== ERR_OK) {

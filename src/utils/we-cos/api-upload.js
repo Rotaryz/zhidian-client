@@ -25,7 +25,7 @@ export default {
    * @returns {Promise.<*>}
    */
   saveFile(data) {
-    const url = `${baseURL.upload}/api/cos/save-file`
+    const url = `${baseURL.upload}/api/cos/file`
     return request.post(url, data, false)
   }
 }
