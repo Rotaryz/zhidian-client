@@ -1,14 +1,14 @@
 <template>
   <article class="shop">
     <shop-header :shopInfo="shopInfo" :employee="employee"></shop-header>
-    <shop-content></shop-content>
+    <shop-content :goodsList="goodsList"></shop-content>
   </article>
 </template>
 
 <script type="text/ecmascript-6">
   import ShopHeader from 'components/shop-header/shop-header'
   import ShopContent from 'components/shop-content/shop-content'
-  import { Guide } from 'api'
+  import { Guide, Shop } from 'api'
 
   export default {
     components: {
@@ -18,7 +18,8 @@
     data() {
       return {
         shopInfo: {},
-        employee: {}
+        employee: {},
+        goodsList: []
       }
     },
     async onShow() {
@@ -28,7 +29,8 @@
       async getBaseInfo() {
         this.$wechat.showLoading()
         await Promise.all([
-          this._getShopInfo(false)
+          this._getShopInfo(false),
+          this._getGoodsList(false)
         ])
         this.$wechat.hideLoading()
       },
@@ -41,6 +43,20 @@
           }
           this.shopInfo = res.data
           this.employee = res.data.employee
+        } catch (e) {
+          console.error(e)
+        }
+      },
+      async _getGoodsList() {
+        try {
+          let res = await Shop.getGoodsList()
+          if (res.error !== this.$ERR_OK) {
+            this.$showToast(res.message)
+            return
+          }
+          console.log(res)
+          this.goodsList = res.data
+          console.log(this.goodsList)
         } catch (e) {
           console.error(e)
         }

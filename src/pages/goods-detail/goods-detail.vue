@@ -105,7 +105,7 @@
           title: this.goodsDetail.goods_title,
           stock: this.goodsDetail.stock,
           goods_id: this.goodsDetail.goods_id,
-          recommend_goods_id: this.reqGoodsId || 16,
+          recommend_goods_id: this.reqGoodsId,
           phoneNum: userInfo.mobile,
           code: this.code,
           hasPhone: this.hasPhone,
@@ -115,7 +115,7 @@
         this.$refs.payment.showOrder(paymentMsg)
       },
       async _getGoodsDetail(id, loading = false) {
-        let res = await Goods.getGoodsDetail(16, loading)
+        let res = await Goods.getGoodsDetail(id, loading)
         this.$wechat.hideLoading()
         if (res.error === this.$ERR_OK) {
           this.bannerImgs = res.data.goods_banner_images
