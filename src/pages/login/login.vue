@@ -88,7 +88,7 @@
           this.$wechat.hideLoading()
           this.$wx.setStorageSync('userInfo', userInfo)
           this.$wx.setStorageSync('token', token)
-          this._switchPage()
+          this._makeConnect()
         } catch (e) {
           e && this.$showToast(e.msg)
         }
@@ -105,7 +105,13 @@
           }
         }
       },
-      _makeConnect() {
+      async _makeConnect() {
+        try {
+          // await this.loginIm()
+          this._switchPage()
+        } catch (e) {
+          console.error(e)
+        }
       }
     },
     computed: {

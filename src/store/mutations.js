@@ -15,6 +15,12 @@ const mutations = {
   },
   [types.SET_ORDER_RESULT] (state, obj) {
     state.orderResult = obj
+  },
+  [types.SET_FROM_MSG] (state, msg) {
+    state.fromMsg = msg
+  },
+  [types.SET_SCENE] (state, scene) {
+    state.scene = scene
   }
 }
 

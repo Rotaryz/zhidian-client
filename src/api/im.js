@@ -8,15 +8,15 @@ export default {
   // },
   // im获取签名，应用信息
   getImInfo(imAccount, loading) {
-    const url = `/api/minimerchant/customer-im-signature`
+    const url = `/api/customer/im/signature`
     const data = {
       im_account: imAccount
     }
-    return request.post(url, data, loading)
+    return request.get(url, data, loading)
   },
   // 员工和客户建立连接
   getConect(data, loading) {
-    const url = `/api/shops/relationship`
+    const url = `/api/customer/shops/relationship`
     return request.post(url, data, loading)
   }
   // // 判断是否有店，有店则返id

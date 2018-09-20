@@ -11,3 +11,7 @@ export const nowChat = state => state.nowChat
 export const imLogin = state => state.imLogin
 
 export const currentMsg = state => state.currentMsg
+
+export const scene = state => state.scene
+
+export const fromMsg = state => state.fromMsg

@@ -1,6 +1,6 @@
 <script>
   import { resolvePageDetail, checkIsTabPage, resolveQrCode } from 'common/js/util'
-  import {mapActions} from 'vuex'
+  import {mapActions, mapGetters} from 'vuex'
   import {Jwt} from 'api'
   import imMixin from 'common/mixins/im-mixin'
 
@@ -24,6 +24,7 @@
       this._saveTargetPage(options)
       this._resolveQrCode(options)
       this._decideEntryType(options)
+      this._setFromData()
       await this._checkIsConnect(options)
     },
     onHide() {
@@ -88,8 +89,11 @@
         this.shopId = options.query.shopId ? options.query.shopId : ''
       },
       _decideEntryType(options) {
-        const source = this.$entryType(options)
-        console.log(source)
+        this.source = this.$entryType(options)
+      },
+      _setFromData() {
+        this.setScene(this.source)
+        this.setFromMsg({fromType: this.fromType, fromId: this.fromId, source: this.source})
       },
       async _checkIsConnect() {
         if (this.shopId) {
@@ -109,7 +113,18 @@
         } else {
           await this.loginIm()
         }
-      }
+      },
+      ...mapActions([
+        'setScene',
+        'setFromMsg'
+        // 'setShowType',
+        // 'setAction'
+      ])
+    },
+    computed: {
+      ...mapGetters([
+        'showType'
+      ])
     }
   }
 </script>
