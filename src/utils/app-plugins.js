@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import store from '../store'
 import wx from 'wx'
 import Store from '../store'
 import WeIM from './we-im/index'
@@ -42,8 +43,9 @@ const somePlugin = {
     Vue.prototype.$wx = wx
     Vue.prototype.$cos = cos
     Vue.prototype.$cosFileType = cosFileType
-    Vue.prototype.$store = Store
+    Vue.prototype.$store = store
   }
 }
+// console.log(somePlugin)
 // 使用插件
 Vue.use(somePlugin)

@@ -1,37 +1,59 @@
 <template>
   <div class="guide-header">
     <section class="logo-wrapper">
-      <img class="img" mode="aspectFill" :src="url" alt="">
+      <img class="img" mode="aspectFill" :src="employee.head_image_url || url" alt="">
       <button class="share-btn">
         <img class="share-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share_dg@2x.png'" alt="">
         <div class="share-txt">分享</div>
       </button>
-      <img class="btn-editor" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-exchange@2x.png'" alt="">
+      <img class="btn-editor" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-exchange@2x.png'" alt="" @click="editorAvatar">
     </section>
     <section class="content">
       <article class="top">
         <div class="avatar-wrapper">
-          <img class="avatar" mode="aspectFill" :src="url" alt="">
+          <img class="avatar" mode="aspectFill" :src="employee.avatar || url" alt="">
         </div>
-        <div class="name">刘辉</div>
+        <div class="name">{{employee.nickname || '刘辉'}}</div>
         <div class="detail">
-          <div class="position">美容导师</div>
-          <div class="company">广州国颐堂养发SPA馆</div>
+          <div class="position">{{employee.role_id || '美容导师'}}</div>
+          <div class="company">{{shopInfo.name || '广州国颐堂养发SPA馆'}}</div>
         </div>
       </article>
-      <div class="down">"黑色给了我黑色的眼睛我却用它来寻找光明"</div>
+      <div class="down">"{{shopInfo.intro || '黑色给了我黑色的眼睛我却用它来寻找光明'}}"</div>
     </section>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  const url = `/static/test-img/1@1x.png`
   export default {
+    props: {
+      shopInfo: {
+        type: Object,
+        default: {}
+      },
+      employee: {
+        type: Object,
+        default: {}
+      }
+    },
     data() {
-      return {url}
+      return {
+        url: this.$parent.$imageUrl + '/zd-image/test-img/1@1x.png'// todo
+      }
     },
     created() {
-      console.log(this.$data)
+    },
+    methods: {
+      async editorAvatar() {
+        try {
+          let res = await this.$wechat.chooseImage()
+          let file = res.tempFilePaths[0]
+          getApp().globalData.imgUrl = file
+          this.$wx.navigateTo({url: '/pages/cut-picture?cutType=avatar'})
+        } catch (e) {
+          console.error(e)
+        }
+      }
     }
   }
 </script>

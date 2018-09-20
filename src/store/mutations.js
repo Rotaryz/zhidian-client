@@ -4,7 +4,7 @@ const mutations = {
   [types.ROLE_TYPE](state, role) {
     state.role = role
   },
-  [types.SET_TARGET_PAGE](state, page) {
+  [types.SET_TARGET_PAGE] (state, page) {
     state.targetPage = page
   },
   [types.SET_SHOW_TYPE] (state, boolean) {
