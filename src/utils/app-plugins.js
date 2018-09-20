@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import Store from '../store'
 import wx from 'wx'
+import Store from '../store'
 import WeIM from './we-im/index'
 import { ERR_OK, baseURL } from 'api/config'
 import * as wechat from 'common/js/wechat'

@@ -66,6 +66,7 @@
       }
     },
     async onLoad(options) {
+      console.log(this.$store)
       if (options.shopId) {
         this.shopId = options.shopId
         wx.setStorageSync('shopId', options.shopId)
