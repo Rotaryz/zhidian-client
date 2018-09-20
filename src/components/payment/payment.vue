@@ -45,13 +45,15 @@
         </div>
       </div>
       <div class="buy-btn-box">
-        <div class="buy-btn">立即购买</div>
+        <div class="buy-btn" :class="paymentMsg.phoneNum ? '' : 'un-click'" @click.stop="submitOrder">立即购买</div>
       </div>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import { Customer, Goods } from 'api'
+  import { mapActions } from 'vuex'
   export default {
     data () {
       return {
@@ -60,15 +62,21 @@
         orderNum: 1,
         total: '',
         paymentMsg: {},
-        code: ''
+        code: '',
+        type: ''
       }
     },
     created() {
-      console.log(this.$imageUrl)
     },
     methods: {
-      async showOrder(msg) {
+      ...mapActions([
+        'setShowType',
+        'setOrderResultMsg'
+      ]),
+      async showOrder(msg, type = 'default') {
+        this.type = type
         this.paymentMsg = msg
+        this.code = msg.code
         this.orderShow = true
         this.total = (this.orderNum * this.paymentMsg.price).toFixed(2)
       },
@@ -83,8 +91,77 @@
         this.orderNum--
         this.total = (this.orderNum * this.paymentMsg.price).toFixed(2)
       },
-      getPhone(e) {
-        console.log(e)
+      getPhone(event) {
+        const e = event.mp
+        if (e.detail.errMsg !== 'getPhoneNumber:ok') {
+          let url = `/pages/chat-msg/chat-msg`
+          wx.navigateTo({ url })
+          return
+        }
+        const iv = e.detail.iv
+        const encryptedData = e.detail.encryptedData
+        const data = { iv, encrypted_data: encryptedData, code: this.code }
+        Customer.setCustomerPhone(data).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            let userInfo = res.data
+            this.paymentMsg.phoneNum = res.data.mobile
+            wx.setStorageSync('userInfo', userInfo)
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
+      submitOrder() {
+        let data
+        let goods = [{
+          goods_id: this.paymentMsg.goods_id,
+          num: this.orderNum,
+          goods_title: this.paymentMsg.title
+        }]
+        switch (this.type) {
+          case 'default':
+            data = {
+              goods,
+              pay_method_id: 1,
+              order_id: 0,
+              recommend_goods_id: this.paymentMsg.recommend_goods_id
+            }
+            break
+          case 'group':
+            break
+          case 'bargain':
+            break
+        }
+        Goods.payOrder(data).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            let payRes = res.data
+            const { timestamp, nonceStr, signType, paySign } = payRes
+            this.setShowType(true)
+            wx.requestPayment({
+              timeStamp: timestamp,
+              nonceStr,
+              package: payRes.package,
+              signType,
+              paySign,
+              success: () => {
+                let resultData = {
+                  avatar: this.paymentMsg.shopImg,
+                  nickName: this.paymentMsg.shopName
+                }
+                this.setOrderResultMsg(resultData)
+                let url = '/pages/order-result?orderId=' + payRes.order_id
+                this.orderShow = false
+                wx.navigateTo({ url })
+              },
+              fail() {
+              }
+            })
+          } else {
+            this.$showToast(res.message)
+          }
+        })
       }
     }
   }
@@ -237,6 +314,8 @@
           font-size: $font-size-16
           font-family: $font-family-medium
           color: $color-white
+          button-style(normal, 22.5px)
+        .buy-btn.un-click
           button-style(un-click, 22.5px)
     .show.payment-content
       bottom: 0

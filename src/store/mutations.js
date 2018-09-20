@@ -8,10 +8,19 @@ const mutations = {
     state.targetPage = page
   },
   [types.SET_SHOW_TYPE] (state, boolean) {
-    state.showType = boolean
+    state.appShowType = boolean
   },
   [types.SET_GOODS_REFRESH] (state, goodsRefresh) {
     state.goodsRefresh = goodsRefresh
+  },
+  [types.SET_ORDER_RESULT] (state, obj) {
+    state.orderResult = obj
+  },
+  [types.SET_FROM_MSG] (state, msg) {
+    state.fromMsg = msg
+  },
+  [types.SET_SCENE] (state, scene) {
+    state.scene = scene
   }
 }
 

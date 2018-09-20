@@ -8,6 +8,10 @@ const fly = new Fly()
 // 公共请求头
 const COMMON_HEADER = {}
 
+const LOGINPAGE = '/pages/login'
+const ERRORPAGE = `/pages/error`
+const SHOP_END = 12001
+
 // 请求拦截器
 fly.interceptors.request.use((request) => {
   request.headers['Authorization'] = wx.getStorageSync('token') || '0f60e1f448a1765e1236ffeb4b3c9967432da3d4'
@@ -53,6 +57,32 @@ function checkCode (res) {
   // 如果网络请求成功，而提交的数据，或者是后端的一些未知错误所导致的，可以根据实际情况进行捕获异常
   if (res.data && (res.data.code !== ERR_OK)) {
     // 可以进行switch操作，根据返回的code进行相对应的操作，然后抛异常
+    switch (res.data.code) {
+      case 10000:
+        if (wx.getStorageSync('errPage') !== LOGINPAGE) {
+          wx.setStorageSync('errPage', LOGINPAGE)
+          wx.reLaunch({ url: LOGINPAGE })
+        }
+        break
+      case 10003:
+      case 10004:
+      case 10001:
+        if (wx.getStorageSync('errPage') !== ERRORPAGE) {
+          wx.setStorageSync('errPage', ERRORPAGE)
+          wx.reLaunch({ url: ERRORPAGE })
+        }
+        break
+      case SHOP_END:
+        const url = `${ERRORPAGE}?error=${SHOP_END}`
+        if (wx.getStorageSync('errPage') !== url) {
+          wx.setStorageSync('errPage', url)
+          wx.reLaunch({ url: url })
+        }
+        break
+      case 12002:
+        wx.setStorageSync('frozen', true)
+        return res.data
+    }
     console.warn(res.data.message)
     throw requestException(res)
   }

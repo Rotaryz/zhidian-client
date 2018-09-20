@@ -30,6 +30,9 @@ export default {
     },
     $entryType(options) {
       return _entryType(options)
+    },
+    $turnShop(data) { // 切换店铺
+      // todo
     }
   }
 }

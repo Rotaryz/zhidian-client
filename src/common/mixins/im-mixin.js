@@ -1,5 +1,17 @@
 import {Im} from 'api'
+import {mapGetters} from 'vuex'
 export default {
+  computed: {
+    ...mapGetters([
+      // 'currentMsg',
+      // 'imIng',
+      // 'behaviorList',
+      // 'imLogin',
+      // 'descMsg',
+      'fromMsg'
+      // 'postUpImage'
+    ])
+  },
   methods: {
     async loginIm() {
       let userInfo = wx.getStorageSync('userInfo')
@@ -56,13 +68,14 @@ export default {
             await this.getEmployeeConect()
           })
         }
-      })
+      }).catch(e => console.error(e))
     },
     async getEmployeeConect() {
       const wx = this.$wx
       let userInfo = wx.getStorageSync('userInfo')
       // 建立连接
       let shopId = wx.getStorageSync('shopId')
+      console.log(userInfo)
       if (shopId) {
         let reqData = {
           customer_id: userInfo.id,
@@ -71,7 +84,9 @@ export default {
           from_type: this.fromMsg.fromType,
           from_id: this.fromMsg.fromId
         }
+        console.log(reqData, '----')
         let resData = await Im.getConect(reqData, false)
+        console.log(resData)
         if (resData.error === this.$ERR_OK) {
           let currentMsg = {
             shopId: resData.data.shop_id,

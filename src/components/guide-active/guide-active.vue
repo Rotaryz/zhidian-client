@@ -10,44 +10,44 @@
     </section>
     <!--砍价-->
     <ul class="active-wrapper" v-if="selectTab === 0">
-      <li class="item-wrapper" v-for="(item,index) in '123'" :key="index">
+      <li class="item-wrapper" v-if="cutList.length" v-for="(item,index) in cutList" :key="index">
         <article class="top" @click="goToDetail(item)">
           <div class="img-wrapper">
-            <img class="img" mode="aspectFill" :src="url" alt="">
-            <div class="tag cut">仅剩6份</div>
+            <img class="img" mode="aspectFill" :src="item.image_url" alt="">
+            <div class="tag cut">仅剩{{item.stock}}份</div>
           </div>
           <div class="title-wrapper">
             <div class="explain-wrapper">
-              <div class="title">国颐堂皇家养发SPA</div>
-              <div class="explain">砍价最低9.9元包邮</div>
+              <div class="title">{{item.goods_title}}</div>
+              <div class="explain">{{item.goods_subtitle}}</div>
             </div>
             <div class="money-wrapper">
-              <div class="money">¥99</div>
+              <div class="money">¥{{item.platform_price}}</div>
               <div class="button">开始砍价</div>
             </div>
           </div>
         </article>
         <div class="down">
           <article class="mine-serve-avatar-box">
-            <div class="mine-serve-avatarBox-item" v-for="(items, idx) in header" :key="idx">
-              <img class="mine-serve-avatarBox-img" :src="url">
+            <div class="mine-serve-avatarBox-item" v-if="item.join_count && idx < 3" v-for="(it, idx) in item.join_list" :key="idx">
+              <img class="mine-serve-avatarBox-img" :src="it">
             </div>
-            <div class="more">
+            <div class="more" v-if="item.join_count > 3">
               <span class="more-item"></span>
               <span class="more-item"></span>
               <span class="more-item"></span>
             </div>
-            <span class="shop-num">28人已成功砍价</span>
+            <span class="shop-num">{{item.join_count}}人已成功砍价</span>
           </article>
           <article class="right-box">
             <div class="jh-wrapper" @click="toLike(item)">
               <img class="icon" v-if="imageUrl && isLike" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
               <img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
-              <div class="number">99</div>
+              <div class="number">{{item.like_count}}</div>
             </div>
             <div class="jh-wrapper" @click="toShare(item)">
               <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">
-              <div class="number">55</div>
+              <div class="number">{{item.share_count}}</div>
             </div>
           </article>
         </div>
@@ -55,44 +55,44 @@
     </ul>
     <!--拼团-->
     <ul class="active-wrapper" v-if="selectTab === 1">
-      <li class="item-wrapper" v-for="(item,index) in '123'" :key="index">
+      <li class="item-wrapper" v-if="groupList.length" v-for="(item,index) in groupList" :key="index">
         <article class="top" @click="goToDetail(item)">
           <div class="img-wrapper">
             <img class="img" mode="aspectFill" :src="url" alt="">
-            <div class="tag group">仅剩6份</div>
+            <div class="tag group">仅剩{{item.stock}}份</div>
           </div>
           <div class="title-wrapper">
             <div class="explain-wrapper">
-              <div class="title">国颐堂皇家养发SPA</div>
-              <div class="explain">砍价最低9.9元包邮</div>
+              <div class="title">{{item.goods_title}}</div>
+              <div class="explain">{{item.goods_subtitle}}</div>
             </div>
             <div class="money-wrapper">
-              <div class="money">¥99</div>
+              <div class="money">¥{{item.platform_price}}</div>
               <div class="button">开始拼团</div>
             </div>
           </div>
         </article>
         <div class="down">
           <article class="mine-serve-avatar-box">
-            <div class="mine-serve-avatarBox-item" v-for="(items, idx) in header" :key="idx">
-              <img class="mine-serve-avatarBox-img" :src="url">
+            <div class="mine-serve-avatarBox-item" v-if="item.join_count && idx < 3" v-for="(it, idx) in item.join_list" :key="idx">
+              <img class="mine-serve-avatarBox-img" :src="it">
             </div>
-            <div class="more">
+            <div class="more" v-if="item.join_count > 3">
               <span class="more-item"></span>
               <span class="more-item"></span>
               <span class="more-item"></span>
             </div>
-            <span class="shop-num">28人已成功砍价</span>
+            <span class="shop-num">{{item.join_count}}人已成功砍价</span>
           </article>
           <article class="right-box">
             <div class="jh-wrapper" @click="toLike(item)">
               <img class="icon" v-if="imageUrl && isLike" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
               <img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
-              <div class="number">99</div>
+              <div class="number">{{item.like_count}}</div>
             </div>
             <div class="jh-wrapper" @click="toShare(item)">
               <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">
-              <div class="number">55</div>
+              <div class="number">{{item.share_count}}</div>
             </div>
           </article>
         </div>
@@ -104,6 +104,16 @@
 <script type="text/ecmascript-6">
   const tabList = [{title: '砍价抢购'}, {title: '火爆拼团'}]
   export default {
+    props: {
+      cutList: {
+        type: Array,
+        default: []
+      },
+      groupList: {
+        type: Array,
+        default: []
+      }
+    },
     data() {
       return {
         url: this.$parent.$imageUrl + '/zd-image/test-img/4@1x.png',
@@ -118,16 +128,17 @@
     methods: {
       changeTab(index) {
         this.selectTab = index
+        this.$emit('changeTab', index)
       },
       goToDetail() {
         console.log(22)
       },
-      toLike() {
+      toLike(item) {
         console.log(111)
         this.isLike = !this.isLike
         console.log(this.isLike)
       },
-      toShare() {
+      toShare(item) {
         console.log(22222)
       }
     }

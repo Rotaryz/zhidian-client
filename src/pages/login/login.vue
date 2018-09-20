@@ -25,6 +25,12 @@
         authorizationCount: 0
       }
     },
+    onLoad() {
+      wx.setStorageSync('errPage', '/pages/login/login')
+    },
+    onUnload() {
+      wx.setStorageSync('errPage', '')
+    },
     methods: {
       async _authorization() {
         const wxUser = await this.$wechat.getUserInfo()
@@ -82,7 +88,7 @@
           this.$wechat.hideLoading()
           this.$wx.setStorageSync('userInfo', userInfo)
           this.$wx.setStorageSync('token', token)
-          this._switchPage()
+          this._makeConnect()
         } catch (e) {
           e && this.$showToast(e.msg)
         }
@@ -99,7 +105,13 @@
           }
         }
       },
-      _makeConnect() {
+      async _makeConnect() {
+        try {
+          // await this.loginIm()
+          this._switchPage()
+        } catch (e) {
+          console.error(e)
+        }
       }
     },
     computed: {
