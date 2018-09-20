@@ -1,26 +1,26 @@
 <template>
   <div class="order-detail">
-    <div class="order-normal" v-if="false">
+    <div class="order-normal" v-if="detail.status !== 'refund'">
       <!-- 商品信息-->
       <div class="order-box">
         <div class="order-shop">
           <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-shop_order@2x.png'" class="home">
-          <p class="order-name">
-            爱撒娇是客服哈手机看啥都看房间爱离开宿舍
+          <p class="order-name" v-if="detail.shop_data">
+            {{detail.shop_data.name}}
             <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
           </p>
         </div>
         <div class="order-msg">
-          <img src="" class="order-pic">
+          <img :src="detail.goods_image_url" class="order-pic" mode="aspectFill">
           <div class="shop-content">
-            <p class="shop-name">sadfsagfdjkaglkdfg;lkaj;lkgjklsdahgklhdsglhsdlgahlasafasfasfassafafasasshfjk</p>
-            <p class="money">总计：<span class="price">¥99</span></p>
+            <p class="shop-name">{{detail.goods_title}}</p>
+            <p class="money">总计：<span class="price">¥{{detail.total}}</span></p>
           </div>
           <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
         </div>
       </div>
       <!-- 团购信息-->
-      <div class="ground-status">
+      <div class="ground-status" v-if="detail.groupon_data && detail.groupon_data.length">
         <div class="ground-name">
           <div class="ground-text">拼团状态</div>
           <div class="ground-time-name">剩余时间:</div>
@@ -40,29 +40,21 @@
         </div>
       </div>
       <!--服务券码-->
-      <div class="coupon">
+      <div class="coupon" v-if="detail.coupon_details && detail.coupon_details.length">
         <div class="coupon-title">服务券码</div>
-        <div class="coupon-item">
+        <div class="coupon-item" v-for="(coupon, index) in detail.coupon_details" :key="index">
           <div class="coupon-left">
-            <img src="" class="coupon-icon">
+            <img src="" mode="aspectFill" class="coupon-icon">
             <p class="coupon-text">券1:</p>
-            <p class="coupon-sn">234 5679 91</p>
+            <p class="coupon-sn">{{coupon.code}}</p>
           </div>
-          <div class="coupon-btn">使用</div>
-        </div>
-        <div class="coupon-item">
-          <div class="coupon-left">
-            <img src="" class="coupon-icon">
-            <p class="coupon-text">券1:</p>
-            <p class="coupon-sn">234 5679 91</p>
-          </div>
-          <div class="coupon-btn coupon-btn-disable">使用</div>
+          <div class="coupon-btn" :class="{'coupon-btn-disable' : item.status !== 0}">{{coupon.status === 0 ? '待使用' : coupon.status === 1 ? '已使用' : '已过期'}}</div>
         </div>
       </div>
       <!--订单详情-->
       <div class="order-msg-content">
         <div class="order-title">订单信息</div>
-        <div class="order-item">订单编号 : <span class="msg-detail">6+566523656</span></div>
+        <div class="order-item">订单编号 : <span class="msg-detail">{{detail.order_sn}}</span></div>
         <div class="order-item">手机号码 : <span class="msg-detail">6+566523656</span></div>
         <div class="order-item order-last">下单时间 : <span class="msg-detail">6+566523656</span></div>
         <div class="order-item order-first">购买数量 : <span class="msg-detail">6+566523656</span></div>
@@ -73,7 +65,7 @@
         <div class="btn">拼团详情</div>
       </div>
     </div>
-    <div class="order-refund">
+    <div class="order-refund" v-if="detail.status === 'refund'">
       <div class="refund-msg">
         <div class="refund-text">
           <p class="refund-title">退款状态</p>
@@ -117,6 +109,8 @@
 </template>
 
 <script>
+  import { Order } from 'api'
+
   const GROUND_STATUS = ['拼团中', '拼团成功']
   export default {
     name: 'order-detail',
@@ -124,10 +118,26 @@
       return {
         groundStatus: GROUND_STATUS,
         groundNow: 2,
-        refundStatus: 2
+        refundStatus: 2,
+        detail: {}
       }
     },
-    methods: {}
+    async onLoad(option) {
+      await this._orderDetail(option.id)
+    },
+    methods: {
+      async _orderDetail(id) {
+        let res = await Order.orderDetail(id)
+        if (res.error !== this.$ERR_OK) {
+          this.$showToast(res.message)
+          this.$wechat.hideLoading()
+          return
+        }
+        console.log(res.data)
+        this.detail = res.data
+        this.$wechat.hideLoading()
+      }
+    }
   }
 </script>
 
@@ -136,6 +146,7 @@
   .order-detail
     min-height: 100vh
     padding-bottom: 60px
+    box-sizing: border-box
     background: $color-background
 
   .order-normal
@@ -152,13 +163,15 @@
           width: 18px
           height: 18px
         .order-name
+          height: $font-size-16
+          line-height: 1.1
           font-family: $font-family-medium
           font-size: $font-size-16
           color: $color-1F1F1F
           margin-left: 5px
           position: relative
           padding-right: 15.5px
-          width: 65%
+          max-width: 65%
           no-wrap()
           .way
             col-center()

@@ -6,7 +6,7 @@
         <p class="order-status">倒计时:142天58时10分36</p>
       </div>
       <div class="order-msg">
-        <img src="" class="order-pic">
+        <img src="" mode="aspectFill" class="order-pic">
         <div class="shop-content">
           <p class="shop-name">sadfsagfdjkaglkdfg;lkaj;lkgjklsdahgklhdsglhsdlgahlasafasfasfassafafasasshfjk</p>
           <p class="shop-price">￥45</p>

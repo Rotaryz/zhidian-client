@@ -5,20 +5,20 @@
       <p class="mine-name">Seven周</p>
     </div>
     <div class="order-tab">
-      <div class="order-tab-item" v-for="(item, index) in order" :key="index">
+      <navigator :url="'/pages/order-list?status=' + item.status" hover-class="none" class="order-tab-item" v-for="(item, index) in order" :key="index">
         <img :src="imageUrl + '/zd-image/mine/' + item.image" class="order-tab-icon">
         <p class="order-tab-title">{{item.title}}</p>
-      </div>
+      </navigator>
     </div>
     <div class="manager-list">
-      <navigator hover-class="none" class="manager-item" v-for="(item, index) in manager" :key="index">
+      <navigator hover-class="none" :url="item.url" class="manager-item" v-for="(item, index) in manager" :key="index">
         <img :src="imageUrl + '/zd-image/mine/' + item.image" class="manager-image">
         <p class="manager-image-title">{{item.title}}</p>
         <div class="mine-serve-avatar-box" v-if="index === 2">
-          <div class="mine-serve-avatarBox-item" v-for="(items, idx) in header" :key="idx">
-            <img class="mine-serve-avatarBox-img">
+          <div class="mine-serve-avatarBox-item" v-for="(items, idx) in shopList" :key="idx">
+            <img class="mine-serve-avatarBox-img" v-if="items.employee" :src="items.employee.avatar">
           </div>
-          <span class="shop-num">1家</span>
+          <span class="shop-num">{{length}}家</span>
         </div>
         <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
       </navigator>
@@ -27,21 +27,40 @@
 </template>
 
 <script type="text/ecmascript-6">
-  const ORDER = [{ title: '待付款', status: '', image: 'icon-obligation@2x.png' }, { title: '待成团', status: '', image: 'icon-staygroup@2x.png' }, { title: '已退款', status: '', image: 'icon-refund@2x.png' }, { title: '全部订单', status: '', image: 'icon-alloeder@2x.png' }]
-  const MANAGER = [{ title: '我的兑换券', status: '', image: 'icon-coupon_my@2x.png' }, { title: '我的砍价', status: '', image: 'icon-sale@2x.png' }, { title: '浏览过的店', status: '', image: 'icon-shop_my@2x.png' }, { title: 'AI雷达智店，我要开店', status: '', image: 'icon-openshop@2x.png' }]
+  import { Shop } from 'api'
+  import { mapActions } from 'vuex'
+
+  const ORDER = [{ title: '待付款', status: 'payment', image: 'icon-obligation@2x.png' }, { title: '待成团', status: 'waiting_groupon', image: 'icon-staygroup@2x.png' }, { title: '已退款', status: 'refund', image: 'icon-refund@2x.png' }, { title: '全部订单', status: '', image: 'icon-alloeder@2x.png' }]
+  const MANAGER = [{ title: '我的兑换券', url: '/pages/exchange-coupon', image: 'icon-coupon_my@2x.png' }, { title: '我的砍价', url: '/pages/mine-bargain', image: 'icon-sale@2x.png' }, { title: '浏览过的店', url: '/pages/browse-shop', image: 'icon-shop_my@2x.png' }, { title: 'AI雷达智店，我要开店', url: '', image: 'icon-openshop@2x.png' }]
+
   export default {
     data() {
       return {
         order: ORDER,
         manager: MANAGER,
         imageUrl: this.$imageUrl,
-        header: [1, 1, 1, 1, 1, 1]
+        length: 1,
+        shopList: []
       }
     },
     onShow() {
-      // console.log(this.$imageUrl, '--7777')
+      this._getBrowserList()
     },
-    methods: {}
+    methods: {
+      ...mapActions(['setBrowseList']),
+      _getBrowserList() {
+        Shop.getBrowseShop().then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            this.length = res.data.length
+            this.setBrowseList(res.data)
+            this.shopList = res.data.slice(0, 5)
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      }
+    }
   }
 </script>
 
@@ -128,7 +147,6 @@
           border-radius: 50%
           margin-right: -11px
           .mine-serve-avatarBox-img
-            background: $color-BC4949
             width: 25px
             height: 25px
             border: 1.5px solid $color-FFFFFF
