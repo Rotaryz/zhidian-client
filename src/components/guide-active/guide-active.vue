@@ -41,7 +41,7 @@
           </article>
           <article class="right-box">
             <div class="jh-wrapper" @click="toLike(item)">
-              <img class="icon" v-if="imageUrl && isLike" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
+              <img class="icon" v-if="imageUrl && item.is_like" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
               <img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
               <div class="number">{{item.like_count}}</div>
             </div>
@@ -86,7 +86,7 @@
           </article>
           <article class="right-box">
             <div class="jh-wrapper" @click="toLike(item)">
-              <img class="icon" v-if="imageUrl && isLike" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
+              <img class="icon" v-if="imageUrl && item.is_like" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
               <img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
               <div class="number">{{item.like_count}}</div>
             </div>
@@ -102,6 +102,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import {Guide} from 'api'
+
   const tabList = [{title: '砍价抢购'}, {title: '火爆拼团'}]
   export default {
     props: {
@@ -130,13 +132,19 @@
         this.selectTab = index
         this.$emit('changeTab', index)
       },
-      goToDetail() {
-        console.log(22)
+      goToDetail(item) {
+        this.$wx.navigateTo({url: `/pages/goods-detail?activityId=${item.activity_id}`})
       },
       toLike(item) {
-        console.log(111)
-        this.isLike = !this.isLike
-        console.log(this.isLike)
+        Guide.likeAction({recommend_activity_id: item.activity_id, recommend_goods_id: item.goods_id}).then(res => {
+          this.$wechat.hideLoading()
+          if (res.error !== this.$ERR_OK) {
+            this.$showToast(res.message)
+            return
+          }
+          item.is_like = !item.is_like
+          item.is_like ? item.like_count++ : item.like_count--
+        })
       },
       toShare(item) {
         console.log(22222)
