@@ -72,14 +72,16 @@
           res = await Jwt.getToken(data)
           this.$wechat.hideLoading()
           let userInfo, token
-          if (res.unauthorized) {
+          if (res.data.unauthorized) {
             let resMsgJson = await this._authorization()
             userInfo = resMsgJson.userInfo
             token = resMsgJson.token
           } else {
-            userInfo = res.customer_info
-            token = res.access_token
+            console.log(res)
+            userInfo = res.data.customer_info
+            token = res.data.access_token
           }
+          console.log(userInfo, token)
           this.$wx.setStorageSync('userInfo', userInfo)
           this.$wx.setStorageSync('token', token)
           let isLoginPage = this.targetPage.indexOf(LOGINPAGE)
