@@ -1,12 +1,17 @@
 import request from 'common/js/request'
 
 export default {
+  // 获取商品列表
+  getGoodsList(data, loading) {
+    const url = `/api/customer/goods`
+    return request.get(url, data, loading)
+  },
   // 获取商家相册
   getMerchantsImg(data, loading) {
     const url = `/api/customer/merchants/images`
     return request.get(url, data, loading)
   },
-  // 获取商家相册
+  // 获取浏览过的店
   getBrowseShop(data, loading) {
     const url = `/api/customer/browsings`
     return request.get(url, data, loading)

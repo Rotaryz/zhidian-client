@@ -22,3 +22,7 @@ export const setTargetPage = ({ commit, state }, page) => {
 export const setBrowseList = ({ commit, state }, arr) => {
   commit(types.BROWSE_LIST, arr)
 }
+
+export const setOrderResultMsg = ({ commit, state }, obj) => {
+  commit(types.SET_ORDER_RESULT, obj)
+}

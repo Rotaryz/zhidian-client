@@ -7,15 +7,15 @@ import * as wechat from 'common/js/wechat'
 import * as cos from './we-cos/upload'
 import * as cosFileType from './we-cos/fileConfig'
 import base from 'common/mixins/base'
+import { role } from 'common/js/contants'
 
 // // 不需要自动重置data数据的页面
 const unResetPage = []
 // 定义插件
-const somePlugin = {
+const AppPlugin = {
   install: function () {
     Vue.mixin({
-      methods: {
-      },
+      methods: {},
       onUnload() {
         // 清除mpvue的wathcers
         this._watchers = []
@@ -43,8 +43,8 @@ const somePlugin = {
     Vue.prototype.$cos = cos
     Vue.prototype.$cosFileType = cosFileType
     Vue.prototype.$store = store
+    Vue.prototype.$role = role
   }
 }
-// console.log(somePlugin)
 // 使用插件
-Vue.use(somePlugin)
+Vue.use(AppPlugin)

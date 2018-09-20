@@ -1,6 +1,5 @@
 // 常量池
 export const role = {
-  BOSS: 1,
-  EMPLOYEE: 2,
-  OTHER: 3
+  ROLE_BOSS: 1,
+  ROLE_EMPLOYEE: 2
 }
