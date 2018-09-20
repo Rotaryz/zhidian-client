@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import store from '../store'
 import wx from 'wx'
 import WeIM from './we-im/index'
 import { ERR_OK, baseURL } from 'api/config'
@@ -6,6 +7,7 @@ import * as wechat from 'common/js/wechat'
 import * as cos from './we-cos/upload'
 import * as cosFileType from './we-cos/fileConfig'
 import base from 'common/mixins/base'
+import { role } from 'common/js/contants'
 
 // // 不需要自动重置data数据的页面
 const unResetPage = []
@@ -13,8 +15,7 @@ const unResetPage = []
 const somePlugin = {
   install: function () {
     Vue.mixin({
-      methods: {
-      },
+      methods: {},
       onUnload() {
         // 清除mpvue的wathcers
         this._watchers = []
@@ -41,6 +42,8 @@ const somePlugin = {
     Vue.prototype.$wx = wx
     Vue.prototype.$cos = cos
     Vue.prototype.$cosFileType = cosFileType
+    Vue.prototype.$store = store
+    Vue.prototype.$role = role
   }
 }
 // 使用插件

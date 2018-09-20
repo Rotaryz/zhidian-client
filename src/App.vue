@@ -1,8 +1,11 @@
 <script>
   import { resolvePageDetail, checkIsTabPage, resolveQrCode } from 'common/js/util'
   import {mapActions} from 'vuex'
+  import {Jwt} from 'api'
+  import imMixin from 'common/mixins/im-mixin'
 
   export default {
+    mixins: [imMixin],
     data() {
       return {
         fromType: '',
@@ -12,30 +15,32 @@
     },
     created() {
       console.log('created')
+      this._setDefaultShop()
     },
     onLaunch() {
       console.log('onlaunch')
     },
-    onShow(options) {
+    async onShow(options) {
       this._saveTargetPage(options)
       this._resolveQrCode(options)
-      this._resolveOptions(options)
       this._decideEntryType(options)
-    },
-    onReady() {
-      console.log('onready')
-    },
-    mounted() {
-      console.log('mounted')
+      await this._checkIsConnect(options)
     },
     onHide() {
       console.log('onHide')
     },
-    update() {
-      console.log('update')
-    },
     methods: {
       ...mapActions(['setTargetPage']),
+      async _setDefaultShop() {
+        try {
+          let res = await Jwt.getDefaultShop()
+          if (res.error !== this.$ERR_OK) return
+          this.$wx.setStorageSync('defaultShop', res.data.default_shop)
+          return res.data.default_shop
+        } catch (e) {
+          console.error(e)
+        }
+      },
       _saveTargetPage(options) {
         let targetPage
         if (checkIsTabPage(options.path)) {
@@ -47,11 +52,14 @@
       },
       _resolveQrCode(options) {
         const qrCodeParams = options.query.scene
-        if (!qrCodeParams) return
+        if (!qrCodeParams) {
+          this._resolveOptions(options)
+          return
+        }
         let sceneMsg = decodeURIComponent(qrCodeParams)
         let params = resolveQrCode(sceneMsg)
         const fromMsgStr = params.f
-        this.employeeId = params.e
+        this.shopId = params.s
         if (fromMsgStr) {
           let fromTypeStr = fromMsgStr.slice(0, 1)
           switch (fromTypeStr) {
@@ -77,21 +85,30 @@
       _resolveOptions(options) {
         this.fromType = options.query.fromType ? options.query.fromType : ''
         this.fromId = options.query.fromId ? options.query.fromId : ''
-        this.employeeId = options.query.employeeId ? options.query.employeeId : ''
+        this.shopId = options.query.shopId ? options.query.shopId : ''
       },
       _decideEntryType(options) {
         const source = this.$entryType(options)
         console.log(source)
       },
-      _checkIsConnect() {
-        if (this.employeeId) {
-          this.$wx.setStorageSync('employeeId', this.employeeId)
+      async _checkIsConnect() {
+        if (this.shopId) {
+          this.$wx.setStorageSync('shopId', this.shopId)
         } else {
-          let employeeId = this.$wx.getStorageSync('employeeId')
-          !employeeId && this.$wx.setStroageSync('employeeId', 100001)
+          let shopId = this.$wx.getStorageSync('shopId')
+          if (!shopId) {
+            let defaultShop = this.$wx.getStorageSync('defaultShop')
+            !defaultShop && (defaultShop = await this._setDefaultShop())
+            this.$wx.setStorageSync('shopId', defaultShop)
+          }
         }
-        // let token = wx.getStorageSync('token')
-        // let userInfo = wx.getStorageSync('userInfo')
+        let token = this.$wx.getStorageSync('token')
+        let userInfo = this.$wx.getStorageSync('userInfo')
+        if (!token || !userInfo) {
+          wx.reLaunch({ url: `/pages/login` })
+        } else {
+          await this.loginIm()
+        }
       }
     }
   }

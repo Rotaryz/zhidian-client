@@ -8,12 +8,13 @@
         <div class="tab-line"></div>
       </div>
     </section>
-    <ul class="active-wrapper">
+    <!--砍价-->
+    <ul class="active-wrapper" v-if="selectTab === 0">
       <li class="item-wrapper" v-for="(item,index) in '123'" :key="index">
-        <article class="top">
+        <article class="top" @click="goToDetail(item)">
           <div class="img-wrapper">
             <img class="img" mode="aspectFill" :src="url" alt="">
-            <div class="tag">仅剩6份</div>
+            <div class="tag cut">仅剩6份</div>
           </div>
           <div class="title-wrapper">
             <div class="explain-wrapper">
@@ -39,11 +40,57 @@
             <span class="shop-num">28人已成功砍价</span>
           </article>
           <article class="right-box">
-            <div class="jh-wrapper">
-              <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
+            <div class="jh-wrapper" @click="toLike(item)">
+              <img class="icon" v-if="imageUrl && isLike" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
+              <img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
               <div class="number">99</div>
             </div>
-            <div class="jh-wrapper">
+            <div class="jh-wrapper" @click="toShare(item)">
+              <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">
+              <div class="number">55</div>
+            </div>
+          </article>
+        </div>
+      </li>
+    </ul>
+    <!--拼团-->
+    <ul class="active-wrapper" v-if="selectTab === 1">
+      <li class="item-wrapper" v-for="(item,index) in '123'" :key="index">
+        <article class="top" @click="goToDetail(item)">
+          <div class="img-wrapper">
+            <img class="img" mode="aspectFill" :src="url" alt="">
+            <div class="tag group">仅剩6份</div>
+          </div>
+          <div class="title-wrapper">
+            <div class="explain-wrapper">
+              <div class="title">国颐堂皇家养发SPA</div>
+              <div class="explain">砍价最低9.9元包邮</div>
+            </div>
+            <div class="money-wrapper">
+              <div class="money">¥99</div>
+              <div class="button">开始拼团</div>
+            </div>
+          </div>
+        </article>
+        <div class="down">
+          <article class="mine-serve-avatar-box">
+            <div class="mine-serve-avatarBox-item" v-for="(items, idx) in header" :key="idx">
+              <img class="mine-serve-avatarBox-img" :src="url">
+            </div>
+            <div class="more">
+              <span class="more-item"></span>
+              <span class="more-item"></span>
+              <span class="more-item"></span>
+            </div>
+            <span class="shop-num">28人已成功砍价</span>
+          </article>
+          <article class="right-box">
+            <div class="jh-wrapper" @click="toLike(item)">
+              <img class="icon" v-if="imageUrl && isLike" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
+              <img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
+              <div class="number">99</div>
+            </div>
+            <div class="jh-wrapper" @click="toShare(item)">
               <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">
               <div class="number">55</div>
             </div>
@@ -62,15 +109,26 @@
         url: this.$parent.$imageUrl + '/zd-image/test-img/4@1x.png',
         tabList,
         selectTab: 0,
-        header: [1, 1, 1]
+        header: [1, 1, 1],
+        isLike: false
       }
     },
     created() {
     },
     methods: {
       changeTab(index) {
-        if (this.selectTab === index) return
         this.selectTab = index
+      },
+      goToDetail() {
+        console.log(22)
+      },
+      toLike() {
+        console.log(111)
+        this.isLike = !this.isLike
+        console.log(this.isLike)
+      },
+      toShare() {
+        console.log(22222)
       }
     }
   }
@@ -138,15 +196,18 @@
               position: absolute
               top: 5px
               left: 0
-              width: 44px
+              padding: 0 4px
               height: 16px
-              background: $color-FFA807
               border-radius: 0 100px 100px 0
               font-family: $font-family-medium
               font-size: $font-size-10
               color: $color-FFFFFF
               line-height: @height
               text-align: center
+              &.group
+                background-image: linear-gradient(116deg, #FFD411 0%, #FFA807 95%)
+              &.cut
+                background-image: linear-gradient(116deg, #FF86BF 0%, #FF6C86 95%)
           .title-wrapper
             line-height: 1.1
             position: relative
@@ -195,7 +256,7 @@
               height: 23px
               box-sizing: border-box
               border-radius: 50%
-              margin-right: -11px
+              margin-right: -4px
               .mine-serve-avatarBox-img
                 width: 23px
                 height: 23px
@@ -218,7 +279,7 @@
                     margin: 0 0.7px
             .more
               margin-top: 2px
-              margin-left: 20px
+              margin-left: 12px
               display: flex
               width: 12px
               justify-content: space-between
@@ -238,7 +299,7 @@
             .jh-wrapper
               layout(row)
               &:first-child
-                margin-right :20px
+                margin-right: 20px
               .icon
                 height: 16px
                 width: 16px
@@ -246,7 +307,7 @@
                 font-family: $font-family-medium
                 font-size: $font-size-10
                 color: $color-99A0AA
-                position :relative
+                position: relative
                 top: -5px
-                margin-left :3.5px
+                margin-left: 3.5px
 </style>

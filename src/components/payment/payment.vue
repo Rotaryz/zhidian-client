@@ -4,13 +4,13 @@
     <div class="payment-content" :class="orderShow ? 'show' : ''" @click.stop="" @touchmove="">
       <div class="payment-top border-bottom-1px">
         <div class="payment-img-box">
-          <img src="" class="payment-img">
+          <img :src="paymentMsg.image" class="payment-img">
         </div>
         <div class="payment-top-right">
-          <div class="payment-title">国颐堂皇室养发套餐</div>
+          <div class="payment-title">{{paymentMsg.title}}</div>
           <div class="payment-money">
-            <span class="price-left"><span class="price-icon">¥</span><span class="big-money">99</span></span>
-            <span class="del-money">599元</span>
+            <span class="price-left"><span class="price-icon">¥</span><span class="big-money">{{paymentMsg.price}}</span></span>
+            <span class="del-money">{{paymentMsg.originPrice}}元</span>
           </div>
         </div>
       </div>
@@ -19,65 +19,149 @@
           <div class="detail-title">数量</div>
           <div class="num-box">
             <div class="num-btn-box">
-              <img :src="imageUrl + '/zd-image/mine/icon-subtract@2x.png'" v-if="imageUrl && orderNum > 1" class="num-btn" @click="subNum">
-              <img :src="imageUrl + '/zd-image/mine/icon-subtract_disable@2x.png'" v-if="imageUrl && orderNum <= 1" class="num-btn">
+              <img :src="imageUrl + '/zd-image/mine/icon-subtract@2x.png'" v-if="imageUrl" class="num-btn" @click="subNum">
+              <img :src="imageUrl + '/zd-image/mine/icon-subtract_disable@2x.png'" v-show="orderNum <= 1" v-if="imageUrl" class="num-btn" @click.stop="">
             </div>
             <div class="payment-num">{{orderNum}}</div>
             <div class="num-btn-box">
               <img :src="imageUrl + '/zd-image/mine/icon-add@2x.png'" v-if="imageUrl" class="num-btn" @click.stop="addNum">
-              <img :src="imageUrl + '/zd-image/mine/icon-add_disable@2x.png'" v-if="imageUrl && false" class="num-btn">
+              <img :src="imageUrl + '/zd-image/mine/icon-add_disable@2x.png'" v-if="imageUrl && orderNum >= paymentMsg.stock" class="num-btn">
             </div>
           </div>
         </div>
         <div class="detail-item">
           <div class="detail-title">商品总额</div>
-          <div class="payment-money"><span class="money-icon">¥</span>99</div>
+          <div class="payment-money"><span class="money-icon">¥</span>{{total}}</div>
         </div>
       </div>
       <div class="phone-auth">
         <div class="detail-title">手机号码</div>
         <div class="phone-right">
-          <button class="phone-get-btn" open-type="getPhoneNumber" @getphonenumber="getPhone">
+          <button class="phone-get-btn" open-type="getPhoneNumber" @getphonenumber="getPhone" v-if="!paymentMsg.phoneNum">
             <span class="get-btn-txt">授权获取</span>
             <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" v-if="imageUrl" class="get-btn-icon">
           </button>
-          <div class="phone-num" v-if="false">15164931877</div>
+          <div class="phone-num" v-if="paymentMsg.phoneNum">{{paymentMsg.phoneNum}}</div>
         </div>
       </div>
       <div class="buy-btn-box">
-        <div class="buy-btn">立即购买</div>
+        <div class="buy-btn" :class="paymentMsg.phoneNum ? '' : 'un-click'" @click.stop="submitOrder">立即购买</div>
       </div>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import { Customer, Goods } from 'api'
+  import { mapActions } from 'vuex'
   export default {
     data () {
       return {
         imageUrl: this.$imageUrl,
         orderShow: false,
-        orderNum: 1
+        orderNum: 1,
+        total: '',
+        paymentMsg: {},
+        code: '',
+        type: ''
       }
     },
     created() {
-      console.log(9898989898)
     },
     methods: {
-      showOrder() {
+      ...mapActions([
+        'setShowType',
+        'setOrderResultMsg'
+      ]),
+      async showOrder(msg, type = 'default') {
+        this.type = type
+        this.paymentMsg = msg
+        this.code = msg.code
         this.orderShow = true
+        this.total = (this.orderNum * this.paymentMsg.price).toFixed(2)
       },
       hideOrder() {
         this.orderShow = false
       },
       addNum() {
         this.orderNum++
+        this.total = (this.orderNum * this.paymentMsg.price).toFixed(2)
       },
       subNum() {
         this.orderNum--
+        this.total = (this.orderNum * this.paymentMsg.price).toFixed(2)
       },
-      getPhone(e) {
-        console.log(e)
+      getPhone(event) {
+        const e = event.mp
+        if (e.detail.errMsg !== 'getPhoneNumber:ok') {
+          let url = `/pages/chat-msg/chat-msg`
+          wx.navigateTo({ url })
+          return
+        }
+        const iv = e.detail.iv
+        const encryptedData = e.detail.encryptedData
+        const data = { iv, encrypted_data: encryptedData, code: this.code }
+        Customer.setCustomerPhone(data).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            let userInfo = res.data
+            this.paymentMsg.phoneNum = res.data.mobile
+            wx.setStorageSync('userInfo', userInfo)
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
+      submitOrder() {
+        let data
+        let goods = [{
+          goods_id: this.paymentMsg.goods_id,
+          num: this.orderNum,
+          goods_title: this.paymentMsg.title
+        }]
+        switch (this.type) {
+          case 'default':
+            data = {
+              goods,
+              pay_method_id: 1,
+              order_id: 0,
+              recommend_goods_id: this.paymentMsg.recommend_goods_id
+            }
+            break
+          case 'group':
+            break
+          case 'bargain':
+            break
+        }
+        Goods.payOrder(data).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            let payRes = res.data
+            const { timestamp, nonceStr, signType, paySign } = payRes
+            this.setShowType(true)
+            wx.requestPayment({
+              timeStamp: timestamp,
+              nonceStr,
+              package: payRes.package,
+              signType,
+              paySign,
+              success: () => {
+                let resultData = {
+                  avatar: this.paymentMsg.shopImg,
+                  nickName: this.paymentMsg.shopName
+                }
+                this.setOrderResultMsg(resultData)
+                let url = '/pages/order-result?orderId=' + payRes.order_id
+                this.orderShow = false
+                wx.navigateTo({ url })
+              },
+              fail() {
+              }
+            })
+          } else {
+            this.$showToast(res.message)
+          }
+        })
       }
     }
   }
@@ -172,9 +256,13 @@
             .num-btn-box
               width: 55px
               height: 32px
+              position: relative
               .num-btn
                 width: 100%
                 height: 100%
+                position: absolute
+                left: 0
+                top: 0
             .payment-num
               width: 35px
               text-align: center
@@ -226,6 +314,8 @@
           font-size: $font-size-16
           font-family: $font-family-medium
           color: $color-white
+          button-style(normal, 22.5px)
+        .buy-btn.un-click
           button-style(un-click, 22.5px)
     .show.payment-content
       bottom: 0

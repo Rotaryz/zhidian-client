@@ -102,7 +102,14 @@
       <div class="right-box" @click="payOrderMsg" v-if="false">¥ 90开团</div>
       <div class="right-box" @click="payOrderMsg" v-if="false">去砍价</div>
       <div class="right-box" @click="payOrderMsg">底价 ¥ 90立即购买</div>
-      <div class="right-box un-click">已抢光</div>
+      <div class="right-box un-click" v-if="false">已抢光</div>
+      <div class="two-right-box" v-if="false">
+        <div class="right-btn black">
+          <span class="btn-top">¥ 90</span>
+          <span class="btn-down">立即购买</span>
+        </div>
+        <div class="right-btn red">拉朋友砍</div>
+      </div>
     </div>
     <payment ref="payment"></payment>
     <share ref="share"></share>
@@ -115,6 +122,8 @@
   import Payment from 'components/payment/payment'
   import Share from 'components/share/share'
   import ActivityRole from 'components/activity-role/activity-role'
+  // import { Goods } from 'api'
+  import { getParams } from 'common/js/util'
   export default {
     data() {
       return {
@@ -133,7 +142,23 @@
         kanList: []
       }
     },
-    onLoad() {
+    async onLoad(options) {
+      if (options.shopId) {
+        this.shopId = options.shopId
+        wx.setStorageSync('shopId', options.shopId)
+      }
+      if (options.scene) {
+        let scene = decodeURIComponent(options.scene)
+        let params = getParams(scene)
+        this.activityId = params.a ? params.a : ''
+        if (params.s) {
+          this.shopId = params.s
+          wx.setStorageSync('shopId', params.s)
+        }
+      } else {
+        this.activityId = options.activityId ? options.activityId : ''
+      }
+      await this._getGoodsDetail(this.activityId, this.activityType)
     },
     methods: {
       test() {
@@ -150,6 +175,8 @@
       },
       showRule(type) {
         this.$refs.role.showModel(type)
+      },
+      _getGoodsDetail(id, type) {
       }
     },
     components: {
@@ -445,6 +472,42 @@
         font-family: $font-family-medium
         color: $color-white
         button-style(normal, 22.5px)
+        &:active
+          button-style(click, 22.5px)
       .un-click.right-box
         button-style(un-click, 22.5px)
+      .two-right-box
+        flex: 1
+        overflow: hidden
+        display: flex
+        align-items: center
+        .right-btn
+          display: flex
+          flex-direction: column
+          align-items: center
+          justify-content: center
+          border-radius: 22.5px
+          height: 45px
+          color: $color-white
+        .black.right-btn
+          flex: 6
+          background: $color-455A64
+          margin-right: 10px
+          &:active
+            background: #374850
+          .btn-top
+            font-family: $font-family-medium
+            font-size: $font-size-16
+            margin-bottom: 2px
+          .btn-down
+            font-family: $font-family-regular
+            font-size: $font-size-12
+        .red.right-btn
+          flex: 4
+          button-style(normal, 22.5px)
+          margin-right: 10px
+          font-size: $font-size-14
+          font-family: $font-family-medium
+          &:active
+            button-style(click, 22.5px)
 </style>

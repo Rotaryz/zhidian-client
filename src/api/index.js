@@ -5,6 +5,9 @@ import jwt from './jwt'
 import dynamic from './dynamic'
 import shop from './shop'
 import order from './order'
+import goods from './goods'
+import guide from './guide'
+import customer from './customer'
 
 // 雷达消息im
 export const Im = im
@@ -20,3 +23,12 @@ export const Shop = shop
 
 // 订单
 export const Order = order
+
+// 商品
+export const Goods = goods
+
+// 导购
+export const Guide = guide
+
+// 顾客
+export const Customer = customer

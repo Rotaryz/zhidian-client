@@ -14,16 +14,44 @@
 
 <script type="text/ecmascript-6">
   import { Jwt } from 'api'
-
+  import {mapGetters} from 'vuex'
+  import { checkIsTabPage } from 'common/js/util'
+  const LOGINPAGE = '/pages/login'
+  const INDEX = '/pages/guide'
   export default {
     data() {
       return {
-        imgUrl: this.$imageUrl
+        imgUrl: this.$imageUrl,
+        authorizationCount: 0
       }
     },
     methods: {
-      test() {
-        this.$showToast('masd')
+      async _authorization() {
+        const wxUser = await this.$wechat.getUserInfo()
+        let resCode = await this.$wechat.login()
+        let code = resCode.code
+        const data = {
+          code,
+          iv: wxUser.iv,
+          encryptedData: wxUser.encryptedData
+        }
+        let Json = await Jwt.getToken(data)
+        if (Json.error !== this.$ERR_OK && this.authorizationCount <= 5) {
+          this.authorizationCount++
+          await this._authorization()
+          return
+        } else if (Json.error !== this.$ERR_OK && this.authorizationCount > 5) {
+          this.$showToast('登录失败，请重新登录')
+          return false
+        }
+        this.authorizationCount = 1
+        const res = Json.data
+        let token = res.access_token
+        let userInfo = res.customer_info
+        return {
+          token,
+          userInfo
+        }
       },
       async onGotUserInfo(e) {
         let res = e.mp.detail
@@ -42,18 +70,40 @@
         }
         try {
           res = await Jwt.getToken(data)
-          this.$wechat.hideLoading()
-          if (res.error !== this.$ERR_Ok) {
-            this.$showToast(res.message)
-            return
+          let userInfo, token
+          if (res.data.unauthorized) {
+            let resMsgJson = await this._authorization()
+            userInfo = resMsgJson.userInfo
+            token = resMsgJson.token
+          } else {
+            userInfo = res.data.customer_info
+            token = res.data.access_token
           }
-          const {userInfo, token} = [res.customer_info, res.access_token]
+          this.$wechat.hideLoading()
           this.$wx.setStorageSync('userInfo', userInfo)
           this.$wx.setStorageSync('token', token)
+          this._switchPage()
         } catch (e) {
           e && this.$showToast(e.msg)
         }
+      },
+      _switchPage() {
+        let isLoginPage = this.targetPage.indexOf(LOGINPAGE)
+        if (isLoginPage !== -1) {
+          wx.switchTab({url: INDEX})
+        } else {
+          if (checkIsTabPage(this.targetPage)) {
+            wx.switchTab({url: this.targetPage})
+          } else {
+            wx.redirectTo({url: this.targetPage})
+          }
+        }
+      },
+      _makeConnect() {
       }
+    },
+    computed: {
+      ...mapGetters(['targetPage'])
     }
   }
 </script>
