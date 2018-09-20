@@ -56,9 +56,7 @@
     data() {
       return {
         imageUrl: this.$imageUrl,
-        bannerImgs: [{image: {url: 'https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png'}},
-          {image: {url: 'https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png'}},
-          {image: {url: 'https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png'}}],
+        bannerImgs: [],
         currentNum: 1,
         shopId: '',
         reqGoodsId: '',
@@ -110,7 +108,9 @@
           recommend_goods_id: this.reqGoodsId || 16,
           phoneNum: userInfo.mobile,
           code: this.code,
-          hasPhone: this.hasPhone
+          hasPhone: this.hasPhone,
+          shopName: this.goodsDetail.shop_data.name,
+          shopImg: this.goodsDetail.shop_data.image_url
         }
         this.$refs.payment.showOrder(paymentMsg)
       },
@@ -118,7 +118,7 @@
         let res = await Goods.getGoodsDetail(16, loading)
         this.$wechat.hideLoading()
         if (res.error === this.$ERR_OK) {
-          // this.bannerImgs = res.data.goods_banner_images
+          this.bannerImgs = res.data.goods_banner_images
           this.goodsDetail = res.data
         }
       },
@@ -165,7 +165,6 @@
           .item-img
             width: 100%
             height: 100%
-            background: #ccc
       .page-box
         position: absolute
         right: 15px
