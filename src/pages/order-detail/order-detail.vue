@@ -3,14 +3,14 @@
     <div class="order-normal" v-if="detail.status !== 'refund'">
       <!-- 商品信息-->
       <div class="order-box">
-        <div class="order-shop">
+        <div class="order-shop" @click="_goShop(item)">
           <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-shop_order@2x.png'" class="home">
           <p class="order-name" v-if="detail.shop_data">
             {{detail.shop_data.name}}
             <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
           </p>
         </div>
-        <div class="order-msg">
+        <div class="order-msg" @click="_goCommodity(item)">
           <img :src="detail.goods_image_url" class="order-pic" mode="aspectFill">
           <div class="shop-content">
             <p class="shop-name">{{detail.goods_title}}</p>
@@ -45,7 +45,7 @@
         <div class="coupon-item" v-for="(coupon, index) in detail.coupon_details" :key="index">
           <div class="coupon-left">
             <img src="" mode="aspectFill" class="coupon-icon">
-            <p class="coupon-text">券1:</p>
+            <p class="coupon-text">券{{index + 1}}:</p>
             <p class="coupon-sn">{{coupon.code}}</p>
           </div>
           <div class="coupon-btn" :class="{'coupon-btn-disable' : item.status !== 0}">{{coupon.status === 0 ? '待使用' : coupon.status === 1 ? '已使用' : '已过期'}}</div>
@@ -55,54 +55,14 @@
       <div class="order-msg-content">
         <div class="order-title">订单信息</div>
         <div class="order-item">订单编号 : <span class="msg-detail">{{detail.order_sn}}</span></div>
-        <div class="order-item">手机号码 : <span class="msg-detail">6+566523656</span></div>
-        <div class="order-item order-last">下单时间 : <span class="msg-detail">6+566523656</span></div>
-        <div class="order-item order-first">购买数量 : <span class="msg-detail">6+566523656</span></div>
-        <div class="order-item">购买价格 : <span class="msg-detail">6+566523656</span></div>
+        <div class="order-item">手机号码 : <span class="msg-detail">{{detail.mobile}}</span></div>
+        <div class="order-item order-last">下单时间 : <span class="msg-detail">{{detail.create_at}}</span></div>
+        <div class="order-item order-first">购买数量 : <span class="msg-detail">{{detail.order_details ? detail.order_details[0].num : ''}}</span></div>
+        <div class="order-item">购买价格 : <span class="msg-detail">{{detail.order_details ? detail.order_details[0].total : ''}}</span></div>
       </div>
       <!--按钮-->
-      <div class="order-btn">
-        <div class="btn">拼团详情</div>
-      </div>
-    </div>
-    <div class="order-refund" v-if="detail.status === 'refund'">
-      <div class="refund-msg">
-        <div class="refund-text">
-          <p class="refund-title">退款状态</p>
-          <p class="refund-status">退款成功</p>
-        </div>
-        <div class="refund-item">
-          <p class="refund-name">退款金额：<span class="refund-content">￥10</span></p>
-        </div>
-        <div class="refund-item">
-          <p class="refund-name">退回账户：<span class="refund-content">￥10</span></p>
-        </div>
-      </div>
-      <div class="refund-progress">
-        <div class="refund-progress-red">
-          <div class="line-box">
-            <div class="line" :class="{'line-active': refundStatus >= 1}"></div>
-            <div class="line" :class="{'line-active': refundStatus === 2}"></div>
-          </div>
-          <span class="refund-progress-circular" :class="{'refund-progress-circular-active': refundStatus >= 0}"></span>
-          <span class="refund-progress-circular" :class="{'refund-progress-circular-active': refundStatus >= 1}"></span>
-          <span class="refund-progress-circular" :class="{'refund-progress-circular-active': refundStatus >= 2}"></span>
-        </div>
-        <div class="refund-progress-text">
-          <div class="refund-progress-item">
-            <div class="refund-progress-title" @click="_show">退款申请已提交</div>
-            <div class="refund-progress-reason">您的退款申请已经提交</div>
-            <div class="refund-progress-reason">2017-12-10 11:00</div>
-          </div>
-          <div class="refund-progress-item">
-            <div class="refund-progress-title">系统处理中</div>
-            <div class="refund-progress-reason">您的退款申请已受理，审核时间预计需要1-2天</div>
-          </div>
-          <div class="refund-progress-item">
-            <div class="refund-progress-title">退款成功</div>
-            <div class="refund-progress-reason">微信支付处理完成后，退款会在3-5天内退回您的</div>
-          </div>
-        </div>
+      <div class="order-btn" v-if="detail.status === 'payment' || detail.status === 'waiting_groupon' || detail.status === 'success_groupon' || detail.status === 'fail_groupon'">
+        <div class="btn" @click="_deal(item)">{{manager[detail.status]}}</div>
       </div>
     </div>
   </div>
@@ -111,6 +71,8 @@
 <script>
   import { Order } from 'api'
 
+  const MANAGER = { payment: '去支付', waiting_groupon: '拼团详情', success_groupon: '拼团详情', fail_groupon: '拼团详情' }
+
   const GROUND_STATUS = ['拼团中', '拼团成功']
   export default {
     name: 'order-detail',
@@ -118,14 +80,28 @@
       return {
         groundStatus: GROUND_STATUS,
         groundNow: 2,
-        refundStatus: 2,
-        detail: {}
+        detail: {},
+        manager: MANAGER
       }
     },
     async onLoad(option) {
       await this._orderDetail(option.id)
     },
     methods: {
+      _goShop(item) {
+        //  跳转店铺首页，切店
+      },
+      _goCommodity() {
+        //  跳转店铺详情，切店
+      },
+      _deal(item) {
+        switch (item.status) {
+          case 'payment':
+            // 支付
+            break
+          default:
+        }
+      },
       async _orderDetail(id) {
         let res = await Order.orderDetail(id)
         if (res.error !== this.$ERR_OK) {
@@ -133,7 +109,6 @@
           this.$wechat.hideLoading()
           return
         }
-        console.log(res.data)
         this.detail = res.data
         this.$wechat.hideLoading()
       }
@@ -353,87 +328,4 @@
         .coupon-btn-disable
           manager-button-style(un-click, 57px, 29px)
 
-  /*退款样式*/
-  .order-refund
-    .refund-msg
-      height: 129px
-      box-sizing: border-box
-      background: $color-white
-      padding: 0 15px
-      .refund-text
-        display: flex
-        justify-content: space-between
-        align-items: center
-        font-size: $font-size-14
-        height: 53.5px
-        font-family: $font-family-regular
-        margin-bottom: 5px
-        border-bottom-1px(rgba(153, 160, 170, 0.3))
-        .refund-title
-          font-size: $font-size-16
-          font-family: $font-family-medium
-        .refund-status
-          color: $color-D32F2F
-      .refund-item
-        font-size: $font-size-14
-        font-family: $font-family-regular
-        margin-top: 12px
-        .refund-content
-          font-family: $font-family-light
-          margin-left: 6.5px
-          color: $color-455A64
-    .refund-progress
-      padding: 23.5px 15px 24px
-      height: 269.5px
-      box-sizing: border-box
-      margin-top: 10px
-      background: $color-FFFFFF
-      display: flex
-      .refund-progress-red
-        height: 173px
-        flex-direction: column
-        justify-content: space-between
-        display: flex
-        position: relative
-        margin-top: 3.5px
-        .refund-progress-circular
-          position: relative
-          z-index: 2
-          background: $color-D2D2D2
-          border-radius: 50%
-          width: 7.5px
-          height: 7.5px
-        .refund-progress-circular-active
-          background: $color-D32F2F
-        .line-box
-          row-center()
-          height: 100%
-          width: 0.5px
-          display: flex
-          flex-direction: column
-          .line
-            height: 83px
-            width: 100%
-            background: $color-D2D2D2
-          .line-active
-            background: $color-D32F2F
-
-      .refund-progress-text
-        margin-left: 17.5px
-        transform: translateY(-3.5px)
-        height: 222px
-        font-size: $font-size-14
-        font-family: $font-family-regular
-        line-height: 1
-        .refund-progress-item
-          margin-bottom: 40px
-          .refund-progress-title
-            margin-bottom: 10px
-          .refund-progress-reason
-            margin-bottom: 3.5px
-            font-size: $font-size-12
-            color: $color-455A64
-          &:nth-child(2)
-            margin-bottom: 46px
-            margin-top: -6px
 </style>

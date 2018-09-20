@@ -70,6 +70,16 @@
         switch (status) {
           case 'payment': // 付款
             break
+          case 'waiting_groupon': // 拼团详情
+            // wx.navigateTo({
+            //   url: `/pages/order-detail?id=${item.id}`
+            // })
+            break
+          case 'fail_groupon': // 退款详情
+            wx.navigateTo({
+              url: `/pages/order-refund?id=${item.id}`
+            })
+            break
           default: // 跳转订单详情
             wx.navigateTo({
               url: `/pages/order-detail?id=${item.id}`
