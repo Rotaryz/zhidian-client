@@ -52,7 +52,6 @@
   import { Goods } from 'api'
   import { getParams } from 'common/js/util'
   import {mapGetters} from 'vuex'
-  import store from '@/store'
   export default {
     data() {
       return {
