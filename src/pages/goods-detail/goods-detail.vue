@@ -37,8 +37,8 @@
           <div class="item-txt">客服</div>
         </div>
       </div>
-      <div class="right-box" @click="payOrderMsg" v-if="!goodsDetail.stock">立即购买</div>
-      <div class="right-box un-click" v-if="goodsDetail.stock">已抢光</div>
+      <div class="right-box" @click="payOrderMsg" v-if="goodsDetail.stock">立即购买</div>
+      <div class="right-box un-click" v-if="!goodsDetail.stock">已抢光</div>
     </div>
     <payment ref="payment"></payment>
     <share ref="share"></share>
@@ -61,8 +61,11 @@
           {image: {url: 'https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png'}}],
         currentNum: 1,
         shopId: '',
-        goodsId: '',
-        goodsDetail: {}
+        reqGoodsId: '',
+        goodsDetail: {},
+        code: '',
+        hasPhone: false,
+        userInfo: {}
       }
     },
     async onLoad(options) {
@@ -73,15 +76,16 @@
       if (options.scene) {
         let scene = decodeURIComponent(options.scene)
         let params = getParams(scene)
-        this.goodsId = params.g ? params.g : ''
+        this.reqGoodsId = params.g ? params.g : ''
         if (params.s) {
           this.shopId = params.s
           wx.setStorageSync('shopId', params.s)
         }
       } else {
-        this.goodsId = options.goodsId ? options.goodsId : ''
+        this.reqGoodsId = options.goodsId ? options.goodsId : ''
       }
-      await this._getGoodsDetail(this.goodsId)
+      await this._getGoodsDetail(this.reqGoodsId)
+      await this._checkHasPhone()
     },
     methods: {
       test() {
@@ -93,19 +97,25 @@
       showShareModel() {
         this.$refs.share.show()
       },
-      payOrderMsg() {
+      async payOrderMsg() {
+        await this._checkHasPhone()
+        let userInfo = wx.getStorageSync('userInfo')
         let paymentMsg = {
           price: this.goodsDetail.platform_price,
           originPrice: this.goodsDetail.original_price,
           image: this.goodsDetail.image_url,
           title: this.goodsDetail.goods_title,
           stock: this.goodsDetail.stock,
-          phoneNum: ''
+          goods_id: this.goodsDetail.goods_id,
+          recommend_goods_id: this.reqGoodsId || 16,
+          phoneNum: userInfo.mobile,
+          code: this.code,
+          hasPhone: this.hasPhone
         }
         this.$refs.payment.showOrder(paymentMsg)
       },
       async _getGoodsDetail(id, loading = false) {
-        let res = await Goods.getGoodsDetail(1, loading)
+        let res = await Goods.getGoodsDetail(16, loading)
         this.$wechat.hideLoading()
         if (res.error === this.$ERR_OK) {
           // this.bannerImgs = res.data.goods_banner_images
