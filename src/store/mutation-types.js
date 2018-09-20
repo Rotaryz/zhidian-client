@@ -7,3 +7,5 @@ export const SET_DYNAMIC = 'SET_DYNAMIC'
 export const SET_SHOW_TYPE = 'SET_SHOW_TYPE'
 
 export const SET_GOODS_REFRESH = 'SET_GOODS_REFRESH'
+
+export const BROWSE_LIST = 'BROWSE_LIST'

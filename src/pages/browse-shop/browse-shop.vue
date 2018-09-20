@@ -52,7 +52,7 @@
       getBrowserList() {
         Shop.getBrowseShop({page: this.page}).then((res) => {
           this.$wechat.hideLoading()
-          if (res.error === this.$ERR_Ok) {
+          if (res.error === this.$ERR_OK) {
             this.browseShopList = res.data
             this._isUpList(res)
           } else {
@@ -70,7 +70,7 @@
         if (this.upMore) return
         Shop.getMerchantsImg({page: this.page}).then((res) => {
           this.$wechat.hideLoading()
-          if (res.error === this.$ERR_Ok) {
+          if (res.error === this.$ERR_OK) {
             this.shopList.push(res.data)
           } else {
             this.$showToast(res.message)
