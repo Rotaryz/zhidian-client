@@ -3,14 +3,14 @@
     <div class="order-normal" v-if="detail.status !== 'refund'">
       <!-- 商品信息-->
       <div class="order-box">
-        <div class="order-shop" @click="_goShop(item)">
+        <div class="order-shop" @click="_goShop()">
           <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-shop_order@2x.png'" class="home">
           <p class="order-name" v-if="detail.shop_data">
             {{detail.shop_data.name}}
             <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
           </p>
         </div>
-        <div class="order-msg" @click="_goCommodity(item)">
+        <div class="order-msg" @click="_goCommodity()">
           <img :src="detail.goods_image_url" class="order-pic" mode="aspectFill">
           <div class="shop-content">
             <p class="shop-name">{{detail.goods_title}}</p>
@@ -88,16 +88,42 @@
       await this._orderDetail(option.id)
     },
     methods: {
-      _goShop(item) {
+      _goShop() {
+        this.$turnShop({ id: this.detail.shop_id, url: '/pages/guide' })
         //  跳转店铺首页，切店
       },
       _goCommodity() {
-        //  跳转店铺详情，切店
+        this.$turnShop({ id: this.detail.shop_id, url: `/pages/goods-detail?goodsId=${this.detail.id}` })
+        //  跳转商品详情，切店
       },
-      _deal(item) {
-        switch (item.status) {
+      async _deal() {
+        switch (this.detail.status) {
           case 'payment':
+            let res = await Order.payOrder({ pay_method_id: 1, order_id: this.detail.id })
+            console.log(res)
             // 支付
+            this.$wechat.hideLoading()
+            if (res.error !== this.$ERR_OK) {
+              this.$showToast(res.message)
+              return
+            }
+            let payRes = res.data
+            const { timestamp, nonceStr, signType, paySign } = payRes
+            wx.requestPayment({
+              timeStamp: timestamp,
+              nonceStr,
+              package: payRes.package,
+              signType,
+              paySign,
+              success: async () => {
+                this.$wechat.showLoading()
+                setTimeout(async () => {
+                  await this._orderDetail(this.detail.id)
+                }, 2000)
+              },
+              fail() {
+              }
+            })
             break
           default:
         }

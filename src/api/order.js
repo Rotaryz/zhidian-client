@@ -10,5 +10,10 @@ export default {
   orderDetail(id) {
     const url = `/api/customer/customer-order/${id}`
     return request.get(url)
+  },
+  // 订单详情
+  payOrder(data) {
+    const url = `/api/customer/customer-order`
+    return request.post(url, data)
   }
 }
