@@ -1,8 +1,11 @@
 <script>
   import { resolvePageDetail, checkIsTabPage, resolveQrCode } from 'common/js/util'
   import {mapActions} from 'vuex'
+  import {Jwt} from 'api'
+  import imMixin from 'common/mixins/im-mixin'
 
   export default {
+    mixins: [imMixin],
     data() {
       return {
         fromType: '',
@@ -12,30 +15,32 @@
     },
     created() {
       console.log('created')
+      this._setDefaultShop()
     },
     onLaunch() {
       console.log('onlaunch')
     },
-    onShow(options) {
+    async onShow(options) {
       this._saveTargetPage(options)
       this._resolveQrCode(options)
       this._decideEntryType(options)
-      this._checkIsConnect(options)
-    },
-    onReady() {
-      console.log('onready')
-    },
-    mounted() {
-      console.log('mounted')
+      await this._checkIsConnect(options)
     },
     onHide() {
       console.log('onHide')
     },
-    update() {
-      console.log('update')
-    },
     methods: {
       ...mapActions(['setTargetPage']),
+      async _setDefaultShop() {
+        try {
+          let res = await Jwt.getDefaultShop()
+          if (res.error !== this.$ERR_OK) return
+          this.$wx.setStorageSync('defaultShop', res.data.default_shop)
+          return res.data.default_shop
+        } catch (e) {
+          console.error(e)
+        }
+      },
       _saveTargetPage(options) {
         let targetPage
         if (checkIsTabPage(options.path)) {
@@ -86,20 +91,23 @@
         const source = this.$entryType(options)
         console.log(source)
       },
-      _checkIsConnect() {
+      async _checkIsConnect() {
         if (this.shopId) {
-          wx.setStorageSync('shopId', this.shopId)
+          this.$wx.setStorageSync('shopId', this.shopId)
         } else {
-          let shopId = wx.getStorageSync('shopId')
-          !shopId && wx.setStorageSync('shopId', 12)
+          let shopId = this.$wx.getStorageSync('shopId')
+          if (!shopId) {
+            let defaultShop = this.$wx.getStorageSync('defaultShop')
+            !defaultShop && (defaultShop = await this._setDefaultShop())
+            this.$wx.setStorageSync('shopId', defaultShop)
+          }
         }
-        let token = wx.getStorageSync('token')
-        let userInfo = wx.getStorageSync('userInfo')
+        let token = this.$wx.getStorageSync('token')
+        let userInfo = this.$wx.getStorageSync('userInfo')
         if (!token || !userInfo) {
           wx.reLaunch({ url: `/pages/login` })
         } else {
-          // this.loginIm().then((res) => {
-          // })
+          await this.loginIm()
         }
       }
     }

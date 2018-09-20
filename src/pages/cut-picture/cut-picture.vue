@@ -47,6 +47,7 @@
       let cutType = option.cutType === 'undefined' ? 'default' : option.cutType
       this.show = true
       this.src = '' + getApp().globalData.imgUrl
+      // this.src = 'http://tmp/wx98f8d6aa65913a3b.o6zAJs4DdKC174WQnBFVcWO3PZsA.vcXfwtu5Ioi60432d4e8558047226344dce461778ca9.jpg' // todo
       this.cropperOpt = CUT_CONFIG[cutType]
     },
     mounted() {
