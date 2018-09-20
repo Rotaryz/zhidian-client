@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import Store from '../store'
 import wx from 'wx'
 import WeIM from './we-im/index'
 import { ERR_OK, baseURL } from 'api/config'
@@ -41,6 +42,7 @@ const somePlugin = {
     Vue.prototype.$wx = wx
     Vue.prototype.$cos = cos
     Vue.prototype.$cosFileType = cosFileType
+    Vue.prototype.$store = Store
   }
 }
 // 使用插件

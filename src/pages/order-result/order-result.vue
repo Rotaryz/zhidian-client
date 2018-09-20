@@ -6,17 +6,17 @@
         <div class="avatar-box">
           <img :src="orderResultMsg ? orderResultMsg.avatar : ''" class="avatar">
         </div>
-        <div class="shop-title">你在{{orderResultMsg ? orderResultMsg.nickName : ''}}</div>
+        <div class="shop-title">您在{{orderResultMsg ? orderResultMsg.nickName : ''}}</div>
         <div class="success-box">
           <div class="success-icon-box" :class="allReady ? 'show' : ''">
-            <img :src="imgUrl + '/ws-image/icon-paysuccess@2x.png'" v-if="imgUrl" class="success-icon back">
-            <img :src="imgUrl + '/ws-image/Oval 6@2x.png'" v-if="imgUrl" class="success-icon front">
+            <img :src="imageUrl + '/zd-image/mine/icon-payok@2x.png'" v-if="imageUrl" class="success-icon back">
+            <img :src="imageUrl + '/zd-image/mine/icon-payment@2x.png'" v-if="imageUrl" class="success-icon front">
           </div>
           <div class="success-txt">{{allReady ? '支付成功' : '支付中···'}}</div>
         </div>
         <div class="result-down">
-          <div class="down-txt">感谢您在{{orderResultMsg ? orderResultMsg.nickName : ''}}</div>
-          <div class="down-txt">购买商品，将尽快为您发货</div>
+          <div class="down-txt">感谢您在{{orderResultMsg ? orderResultMsg.nickName : ''}}购买</div>
+          <div class="down-txt">商品，请到线下门店核销使用！</div>
         </div>
       </div>
       <div class="down-btn-box">
@@ -152,7 +152,8 @@
           .success-txt
             font-family: PingFangSC-Regular
             font-size: $font-size-18
-            color: #374B63
+            color: $color-6E6E6E
+            text-align: center
             letter-spacing: 0.68px
         .result-down
           margin-bottom: 45px
@@ -160,7 +161,7 @@
             text-align: center
             font-family: PingFangSC-Regular
             font-size: $font-size-14
-            color: #828AA2
+            color: $color-6E6E6E
             letter-spacing: 0.3px
             line-height: 21px
 

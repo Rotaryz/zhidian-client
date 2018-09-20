@@ -37,7 +37,8 @@
           <div class="item-txt">客服</div>
         </div>
       </div>
-      <div class="right-box" @click="payOrderMsg">立即购买</div>
+      <div class="right-box" @click="payOrderMsg" v-if="!goodsDetail.stock">立即购买</div>
+      <div class="right-box un-click" v-if="goodsDetail.stock">已抢光</div>
     </div>
     <payment ref="payment"></payment>
     <share ref="share"></share>
@@ -50,6 +51,8 @@
   import Share from 'components/share/share'
   import { Goods } from 'api'
   import { getParams } from 'common/js/util'
+  import {mapGetters} from 'vuex'
+  import store from '@/store'
   export default {
     data() {
       return {
@@ -109,12 +112,27 @@
           // this.bannerImgs = res.data.goods_banner_images
           this.goodsDetail = res.data
         }
+      },
+      async _checkHasPhone() {
+        let userInfo = wx.getStorageSync('userInfo')
+        if (!userInfo.mobile) {
+          this.hasPhone = false
+          let login = await this.$wechat.login()
+          if (login.errMsg === 'login:ok') {
+            this.code = login.code
+          }
+        }
       }
     },
     components: {
       DetailContent,
       Payment,
       Share
+    },
+    computed: {
+      ...mapGetters([
+        'targetPage'
+      ])
     }
   }
 </script>
@@ -256,4 +274,6 @@
         font-family: $font-family-medium
         color: $color-white
         button-style(normal, 22.5px)
+      .un-click.right-box
+        button-style(un-click, 22.5px)
 </style>
