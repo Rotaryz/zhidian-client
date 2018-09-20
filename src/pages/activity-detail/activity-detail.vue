@@ -122,6 +122,8 @@
   import Payment from 'components/payment/payment'
   import Share from 'components/share/share'
   import ActivityRole from 'components/activity-role/activity-role'
+  // import { Goods } from 'api'
+  import { getParams } from 'common/js/util'
   export default {
     data() {
       return {
@@ -140,7 +142,23 @@
         kanList: []
       }
     },
-    onLoad() {
+    async onLoad(options) {
+      if (options.shopId) {
+        this.shopId = options.shopId
+        wx.setStorageSync('shopId', options.shopId)
+      }
+      if (options.scene) {
+        let scene = decodeURIComponent(options.scene)
+        let params = getParams(scene)
+        this.activityId = params.a ? params.a : ''
+        if (params.s) {
+          this.shopId = params.s
+          wx.setStorageSync('shopId', params.s)
+        }
+      } else {
+        this.activityId = options.activityId ? options.activityId : ''
+      }
+      await this._getGoodsDetail(this.activityId, this.activityType)
     },
     methods: {
       test() {
@@ -157,6 +175,8 @@
       },
       showRule(type) {
         this.$refs.role.showModel(type)
+      },
+      _getGoodsDetail(id, type) {
       }
     },
     components: {
