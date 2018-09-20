@@ -7,7 +7,7 @@ export default {
    * @returns {Promise.<*>}
    */
   getUploadSign() {
-    const url = `${baseURL.upload}/api/cos/upload-sign`
+    const url = `${baseURL.upload}/api/cos/signature`
     return request.get(url, {}, false)
   },
   /**
