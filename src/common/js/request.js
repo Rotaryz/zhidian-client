@@ -11,7 +11,6 @@ const COMMON_HEADER = {}
 // 请求拦截器
 fly.interceptors.request.use((request) => {
   request.headers['Authorization'] = wx.getStorageSync('token') || '0f60e1f448a1765e1236ffeb4b3c9967432da3d4'
-  request.headers['Current-Employee'] = wx.getStorageSync('employeeId')
   request.headers['Current-Shop'] = wx.getStorageSync('shopId') || 12
   return request
 })
@@ -30,7 +29,7 @@ fly.config.baseURL = baseURL.api
 function checkStatus (response) {
   // login
   // 如果http状态码正常，则直接返回数据
-  if (response && (response.status === 200 || response.status === 304 || response.status === 422)) {
+  if (response && (response.status === 200 || response.status === 201 || response.status === 304 || response.status === 422)) {
     return response
     // 如果不需要除了data之外的数据，可以直接 return response.data
   }

@@ -153,7 +153,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!loadMoreDy" class="no-more"><div class="line"></div><div class="txt">再拉也没有了</div></div>
+    <!--<div v-if="!loadMoreDy" class="no-more"><div class="line"></div><div class="txt">再拉也没有了</div></div>-->
     <navigator hover-class="none" v-if="isMine" url="edit-dynamic" class="new-dynamic">
       <img mode="widthFix" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-write@2x.png'" class="new-dynamic-img">
     </navigator>
@@ -191,9 +191,10 @@
   import { resolveQrCode } from 'common/js/util'
   import DynamicShare from 'components/dynamic-share/dynamic-share'
   import Share from 'components/share/share'
+  import imMixin from 'common/mixins/im-mixin'
 
   export default {
-    mixins: [base],
+    mixins: [base, imMixin],
     name: 'dynamic',
     data() {
       return {
@@ -219,7 +220,7 @@
         testImg: '', // 重要，勿删
         testShow: 0, // 重要，勿删
         isShowBox: true,
-        isMine: true
+        qrCode: ''
       }
     },
     async onLoad(option) {
@@ -231,7 +232,7 @@
       this.page = 1
       setTimeout(() => {
         this._getList()
-        this.shopId = this.$wx.getStorageSync('employeeId') ? wx.getStorageSync('employeeId') * 1 : ''
+        this.shopId = this.$wx.getStorageSync('shopId') ? wx.getStorageSync('shopId') * 1 : ''
         this.myShopId = this.$wx.getStorageSync('myShopId') ? wx.getStorageSync('myShopId') * 1 : null
         this._getDrawPosterInfo() // 获取画海报的信息
       }, 500)
@@ -242,20 +243,6 @@
     onReachBottom() {
       this.page++
       this._getList()
-    },
-    onShareAppMessage() {
-      let id = this.$wx.getStorageSync('userInfo').id
-      let employeeId = this.$wx.getStorageSync('employeeId')
-      return {
-        title: '',
-        path: `/pages/dynamic/dynamic?fromType=3&fromId=${id}&employeeId=${employeeId}`,
-        success: (res) => {
-          // 转发成功
-        },
-        fail: (res) => {
-          // 转发失败
-        }
-      }
     },
     methods: {
       cancel() {
@@ -278,37 +265,32 @@
         }
       },
       _getDrawPosterInfo() {
-        const houseInfo = this.$wx.getStorageSync('houseInfo')
-        let avatarUrl = houseInfo.avatar || `${baseURL.image}/ws-image/pic-headshot@2x.png`
-        let name = houseInfo.name || ''
-        let qrCodeUrl = ''
-        let defaultAvatar = baseURL.image + '/zd-image/dynamic/pic-zanbo_logo@2x.png'
-        let defaultName = '赞播智店'
-        let userInfo = this.$wx.getStorageSync('userInfo')
         const data = {
-          'type': 'dynamic',
-          data: {
-            'from_id': 'c' + userInfo.id,
-            'employee_id': this.$wx.getStorageSync('employeeId')
-          }
+          'patch': 'pages/dynamic/dynamic',
+          'width': '430',
+          'is_forever': '0',
+          'is_hyaline': '1'
         }
         Dynamic.createMiniCode(data, false).then(res => {
           if (res.error !== this.$ERR_OK) {
+            this.$wechat.hideLoading()
             this.$showToast(res.message)
             return
           }
-          qrCodeUrl = res.data.image_url || (baseURL.image + '/ws-image/pic-headshot@2x.png')
-          let arr = [avatarUrl, qrCodeUrl, defaultAvatar]
-          this._downloadPictures(arr, res => {
-            // console.log(res, '-----------=-')
-            getApp().globalData.drawInfo = {
-              avatarUrl: res[0].tempFilePath,
-              qrCodeUrl: res[1].tempFilePath,
-              name,
-              defaultAvatar: res[2].tempFilePath,
-              defaultName
-            }
-          })
+          this.$wechat.hideLoading()
+          this.qrCode = res.data.image_url
+          // qrCodeUrl = res.data.image_url || (baseURL.image + '/zd-image/dynamic/pic-headshot@2x.png')
+          // let arr = [avatarUrl, qrCodeUrl, defaultAvatar]
+          // this._downloadPictures(arr, res => {
+          //   // console.log(res, '-----------=-')
+          //   getApp().globalData.drawInfo = {
+          //     avatarUrl: res[0].tempFilePath,
+          //     qrCodeUrl: res[1].tempFilePath,
+          //     name,
+          //     defaultAvatar: res[2].tempFilePath,
+          //     defaultName
+          //   }
+          // })
         })
       },
       _downloadPictures(arr, callback) {
@@ -380,7 +362,7 @@
       },
       _goCopy(imgArr, title) {
         this.dynamicCopy = imgArr
-        wx.setClipboardData({
+        this.$wx.setClipboardData({
           data: title,
           success: (res) => {
             this.showDown = true
@@ -471,7 +453,7 @@
             return
           }
           this.$wechat.hideLoading()
-          this.$refs.toast.show(res.message)
+          this.$showToast(res.message)
         })
       },
       _closeLong() {
@@ -483,12 +465,12 @@
       },
       sendMsg() {
         if (!this.inputMsg) {
-          this.showToast('评论不能为空')
+          this.$showToast('评论不能为空')
           return
         }
         let msgTxt = this.inputMsg.toString().trim()
         if (!msgTxt) {
-          this.showToast('评论不能为空')
+          this.$showToast('评论不能为空')
           return
         }
         let data = {
@@ -501,6 +483,7 @@
         Dynamic.commentLog(data).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
+            this.$wechat.hideLoading()
             this.dynamicList[this.comIndex].live_log_comment.push(res.data)
             this.textArea = false
             this.sendCustomMsg(30003)
@@ -514,13 +497,13 @@
         Dynamic.delLogs(this.dynamicList[this.delIndex].id).then((res) => {
           if (res.error === this.$ERR_OK) {
             this.dynamicList.splice(this.delIndex, 1)
-            this.$refs.toast.show('删除动态成功')
+            this.$showToast('删除动态成功')
             this.$wechat.hideLoading()
             return
           }
           this.$wechat.hideLoading()
           this.isShowBox = false
-          this.$refs.toast.show(res.message)
+          this.$showToast(res.message)
         })
       },
       _showLong(index, status) {

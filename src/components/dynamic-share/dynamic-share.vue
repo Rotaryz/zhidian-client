@@ -183,12 +183,12 @@
               el: '.line',
               drawType: 'rect',
               color: '#EDEDEF'
+            },
+            {
+              el: '.qr-code-wrapper',
+              drawType: 'img',
+              source: this.qrCodeUrlTmp
             }
-            // {
-            //   el: '.qr-code-wrapper',
-            //   drawType: 'img',
-            //   source: this.qrCodeUrlTmp
-            // }
           ]
         }
         this.$refs.wePaint.action(options)

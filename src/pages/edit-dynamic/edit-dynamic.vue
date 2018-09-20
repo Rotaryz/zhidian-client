@@ -16,7 +16,7 @@
           <!--<input type="file" class="image-file" @change="_fileImage($event)" accept="image/*" multiple>-->
         </div>
       </div>
-      <div class="synchronization">
+      <div class="synchronization" v-if="isBoss">
         <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-member@2x.png'" class="synchronization-icon">
         <span class="synchronization-text">将动态同步全部成员</span>
         <switch :checked="isChecked" color="#56BA15" class="synchronization-switch" @change="_synchronization"></switch>

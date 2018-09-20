@@ -6,7 +6,7 @@ export default {
    * @return {*}
    */
   liveLogsList(data, loading) {
-    let url = 'https://ws-api.jerryf.cn/api/minimerchant/live-logs'
+    let url = '/api/customer/live-logs'
     return request.get(url, data, loading)
   },
   /**
@@ -14,7 +14,7 @@ export default {
    * @returns {*}
    */
   likeLog (data) {
-    let url = 'https://ws-api.jerryf.cn/api/customer/like-log'
+    let url = '/api/customer/like-log'
     return request.post(url, data)
   },
   /**
@@ -22,7 +22,7 @@ export default {
    * @returns {*}
    */
   commentLog (data) {
-    let url = 'https://ws-api.jerryf.cn/api/customer/comment-log'
+    let url = '/api/customer/comment-log'
     return request.post(url, data)
   },
   /**
@@ -30,7 +30,7 @@ export default {
    * @returns {*}
    */
   createMiniCode (data) {
-    let url = 'https://ws-api.jerryf.cn/api/customer/create-mini-qrcode'
+    let url = '/api/customer/create-mini-qrcode'
     return request.get(url, data)
   },
   /**
@@ -38,7 +38,7 @@ export default {
    * @returns {*}
    */
   liveLogs (data) {
-    let url = '/api/customer/e-live-logs'
+    let url = '/api/customer/live-logs'
     return request.post(url, data)
   },
   /**
@@ -46,7 +46,7 @@ export default {
    * @returns {*}
    */
   delLogs (id) {
-    let url = `/api/customer/e-live-logs/${id}`
+    let url = `/api/customer/live-logs/${id}`
     return request.delete(url)
   },
   /**
