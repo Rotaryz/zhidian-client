@@ -14,21 +14,16 @@
 
 <script type="text/ecmascript-6">
   import { Jwt } from 'api'
-  // import {mapGetters} from 'vuex'
+  import {mapGetters} from 'vuex'
   import { checkIsTabPage } from 'common/js/util'
   const LOGINPAGE = '/pages/login'
   const INDEX = '/pages/guide'
-// console.log(mapGetters('targetPage'))
-//   console.log(mapGetters)
   export default {
     data() {
       return {
         imgUrl: this.$imageUrl,
         authorizationCount: 0
       }
-    },
-    onShow() {
-      console.log(this.$store, '--00-0')
     },
     methods: {
       async _authorization() {
@@ -103,7 +98,7 @@
       }
     },
     computed: {
-      // ...mapGetters(['role'])
+      ...mapGetters(['targetPage'])
     }
   }
 </script>

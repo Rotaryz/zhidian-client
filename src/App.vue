@@ -12,7 +12,6 @@
     },
     created() {
       console.log('created')
-      // console.log(this.$store)
     },
     onLaunch() {
       console.log('onlaunch')
