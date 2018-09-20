@@ -1,8 +1,8 @@
 <template>
   <div class="browse-shop">
     <div class="browse-shop-small">
-      <div class="browse-shop-item" v-for="(item, index) in browseShopList" :key="index" @click="_changeShop(item.id)">
-        <img :src="item.image_url" class="browse-shop-logo">
+      <div class="browse-shop-item" v-for="(item, index) in browseShopList" :key="index">
+        <img :src="item.employee.avatar" class="browse-shop-logo">
         <span class="browse-shop-name">{{item.name}}</span>
         <img :src="image_url + '/zd-image/mine/icon-pressed@2x.png'" class="list-way">
       </div>
@@ -21,16 +21,10 @@
       return {
         browseShopList: [
           {
-            image_url: 'https://img.jerryf.cn/defaults/zd-image/mine/icon-success@2x.png',
-            name: 'eleven丶小店'
-          },
-          {
-            image_url: 'https://img.jerryf.cn/defaults/zd-image/mine/icon-success@2x.png',
-            name: 'eleven丶小店'
-          },
-          {
-            image_url: 'https://img.jerryf.cn/defaults/zd-image/mine/icon-success@2x.png',
-            name: 'eleven丶小店'
+            name: '',
+            employee: {
+              avatar: ''
+            }
           }
         ],
         page: 1,
@@ -38,23 +32,22 @@
         image_url: this.$imageUrl
       }
     },
-    created() {
-      console.log(this.$imageUrl)
-    },
     mounted() {
       this.getBrowserList()
     },
-    onReachBottom () {
-      this.page++
-      this.getMoreBrowserList()
-    },
+    // onReachBottom () {
+    //   this.page++
+    //   this.getMoreBrowserList()
+    // },
     methods: {
       getBrowserList() {
-        Shop.getBrowseShop({page: this.page}).then((res) => {
+        Shop.getBrowseShop().then((res) => {
           this.$wechat.hideLoading()
-          if (res.error === this.$ERR_Ok) {
+          console.log(res.error, this.$ERR_OK)
+          if (res.error === this.$ERR_OK) {
             this.browseShopList = res.data
-            this._isUpList(res)
+            // this._isUpList(res)
+            console.log(this.browseShopList)
           } else {
             this.$showToast(res.message)
           }
