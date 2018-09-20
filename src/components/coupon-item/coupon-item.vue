@@ -3,25 +3,23 @@
       <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/pic-coupon@2x.png'" class="coupon-bg">
       <div class="coupon-box">
         <div class="coupon-left">
-          <img  :src="couponInfo.imgUrl" class="coupon-img" :class="{'coupon-unused' : coupontype * 1 === 1}"  mode="aspectFill">
+          <img  :src="couponInfo.image_url" class="coupon-img" :class="{'coupon-unused' : coupontype * 1 === 1}"  mode="aspectFill">
           <div class="coupon-info">
-            <div class="title" :class="{'color-unused' : coupontype * 1 === 1}">{{couponInfo.title}}</div>
-            <div class="end-tiem" :class="{'color-unused' : coupontype * 1 === 1}">有效期至{{couponInfo.time}}</div>
+            <div class="title" :class="{'color-unused' : coupontype * 1 === 1}">{{couponInfo.goods_name}}</div>
+            <div class="end-tiem" :class="{'color-unused' : coupontype * 1 === 1}">有效期至{{couponInfo.end_at}}</div>
           </div>
         </div>
-        <div class="coupon-right" v-if="coupontype * 1 === 0">
-          <div class="coupon-btn">去使用</div>
-        </div>
-        <div class="coupon-right" v-if="coupontype * 1 === 1">
-          <div class="coupon-used">已使用</div>
-          <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon_overdue@2x.png'" class="ununsed-img" mode="aspectFill">
+        <div class="coupon-right">
+          <div class="coupon-btn" @click="usedBtn(couponInfo)" v-if="coupontype.status * 1 === 0">去使用</div>
+          <div class="coupon-used" v-if="coupontype.status * 1 === 1">已使用</div>
+          <img v-if="imageUrl && coupontype.status * 1 === 2" :src="imageUrl + '/zd-image/mine/icon_overdue@2x.png'" class="ununsed-img" mode="aspectFill">
         </div>
       </div>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
-  const DEFAULTDATA = {title: '国颐堂养发SPA馆瑶发堂洗发水', time: '2018-09-09', imgUrl: `https://img.jerryf.cn/defaults/zd-image/test-img/9@1x.png`}
+  const DEFAULTDATA = {goods_name: '国颐堂养发SPA馆瑶发堂洗发水', end_at: '2018-09-09', image_url: `https://img.jerryf.cn/defaults/zd-image/test-img/9@1x.png`, status: 0}
   export default {
     name: 'coupon-item',
     props: {
@@ -37,6 +35,11 @@
     data() {
       return {
         status: 0
+      }
+    },
+    methods: {
+      usedBtn(item) {
+        this.$emit('clickUsedBtn', item)
       }
     }
   }
@@ -62,7 +65,7 @@
       height: 100%
       z-index: 3
       layout(row)
-      padding: 0 1.3%
+      padding: 0 1.3% 1%
       align-items: center
       box-sizing: border-box
       .coupon-left
