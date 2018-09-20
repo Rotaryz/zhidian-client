@@ -16,6 +16,6 @@ export const setGoodsRefresh = ({ commit, state }, goodsRefresh) => {
   commit(types.SET_GOODS_REFRESH, goodsRefresh)
 }
 
-export const setTargetPage = ({commit, state}, page) => {
+export const setTargetPage = ({ commit, state }, page) => {
   commit(types.SET_TARGET_PAGE, page)
 }

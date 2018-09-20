@@ -12,20 +12,20 @@
     </div>
     <div class="goods-msg">
       <div class="goods-msg-left">
-        <div class="goods-title">国颐堂皇室养发套餐</div>
+        <div class="goods-title">{{goodsDetail.goods_title}}</div>
         <div class="goods-money-box">
-          <span class="big-money-box"><span class="red-money-icon">¥</span><span class="red-big-money">100</span></span>
-          <span class="del-money">699元</span>
+          <span class="big-money-box"><span class="red-money-icon">¥</span><span class="red-big-money">{{goodsDetail.platform_price}}</span></span>
+          <span class="del-money">{{goodsDetail.original_price}}元</span>
         </div>
       </div>
       <div class="goods-msg-right">
         <div class="right-box-container" @click="showShareModel">
-          <span class="msg-right-txt">0人分享</span>
+          <span class="msg-right-txt">{{goodsDetail.share_count}}人分享</span>
           <img :src="imageUrl + '/zd-image/mine/icon-share@2x.png'" v-if="imageUrl" class="msg-right-icon">
         </div>
       </div>
     </div>
-    <detail-content ref="detailContent"></detail-content>
+    <detail-content ref="detailContent" :goodsDetail="goodsDetail"></detail-content>
     <div class="pay-order-bottom border-top-1px">
       <div class="left-box">
         <div class="left-item">
@@ -37,7 +37,8 @@
           <div class="item-txt">客服</div>
         </div>
       </div>
-      <div class="right-box" @click="payOrderMsg">立即购买</div>
+      <div class="right-box" @click="payOrderMsg" v-if="!goodsDetail.stock">立即购买</div>
+      <div class="right-box un-click" v-if="goodsDetail.stock">已抢光</div>
     </div>
     <payment ref="payment"></payment>
     <share ref="share"></share>
@@ -48,6 +49,9 @@
   import DetailContent from 'components/detail-content/detail-content'
   import Payment from 'components/payment/payment'
   import Share from 'components/share/share'
+  import { Goods } from 'api'
+  import { getParams } from 'common/js/util'
+  import {mapGetters} from 'vuex'
   export default {
     data() {
       return {
@@ -55,10 +59,29 @@
         bannerImgs: [{image: {url: 'https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png'}},
           {image: {url: 'https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png'}},
           {image: {url: 'https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png'}}],
-        currentNum: 1
+        currentNum: 1,
+        shopId: '',
+        goodsId: '',
+        goodsDetail: {}
       }
     },
-    onLoad() {
+    async onLoad(options) {
+      if (options.shopId) {
+        this.shopId = options.shopId
+        wx.setStorageSync('shopId', options.shopId)
+      }
+      if (options.scene) {
+        let scene = decodeURIComponent(options.scene)
+        let params = getParams(scene)
+        this.goodsId = params.g ? params.g : ''
+        if (params.s) {
+          this.shopId = params.s
+          wx.setStorageSync('shopId', params.s)
+        }
+      } else {
+        this.goodsId = options.goodsId ? options.goodsId : ''
+      }
+      await this._getGoodsDetail(this.goodsId)
     },
     methods: {
       test() {
@@ -71,19 +94,51 @@
         this.$refs.share.show()
       },
       payOrderMsg() {
-        this.$refs.payment.showOrder()
+        let paymentMsg = {
+          price: this.goodsDetail.platform_price,
+          originPrice: this.goodsDetail.original_price,
+          image: this.goodsDetail.image_url,
+          title: this.goodsDetail.goods_title,
+          stock: this.goodsDetail.stock,
+          phoneNum: ''
+        }
+        this.$refs.payment.showOrder(paymentMsg)
+      },
+      async _getGoodsDetail(id, loading = false) {
+        let res = await Goods.getGoodsDetail(1, loading)
+        this.$wechat.hideLoading()
+        if (res.error === this.$ERR_OK) {
+          // this.bannerImgs = res.data.goods_banner_images
+          this.goodsDetail = res.data
+        }
+      },
+      async _checkHasPhone() {
+        let userInfo = wx.getStorageSync('userInfo')
+        if (!userInfo.mobile) {
+          this.hasPhone = false
+          let login = await this.$wechat.login()
+          if (login.errMsg === 'login:ok') {
+            this.code = login.code
+          }
+        }
       }
     },
     components: {
       DetailContent,
       Payment,
       Share
+    },
+    computed: {
+      ...mapGetters([
+        'targetPage'
+      ])
     }
   }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
+  @import "~common/stylus/base"
   .goods-detail
     background: $color-white
     padding-bottom: 70px
@@ -159,7 +214,7 @@
             font-size: $font-size-14
             margin-bottom: 2px
       .goods-msg-right
-        width: 85px
+        padding-left: 15px
         display: flex
         align-items: center
         justify-content: flex-end
@@ -218,4 +273,6 @@
         font-family: $font-family-medium
         color: $color-white
         button-style(normal, 22.5px)
+      .un-click.right-box
+        button-style(un-click, 22.5px)
 </style>

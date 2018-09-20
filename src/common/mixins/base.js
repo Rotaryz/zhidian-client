@@ -1,3 +1,5 @@
+import {Im} from 'api'
+
 const shareArr = [1007, 1008, 1036, 1044, 1073, 1074]
 const qrCordArr = [1047, 1048, 1049, 1011, 1012, 1013]
 
@@ -10,7 +12,6 @@ function _entryType(options) {
   let source = isShare ? 1 : isQrcord ? 2 : 0
   return source
 }
-
 export default {
   data() {
     return {
@@ -32,8 +33,60 @@ export default {
     $entryType(options) {
       return _entryType(options)
     },
-    async sendCustomMsg(code, obj) {
+    async $getEmployeeConect() {
+      let userInfo = wx.getStorageSync('userInfo')
+      // 建立连接
+      let employeeId = wx.getStorageSync('employeeId')
+      if (employeeId) {
+        let reqData = {
+          customer_id: userInfo.id,
+          employee_id: employeeId,
+          source: this.fromMsg.source,
+          from_type: this.fromMsg.fromType,
+          from_id: this.fromMsg.fromId
+        }
+        let resData = await Im.getConect(reqData, false)
+        if (resData.error === this.$ERR_OK) {
+          let currentMsg = {
+            employeeId: resData.data.employee_id,
+            flowId: resData.data.flow_id,
+            nickName: resData.data.employee_name,
+            avatar: resData.data.employee_avatar,
+            account: resData.data.employee_im_account
+          }
+          let descMsg = {
+            flow_id: resData.data.flow_id,
+            card_holder_id: resData.data.card_holder_id,
+            merchant_id: resData.data.merchant_id,
+            employee_id: resData.data.employee_id,
+            customer_id: userInfo.id,
+            customer_name: userInfo.nickname
+          }
+          // wx.setStorageSync('merchantId', resData.data.merchant_id)
+          this.setCurrentMsg(currentMsg)
+          this.setDescMsg(descMsg)
+          // 执行待完成的行为动作数组
+          if (this.behaviorList.length && employeeId) {
+            Promise.all(this.behaviorList.map((item) => {
+              let opt = Object.assign({}, item, { desc: JSON.stringify(descMsg) })
+              return this.$webimHandler.onSendCustomMsg(opt, this.currentMsg.account)
+            })).then(() => {
+              this.clearBehaviorList()
+            })
+          }
+          // 读取当前员工的未读信息, 没有则设置成1(欢迎语)
+          if (resData.data.ever_talked) {
+            let count = await this.$webimHandler.getAnyUnread(this.currentMsg.account)
+            this.setNowCountNum(count)
+          } else {
+            this.setNowCountNum(1)
+          }
+        }
+      }
+    },
+    async $sendCustomMsg(code, obj) {
       let descMsg
+      if (!descMsg) return // todo
       if (code * 1 === 20005) {
         let type = obj.type * 1
         switch (type) {

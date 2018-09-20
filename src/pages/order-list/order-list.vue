@@ -59,6 +59,7 @@
           width: 18px
           height: 18px
         .order-name
+          font-family: $font-family-medium
           font-size: $font-size-16
           color: $color-1F1F1F
           margin-left: 5px
