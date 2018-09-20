@@ -13,7 +13,7 @@
           <div class="cainter">
             <div class="user">
               <!-- 头像-->
-              <img class="header" mode="aspectFill" v-if="imageUrl" :src="!item.is_default ? item.employee_image_url: imageUrl + '/ws-image/pic-zanbo_logo@2x.png'">
+              <img class="header" mode="aspectFill" v-if="imageUrl" :src="!item.is_default ? item.employee_image_url : imageUrl + '/zd-image/dynamic/pic-zanbo_logo@2x.png'">
               <p class="nickname">{{!item.is_default ? item.employee_name : '赞播智店'}}</p>
             </div>
             <!--{{comment?'':'special'}}-->
@@ -33,27 +33,27 @@
             </div>
             <div class="share" :class="{'share-active': item.show}">
               <div class="share-item comment" @click="_comment(item.id)">
-                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/ws-image/icon-review@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-comments@2x.png'">
               </div>
               <div class="share-item" @click="_goodLike(index)">
-                <img class="find-icon" v-if="imageUrl" :src="item.is_like ? imageUrl + '/ws-image/icon-like_pressed@2x.png' : imageUrl + '/ws-image/icon-like@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="item.is_like ? imageUrl + '/zd-image/dynamic/icon-like_pressed@2x.png' : imageUrl + '/zd-image/dynamic/icon-zan@2x.png'">
               </div>
               <div class="share-item" @click.stop="_showCover(item)">
-                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/ws-image/icon-share_trends@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-share@2x.png'">
               </div>
               <!--{{find.is_like ? 'thumbs-up' : ''}}-->
             </div>
           </div>
           <div class="likes-peo" v-if="item.live_log_like.length || item.live_log_comment.length">
-            <img :src="imageUrl + '/zd-image/dynamic/pic-trends_zan1@2x.png'" class="likes-peo-bg" mode="widthFix">
+            <!--<img :src="imageUrl + '/zd-image/dynamic/pic-trends_zan1@2x.png'" class="likes-peo-bg" mode="widthFix">-->
             <div class="peo-big-box">
-              <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/ws-image/icon-like_show@2x.png'" class="like-icon">
+              <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/zd-image/dynamic/icon-like@2x.png'" class="like-icon">
               <div class="like-name">
                 <span v-for="(items,idx) in item.live_log_like" :key="idx">{{idx > 0 ? '，' : ''}}{{items.employee_name || items.customer_name}}</span>
               </div>
             </div>
             <div class="comment-peo" v-for="(com, comIdx) in item.live_log_comment" :key="comIdx"><span class="ro-peo-name">{{com.customer_name}}：</span><span class="comment-name">{{com.content}}</span></div>
-            <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan3@2x.png'" class="likes-peo-bg" mode="widthFix">
+            <!--<img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan3@2x.png'" class="likes-peo-bg" mode="widthFix">-->
           </div>
         </div>
       </div>
@@ -61,7 +61,7 @@
         <div class="find-box">
           <div class="cainter">
             <div class="user">
-              <img class="header" mode="aspectFill" v-if="imageUrl" :src="!item.is_default ? item.employee_image_url: imageUrl + '/ws-image/pic-zanbo_logo@2x.png'">
+              <img class="header" mode="aspectFill" v-if="imageUrl" :src="!item.is_default ? item.employee_image_url: imageUrl + '/zd-image/dynamic/pic-zanbo_logo@2x.png'">
               <p class="nickname">{{!item.is_default ? item.employee_name : '赞播智店'}}</p>
             </div>
             <text class="words">{{item.content}}</text>
@@ -80,27 +80,27 @@
             </div>
             <div class="share" :class="{'share-active': item.show}">
               <div class="share-item comment" @click="_comment(item.id)">
-                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/ws-image/icon-review@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-comments@2x.png'">
               </div>
               <div class="share-item" @click="_goodLike(index)">
-                <img class="find-icon" v-if="imageUrl" :src="item.is_like ? imageUrl + '/ws-image/icon-like_pressed@2x.png' : imageUrl + '/ws-image/icon-like@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="item.is_like ? imageUrl + '/zd-image/dynamic/icon-like_pressed@2x.png' : imageUrl + '/zd-image/dynamic/icon-zan@2x.png'">
               </div>
               <div class="share-item" @click.stop="_showCover(item)">
-                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/ws-image/icon-share_trends@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-share@2x.png'">
               </div>
               <!--{{find.is_like ? 'thumbs-up' : ''}}-->
             </div>
           </div>
           <div class="likes-peo" v-if="item.live_log_like.length || item.live_log_comment.length">
-            <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan1@2x.png'" class="likes-peo-bg" mode="widthFix">
+            <!--<img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan1@2x.png'" class="likes-peo-bg" mode="widthFix">-->
             <div class="peo-big-box">
-              <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/ws-image/icon-like_show@2x.png'" class="like-icon">
+              <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/zd-image/dynamic/icon-like@2x.png'" class="like-icon">
               <div class="like-name">
                 <span v-for="(items,idx) in item.live_log_like" :key="idx">{{idx > 0 ? '，' : ''}}{{items.employee_name || items.customer_name}}</span>
               </div>
             </div>
             <div class="comment-peo" v-for="(com, comIdx) in item.live_log_comment" :key="comIdx"><span class="ro-peo-name">{{com.customer_name}}：</span><span class="comment-name">{{com.content}}</span></div>
-            <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan3@2x.png'" class="likes-peo-bg" mode="widthFix">
+            <!--<img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan3@2x.png'" class="likes-peo-bg" mode="widthFix">-->
           </div>
         </div>
       </div>
@@ -108,7 +108,7 @@
         <div class="find-box">
           <div class="cainter">
             <div class="user">
-              <img class="header" v-if="imageUrl" mode="aspectFill" :src="!item.is_default ? item.employee_image_url: imageUrl + '/ws-image/pic-zanbo_logo@2x.png'">
+              <img class="header" v-if="imageUrl" mode="aspectFill" :src="!item.is_default ? item.employee_image_url: imageUrl + '/zd-image/dynamic/pic-zanbo_logo@2x.png'">
               <p class="nickname">{{!item.is_default ? item.employee_name : '赞播智店'}}</p>
             </div>
             <!--{{comment?'':'special'}}"-->
@@ -128,34 +128,34 @@
             </div>
             <div class="share" :class="{'share-active': item.show}">
               <div class="share-item comment" @click="_comment(item.id)">
-                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/ws-image/icon-review@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-comments@2x.png'">
               </div>
               <div class="share-item" @click="_goodLike(index)">
-                <img class="find-icon" v-if="imageUrl" :src="item.is_like ? imageUrl + '/ws-image/icon-like_pressed@2x.png' : imageUrl + '/ws-image/icon-like@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="item.is_like ? imageUrl + '/zd-image/dynamic/icon-like_pressed@2x.png' : imageUrl + '/zd-image/dynamic/icon-zan@2x.png'">
               </div>
               <div class="share-item" @click.stop="_showCover(item)">
-                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/ws-image/icon-share_trends@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-share@2x.png'">
               </div>
               <!--{{find.is_like ? 'thumbs-up' : ''}}-->
             </div>
           </div>
           <div class="likes-peo" v-if="item.live_log_like.length || item.live_log_comment.length">
-            <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan1@2x.png'" class="likes-peo-bg" mode="widthFix">
+            <!--<img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan1@2x.png'" class="likes-peo-bg" mode="widthFix">-->
             <div class="peo-big-box">
-              <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/ws-image/icon-like_show@2x.png'" class="like-icon">
+              <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/zd-image/dynamic/icon-like@2x.png'" class="like-icon">
               <div class="like-name">
                 <span v-for="(items,idx) in item.live_log_like" :key="idx">{{idx > 0 ? '，' : ''}}{{items.employee_name || items.customer_name}}</span>
               </div>
             </div>
             <div class="comment-peo" v-for="(com, comIdx) in item.live_log_comment" :key="comIdx"><span class="ro-peo-name">{{com.customer_name}}：</span><span class="comment-name">{{com.content}}</span></div>
-            <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan3@2x.png'" class="likes-peo-bg" mode="widthFix">
+            <!--<img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan3@2x.png'" class="likes-peo-bg" mode="widthFix">-->
           </div>
         </div>
       </div>
     </div>
     <div v-if="!loadMoreDy" class="no-more"><div class="line"></div><div class="txt">再拉也没有了</div></div>
     <navigator hover-class="none" v-if="isMine" url="edit-dynamic" class="new-dynamic">
-      <img mode="widthFix" v-if="imageUrl" :src="imageUrl + '/ws-image/radar/icon-release_dynamic@2x.png'" class="new-dynamic-img">
+      <img mode="widthFix" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-write@2x.png'" class="new-dynamic-img">
     </navigator>
     <confirm-msg ref="confirm" @confirm="_sureDel" @cancel="cancel"></confirm-msg>
     <div class="chat-input border-top-1px" v-if="textArea">
@@ -173,12 +173,13 @@
     </div>
     <dynamic-share :item.sync="pictureObj" ref="dynamic" @drawDone="drawDone" :qrCodeUrlTmp.sync="qrCode"></dynamic-share>
     <!--<div class="bottom-box-big" :class="showCover ? 'bottom-box-big-show' : ''">-->
-    <div class="bottom-box" :class="showCover ? 'show' : ''">
-      <button open-type="share" hover-class="none" class="share-item">发给好友</button>
-      <div class="share-item border-top" @click.stop="makePoster()">生成图片 保存分享</div>
-      <div class="share-item last" @click="_closeCover">取消</div>
-    </div>
+      <div class="bottom-box" :class="showCover ? 'show' : ''">
+        <button open-type="share" hover-class="none" class="share-item">发给好友</button>
+        <div class="share-item border-top" @click.stop="makePoster()">生成图片 保存分享</div>
+        <div class="share-item last" @click="_closeCover">取消</div>
+      </div>
     <!--</div>-->
+    <!--<share ref="share" />-->
   </article>
 </template>
 
@@ -189,6 +190,7 @@
   import ConfirmMsg from 'components/confirm-msg/confirm-msg'
   import { resolveQrCode } from 'common/js/util'
   import DynamicShare from 'components/dynamic-share/dynamic-share'
+  import Share from 'components/share/share'
 
   export default {
     mixins: [base],
@@ -222,6 +224,8 @@
     },
     async onLoad(option) {
       // await this._getQuery(option)
+      // this.$wx.setStorageSync('employeeId', 100001)
+      // this.$wx.setStorageSync('token', '8ab4795567cb2e07245d89bbd1ea1a8e2d05416a')
       this.loadMoreDy = true
       this.dynamicList = []
       this.page = 1
@@ -278,7 +282,7 @@
         let avatarUrl = houseInfo.avatar || `${baseURL.image}/ws-image/pic-headshot@2x.png`
         let name = houseInfo.name || ''
         let qrCodeUrl = ''
-        let defaultAvatar = baseURL.image + '/ws-image/pic-zanbo_logo@2x.png'
+        let defaultAvatar = baseURL.image + '/zd-image/dynamic/pic-zanbo_logo@2x.png'
         let defaultName = '赞播智店'
         let userInfo = this.$wx.getStorageSync('userInfo')
         const data = {
@@ -334,7 +338,9 @@
         this.showCover = false
       },
       _showCover(item) {
+        console.log('showcover')
         this.pictureObj = item
+        // this.$refs.share.show()
         this.showCover = true
       },
       _hideDown() {
@@ -533,7 +539,8 @@
     },
     components: {
       ConfirmMsg,
-      DynamicShare
+      DynamicShare,
+      Share
     }
   }
 </script>
@@ -652,22 +659,33 @@
         position: relative
         width: 79.73vw
         box-sizing: border-box
+        border-radius: 5px
+        background: $color-F4F5F7
+        padding-bottom: 3px
+        &:before
+          content: ''
+          width: 0
+          height: 0
+          border: 8px solid $color-F4F5F7
+          border-top-color: transparent
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          position: absolute
+          left: 20px
+          top: -15px
         .likes-peo-bg
           display: block
           width: 100%
         .peo-big-box
           width: 100%
           box-sizing: border-box
-          border-right-1px(rgba(0, 0, 0, 0.10), solid)
-          border-left-1px(rgba(0, 0, 0, 0.10), solid)
-          background: #F9F9F9
           padding: 3px 0
           display: flex
         .like-icon
           margin: 4px 0 0 10px
           z-index: 10
           width: 14px
-          height: 12.963px
+          height: 14px
         .like-name
           font-size: $font-size-14
           color: $color-466889
@@ -676,12 +694,9 @@
           line-height: 21px
           flex: 1
         .comment-peo
-          border-right-1px(rgba(0, 0, 0, 0.10), solid)
-          border-left-1px(rgba(0, 0, 0, 0.10), solid)
           padding: 0 10px
           width: 100%
           box-sizing: border-box
-          background: #F9F9F9
           font-size: $font-size-14
           line-height: 22px
           color: $color-466889

@@ -8,16 +8,16 @@
           <img class="img-item" :src="item.image_url" mode="aspectFill">
           <!--<input type="file" class="image-file" @change="_fileImage($event)" accept="image/*" multiple>-->
           <div class="close-icon" @click.stop="_delImage(index)">
-            <img class="close-icon" v-if="imageUrl" :src="imageUrl + '/ws-image/icon-delpic@2x.png'" mode="widthFix">
+            <img class="close-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-delpic@2x.png'" mode="widthFix">
           </div>
         </div>
         <div class="com-image" v-if="image.length < 9">
-          <img class="img-item" src="/static/img/Group3@2x.png" @click="_fileImage">
+          <img class="img-item" :src="imageUrl + '/zd-image/dynamic/Group3@2x.png'" @click="_fileImage">
           <!--<input type="file" class="image-file" @change="_fileImage($event)" accept="image/*" multiple>-->
         </div>
       </div>
       <div class="synchronization">
-        <img v-if="imageUrl" :src="imageUrl + '/ws-image/icon-member-dy@2x.png'" class="synchronization-icon">
+        <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-member@2x.png'" class="synchronization-icon">
         <span class="synchronization-text">将动态同步全部成员</span>
         <switch :checked="isChecked" color="#56BA15" class="synchronization-switch" @change="_synchronization"></switch>
       </div>
@@ -90,16 +90,17 @@
         })
       },
       async _upLoad (data) {
-        // await Promise.all(data.map(async (val, index) => {
+        await Promise.all(data.map(async (val, index) => {
         //   // let image = await Dynamic.upLoadImage({ file: val, sort: index })
-        //   // let image = await this.cos.uploadFiles(this.cosFileType.IMAGE_TYPE, [val])
+          console.log(this.$cos, 'cos')
+          let image = await this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, [val])
+          console.log(image, 'image')
         //   // let imageItem = { type: 1, detail_id: image.id, image_url: image.url, sort: image.sort * 1 }
         //   this.image.push(imageItem)
-        // }))
+        }))
         data.map((val, index) => {
           this.image.push(data[index])
         })
-        console.log(this.image, 'thisimage', data instanceof Array)
         this.image.sort(this._sort)
         data.forEach((item) => {
           let obj = { image_url: item }
