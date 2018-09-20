@@ -19,3 +19,7 @@ export const setGoodsRefresh = ({ commit, state }, goodsRefresh) => {
 export const setTargetPage = ({ commit, state }, page) => {
   commit(types.SET_TARGET_PAGE, page)
 }
+
+export const setOrderResultMsg = ({ commit, state }, obj) => {
+  commit(types.SET_ORDER_RESULT, obj)
+}

@@ -12,6 +12,9 @@ const mutations = {
   },
   [types.SET_GOODS_REFRESH] (state, goodsRefresh) {
     state.goodsRefresh = goodsRefresh
+  },
+  [types.SET_ORDER_RESULT] (state, obj) {
+    state.orderResult = obj
   }
 }
 

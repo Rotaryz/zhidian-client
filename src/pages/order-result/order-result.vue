@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  // import { mapGetters } from 'vuex'
+  import { mapGetters } from 'vuex'
   export default {
     name: 'OrderResult',
     data () {
@@ -39,8 +39,6 @@
         imageUrl: this.$imageUrl,
         type: 0,
         orderId: '',
-        shopName: wx.getStorageSync('shopName'),
-        activityId: '',
         allReady: false,
         timer: ''
       }
@@ -48,21 +46,17 @@
     methods: {
       toShop() {
         if (!this.allReady) return
-        let url = '/pages/goods/goods'
+        let url = '/pages/guide'
         wx.switchTab({url})
       },
       toDetail() {
         if (!this.allReady) return
-        let url = '/pages/order-detail/order-detail?id=' + this.orderId
+        let url = '/pages/order-detail?id=' + this.orderId
         wx.navigateTo({url})
       }
     },
     onLoad(option) {
-      this.type = option.type
       this.orderId = option.orderId
-      if (this.type * 1 === 1) {
-        this.activityId = option.ActivityId
-      }
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
         this.allReady = true
@@ -72,6 +66,9 @@
       this.allReady = false
     },
     computed: {
+      ...mapGetters([
+        'orderResultMsg'
+      ])
     }
   }
 </script>

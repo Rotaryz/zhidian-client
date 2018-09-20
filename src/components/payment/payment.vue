@@ -70,7 +70,8 @@
     },
     methods: {
       ...mapActions([
-        'setShowType'
+        'setShowType',
+        'setOrderResultMsg'
       ]),
       async showOrder(msg, type = 'default') {
         this.type = type
@@ -135,7 +136,6 @@
         Goods.payOrder(data).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
-            console.log(res)
             let payRes = res.data
             const { timestamp, nonceStr, signType, paySign } = payRes
             this.setShowType(true)
@@ -146,35 +146,12 @@
               signType,
               paySign,
               success: () => {
-                if (this.orderType * 1 === 0) {
-                  this.sendCustomMsg(20020, dataJson)
-                } else if (this.orderType * 1 === 1) {
-                  this.sendCustomMsg(20011, dataJson)
-                  wechat.showLoading()
-                  setTimeout(() => {
-                    wechat.hideLoading()
-                    if (this.from !== 'groupDetail') {
-                      let nextUrl = `/pages/group-detail/group-detail?groupId=${payRes.group_id}&fromPage=goodsDetail`
-                      this.orderShow = false
-                      wx.navigateTo({ url: nextUrl })
-                    } else {
-                      let goods = {
-                        groupId: payRes.group_id
-                      }
-                      this.setGroupDetail(goods)
-                      wx.navigateBack({ delta: 1 })
-                    }
-                  }, 2000)
-                  return
-                } else if (this.orderType * 1 === 3) {
-                  this.sendCustomMsg(20017, dataJson)
-                }
                 let resultData = {
-                  avatar: this.goodsDetail.shop_image_url,
-                  nickName: this.goodsDetail.shop_name
+                  avatar: this.paymentMsg.shopImg,
+                  nickName: this.paymentMsg.shopName
                 }
                 this.setOrderResultMsg(resultData)
-                let url = '/pages/order-result/order-result?type=' + this.goodsType + '&orderId=' + payRes.order_id + '&ActivityId=' + this.reqActivityId
+                let url = '/pages/order-result?orderId=' + payRes.order_id
                 this.orderShow = false
                 wx.navigateTo({ url })
               },
