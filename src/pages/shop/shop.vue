@@ -59,8 +59,8 @@
             this.$showToast(res.message)
             return
           }
-          this.shopInfo = res.data
-          this.employee = res.data.employee
+          this.shopInfo = res.data || {}
+          this.employee = res.data.employee || {}
         } catch (e) {
           console.error(e)
         }

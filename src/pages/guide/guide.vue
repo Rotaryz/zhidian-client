@@ -62,6 +62,7 @@
     methods: {
       changeTab(index) {
         this.selectTab = index
+        console.log(this.selectTab, 'asdsadadadd')
         switch (index) {
           case 0:
             this.cutData.page = 1
@@ -95,8 +96,8 @@
             this.$showToast(res.message)
             return
           }
-          this.shopInfo = res.data
-          this.employee = res.data.employee
+          this.shopInfo = res.data || {}
+          this.employee = res.data.employee || {}
         } catch (e) {
           console.error(e)
         }

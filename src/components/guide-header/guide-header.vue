@@ -11,12 +11,11 @@
     <section class="content">
       <article class="top">
         <div class="avatar-wrapper">
-          <img class="avatar" mode="aspectFill" :src="employee && employee.avatar || url" alt="">
+          <img class="avatar" mode="aspectFill" :src="employee.avatar || url" alt="">
         </div>
         <div class="name">{{employee.nickname || '刘辉'}}</div>
         <div class="detail">
-          <!--<div class="position">{{employee.role_id || '美容导师'}}</div>-->
-          <div class="position">{{'美容导师'}}</div>
+          <div class="position">{{shopInfo.position || '美容导师'}}</div>
           <div class="company">{{shopInfo.name || '广州国颐堂养发SPA馆'}}</div>
         </div>
       </article>
