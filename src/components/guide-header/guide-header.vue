@@ -1,7 +1,7 @@
 <template>
   <div class="guide-header">
     <section class="logo-wrapper">
-      <img class="img" mode="aspectFill" :src="employee.head_image_url || url" alt="">
+      <img class="img" mode="aspectFill" :src="(employee&&employee.head_image_url) || url" alt="">
       <button class="share-btn">
         <img class="share-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share_dg@2x.png'" alt="">
         <div class="share-txt">分享</div>
@@ -11,12 +11,12 @@
     <section class="content">
       <article class="top">
         <div class="avatar-wrapper">
-          <img class="avatar" mode="aspectFill" :src="employee.avatar || url" alt="">
+          <img class="avatar" mode="aspectFill" :src="(employee&&employee.avatar) || url" alt="">
         </div>
-        <div class="name">{{employee.nickname || '刘辉'}}</div>
+        <div class="name">{{(employee&&employee.nickname) || '刘辉'}}</div>
         <div class="detail">
-          <div class="position">{{employee.role_id || '美容导师'}}</div>
-          <div class="company">{{shopInfo.name || '广州国颐堂养发SPA馆'}}</div>
+          <div class="position">{{(employee&&employee.role_id) || '美容导师'}}</div>
+          <div class="company">{{(employee&&shopInfo.name) || '广州国颐堂养发SPA馆'}}</div>
         </div>
       </article>
       <div class="down">"{{shopInfo.intro || '黑色给了我黑色的眼睛我却用它来寻找光明'}}"</div>

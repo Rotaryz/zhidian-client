@@ -144,3 +144,66 @@ export function previewImage (data = {urls: [], current: ''}) {
     })
   })
 }
+
+/**
+ * canvasContext.draw 将之前在绘图上下文中的描述（路径、变形、样式）画到 canvas 中。
+ * @returns {Promise<any>}
+ */
+export function draw (ctx, reserve = false) {
+  return new Promise((resolve, reject) => {
+    ctx.draw(reserve, (res) => {
+      if (res.errMsg === 'drawCanvas:ok') {
+        resolve(res)
+      } else {
+        reject(res)
+      }
+    })
+  })
+}
+
+/**
+ * 把当前画布指定区域的内容导出生成指定大小的图片，并返回文件路径
+ * @returns {Promise<any>}
+ */
+export function canvasToTempFilePath (data, ctx) {
+  return new Promise((resolve, reject) => {
+    wx.canvasToTempFilePath({
+      ...data,
+      success: resolve,
+      fail: reject
+    }, ctx)
+  })
+}
+
+/**
+ * 保存图片到系统相册
+ * @returns {Promise<any>}
+ */
+export function saveImageToPhotosAlbum (data = {filePath: ''}) {
+  return new Promise((resolve, reject) => {
+    wx.saveImageToPhotosAlbum({
+      ...data,
+      success: resolve,
+      fail: (err) => {
+        reject(err)
+        setTimeout(() => {
+          wx.openSetting()
+        }, 1000)
+      }
+    })
+  })
+}
+
+/**
+ * 下载文件
+ * @returns {Promise<any>}
+ */
+export function downloadFile (data = {url: ''}) {
+  return new Promise((resolve, reject) => {
+    wx.downloadFile({
+      ...data,
+      success: resolve,
+      fail: reject
+    })
+  })
+}
