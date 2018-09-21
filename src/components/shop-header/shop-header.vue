@@ -25,13 +25,17 @@
       <span class="txt">大众点评</span>
     </div>
     <div class="explain open-time">营业时间：11:00-21:00</div>
-    <div class="explain address">广州市海珠区 TIT 创意园A9</div>
-    <div class="distance">距你340m，步行需要9分钟</div>
-    <div class="btn-group">
-      <img class="icon left" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-maps@2x.png'" alt="" @click="toMap">
-      <div class="line"></div>
-      <img class="icon right" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-tel@2x.png'" alt="" @click="toMobile">
-    </div>
+    <section class="distance-wrapper">
+      <article class="left">
+        <div class="explain address">广州市海珠区 TIT 创意园A9</div>
+        <div class="distance">距你340m，步行需要9分钟</div>
+      </article>
+      <article class="btn-group">
+        <img class="icon left" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-maps@2x.png'" alt="" @click="toMap">
+        <div class="line"></div>
+        <img class="icon right" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-tel@2x.png'" alt="" @click="toMobile">
+      </article>
+    </section>
     <video class="my-video" id="my-video" :src="video"></video>
   </div>
 </template>
@@ -143,6 +147,8 @@
     .evaluate
       layout(row, block, nowrap)
       margin: 8px 0 25px
+      position: relative
+      left: 1px
       .star
         width: 15px
         height: 15px
@@ -151,7 +157,7 @@
         .star-icon
           width: 100%
           height: 100%
-          display :block
+          display: block
       .txt
         margin-left: 3px
         font-size: $font-size-12
@@ -162,25 +168,34 @@
       font-size: $font-size-14
       color: $color-1F1F1F
       letter-spacing: 0.6px
-    .address
-      margin: 25px 0 6px
-    .distance
-      font-size: $font-size-12
-      color: $color-99A0AA
-      padding-bottom: 40px
-    .btn-group
-      position: absolute
-      bottom: 45px
-      right: 15px
-      layout(row)
-      align-items: center
-      .line
-        width: 1px
-        height: 19px
-        background: $color-99A0AA
-        opacity: 0.3
-      .icon
-        width: 22px
-        height: 22px
-        margin: 0 15px
+    .distance-wrapper
+      layout(row, block, nowrap)
+      .left
+        width: 67%
+        .address
+          width: 100%
+          margin: 25px 0 6px
+          text-align: justify
+          word-break :break-all
+        .distance
+          width: 95%
+          font-size: $font-size-12
+          color: $color-99A0AA
+          padding-bottom: 40px
+          text-align: justify
+          word-break :break-all
+      .btn-group
+        flex: 1
+        margin-top: 31px
+        layout(row)
+        justify-content :flex-end
+        .line
+          width: 1px
+          height: 19px
+          background: $color-99A0AA
+          opacity: 0.3
+          margin :3px 15px
+        .icon
+          width: 24px
+          height: 24px
 </style>

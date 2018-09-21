@@ -10,18 +10,22 @@
     </section>
     <ul class="server-wrapper" v-if="selectTab === 0">
       <li class="coupon-item" v-if="goodsList.length" v-for="(item,index) in goodsList" :key="index" @click="toGoodsDetail(item)">
-        <div class="logo"><img class="logo-pic" mode="aspectFill" :src="item.image_url" alt=""></div>
-        <article class="detail">
-          <div class="title">{{item.goods_title}}</div>
-          <div class="money">
-            <div class="price">¥{{item.platform_price}}</div>
-            <span class="old-price">{{item.original_price}}元</span>
-          </div>
-        </article>
-        <div class="btn-wrapper">
-          <div class="btn">购买</div>
-          <div class="txt">已售{{item.sale_count}}份</div>
+        <div class="logo">
+          <img class="logo-pic" mode="aspectFill" :src="item.image_url" alt="">
         </div>
+        <section class="right">
+          <article class="detail">
+            <div class="title">{{item.goods_title}}</div>
+            <div class="money">
+              <div class="price">¥{{item.platform_price}}</div>
+              <span class="old-price">{{item.original_price}}元</span>
+            </div>
+          </article>
+          <div class="btn-wrapper">
+            <div class="btn">购买</div>
+            <div class="txt">已售{{item.sale_count}}份</div>
+          </div>
+        </section>
       </li>
     </ul>
     <section class="story-wrapper" v-if="selectTab === 1">
@@ -40,6 +44,7 @@
           <!--<div class="video" v-if="item.type === 2">{{item.detail}}</div>-->
         </li>
       </ul>
+      <div class="end">END</div>
     </section>
   </div>
 </template>
@@ -81,6 +86,10 @@
       goodsList: {
         type: Array,
         default: []
+      },
+      selectTab: {
+        type: Number,
+        default: 0
       }
     },
     data() {
@@ -96,7 +105,6 @@
     },
     methods: {
       changeTab(index) {
-        this.selectTab = index
         this.$emit('changeTab', index)
       },
       toGoodsDetail(item) {
@@ -149,12 +157,11 @@
           background: $color-D32F2F
           border-radius: 3px
     .server-wrapper
-      padding: 0 20px
+      padding: 0 15px 37.5px
       .coupon-item
         margin-top: 20px
         layout(row, block, nowrap)
-        &:last-child
-          margin-bottom: 37.5px
+        position: relative
         .logo
           width: 76px
           height: 76px
@@ -163,42 +170,56 @@
           .logo-pic
             width: 100%
             height: 100%
-        .detail
+        .right
           flex: 1
-          padding: 3px 10px 3px 0
-          layout()
-          justify-content: space-between
-          .title
-            font-size: $font-size-16
-            color: $color-1F1F1F
-            letter-spacing: 0.6px
-            no-wrap-plus()
-          .money
-            layout(row, block, nowrap)
-            align-items: flex-end
-            .price
+          overflow: hidden
+          layout(row)
+          .detail
+            flex: 1
+            overflow: hidden
+            padding: 3px 10px 3px 0
+            layout()
+            justify-content: space-between
+            width: 53%
+            .title
+              font-size: $font-size-16
+              color: $color-1F1F1F
+              letter-spacing: 0.6px
+              no-wrap-plus()
+            .money
+              layout(row, block, nowrap)
+              align-items: flex-end
+              .price
+                font-family: $font-family-bold
+                font-size: 26px
+                color: #000028
+                &:first-letter
+                  font-size: $font-size-12
+                  margin-right: 3px
+              .old-price
+                no-wrap()
+                max-width: 50%
+                margin: 0 7.5px
+                font-size: 15px
+                color: $color-99A0AA
+                text-decoration: line-through
+                vertical-align: bottom
+                position: relative
+                bottom: 3px
+          .btn-wrapper
+            width: 68px
+            height: 100%
+            layout()
+            justify-content: center
+            align-items: center
+            .btn
+              normal-button-style(normal, 68px, 27px, 27px)
               font-family: $font-family-bold
-              font-size: 26px
-              color: #000028
-              &:first-letter
-                font-size: $font-size-12
-                margin-right: 3px
-            .old-price
-              margin: 0 7.5px
-              font-size: 15px
+              font-size: $font-size-14
+            .txt
+              margin-top: 6px
+              font-size: $font-size-12
               color: $color-99A0AA
-              text-decoration: line-through
-              vertical-align: bottom
-        .btn-wrapper
-          layout()
-          justify-content: center
-          align-items: center
-          .btn
-            normal-button-style(normal, 68px, 27px, 27px)
-          .txt
-            margin-top: 6px
-            font-size: $font-size-12
-            color: $color-99A0AA
     .story-wrapper
       layout()
       align-items: center
@@ -206,7 +227,7 @@
       .video-wrapper
         width: 100%
         height: 46vw
-        margin: 19px 0 28px
+        margin: 28px 0
         .video
           width: 100%
           height: 100%
@@ -236,7 +257,6 @@
           width: 21.5px
           height: 1.5px
           background: $color-455A64
-
       .content
         width: 100%
         .item
@@ -259,4 +279,26 @@
             line-height: 1.8
             word-break: break-all
             text-align: justify
+      .end
+        font-size: $font-size-14
+        color: $color-99A0AA
+        text-align: center
+        height: 14px
+        line-height: 1
+        margin: 10px 0 20px
+        position: relative
+        &:before
+          content: ''
+          width: 9px
+          height: 1px
+          background: $color-99A0AA
+          col-center()
+          left: -14px
+        &:after
+          content: ''
+          width: 9px
+          height: 1px
+          background: $color-99A0AA
+          col-center()
+          right: -14px
 </style>

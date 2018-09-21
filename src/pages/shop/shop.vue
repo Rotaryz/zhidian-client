@@ -1,7 +1,7 @@
 <template>
   <article class="shop">
     <shop-header :shopInfo="shopInfo" :employee="employee"></shop-header>
-    <shop-content :goodsList="goodsList" @changeTab="changeTab"></shop-content>
+    <shop-content :goodsList="goodsList" :selectTab="selectTab" @changeTab="changeTab"></shop-content>
   </article>
 </template>
 
@@ -21,20 +21,22 @@
         employee: {},
         goodsList: [],
         page: 1,
-        more: true
+        more: true,
+        selectTab: 0
       }
     },
     async onShow() {
       await this.getBaseInfo()
     },
     async onReachBottom() {
-      if (!this.more) return
+      if (!this.more || this.selectTab) return
       this.page++
       await this._getGoodsList()
       this.$wechat.hideLoading()
     },
     methods: {
       async changeTab(index) {
+        this.selectTab = index
         if (index === 0) {
           this.page = 1
           this.more = true
