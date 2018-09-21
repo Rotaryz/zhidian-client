@@ -3,13 +3,13 @@
     <div class="refund-msg">
       <div class="refund-text">
         <p class="refund-title">退款状态</p>
-        <p class="refund-status">退款成功</p>
+        <p class="refund-status">{{refundDetail.refund_str}}</p>
       </div>
       <div class="refund-item">
-        <p class="refund-name">退款金额：<span class="refund-content">￥10</span></p>
+        <p class="refund-name">退款金额：<span class="refund-content">¥{{refundDetail.money}}</span></p>
       </div>
       <div class="refund-item">
-        <p class="refund-name">退回账户：<span class="refund-content">￥10</span></p>
+        <p class="refund-name">退回账户：<span class="refund-content">{{refundDetail.pay_method_id}}</span></p>
       </div>
     </div>
     <div class="refund-progress">
@@ -24,16 +24,16 @@
       </div>
       <div class="refund-progress-text">
         <div class="refund-progress-item">
-          <div class="refund-progress-title" @click="_show">退款申请已提交</div>
+          <div class="refund-progress-title" :class="{'refund-progress-title-active': refundStatus >= 0}">退款申请已提交</div>
           <div class="refund-progress-reason">您的退款申请已经提交</div>
           <div class="refund-progress-reason">2017-12-10 11:00</div>
         </div>
         <div class="refund-progress-item">
-          <div class="refund-progress-title">系统处理中</div>
+          <div class="refund-progress-title" :class="{'refund-progress-title-active': refundStatus >= 1}">系统处理中</div>
           <div class="refund-progress-reason">您的退款申请已受理，审核时间预计需要1-2天</div>
         </div>
         <div class="refund-progress-item">
-          <div class="refund-progress-title">退款成功</div>
+          <div class="refund-progress-title" :class="{'refund-progress-title-active': refundStatus >= 2}">退款成功</div>
           <div class="refund-progress-reason">微信支付处理完成后，退款会在3-5天内退回您的</div>
         </div>
       </div>
@@ -42,11 +42,31 @@
 </template>
 
 <script>
+  import { Order } from 'api'
+
   export default {
     name: 'order-refund',
     data() {
       return {
-        refundStatus: 2
+        refundStatus: 1,
+        refundDetail: {},
+        endString: '退款成功'
+      }
+    },
+    async onLoad(option) {
+      let id = option.id || 0
+      await this._getRefundDetail(id)
+    },
+    methods: {
+      async _getRefundDetail(id) {
+        let res = await Order.orderRefund(id)
+        if (res.error !== this.$ERR_OK) {
+          this.$showToast(res.message)
+          return
+        }
+        this.refundDetail = res.data
+        this.refundStatus = res.data.status === 0 ? 1 : 2
+        this.endString = res.data.status === 2 ? '退款失败' : '退款成功'
       }
     }
   }
@@ -131,6 +151,8 @@
           margin-bottom: 40px
           .refund-progress-title
             margin-bottom: 10px
+          .refund-progress-title-active
+            color: $color-D32F2F
           .refund-progress-reason
             margin-bottom: 3.5px
             font-size: $font-size-12

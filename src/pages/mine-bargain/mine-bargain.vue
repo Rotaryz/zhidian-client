@@ -132,9 +132,9 @@
     align-items: center
 
   .shop-num
-    font-size: $font-size-14
+    font-size: $font-size-12
     margin-left: 5px
-    color: $color-99A0AA
+    color: $color-455A64
     line-height: 1
 
   .mine-serve-avatarBox-item

@@ -10,9 +10,9 @@
           </div>
         </div>
         <div class="coupon-right">
-          <div class="coupon-btn" @click="usedBtn(couponInfo)" v-if="coupontype.status * 1 === 0">去使用</div>
-          <div class="coupon-used" v-if="coupontype.status * 1 === 1">已使用</div>
-          <img v-if="imageUrl && coupontype.status * 1 === 2" :src="imageUrl + '/zd-image/mine/icon_overdue@2x.png'" class="ununsed-img" mode="aspectFill">
+          <div class="coupon-btn" @click="usedBtn(couponInfo)" v-if="couponInfo.status * 1 === 0">去使用</div>
+          <div class="coupon-used" v-if="couponInfo.status * 1 === 1">已使用</div>
+          <img v-if="imageUrl && couponInfo.status * 1 === 2" :src="imageUrl + '/zd-image/mine/icon_overdue@2x.png'" class="ununsed-img" mode="aspectFill">
         </div>
       </div>
     </div>
