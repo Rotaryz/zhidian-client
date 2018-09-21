@@ -1,6 +1,6 @@
 <template>
   <article class="shop">
-    <shop-header :shopInfo="shopInfo" :employee="employee"></shop-header>
+    <shop-header :shopInfo="shopInfo" :employee="employee" :photoInfo="photoInfo"></shop-header>
     <shop-content :goodsList="goodsList" :selectTab="selectTab" @changeTab="changeTab"></shop-content>
   </article>
 </template>
@@ -22,6 +22,7 @@
         },
         employee: {},
         goodsList: [],
+        photoInfo: {},
         page: 1,
         more: true,
         selectTab: 0
@@ -50,21 +51,20 @@
         this.$wechat.showLoading()
         await Promise.all([
           this._getShopInfo(false),
-          this._getGoodsList(false)
+          this._getGoodsList(false),
+          this._getMerchantsImg(false)
         ])
         this.$wechat.hideLoading()
       },
-      async _getMerchantsImg(data, loading) {
+      async _getMerchantsImg(loading) {
         try {
-          let res = await Guide.getShopInfo({}, loading)
+          let res = await Shop.getMerchantsImg({limit: 1}, loading)
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return
           }
+          this.photoInfo = res.data
           console.log(res)
-          this.shopInfo = res.data || {}
-          this.employee = res.data.employee || {}
-          this.shopInfo.rate = this._formatStars(this.shopInfo.rate)
         } catch (e) {
           console.error(e)
         }

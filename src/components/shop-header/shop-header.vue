@@ -51,6 +51,10 @@
       employee: {
         type: Object,
         default: {}
+      },
+      photoInfo: {
+        type: Object,
+        default: {}
       }
     },
     data() {
