@@ -100,6 +100,7 @@
             // })
             break
           case 'fail_groupon': // 退款详情
+          case 'refund':
             wx.navigateTo({
               url: `/pages/order-refund?id=${item.id}`
             })

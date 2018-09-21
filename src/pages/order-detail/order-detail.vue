@@ -107,9 +107,7 @@
           return
         }
         this.couponDetail = { name: this.detail.goods_title, goods_image: this.detail.goods_image_url, time: this.detail.create_at, qrcode_url: coupon.qrcode_url, code: coupon.code }
-        this.showCoupon = true
         this.$refs.couponCode.show()
-        console.log(this.$refs)
       },
       _goShop() {
         this.$turnShop({ id: this.detail.shop_id, url: '/pages/guide' })

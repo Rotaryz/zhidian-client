@@ -1,33 +1,35 @@
 <template>
-    <div class="exchange">
-      <section class="tab-container">
-        <div class="tab-box">
-          <ul class="tab-wrapper">
-            <li class="tab-item" v-for="(item, index) in tabList" :key="index" @click="changeTab(index)">{{item.title}}</li>
-          </ul>
-          <div class="tab-line-wrapper" :style="'transform: translate3d(' + selectTab*100 + '%,0,0)'">
-            <div class="tab-line"></div>
-          </div>
-        </div>
-      </section>
-      <div class="used-box" v-if="selectTab * 1 === 0">
-        <div class="item" v-for="(item, index) in unusedList" v-bind:key="index">
-          <coupon-item @clickUsedBtn="clickUsedBtn" :couponInfo="item"></coupon-item>
+  <div class="exchange">
+    <section class="tab-container">
+      <div class="tab-box">
+        <ul class="tab-wrapper">
+          <li class="tab-item" v-for="(item, index) in tabList" :key="index" @click="changeTab(index)">{{item.title}}</li>
+        </ul>
+        <div class="tab-line-wrapper" :style="'transform: translate3d(' + selectTab*100 + '%,0,0)'">
+          <div class="tab-line"></div>
         </div>
       </div>
-      <div class="used-box" v-if="selectTab * 1 === 1">
-        <div class="item" v-for="(item, index) in usedList" v-bind:key="index">
-          <coupon-item :coupontype="1" :couponInfo="item"></coupon-item>
-        </div>
+    </section>
+    <div class="used-box" v-if="selectTab * 1 === 0">
+      <div class="item" v-for="(item, index) in unusedList" v-bind:key="index">
+        <coupon-item @clickUsedBtn="clickUsedBtn" :couponInfo="item"></coupon-item>
       </div>
     </div>
+    <div class="used-box" v-if="selectTab * 1 === 1">
+      <div class="item" v-for="(item, index) in usedList" v-bind:key="index">
+        <coupon-item :coupontype="1" :couponInfo="item"></coupon-item>
+      </div>
+    </div>
+    <coupon-code ref="couponCode" :couponMsg.sync="couponDetail" @cancel="cancel"></coupon-code>
+  </div>
 </template>
 
 <script type="text/ecmascript-6">
   import CouponItem from 'components/coupon-item/coupon-item'
-  import {Shop} from 'api'
+  import { Shop } from 'api'
+  import CouponCode from 'components/coupon-code/coupon-code'
 
-  const tabList = [{title: '未使用'}, {title: '不可用'}]
+  const tabList = [{ title: '未使用' }, { title: '不可用' }]
   export default {
     name: 'exchange-coupon',
     data() {
@@ -39,7 +41,8 @@
         unusedMore: false,
         usedList: [],
         usedPage: 1,
-        usedMore: false
+        usedMore: false,
+        couponDetail: {}
       }
     },
     onShow() {
@@ -54,12 +57,17 @@
       }
     },
     methods: {
+      async cancel() {
+        this.getUnusedList()
+        this.getUsedList()
+      },
       changeTab(index) {
         if (this.selectTab === index) return
         this.selectTab = index
       },
       clickUsedBtn(item) {
-        console.log(item)
+        this.couponDetail = { name: item.goods_name, goods_image: item.image_url, time: item.end_at, qrcode_url: item.qrcode_url, code: item.code }
+        this.$refs.couponCode.show()
       },
       getUnusedList() {
         this.unusedPage = 1
@@ -79,7 +87,7 @@
           }
         })
       },
-      _isUnusedList (res) {
+      _isUnusedList(res) {
         this.unusedPage++
         if (this.unusedList.length >= res.meta.total * 1) {
           this.unusedMore = true
@@ -120,7 +128,7 @@
           }
         })
       },
-      _isUsedList (res) {
+      _isUsedList(res) {
         this.usedPage++
         if (this.usedList.length >= res.meta.total * 1) {
           this.usedMore = true
@@ -145,7 +153,8 @@
       }
     },
     components: {
-      CouponItem
+      CouponItem,
+      CouponCode
     }
   }
 </script>
@@ -157,6 +166,7 @@
     background: $color-background
     padding: 65px 13px 15px
     box-sizing: border-box
+
   .tab-container
     height: 50px
     padding: 0 15px
@@ -199,6 +209,7 @@
           width: 65px
           background: $color-D32F2F
           border-radius: 3px
+
   .z
     width: 11px
 </style>
