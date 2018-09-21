@@ -43,7 +43,6 @@
 <script type="text/ecmascript-6">
   import { Goods } from 'api'
   import Payment from 'components/payment/payment'
-  import {mapGetters} from 'vuex'
   const STATUSOBJ = {
     1: {icon: 'icon-group_ing@2x.png', txt: '拼团中'},
     2: {icon: 'icon-group_success@2x.png', txt: '拼团成功'},
@@ -77,19 +76,14 @@
         imageUrl: this.groupDetail.image_url
       }
     },
-    onLoad(options) {
+    onShow() {
+      let options = this.$root.$mp.page.options
       if (options.shopId) {
         this.shopId = options.shopId
         wx.setStorageSync('shopId', options.shopId)
       }
       this.id = options.groupId
       this._getGroupDetail()
-    },
-    onShow() {
-      if (this.groupDetailReq.groupId) {
-        this.id = this.groupDetailReq.groupId
-        this.getGroupDetail(this.id)
-      }
     },
     methods: {
       toOrderDetail() {
@@ -120,7 +114,6 @@
           currentPage: 'groupDetail',
           groupJoinId: this.id
         }
-        console.log(paymentMsg)
         this.$refs.payment.showOrder(paymentMsg, 'group')
       },
       async _checkHasPhone() {
@@ -144,9 +137,7 @@
         wx.navigateTo({ url })
       },
       _getGroupDetail() {
-        console.log(this.id)
         Goods.getGroupInDetail(this.id).then((res) => {
-          console.log(res)
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
             this.groupDetail = res.data
@@ -165,9 +156,6 @@
       }
     },
     computed: {
-      ...mapGetters([
-        'groupDetailReq'
-      ]),
       statusNum() {
         let status
         if (this.groupDetail.in_group) {

@@ -85,7 +85,6 @@
         this.paymentMsg = msg
         this.code = msg.code
         this.orderShow = true
-        console.log(msg)
         this.total = (this.orderNum * this.paymentMsg.price).toFixed(2)
       },
       hideOrder() {

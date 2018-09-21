@@ -68,6 +68,7 @@
     },
     methods: {
       showLocation() {
+        this.$emit('noRefresh')
         let data = {
           longitude: this.goodsDetail.shop_data.longitude,
           latitude: this.goodsDetail.shop_data.latitude,
@@ -77,6 +78,7 @@
         wx.openLocation(data)
       },
       callShop() {
+        this.$emit('noRefresh')
         wx.makePhoneCall({
           phoneNumber: this.goodsDetail.shop_data.telephone
         })

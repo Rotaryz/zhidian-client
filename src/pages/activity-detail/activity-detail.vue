@@ -90,16 +90,16 @@
         <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" v-if="imageUrl" class="right">
       </div>
     </div>
-    <detail-content ref="detailContent" :goodsDetail="goodsDetail"></detail-content>
+    <detail-content ref="detailContent" :goodsDetail="goodsDetail" @noRefresh="noRefresh"></detail-content>
     <div class="pay-order-bottom border-top-1px">
       <div class="left-box">
         <div class="left-item">
           <img :src="imageUrl + '/zd-image/mine/icon-shop_xq@2x.png'" v-if="imageUrl" class="item-icon">
-          <div class="item-txt">进店铺</div>
+          <div class="item-txt">进入店铺</div>
         </div>
         <div class="left-item">
           <img :src="imageUrl + '/zd-image/mine/icon-service@2x.png'" v-if="imageUrl" class="item-icon">
-          <div class="item-txt">客服</div>
+          <div class="item-txt">联系店家</div>
         </div>
       </div>
       <div class="right-box" @click="payOrderMsg" v-if="activityType === 'group' && goodsDetail.stock">¥ {{goodsDetail.platform_price}} {{groupType === 'join' ? '参团' : '开团'}}</div>
@@ -150,10 +150,16 @@
         groupType: 'open', // 团购页面参与类型
         orderGroupType: 'open', // 团购订单类型
         code: '',
-        hasPhone: ''
+        hasPhone: '',
+        refreshPage: true
       }
     },
-    async onLoad(options) {
+    async onShow() {
+      if (!this.refreshPage) {
+        this.refreshPage = true
+        return
+      }
+      let options = this.$root.$mp.page.options
       if (options.shopId) {
         this.shopId = options.shopId
         wx.setStorageSync('shopId', options.shopId)
@@ -176,6 +182,9 @@
     methods: {
       test() {
         this.$showToast('askjdhakdhashd')
+      },
+      noRefresh() {
+        this.refreshPage = false
       },
       bannerChange(e) {
         this.currentNum = e.mp.detail.current * 1 + 1
@@ -436,7 +445,6 @@
           .item-img
             width: 100%
             height: 100%
-            background: #ccc
       .page-box
         position: absolute
         right: 15px
@@ -684,7 +692,7 @@
       display: flex
       align-items: center
       .left-box
-        width: 110px
+        width: 130px
         display: flex
         align-items: center
         .left-item
@@ -698,7 +706,7 @@
           .item-icon
             width: 22px
             height: 22px
-            margin-bottom: 4px
+            margin-bottom: 6px
           .item-txt
             font-size: $font-size-10
             font-family: $font-family-regular
