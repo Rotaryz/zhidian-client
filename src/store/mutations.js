@@ -7,7 +7,10 @@ const mutations = {
   [types.SET_TARGET_PAGE](state, page) {
     state.targetPage = page
   },
-  [types.SET_SHOW_TYPE] (state, boolean) {
+  [types.SET_SHOW_TYPE](state, boolean) {
+    state.appShowType = boolean
+  },
+  [types.SET_SHOW_TYPE](state, boolean) {
     state.appShowType = boolean
   },
   [types.SET_GOODS_REFRESH](state, goodsRefresh) {
@@ -19,10 +22,10 @@ const mutations = {
   [types.SET_ORDER_RESULT](state, obj) {
     state.orderResult = obj
   },
-  [types.SET_FROM_MSG] (state, msg) {
+  [types.SET_FROM_MSG](state, msg) {
     state.fromMsg = msg
   },
-  [types.SET_SCENE] (state, scene) {
+  [types.SET_SCENE](state, scene) {
     state.scene = scene
   },
   [types.SET_DYNAMIC] (state, boolean) {
