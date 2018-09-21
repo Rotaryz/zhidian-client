@@ -10,6 +10,9 @@
       </swiper>
       <span class="page-box"><text class="currentNum">{{currentNum}}</text>/{{bannerImgs.length}}</span>
       <div class="time-box">
+        <div class="left">
+          <div class="group-box" v-if="activityType === 'group'">{{goodsDetail.group_number}}人团</div>
+        </div>
         <div class="right">
           <span>距离活动结束还剩: </span>
           <text class="time-txt">{{activityTime.day}}</text>
@@ -25,21 +28,21 @@
     </div>
     <div class="goods-msg">
       <div class="goods-msg-left">
-        <div class="goods-title">国颐堂皇室养发套餐</div>
+        <div class="goods-title">{{goodsDetail.goods_title}}</div>
         <div class="goods-money-box">
-          <span class="big-money-box"><span class="red-money-icon">¥</span><span class="red-big-money">100</span></span>
-          <span class="del-money">699元</span>
+          <span class="big-money-box"><span class="red-money-icon">¥</span><span class="red-big-money">{{goodsDetail.platform_price}}</span></span>
+          <span class="del-money">{{goodsDetail.original_price}}元</span>
         </div>
       </div>
       <div class="goods-msg-right">
         <div class="right-box-container" @click="showShareModel">
-          <span class="msg-right-txt">0人分享</span>
+          <span class="msg-right-txt">{{goodsDetail.share_count}}人分享</span>
           <img :src="imageUrl + '/zd-image/mine/icon-share@2x.png'" v-if="imageUrl" class="msg-right-icon">
         </div>
       </div>
     </div>
     <div class="f4-line"></div>
-    <div class="group-list-box">
+    <div class="group-list-box" v-if="activityType === 'group'">
       <div class="list-head border-bottom-1px">小伙伴们在开团，可直接参与</div>
       <swiper class="list-content" autoplay circular :vertical="true" interval="4000" v-if="groupOrList.length">
         <block v-for="(item, index) in groupOrList" :key="index">
@@ -74,7 +77,7 @@
         <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" v-if="imageUrl" class="right">
       </div>
     </div>
-    <div class="bargain-box">
+    <div class="bargain-box" v-if="activityType === 'bargain'">
       <div class="list-head border-bottom-1px">参与砍价（{{'21'}}人）</div>
       <div class="avatar-list" v-if="kanList.length">
         <img :src="item" class="avatar-item" v-for="(item, index) in kanList" :key="index">
@@ -87,7 +90,7 @@
         <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" v-if="imageUrl" class="right">
       </div>
     </div>
-    <detail-content ref="detailContent"></detail-content>
+    <detail-content ref="detailContent" :goodsDetail="goodsDetail"></detail-content>
     <div class="pay-order-bottom border-top-1px">
       <div class="left-box">
         <div class="left-item">
@@ -99,11 +102,12 @@
           <div class="item-txt">客服</div>
         </div>
       </div>
-      <div class="right-box" @click="payOrderMsg" v-if="false">¥ 90开团</div>
-      <div class="right-box" @click="payOrderMsg" v-if="false">去砍价</div>
-      <div class="right-box" @click="payOrderMsg">底价 ¥ 90立即购买</div>
-      <div class="right-box un-click" v-if="false">已抢光</div>
-      <div class="two-right-box" v-if="false">
+      <div class="right-box" @click="payOrderMsg" v-if="activityType === 'group' && goodsDetail.stock">¥ {{goodsDetail.platform_price}} {{groupType === 'join' ? '参团' : '开团'}}</div>
+      <div class="right-box un-click" v-if="activityType === 'group' && !goodsDetail.stock">已抢光</div>
+      <div class="right-box" @click="payOrderMsg" v-if="activityType === 'bargain'">去砍价</div>
+      <div class="right-box" @click="payOrderMsg" v-if="activityType === 'bargain'">底价 ¥ 90立即购买</div>
+      <div class="right-box un-click" v-if="activityType === 'bargain' && !timeEnd && goodsDetail.status && !goodsDetail.stock">已抢光</div>
+      <div class="two-right-box" v-if="activityType === 'bargain'">
         <div class="right-btn black">
           <span class="btn-top">¥ 90</span>
           <span class="btn-down">立即购买</span>
@@ -122,7 +126,7 @@
   import Payment from 'components/payment/payment'
   import Share from 'components/share/share'
   import ActivityRole from 'components/activity-role/activity-role'
-  // import { Goods } from 'api'
+  import { Goods } from 'api'
   import { getParams } from 'common/js/util'
   export default {
     data() {
@@ -138,11 +142,21 @@
           minute: '00',
           second: '00'
         },
+        goodsDetail: {},
         groupOrList: [],
-        kanList: []
+        kanList: [],
+        activityType: 'group', // 活动类型
+        timer: '',
+        timeEnd: false,
+        groupJoinId: '', // 参团id
+        groupType: 'open', // 团购页面参与类型
+        orderGroupType: 'open', // 团购订单类型
+        code: '',
+        hasPhone: ''
       }
     },
     async onLoad(options) {
+      console.log(this)
       if (options.shopId) {
         this.shopId = options.shopId
         wx.setStorageSync('shopId', options.shopId)
@@ -151,12 +165,14 @@
         let scene = decodeURIComponent(options.scene)
         let params = getParams(scene)
         this.activityId = params.a ? params.a : ''
+        this.activityType = params.t ? params.t : ''
         if (params.s) {
           this.shopId = params.s
           wx.setStorageSync('shopId', params.s)
         }
       } else {
-        this.activityId = options.activityId ? options.activityId : ''
+        this.activityId = options.activityId ? options.activityId : '1'
+        this.activityType = options.activityType ? options.activityType : 'group'
       }
       await this._getGoodsDetail(this.activityId, this.activityType)
     },
@@ -170,13 +186,182 @@
       showShareModel() {
         this.$refs.share.show()
       },
-      payOrderMsg() {
-        this.$refs.payment.showOrder()
+      async payOrderMsg() {
+        await this._checkHasPhone()
+        let userInfo = wx.getStorageSync('userInfo')
+        let paymentMsg = {
+          price: this.goodsDetail.platform_price,
+          originPrice: this.goodsDetail.original_price,
+          image: this.goodsDetail.image_url,
+          title: this.goodsDetail.goods_title,
+          stock: this.goodsDetail.stock,
+          goods_id: this.goodsDetail.goods_id,
+          recommend_activity_id: this.activityId,
+          phoneNum: userInfo.mobile,
+          code: this.code,
+          hasPhone: this.hasPhone,
+          shopName: this.goodsDetail.shop_data.name,
+          shopImg: this.goodsDetail.shop_data.image_url
+        }
+        switch (this.activityType) {
+          case 'group':
+            await this._checkGroup(paymentMsg)
+            break
+          case 'bargain':
+            break
+        }
       },
       showRule(type) {
         this.$refs.role.showModel(type)
       },
       _getGoodsDetail(id, type) {
+        switch (type) {
+          case 'group':
+            this._getGroupDetail(id)
+            break
+          case 'bargain':
+            break
+        }
+      },
+      _getGroupDetail(id) {
+        Goods.getGroupDetail(id).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            // this.bannerImgs = res.data.goods_banner_images
+            this.goodsDetail = res.data
+            this.activityStatus = res.activity_status
+            let groupList = res.data.open_groupon_lists
+            let first = groupList.slice(0, 2)
+            let second = groupList.slice(2, 4)
+            let third = groupList.slice(4, 6)
+            let four = groupList.slice(6, 8)
+            this.groupOrList = [first, second, third, four].filter((item) => {
+              return item.length > 0
+            })
+            this.endTime = res.data.end_at_timestamp
+            this._groupTimePlay()
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
+      _groupTimePlay() {
+        clearInterval(this.timer)
+        this.activityTime = this._groupTimeCheckout(this.endTime)
+        this.groupOrList = this.groupOrList.map((item) => {
+          item.map((item) => {
+            let endTime = this._groupTimeCheckoutNoDay(item.remaining_time_timestamp)
+            item.endTime = `${endTime.hour}:${endTime.minute}:${endTime.second}`
+            return item
+          })
+          return item
+        })
+        this.timer = setInterval(() => {
+          this.activityTime = this._groupTimeCheckout(this.endTime)
+          this.groupOrList = this.groupOrList.map((item) => {
+            item.map((item) => {
+              let endTime = this._groupTimeCheckoutNoDay(item.remaining_time_timestamp)
+              item.endTime = `${endTime.hour}:${endTime.minute}:${endTime.second}`
+              return item
+            })
+            return item
+          })
+        }, 1000)
+      },
+      _kanTimePlay() {
+        clearInterval(this.timer)
+        this.activityTime = this._groupTimeCheckout(this.endTime)
+        this.timer = setInterval(() => {
+          this.activityTime = this._groupTimeCheckout(this.endTime)
+          if (this.timeEnd) {
+            clearInterval(this.timer)
+          }
+        }, 1000)
+      },
+      _groupTimeCheckout(time) {
+        let nowSecond = parseInt(Date.now() / 1000)
+        let differ = time * 1 - nowSecond
+        let day = Math.floor(differ / (60 * 60 * 24))
+        day = day >= 10 ? day : '0' + day
+        let hour = Math.floor(differ / (60 * 60)) - (day * 24)
+        hour = hour >= 10 ? hour : '0' + hour
+        let minute = Math.floor(differ / 60) - (day * 24 * 60) - (hour * 60)
+        minute = minute >= 10 ? minute : '0' + minute
+        let second = Math.floor(differ) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60)
+        second = second >= 10 ? second : '0' + second
+        let times
+        if (differ > 0) {
+          times = {
+            day,
+            hour,
+            minute,
+            second
+          }
+        } else {
+          times = {
+            day: '00',
+            hour: '00',
+            minute: '00',
+            second: '00'
+          }
+          this.timeEnd = true
+        }
+        return times
+      },
+      _groupTimeCheckoutNoDay(time) {
+        let nowSecond = parseInt(Date.now() / 1000)
+        let differ = time * 1 - nowSecond
+        let hour = Math.floor(differ / (60 * 60))
+        hour = hour >= 10 ? hour : '0' + hour
+        let minute = Math.floor(differ / 60) - (hour * 60)
+        minute = minute >= 10 ? minute : '0' + minute
+        let second = Math.floor(differ) - (hour * 60 * 60) - (minute * 60)
+        second = second >= 10 ? second : '0' + second
+        let times
+        if (differ > 0) {
+          times = {
+            hour,
+            minute,
+            second
+          }
+        } else {
+          times = {
+            hour: '00',
+            minute: '00',
+            second: '00'
+          }
+        }
+        return times
+      },
+      async _checkHasPhone() {
+        let userInfo = wx.getStorageSync('userInfo')
+        if (!userInfo.mobile) {
+          this.hasPhone = false
+          let login = await this.$wechat.login()
+          if (login.errMsg === 'login:ok') {
+            this.code = login.code
+          }
+        }
+      },
+      async _openGroup(paymentMsg) {
+        let data = {
+          group_type: this.groupType,
+          recommend_activity_id: this.activityId,
+          id: this.groupJoinId
+        }
+        Goods.checkGroup(data).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            if (res.can_open) {
+              this.orderGroupType = 'open'
+              this.$refs.payment.showOrder(paymentMsg, this.activityType)
+            } else {
+              this.$refs.toast.show(res.message)
+            }
+          } else {
+            this.$showToast(res.message)
+          }
+        })
       }
     },
     components: {
@@ -235,8 +420,21 @@
         left: 0
         bottom: 0
         display: flex
-        justify-content: flex-end
+        justify-content: space-between
         align-items: center
+        .left
+          margin-left: 15px
+          .group-box
+            width: 46px
+            height: 20px
+            text-align: center
+            line-height: 18px
+            box-sizing: border-box
+            border: 1px solid $color-white
+            border-radius: 10px
+            font-size: $font-size-12
+            font-family: $font-family-regular
+            color: $color-white
         .right
           color: $color-white
           font-family: $font-family-regular

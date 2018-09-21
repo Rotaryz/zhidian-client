@@ -17,9 +17,6 @@ const somePlugin = {
       methods: {
       },
       onUnload() {
-        // 清除mpvue的wathcers
-        this._watchers = []
-        this._watcher && this._watcher.teardown()
         // 重置页面组件的data数据
         if (!this.$mp) return
         // 重置页面的data数据
