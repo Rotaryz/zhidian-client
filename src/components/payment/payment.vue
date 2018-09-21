@@ -4,7 +4,7 @@
     <div class="payment-content" :class="orderShow ? 'show' : ''" @click.stop="" @touchmove="">
       <div class="payment-top border-bottom-1px">
         <div class="payment-img-box">
-          <img :src="paymentMsg.image" class="payment-img">
+          <img :src="paymentMsg.image" class="payment-img" mode="aspectFill">
         </div>
         <div class="payment-top-right">
           <div class="payment-title">{{paymentMsg.title}}</div>
@@ -70,6 +70,10 @@
     },
     onUnload() {
       this.orderShow = false
+      this.orderNum = 1
+      this.paymentMsg = {}
+      this.code = ''
+      this.type = ''
     },
     methods: {
       ...mapActions([
@@ -159,6 +163,20 @@
               signType,
               paySign,
               success: () => {
+                if (this.type === 'group' && this.paymentMsg.currentPage !== 'groupDetail') {
+                  this.$wechat.showLoading()
+                  setTimeout(() => {
+                    this.$wechat.hideLoading()
+                    let url = `/pages/group-detail?groupId=${payRes.group_id}`
+                    this.orderShow = false
+                    wx.navigateTo({ url })
+                  }, 2000)
+                  return
+                } else if (this.type === 'group' && this.paymentMsg.currentPage === 'groupDetail') {
+                  this.orderShow = false
+                  this.$emit('paySuccess')
+                  return
+                }
                 let resultData = {
                   avatar: this.paymentMsg.shopImg,
                   nickName: this.paymentMsg.shopName

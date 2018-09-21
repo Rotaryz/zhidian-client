@@ -7,11 +7,11 @@
         <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" v-if="imageUrl" class="arrow-icon">
       </div>
       <div class="goods-msg">
-        <img :src="groupDetail.image_url" class="left-img">
+        <img :src="groupDetail.image_url" class="left-img" mode="aspectFill">
         <div class="right">
           <div class="center-msg">
             <div class="msg-title">{{groupDetail.goods_title}}</div>
-            <div class="msg-down">总计：<span class="money-txt">¥{{groupDetail.group_price}}</span></div>
+            <div class="msg-down">总计：<span class="money-txt">¥{{groupDetail.platform_price}}</span></div>
           </div>
           <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" v-if="imageUrl" class="right-arrow">
         </div>
@@ -20,8 +20,8 @@
     <div class="f4-line"></div>
     <div class="group-status-box">
       <div class="group-status">
-        <img :src="imageUrl + '/zd-image/mine/' + statusList[statusNum].icon" v-if="imageUrl" class="status-icon">
-        <div class="status-txt">{{statusList[statusNum].txt}}</div>
+        <img :src="imageUrl + '/zd-image/mine/' + (statusList[statusNum] ? statusList[statusNum].icon : '')" v-if="imageUrl && statusList[statusNum]" class="status-icon">
+        <div class="status-txt">{{statusList[statusNum] ? statusList[statusNum].txt : ''}}</div>
       </div>
       <div class="avatar-list">
         <div class="avatar-box" v-for="(item, index) in groupAvatarList" :key="index">
@@ -30,15 +30,17 @@
         </div>
       </div>
       <button open-type="share" hover-class="none" class="group-btn" v-if="statusNum == 1">邀请好友参团</button>
-      <div class="group-btn" v-if="statusNum == 2">查看订单列表</div>
-      <div class="group-btn" v-if="statusNum == 3 || statusNum == 5">查看更多精彩</div>
-      <div class="group-btn" v-if="statusNum == 4">我要参团</div>
+      <div class="group-btn" v-if="statusNum == 2" @click="toOrderDetail">查看订单详情</div>
+      <div class="group-btn" v-if="statusNum == 3 || statusNum == 5" @click="toIndex">查看更多精彩</div>
+      <div class="group-btn" v-if="statusNum == 4" @click="joinGroup">我要参团</div>
     </div>
+    <payment ref="payment" :paySuccess="paySuccess"></payment>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import { Goods } from 'api'
+  import Payment from 'components/payment/payment'
   const STATUSOBJ = {
     1: {icon: 'icon-group_ing@2x.png', txt: '拼团中'},
     2: {icon: 'icon-group_success@2x.png', txt: '拼团成功'},
@@ -53,7 +55,23 @@
         statusList: STATUSOBJ,
         groupAvatarList: [],
         id: '',
-        groupDetail: {}
+        groupDetail: {},
+        hasPhone: '',
+        code: ''
+      }
+    },
+    onShareAppMessage (res) {
+      let title = this.groupDetail.goods_title ? this.groupDetail.goods_title : ''
+      let id = wx.getStorageSync('userInfo').id
+      let shopId = wx.getStorageSync('shopId')
+      let path = `/pages/group-detail?fromType=3&fromId=${id}&shopId=${shopId}&groupId=${this.id}`
+      if (res.from === 'button') {
+        // 来自页面内转发按钮
+      }
+      return {
+        title: `我参加了拼团活动${title},真的很实惠,快来和我一起成团吧！`,
+        path,
+        imageUrl: this.groupDetail.image_url
       }
     },
     onLoad(options) {
@@ -65,8 +83,54 @@
       this._getGroupDetail()
     },
     methods: {
+      toOrderDetail() {
+        let url = `/pages/order-detail?id=${this.groupDetail.order_id}&fromPage=groupDetail`
+        wx.navigateTo({ url })
+      },
+      toIndex() {
+        let url = '/pages/guide'
+        wx.switchTab({url})
+      },
+      async joinGroup() {
+        await this._checkHasPhone()
+        let userInfo = wx.getStorageSync('userInfo')
+        let paymentMsg = {
+          price: this.groupDetail.platform_price,
+          originPrice: this.groupDetail.original_price,
+          image: this.groupDetail.image_url,
+          title: this.groupDetail.goods_title,
+          stock: this.groupDetail.stock,
+          goods_id: this.groupDetail.goods_id,
+          recommend_activity_id: this.groupDetail.activity_id,
+          phoneNum: userInfo.mobile,
+          code: this.code,
+          hasPhone: this.hasPhone,
+          shopName: this.groupDetail.shop_data.name,
+          shopImg: this.groupDetail.shop_data.image_url,
+          groupType: 'join',
+          currentPage: 'groupDetail',
+          groupJoinId: this.id
+        }
+        console.log(paymentMsg)
+        this.$refs.payment.showOrder(paymentMsg, 'group')
+      },
+      async _checkHasPhone() {
+        let userInfo = wx.getStorageSync('userInfo')
+        if (!userInfo.mobile) {
+          this.hasPhone = false
+          let login = await this.$wechat.login()
+          if (login.errMsg === 'login:ok') {
+            this.code = login.code
+          }
+        }
+      },
+      paySuccess() {
+        this._getGroupDetail()
+      },
       _getGroupDetail() {
+        console.log(this.id)
         Goods.getGroupInDetail(this.id).then((res) => {
+          console.log(res)
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
             this.groupDetail = res.data
@@ -112,6 +176,9 @@
         }
         return status
       }
+    },
+    components: {
+      Payment
     }
   }
 </script>
