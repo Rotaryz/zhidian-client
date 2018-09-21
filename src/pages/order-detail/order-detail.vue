@@ -93,12 +93,13 @@
         groupDetail: null
       }
     },
-    async onLoad(option) {
-      let id = option.id || 0
+    async onShow() {
+      let id = this.$root.$mp.page.options.id
       await this._orderDetail(id, true)
     },
     onUnload() {
       clearTimeout(this.timer)
+      this.groupDetail = {}
     },
     methods: {
       async cancel() {
@@ -149,6 +150,7 @@
             })
             break
           default:
+            // wx.navigateTo({ url: `/pages/group-detail?groupId=${this.groupDetail.group_id}` })
             this.$turnShop({ id: this.detail.shop_id, url: `/pages/group-detail?groupId=${this.groupDetail.group_id}` })
         }
       },
@@ -162,7 +164,6 @@
         this.detail = res.data
         this.groupDetail = this.detail.groupon_data.length === 0 ? null : this.detail.groupon_data
         if (this.groupDetail) {
-          console.log(this.groupDetail)
           let status = this.groupDetail.group_status
           // 拼团状态
           this.groundNow = status + 1
@@ -183,10 +184,10 @@
       },
       _groupTimePlay() {
         clearInterval(this.timer)
-        let res = this._groupTimeCheckout(this.groupDetail.end_timestamp)
+        let res = this._groupTimeCheckout(this.groupDetail.group_end_timestamp)
         this.groupEndTime = `${res.hour}:${res.minute}:${res.second}`
         this.timer = setInterval(() => {
-          let res = this._groupTimeCheckout(this.groupDetail.end_timestamp)
+          let res = this._groupTimeCheckout(this.groupDetail.group_end_timestamp)
           this.groupEndTime = `${res.hour}:${res.minute}:${res.second}`
           if (this.timeEnd) {
             clearInterval(this.timer)
