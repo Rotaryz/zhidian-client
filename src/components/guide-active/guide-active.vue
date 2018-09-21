@@ -65,6 +65,7 @@
         </div>
       </li>
     </ul>
+    <blank v-if="selectTab===0 && cutList.length===0" styles="padding:50px 0"></blank>
     <!--拼团-->
     <ul class="active-wrapper" v-if="selectTab === 1">
       <li class="item-wrapper" v-if="groupList.length" v-for="(item,index) in groupList" :key="index">
@@ -122,14 +123,19 @@
         </div>
       </li>
     </ul>
+    <blank v-if="selectTab===1 && groupList.length===0" styles="padding:50px 0"></blank>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import { Guide } from 'api'
+  import Blank from 'components/blank/blank'
 
   const tabList = [{title: '砍价抢购'}, {title: '火爆拼团'}]
   export default {
+    components: {
+      Blank
+    },
     props: {
       cutList: {
         type: Array,
@@ -192,9 +198,10 @@
     position: relative
     padding-bottom: 26px
     .tab-container
-      height: 30px
+      height: 26px
       margin: 0 15px
       position: relative
+      padding-bottom :8px
       .tab-wrapper
         position: relative
         height: 100%

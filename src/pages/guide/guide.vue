@@ -33,7 +33,7 @@
           page: 1,
           more: true
         },
-        selectTab: 1
+        selectTab: 0
       }
     },
     onLoad() {
@@ -62,7 +62,6 @@
     methods: {
       changeTab(index) {
         this.selectTab = index
-        console.log(this.selectTab, 'asdsadadadd')
         switch (index) {
           case 0:
             this.cutData.page = 1

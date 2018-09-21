@@ -1,6 +1,6 @@
+import { Jwt } from 'api'
+import { mapActions } from 'vuex'
 import { checkIsTabPage } from 'common/js/util'
-import {Jwt} from '../../api'
-import {mapActions} from 'vuex'
 
 const shareArr = [1007, 1008, 1036, 1044, 1073, 1074]
 const qrCordArr = [1047, 1048, 1049, 1011, 1012, 1013]

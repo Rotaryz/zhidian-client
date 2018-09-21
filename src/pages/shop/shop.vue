@@ -17,7 +17,9 @@
     },
     data() {
       return {
-        shopInfo: {},
+        shopInfo: {
+          rate: new Array(5).fill(0)
+        },
         employee: {},
         goodsList: [],
         page: 1,
@@ -52,6 +54,21 @@
         ])
         this.$wechat.hideLoading()
       },
+      async _getMerchantsImg(data, loading) {
+        try {
+          let res = await Guide.getShopInfo({}, loading)
+          if (res.error !== this.$ERR_OK) {
+            this.$showToast(res.message)
+            return
+          }
+          console.log(res)
+          this.shopInfo = res.data || {}
+          this.employee = res.data.employee || {}
+          this.shopInfo.rate = this._formatStars(this.shopInfo.rate)
+        } catch (e) {
+          console.error(e)
+        }
+      },
       async _getShopInfo(loading) {
         try {
           let res = await Guide.getShopInfo({}, loading)
@@ -59,8 +76,10 @@
             this.$showToast(res.message)
             return
           }
+          console.log(res)
           this.shopInfo = res.data || {}
           this.employee = res.data.employee || {}
+          this.shopInfo.rate = this._formatStars(this.shopInfo.rate)
         } catch (e) {
           console.error(e)
         }
@@ -83,6 +102,21 @@
         } catch (e) {
           console.error(e)
         }
+      },
+      _formatStars(rate) {
+        let arr = []
+        if (rate) {
+          while (rate > 0) {
+            let n = rate--
+            n === 0 || n > 0.5 ? arr.push(1) : arr.push(0.5)
+          }
+          let num = 5 - arr.length
+          let newArr = new Array(num).fill(0)
+          arr = arr.concat(newArr)
+        } else {
+          arr = new Array(5).fill(0)
+        }
+        return arr
       }
     }
   }

@@ -28,6 +28,7 @@
         </section>
       </li>
     </ul>
+    <blank v-if="selectTab===0 && goodsList.length===0" styles="padding:50px 0"></blank>
     <section class="story-wrapper" v-if="selectTab === 1">
       <div class="video-wrapper">
         <video class="video" :src="storyData.video" objectFit="fill" :poster="storyData.video" :initial-time="1"></video>
@@ -46,11 +47,13 @@
       </ul>
       <div class="end">END</div>
     </section>
+    <blank v-if="selectTab===1 && storyData.content_details.length===0" styles="padding:50px 0"></blank>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import Vue from 'vue'
+  import Blank from 'components/blank/blank'
 
   const vue = new Vue()
   const video = 'http://14.29.86.17/vlive.qqvideo.tc.qq.com/AuOCHUj_W0--tQeJANCWNmtOqXc5ZjplRKBdW5LSw1Vk/m0200c2wagp.p201.1.mp4?level=0&vkey=9897261EB2D341D0AEF807E49A29F6FBA9B95815912FB21A55F674FB72A98A91BD1BB9C0943FC026576483868EF21587F2B80F5B90A0BDF1D1822E3226EF18EB9E0F52091D20F7215F0001FE81470D37574F42D2BF747672150194DF8DB2B914DBD40C2104BCEE4EA88B8F9EC423B8344581AC018693EC79&sdtfrom=&fmt=shd&platform=10901&locid=97f27211-cd66-44cd-ad0c-56244cbde333&size=2562617&ocid=350887852'
@@ -82,6 +85,9 @@
   }
   const tabList = [{title: '服务项目'}, {title: '品牌故事'}]
   export default {
+    components: {
+      Blank
+    },
     props: {
       goodsList: {
         type: Array,
@@ -122,15 +128,16 @@
     &:after
       content: ""
       position: absolute
-      top: 33px
+      top: 29px
       right: 0
       width: 100%
       transform: scaleY(.5) translateZ(0)
       border-bottom: 1px solid $color-col-line
     .tab-container
-      height: 30px
+      height: 26px
       margin: 0 15px
       position: relative
+      padding-bottom: 8px
       .tab-wrapper
         position: relative
         height: 100%
@@ -174,10 +181,12 @@
           flex: 1
           overflow: hidden
           layout(row)
+          align-items: center
           .detail
             flex: 1
             overflow: hidden
-            padding: 3px 10px 3px 0
+            padding: 0 10px
+            height: 70px
             layout()
             justify-content: space-between
             width: 53%
@@ -185,7 +194,7 @@
               font-size: $font-size-16
               color: $color-1F1F1F
               letter-spacing: 0.6px
-              no-wrap-plus()
+              no-wrap()
             .money
               layout(row, block, nowrap)
               align-items: flex-end
