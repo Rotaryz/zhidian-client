@@ -48,7 +48,6 @@
       }
     },
     async onLoad(option) {
-      console.log(option)
       this.status = option.status || ''
       await this._getOrderList()
     },
@@ -65,10 +64,35 @@
           url: `/pages/order-detail?id=${id}`
         })
       },
-      _goUse(item) {
+      async _goUse(item) {
         let status = item.status
         switch (status) {
           case 'payment': // 付款
+            let res = await Order.payOrder({ pay_method_id: 1, order_id: item.id })
+            // 支付
+            this.$wechat.hideLoading()
+            if (res.error !== this.$ERR_OK) {
+              this.$showToast(res.message)
+              return
+            }
+            let payRes = res.data
+            const { timestamp, nonceStr, signType, paySign } = payRes
+            wx.requestPayment({
+              timeStamp: timestamp,
+              nonceStr,
+              package: payRes.package,
+              signType,
+              paySign,
+              success: async () => {
+                this.$wechat.showLoading()
+                setTimeout(async () => {
+                  this.page = 1
+                  await this._getOrderList(this.detail.id)
+                }, 2000)
+              },
+              fail() {
+              }
+            })
             break
           case 'waiting_groupon': // 拼团详情
             // wx.navigateTo({
@@ -100,7 +124,6 @@
         } else {
           this.orderList = this.orderList.concat(res.data)
         }
-        console.log(this.orderList)
         this.$wechat.hideLoading()
       }
     },

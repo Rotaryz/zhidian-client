@@ -1,6 +1,6 @@
 <template>
   <div class="order-detail">
-    <div class="order-normal" v-if="detail.status !== 'refund'">
+    <div class="order-normal" v-if="detail">
       <!-- 商品信息-->
       <div class="order-box">
         <div class="order-shop" @click="_goShop()">
@@ -20,11 +20,11 @@
         </div>
       </div>
       <!-- 团购信息-->
-      <div class="ground-status" v-if="detail.groupon_data && detail.groupon_data.length">
+      <div class="ground-status" v-if="groupDetail">
         <div class="ground-name">
           <div class="ground-text">拼团状态</div>
           <div class="ground-time-name">剩余时间:</div>
-          <div class="ground-time">00:00:00</div>
+          <div class="ground-time" :class="groupDetail.group_status > 2 || timeEnd ? 'time-down' : ''">{{groupDetail.group_status > 2 ? '00:00:00' : groupEndTime}}</div>
         </div>
         <div class="progress-success">
           <!--<span class="progress-item"></span>-->
@@ -44,11 +44,12 @@
         <div class="coupon-title">服务券码</div>
         <div class="coupon-item" v-for="(coupon, index) in detail.coupon_details" :key="index">
           <div class="coupon-left">
-            <img src="" mode="aspectFill" class="coupon-icon">
+            <img v-if="imageUrl && coupon.status !== 0" :src="imageUrl + '/zd-image/mine/icon-coupon_used@2x.png'" mode="aspectFill" class="coupon-icon">
+            <img v-if="imageUrl && coupon.status === 0" :src="imageUrl + '/zd-image/mine/icon-coupon@2x.png'" mode="aspectFill" class="coupon-icon">
             <p class="coupon-text">券{{index + 1}}:</p>
             <p class="coupon-sn">{{coupon.code}}</p>
           </div>
-          <div class="coupon-btn" :class="{'coupon-btn-disable' : item.status !== 0}">{{coupon.status === 0 ? '待使用' : coupon.status === 1 ? '已使用' : '已过期'}}</div>
+          <div class="coupon-btn" @click="_useCoupon(coupon)" :class="{'coupon-btn-disable' : coupon.status !== 0}">{{coupon.status === 0 ? '待使用' : coupon.status === 1 ? '已使用' : '已过期'}}</div>
         </div>
       </div>
       <!--订单详情-->
@@ -65,29 +66,51 @@
         <div class="btn" @click="_deal(item)">{{manager[detail.status]}}</div>
       </div>
     </div>
+    <coupon-code ref="couponCode" :couponMsg.sync="couponDetail" @cancel="cancel"></coupon-code>
   </div>
 </template>
 
 <script>
   import { Order } from 'api'
+  import CouponCode from 'components/coupon-code/coupon-code'
+  import clearWatch from 'common/mixins/clear-watch'
 
   const MANAGER = { payment: '去支付', waiting_groupon: '拼团详情', success_groupon: '拼团详情', fail_groupon: '拼团详情' }
 
   const GROUND_STATUS = ['拼团中', '拼团成功']
+  const GROUND_END = ['拼团中', '拼团失败', '退款成功']
   export default {
+    mixins: [clearWatch],
     name: 'order-detail',
     data() {
       return {
         groundStatus: GROUND_STATUS,
         groundNow: 2,
-        detail: {},
-        manager: MANAGER
+        detail: null,
+        manager: MANAGER,
+        couponDetail: {},
+        timeEnd: false,
+        timer: '',
+        groupEndTime: '00:00:00',
+        groupDetail: null
       }
     },
     async onLoad(option) {
-      await this._orderDetail(option.id)
+      await this._orderDetail(option.id, true)
     },
     methods: {
+      async cancel() {
+        await this._orderDetail(this.detail.id, false)
+      },
+      _useCoupon(coupon) {
+        if (coupon.status !== 0) {
+          return
+        }
+        this.couponDetail = { name: this.detail.goods_title, goods_image: this.detail.goods_image_url, time: this.detail.create_at, qrcode_url: coupon.qrcode_url, code: coupon.code }
+        this.showCoupon = true
+        this.$refs.couponCode.show()
+        console.log(this.$refs)
+      },
       _goShop() {
         this.$turnShop({ id: this.detail.shop_id, url: '/pages/guide' })
         //  跳转店铺首页，切店
@@ -100,7 +123,6 @@
         switch (this.detail.status) {
           case 'payment':
             let res = await Order.payOrder({ pay_method_id: 1, order_id: this.detail.id })
-            console.log(res)
             // 支付
             this.$wechat.hideLoading()
             if (res.error !== this.$ERR_OK) {
@@ -118,7 +140,7 @@
               success: async () => {
                 this.$wechat.showLoading()
                 setTimeout(async () => {
-                  await this._orderDetail(this.detail.id)
+                  await this._orderDetail(this.detail.id, false)
                 }, 2000)
               },
               fail() {
@@ -128,16 +150,83 @@
           default:
         }
       },
-      async _orderDetail(id) {
-        let res = await Order.orderDetail(id)
+      async _orderDetail(id, loading) {
+        let res = await Order.orderDetail(id, loading)
         if (res.error !== this.$ERR_OK) {
           this.$showToast(res.message)
           this.$wechat.hideLoading()
           return
         }
         this.detail = res.data
+        this.groupDetail = this.detail.groupon_data.length === 0 ? null : this.detail.groupon_data
+        if (this.groupDetail) {
+          let status = this.groupDetail.group_end_timestamp
+          // 拼团状态
+          switch (status) {
+            case 1:
+            case 2:
+              this.groundNow = 1
+              this.groundStatus = GROUND_STATUS
+              break
+            case 3:
+              this.groundNow = 2
+              this.groundStatus = GROUND_STATUS
+              break
+            case 5:
+              this.groundNow = 2
+              this.groundStatus = GROUND_END
+              break
+            case 6:
+              this.groundNow = 3
+              this.groundStatus = GROUND_END
+              break
+          }
+          this._groupTimePlay()
+        }
         this.$wechat.hideLoading()
+      },
+      _groupTimePlay() {
+        clearInterval(this.timer)
+        let res = this._groupTimeCheckout(this.groupDetail.group_end_timestamp)
+        this.groupEndTime = `${res.hour}:${res.minute}:${res.second}`
+        this.timer = setInterval(() => {
+          let res = this._groupTimeCheckout(this.groupDetail.group_end_timestamp)
+          this.groupEndTime = `${res.hour}:${res.minute}:${res.second}`
+          if (this.timeEnd) {
+            clearInterval(this.timer)
+          }
+        }, 1000)
+      },
+      // 引入时间戳（秒）换算出时间差
+      _groupTimeCheckout(time) {
+        let nowSecond = parseInt(Date.now() / 1000)
+        let differ = time * 1 - nowSecond
+        let hour = Math.floor(differ / (60 * 60))
+        hour = hour >= 10 ? hour : '0' + hour
+        let minute = Math.floor(differ / 60) - (hour * 60)
+        minute = minute >= 10 ? minute : '0' + minute
+        let second = Math.floor(differ) - (hour * 60 * 60) - (minute * 60)
+        second = second >= 10 ? second : '0' + second
+        let times
+        if (differ > 0) {
+          times = {
+            hour,
+            minute,
+            second
+          }
+        } else {
+          times = {
+            hour: '00',
+            minute: '00',
+            second: '00'
+          }
+          this.timeEnd = true
+        }
+        return times
       }
+    },
+    components: {
+      CouponCode
     }
   }
 </script>
@@ -236,6 +325,8 @@
           font-size: $font-size-14
           font-family: $font-family-regular
           color: $color-D32F2F
+        .time-down
+          color: $color-455A64
       .progress-success
         width: 88%
         display: flex
@@ -339,8 +430,7 @@
           align-items: center
         .coupon-icon
           margin-right: 10px
-          background: $color-D32F2F
-          height: 13.9px
+          height: 15px
           width: 17px
         .coupon-text
           font-size: $font-size-14

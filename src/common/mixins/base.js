@@ -10,6 +10,7 @@ function _entryType(options) {
   let source = isShare ? 1 : isQrcord ? 2 : 0
   return source
 }
+
 export default {
   data() {
     return {

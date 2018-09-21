@@ -7,9 +7,10 @@ export default {
     return request.get(url, data)
   },
   // 订单详情
-  orderDetail(id) {
+  orderDetail(id, loading) {
+    console.log(loading)
     const url = `/api/customer/customer-order/${id}`
-    return request.get(url)
+    return request.get(url, {}, loading)
   },
   // 订单详情
   payOrder(data) {
