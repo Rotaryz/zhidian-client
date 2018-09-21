@@ -2,19 +2,38 @@
   <div class="shop">
     <div class="back-shop">
       <p class="back-name">您正在浏览</p>
-      <p class="back-title">国颐堂美容店</p>
+      <p class="back-title">{{name}}</p>
       <div class="btn" @click="_goBack()">回自己店铺</div>
     </div>
   </div>
 </template>
 
 <script>
+  import { Guide } from 'api'
+
   export default {
     name: 'back-shop',
-    method: {
+    data() {
+      return {
+        name: ''
+      }
+    },
+    async onLoad() {
+      await this._getShopMsg()
+    },
+    methods: {
       _goBack() {
         let userInfoExtend = wx.getStorageSync('userInfoExtend')
         this.$turnShop({ id: userInfoExtend.shop_id, url: '/pages/guide' })
+      },
+      async _getShopMsg() {
+        let res = await Guide.getShopInfo({}, false)
+        this.$wechat.hideLoading()
+        if (res.error !== this.$ERR_OK) {
+          this.$showToast(res.message)
+          return
+        }
+        this.name = res.data.name
       }
     }
   }
