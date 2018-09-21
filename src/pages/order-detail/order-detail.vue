@@ -73,14 +73,12 @@
 <script>
   import { Order } from 'api'
   import CouponCode from 'components/coupon-code/coupon-code'
-  import clearWatch from 'common/mixins/clear-watch'
 
   const MANAGER = { payment: '去支付', waiting_groupon: '拼团详情', success_groupon: '拼团详情', fail_groupon: '拼团详情' }
 
   const GROUND_STATUS = ['拼团中', '拼团成功']
   const GROUND_END = ['拼团中', '拼团失败', '退款成功']
   export default {
-    mixins: [clearWatch],
     name: 'order-detail',
     data() {
       return {
@@ -98,6 +96,9 @@
     async onLoad(option) {
       let id = option.id || 0
       await this._orderDetail(id, true)
+    },
+    onUnload() {
+      clearTimeout(this.timer)
     },
     methods: {
       async cancel() {
@@ -161,7 +162,8 @@
         this.detail = res.data
         this.groupDetail = this.detail.groupon_data.length === 0 ? null : this.detail.groupon_data
         if (this.groupDetail) {
-          let status = this.groupDetail.group_end_timestamp
+          console.log(this.groupDetail)
+          let status = this.groupDetail.group_status
           // 拼团状态
           this.groundNow = status + 1
           switch (status) {
@@ -181,10 +183,10 @@
       },
       _groupTimePlay() {
         clearInterval(this.timer)
-        let res = this._groupTimeCheckout(this.groupDetail.group_end_timestamp)
+        let res = this._groupTimeCheckout(this.groupDetail.end_timestamp)
         this.groupEndTime = `${res.hour}:${res.minute}:${res.second}`
         this.timer = setInterval(() => {
-          let res = this._groupTimeCheckout(this.groupDetail.group_end_timestamp)
+          let res = this._groupTimeCheckout(this.groupDetail.end_timestamp)
           this.groupEndTime = `${res.hour}:${res.minute}:${res.second}`
           if (this.timeEnd) {
             clearInterval(this.timer)

@@ -89,6 +89,7 @@
               success: async () => {
                 this.$wechat.showLoading()
                 setTimeout(async () => {
+                  this.$wechat.hideLoading()
                   this.page = 1
                   await this._getOrderList(this.detail.id)
                 }, 2000)
