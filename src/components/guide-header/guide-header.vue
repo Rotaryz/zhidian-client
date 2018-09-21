@@ -11,7 +11,7 @@
     <section class="content">
       <article class="top">
         <div class="avatar-wrapper">
-          <img class="avatar" mode="aspectFill" :src="employee.avatar || url" alt="">
+          <img class="avatar" mode="aspectFill" :src="employee && employee.avatar || url" alt="">
         </div>
         <div class="name">{{employee.nickname || '刘辉'}}</div>
         <div class="detail">

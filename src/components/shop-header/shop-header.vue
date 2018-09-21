@@ -36,7 +36,7 @@
         <img class="icon right" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-tel@2x.png'" alt="" @click="toMobile">
       </article>
     </section>
-    <video class="my-video" id="my-video" :src="video"></video>
+    <video class="my-video" id="my-video" :src="video" @fullscreenchange="videoChange" @play="videoPlay" @pause="videoPause"></video>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -55,14 +55,26 @@
       return {
         url: this.$parent.$imageUrl + `/zd-image/test-img/5@1x.png`,
         video: 'http://14.29.86.17/vlive.qqvideo.tc.qq.com/AuOCHUj_W0--tQeJANCWNmtOqXc5ZjplRKBdW5LSw1Vk/m0200c2wagp.p201.1.mp4?level=0&vkey=9897261EB2D341D0AEF807E49A29F6FBA9B95815912FB21A55F674FB72A98A91BD1BB9C0943FC026576483868EF21587F2B80F5B90A0BDF1D1822E3226EF18EB9E0F52091D20F7215F0001FE81470D37574F42D2BF747672150194DF8DB2B914DBD40C2104BCEE4EA88B8F9EC423B8344581AC018693EC79&sdtfrom=&fmt=shd&platform=10901&locid=97f27211-cd66-44cd-ad0c-56244cbde333&size=2562617&ocid=350887852',
-        stars: [1, 1, 1, 0.5, 0]
+        stars: [1, 1, 1, 0.5, 0],
+        ctx: null,
+        isPlay: false
       }
     },
     methods: {
+      videoPlay() {
+        this.isPlay = true
+      },
+      videoPause() {
+        this.isPlay = false
+      },
       playVideo() {
         const ctx = this.$wx.createVideoContext('my-video')
-        ctx.requestFullScreen({direction: 90})
         ctx.play()
+        ctx.requestFullScreen({direction: 90})
+        this.ctx = ctx
+      },
+      videoChange() {
+        this.isPlay && this.ctx && this.ctx.pause()
       },
       async toMap() {
         try {
@@ -176,25 +188,25 @@
           width: 100%
           margin: 25px 0 6px
           text-align: justify
-          word-break :break-all
+          word-break: break-all
         .distance
           width: 95%
           font-size: $font-size-12
           color: $color-99A0AA
           padding-bottom: 40px
           text-align: justify
-          word-break :break-all
+          word-break: break-all
       .btn-group
         flex: 1
         margin-top: 31px
         layout(row)
-        justify-content :flex-end
+        justify-content: flex-end
         .line
           width: 1px
           height: 19px
           background: $color-99A0AA
           opacity: 0.3
-          margin :3px 15px
+          margin: 3px 15px
         .icon
           width: 24px
           height: 24px
