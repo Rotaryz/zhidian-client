@@ -68,6 +68,9 @@
     },
     created() {
     },
+    onUnload() {
+      this.orderShow = false
+    },
     methods: {
       ...mapActions([
         'setShowType',
@@ -78,6 +81,7 @@
         this.paymentMsg = msg
         this.code = msg.code
         this.orderShow = true
+        console.log(msg)
         this.total = (this.orderNum * this.paymentMsg.price).toFixed(2)
       },
       hideOrder() {
@@ -129,6 +133,15 @@
             }
             break
           case 'group':
+            data = {
+              goods,
+              pay_method_id: 1,
+              order_id: 0,
+              activity_type: 1,
+              group_type: this.paymentMsg.groupType,
+              group_id: this.paymentMsg.groupJoinId,
+              recommend_activity_id: this.paymentMsg.recommend_activity_id
+            }
             break
           case 'bargain':
             break
