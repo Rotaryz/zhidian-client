@@ -7,7 +7,7 @@
         <img :src="image_url + '/zd-image/mine/icon-pressed@2x.png'" class="list-way">
       </div>
     </div>
-    <panel-end></panel-end>
+    <panel-end v-if="upMore && browseShopList.length * 1 !== 0"></panel-end>
   </div>
 </template>
 
