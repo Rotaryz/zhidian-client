@@ -11,16 +11,21 @@
         </div>
       </section>
       <div class="used-box" v-if="selectTab * 1 === 0">
-        <coupon-item></coupon-item>
+        <div class="item" v-for="(item, index) in unusedList" v-bind:key="index">
+          <coupon-item @clickUsedBtn="clickUsedBtn" :couponInfo="item"></coupon-item>
+        </div>
       </div>
       <div class="used-box" v-if="selectTab * 1 === 1">
-        <coupon-item :coupontype="1"></coupon-item>
+        <div class="item" v-for="(item, index) in usedList" v-bind:key="index">
+          <coupon-item :coupontype="1" :couponInfo="item"></coupon-item>
+        </div>
       </div>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
   import CouponItem from 'components/coupon-item/coupon-item'
+  import {Shop} from 'api'
 
   const tabList = [{title: '未使用'}, {title: '不可用'}]
   export default {
@@ -28,13 +33,115 @@
     data() {
       return {
         tabList,
-        selectTab: 0
+        selectTab: 0,
+        unusedList: [],
+        unusedPage: 1,
+        unusedMore: false,
+        usedList: [],
+        usedPage: 1,
+        usedMore: false
+      }
+    },
+    onShow() {
+      this.getUnusedList()
+      this.getUsedList()
+    },
+    onReachBottom() {
+      if (this.selectTab * 1 === 0) {
+        this.getMoreUnusedList()
+      } else {
+        this.getMoreUsedList()
       }
     },
     methods: {
       changeTab(index) {
         if (this.selectTab === index) return
         this.selectTab = index
+      },
+      clickUsedBtn(item) {
+        console.log(item)
+      },
+      getUnusedList() {
+        this.unusedPage = 1
+        this.unusedMore = false
+        let data = {
+          page: 1,
+          status: 0,
+          limit: 10
+        }
+        Shop.getCouponList(data).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            this.unusedList = res.data
+            this._isUnusedList(res)
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
+      _isUnusedList (res) {
+        this.unusedPage++
+        if (this.unusedList.length >= res.meta.total * 1) {
+          this.unusedMore = true
+        }
+      },
+      getMoreUnusedList() {
+        if (this.unusedMore) return
+        let data = {
+          page: this.unusedPage,
+          status: 0,
+          limit: 10
+        }
+        Shop.getCouponList(data).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            this.unusedList.push(res.data)
+            this._isUnusedList(res)
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
+      getUsedList() {
+        this.usedPage = 1
+        this.usedMore = false
+        let data = {
+          page: 1,
+          status: 1,
+          limit: 10
+        }
+        Shop.getCouponList(data).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            this.usedList = res.data
+            this._isUsedList(res)
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
+      _isUsedList (res) {
+        this.usedPage++
+        if (this.usedList.length >= res.meta.total * 1) {
+          this.usedMore = true
+        }
+      },
+      getMoreUsedList() {
+        if (this.usedMore) return
+        let data = {
+          page: this.usedPage,
+          status: 1,
+          limit: 10
+        }
+        Shop.getCouponList(data).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            this.usedList.push(res.data)
+            this._isUsedList(res)
+          } else {
+            this.$showToast(res.message)
+          }
+        })
       }
     },
     components: {
@@ -48,7 +155,7 @@
   .exchange
     min-height: 100vh
     background: $color-background
-    padding: 65px 15px 15px
+    padding: 65px 13px 15px
     box-sizing: border-box
   .tab-container
     height: 50px

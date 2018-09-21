@@ -12,37 +12,21 @@
 
 <script type="text/ecmascript-6">
   import wx from 'common/js/wx'
-  import { Shop } from 'api'
+  import { Shop, Guide } from 'api'
   export default {
     name: 'album',
     data() {
       return {
-        shopList: [
-          {
-            url: 'https://img.jerryf.cn/defaults/zd-image/test-img/9@1x.png'
-          },
-          {
-            url: 'https://img.jerryf.cn/defaults/zd-image/test-img/8@1x.png'
-          },
-          {
-            url: 'https://img.jerryf.cn/defaults/zd-image/test-img/10@1x.png'
-          },
-          {
-            url: 'https://img.jerryf.cn/defaults/zd-image/test-img/3@1x.png'
-          }
-        ],
+        shopList: [],
         upMore: false,
         page: 1
       }
     },
-    created() {
-    },
-    mounted() {
-      wx.setNavigationBarTitle({ title: '国颐堂' })
+    onShow() {
+      this.getMerchantsTitle()
       this.getImgList()
     },
     onReachBottom () {
-      this.page++
       this.getMoreImgList()
     },
     methods: {
@@ -50,9 +34,11 @@
         wx.previewImage({urls: [item.url]})
       },
       getImgList() {
-        Shop.getMerchantsImg({page: this.page}).then((res) => {
+        this.page = 1
+        this.upMore = false
+        Shop.getMerchantsImg({page: this.page, limit: 10}).then((res) => {
           this.$wechat.hideLoading()
-          if (res.error === this.$ERR_Ok) {
+          if (res.error === this.$ERR_OK) {
             this.shopList = res.data
             this._isUpList(res)
           } else {
@@ -62,16 +48,27 @@
       },
       _isUpList (res) {
         this.page++
-        if (this.upList.length >= res.meta.total * 1) {
+        if (this.shopList.length >= res.meta.total * 1) {
           this.upMore = true
         }
       },
       getMoreImgList() {
         if (this.upMore) return
-        Shop.getMerchantsImg({page: this.page}).then((res) => {
+        Shop.getMerchantsImg({page: this.page, limit: 10}).then((res) => {
           this.$wechat.hideLoading()
-          if (res.error === this.$ERR_Ok) {
+          if (res.error === this.$ERR_OK) {
             this.shopList.push(res.data)
+            this._isUpList(res)
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
+      getMerchantsTitle() {
+        Guide.getShopInfo().then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            wx.setNavigationBarTitle({title: res.data.name})
           } else {
             this.$showToast(res.message)
           }

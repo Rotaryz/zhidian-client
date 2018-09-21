@@ -25,6 +25,12 @@
         authorizationCount: 0
       }
     },
+    onLoad() {
+      wx.setStorageSync('errPage', '/pages/login/login')
+    },
+    onUnload() {
+      wx.setStorageSync('errPage', '')
+    },
     methods: {
       async _authorization() {
         const wxUser = await this.$wechat.getUserInfo()
