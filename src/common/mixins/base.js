@@ -1,3 +1,7 @@
+import { checkIsTabPage } from 'common/js/util'
+import {Jwt} from '../../api'
+import {mapActions} from 'vuex'
+
 const shareArr = [1007, 1008, 1036, 1044, 1073, 1074]
 const qrCordArr = [1047, 1048, 1049, 1011, 1012, 1013]
 
@@ -21,10 +25,19 @@ export default {
   onLoad() {
     // 记录页面栈
     let url = this.$root.$mp.page.route
-    console.log(this.$root.$mp)
-    if (url !== 'pages/error' && url !== 'pages/error-network') {
-      wx.setStorageSync('errorUrl', url)
+    let status = checkIsTabPage(url)
+    let query = this.$root.$mp.query
+    if (!status) {
+      let string = ''
+      for (let value in query) {
+        string = `&${value}=${query[value]}`
+      }
+      url = `${url}?${string.slice(1)}`
     }
+    if (url.includes('pages/error') || url.includes('pages/error-network')) {
+      return
+    }
+    wx.setStorageSync('errorUrl', url)
   },
   methods: {
     ...mapActions(['setIsLoadDy']),

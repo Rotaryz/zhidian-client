@@ -1,6 +1,8 @@
 <template>
   <div class="error-none">
-    <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/pic-nointernet@2x.png'" class="blank-img">
+    <div class="img-box">
+      <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/pic-nointernet@2x.png'" class="blank-img">
+    </div>
     <p class="blank-title">网络好像不太给力， 请稍后再试哦~</p>
     <p class="btn" @click="_goGuide">重新加载</p>
   </div>
@@ -8,8 +10,10 @@
 
 <script>
   import { checkIsTabPage } from 'common/js/util'
+  import clearWatch from 'common/mixins/clear-watch'
 
   export default {
+    mixins: [clearWatch],
     name: 'error-none',
     methods: {
       _goGuide() {
@@ -38,7 +42,7 @@
     justify-content: center
     flex-direction: column
 
-  .blank-img
+  .blank-img, .img-box
     height: 117px
     width: 168px
 
