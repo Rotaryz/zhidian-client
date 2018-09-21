@@ -33,7 +33,7 @@ fly.config.baseURL = baseURL.api
 function checkStatus (response) {
   // login
   // 如果http状态码正常，则直接返回数据
-  if (response && (response.status === 200 || response.status === 201 || response.status === 304 || response.status === 422)) {
+  if (response && (response.status === 200 || response.status === 304 || response.status === 422)) {
     return response
     // 如果不需要除了data之外的数据，可以直接 return response.data
   }

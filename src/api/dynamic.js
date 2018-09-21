@@ -48,14 +48,5 @@ export default {
   delLogs (id) {
     let url = `/api/customer/live-logs/${id}`
     return request.delete(url)
-  },
-  /**
-   * 上传图片
-   * @param data
-   * @returns {*}
-   */
-  upLoadImage (data, loading, autoHide) {
-    let url = 'https://ws-api.jerryf.cn/api/minimerchant/images'
-    return request.upLoadImage(url, data, loading, autoHide)
   }
 }

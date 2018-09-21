@@ -8,7 +8,7 @@
           <img class="img-item" :src="item.image_url" mode="aspectFill">
           <!--<input type="file" class="image-file" @change="_fileImage($event)" accept="image/*" multiple>-->
           <div class="close-icon" @click.stop="_delImage(index)">
-            <img class="close-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-delpic@2x.png'" mode="widthFix">
+            <img class="close-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-del@2x.png'" mode="widthFix">
           </div>
         </div>
         <div class="com-image" v-if="image.length < 9">
@@ -91,21 +91,25 @@
       },
       async _upLoad (data) {
         await Promise.all(data.map(async (val, index) => {
-        //   // let image = await Dynamic.upLoadImage({ file: val, sort: index })
-          console.log(this.$cos, 'cos')
+          // let image = await Dynamic.upLoadImage({ file: val, sort: index })
           let image = await this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, [val])
-          console.log(image, 'image')
-        //   // let imageItem = { type: 1, detail_id: image.id, image_url: image.url, sort: image.sort * 1 }
-        //   this.image.push(imageItem)
+          // let imageItem = { type: 1, detail_id: image.id, image_url: image.url, sort: image.sort * 1 }
+          this.image.push(image[0].id)
+          console.log(image, this.image)
         }))
-        data.map((val, index) => {
-          this.image.push(data[index])
-        })
-        this.image.sort(this._sort)
+        // data.map((val, index) => {
+        //   this.image.push(data[index])
+        // })
+
+        // this.image.sort(this._sort)
         data.forEach((item) => {
           let obj = { image_url: item }
           this.showImage.push(obj)
         })
+      },
+      async boss() {
+        let res = await Dynamic.isBoss()
+        this.isBoss = res.data
       },
       _sort (a, b) {
         return a.sort - b.sort
@@ -125,7 +129,16 @@
           this.$showToast('发布图片不能为空')
           return
         }
-        let data = { content: this.title, live_log_details: this.image, is_sync: this.isChecked }
+        let imageArr = []
+        this.image.map((item) => {
+          console.log(item)
+          imageArr.push({type: 1, detail_id: item})
+        })
+        let data = {
+          content: this.title,
+          live_log_details: imageArr,
+          is_sync: this.isChecked
+        }
         Dynamic.liveLogs(data).then((res) => {
           this.send = false
           if (res.error === this.$ERR_OK) {
@@ -135,7 +148,7 @@
               this.image = []
               this.showImage = []
               this.title = ''
-              this.setIsLoadDy(true)
+              // this.setIsLoadDy(true)
               this._back()
             }, 2010)
             this.$wechat.hideLoading()
@@ -146,7 +159,10 @@
         })
       },
       _back () {
-        this.$router.back()
+        // this.$router.back()
+        this.$wx.navigateBack({
+          delta: 1
+        })
       }
     },
     components: {

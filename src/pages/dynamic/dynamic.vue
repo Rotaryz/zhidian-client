@@ -153,7 +153,7 @@
         </div>
       </div>
     </div>
-    <!--<div v-if="!loadMoreDy" class="no-more"><div class="line"></div><div class="txt">再拉也没有了</div></div>-->
+    <div v-if="!loadMoreDy && dynamicList.length > 1" class="no-more"><div class="line"></div><div class="txt">再拉也没有了</div></div>
     <navigator hover-class="none" v-if="isMine" url="edit-dynamic" class="new-dynamic">
       <img mode="widthFix" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-write@2x.png'" class="new-dynamic-img">
     </navigator>
@@ -173,20 +173,19 @@
     </div>
     <dynamic-share :item.sync="pictureObj" ref="dynamic" @drawDone="drawDone" :qrCodeUrlTmp.sync="qrCode"></dynamic-share>
     <!--<div class="bottom-box-big" :class="showCover ? 'bottom-box-big-show' : ''">-->
-      <div class="bottom-box" :class="showCover ? 'show' : ''">
-        <button open-type="share" hover-class="none" class="share-item">发给好友</button>
-        <div class="share-item border-top" @click.stop="makePoster()">生成图片 保存分享</div>
-        <div class="share-item last" @click="_closeCover">取消</div>
-      </div>
+      <!--<div class="bottom-box" :class="showCover ? 'show' : ''">-->
+        <!--<button open-type="share" hover-class="none" class="share-item">发给好友</button>-->
+        <!--<div class="share-item border-top" @click.stop="makePoster()">生成图片 保存分享</div>-->
+        <!--<div class="share-item last" @click="_closeCover">取消</div>-->
+      <!--</div>-->
     <!--</div>-->
-    <!--<share ref="share" />-->
+    <share ref="share" @getPicture="makePoster" @friendShare="friendShare"/>
   </article>
 </template>
 
 <script type="text/ecmascript-6">
   import {Dynamic} from 'api'
   import {baseURL} from 'api/config'
-  import base from 'common/mixins/base'
   import ConfirmMsg from 'components/confirm-msg/confirm-msg'
   import { resolveQrCode } from 'common/js/util'
   import DynamicShare from 'components/dynamic-share/dynamic-share'
@@ -194,7 +193,7 @@
   import imMixin from 'common/mixins/im-mixin'
 
   export default {
-    mixins: [base, imMixin],
+    mixins: [imMixin],
     name: 'dynamic',
     data() {
       return {
@@ -214,17 +213,16 @@
         showDown: false,
         showSmallDown: false,
         showCover: false,
-        posterInfo: null,
         pictureObj: null,
-        forzenTimer: '',
         testImg: '', // 重要，勿删
         testShow: 0, // 重要，勿删
         isShowBox: true,
-        qrCode: ''
+        qrCode: '',
+        isMine: true
       }
     },
     async onLoad(option) {
-      // await this._getQuery(option)
+      await this._getQuery(option)
       // this.$wx.setStorageSync('employeeId', 100001)
       // this.$wx.setStorageSync('token', '8ab4795567cb2e07245d89bbd1ea1a8e2d05416a')
       this.loadMoreDy = true
@@ -244,6 +242,20 @@
       this.page++
       this._getList()
     },
+    onShareAppMessage() {
+      let id = this.$wx.getStorageSync('userInfo').id
+      let shopId = wx.getStorageSync('shopId')
+      return {
+        title: '',
+        path: `/pages/dynamic/dynamic?fromType=3&fromId=${id}&shopId=${shopId}`,
+        success: (res) => {
+          // 转发成功
+        },
+        fail: (res) => {
+          // 转发失败
+        }
+      }
+    },
     methods: {
       cancel() {
         this.isShowBox = true
@@ -252,7 +264,7 @@
         // 分享进来的
         let entryId = option.shopId
         if (entryId) {
-          wx.setStorageSync('shopId', entryId)
+          this.$wx.setStorageSync('shopId', entryId)
         }
         // 二维码扫描进入 - 永久
         let scene = option.scene
@@ -260,7 +272,7 @@
           let sceneMsg = decodeURIComponent(scene)
           const params = resolveQrCode(sceneMsg)
           if (params.e) {
-            this.$wx.setStorageSync('employeeId', params.e)
+            this.$wx.setStorageSync('shopId', params.e)
           }
         }
       },
@@ -279,51 +291,22 @@
           }
           this.$wechat.hideLoading()
           this.qrCode = res.data.image_url
-          // qrCodeUrl = res.data.image_url || (baseURL.image + '/zd-image/dynamic/pic-headshot@2x.png')
-          // let arr = [avatarUrl, qrCodeUrl, defaultAvatar]
-          // this._downloadPictures(arr, res => {
-          //   // console.log(res, '-----------=-')
-          //   getApp().globalData.drawInfo = {
-          //     avatarUrl: res[0].tempFilePath,
-          //     qrCodeUrl: res[1].tempFilePath,
-          //     name,
-          //     defaultAvatar: res[2].tempFilePath,
-          //     defaultName
-          //   }
-          // })
-        })
-      },
-      _downloadPictures(arr, callback) {
-        // wechat.showLoading()
-        let flag = arr.every(val => val)
-        if (!flag) {
-          // wechat.hideLoading()
-          // return this.$refs.to、ast.show('请添加图片')
-        }
-        arr = arr.map(item => {
-          return this.$wechat.downloadFile({ url: item })
-        })
-        Promise.all(arr).then(callback).catch((err) => {
-          console.warn(err)
-          // wechat.hideLoading()
-          // this.$refs.toast.sho、w('下载图片失败，请重新尝试！')
         })
       },
       drawDone() {
         this.pictureObj = null
       },
       makePoster() {
+        this.$refs.share.closeCover()
         this.$refs.dynamic.action()
-        this._closeCover()
-      },
-      _closeCover() {
-        this.showCover = false
       },
       _showCover(item) {
-        console.log('showcover')
         this.pictureObj = item
-        // this.$refs.share.show()
+        this.$refs.share.show()
         this.showCover = true
+      },
+      friendShare() {
+        this.$refs.share.closeCover()
       },
       _hideDown() {
         this.showSmallDown = false
@@ -447,7 +430,7 @@
             this.dynamicList[index].show = false
             this.dynamicList[index].live_log_like = res.data
             if (this.dynamicList[index].is_like) {
-              this.sendCustomMsg(30002)
+              this.sendCustomMsg(50005)
             }
             // 点赞之后加入
             return
@@ -461,7 +444,7 @@
           item.show = false
           return item
         })
-        this._closeCover()
+        // this._closeCover()
       },
       sendMsg() {
         if (!this.inputMsg) {
@@ -486,7 +469,7 @@
             this.$wechat.hideLoading()
             this.dynamicList[this.comIndex].live_log_comment.push(res.data)
             this.textArea = false
-            this.sendCustomMsg(30003)
+            this.sendCustomMsg(50004)
             return
           }
           this.$showToast(res.message)
