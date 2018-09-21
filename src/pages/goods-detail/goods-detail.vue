@@ -196,6 +196,8 @@
           letter-spacing: 0.6px
           overflow: hidden
           width: 100%
+          white-space: normal
+          word-break: break-all
           text-overflow: ellipsis
           display: -webkit-box
           -webkit-line-clamp: 2

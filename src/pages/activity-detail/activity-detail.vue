@@ -103,7 +103,7 @@
         </div>
       </div>
       <div class="right-box" @click="payOrderMsg" v-if="activityType === 'group' && goodsDetail.stock">¥ {{goodsDetail.platform_price}} {{groupType === 'join' ? '参团' : '开团'}}</div>
-      <div class="right-box un-click" v-if="activityType === 'group' && !goodsDetail.stock">已抢光</div>
+      <div class="right-box un-click" v-if="activityType === 'group' && goodsDetail.stock == 0">已抢光</div>
       <div class="right-box" @click="payOrderMsg" v-if="activityType === 'bargain'">去砍价</div>
       <div class="right-box" @click="payOrderMsg" v-if="activityType === 'bargain'">底价 ¥ 90立即购买</div>
       <div class="right-box un-click" v-if="activityType === 'bargain' && !timeEnd && goodsDetail.status && !goodsDetail.stock">已抢光</div>
@@ -156,7 +156,6 @@
       }
     },
     async onLoad(options) {
-      console.log(this)
       if (options.shopId) {
         this.shopId = options.shopId
         wx.setStorageSync('shopId', options.shopId)
@@ -205,7 +204,10 @@
         }
         switch (this.activityType) {
           case 'group':
-            await this._checkGroup(paymentMsg)
+            this.orderGroupType = 'open'
+            paymentMsg.groupType = this.orderGroupType
+            paymentMsg.groupJoinId = this.groupJoinId
+            await this._openGroup(paymentMsg)
             break
           case 'bargain':
             break
@@ -213,6 +215,28 @@
       },
       showRule(type) {
         this.$refs.role.showModel(type)
+      },
+      async joinGroup(item) {
+        await this._checkHasPhone()
+        let userInfo = wx.getStorageSync('userInfo')
+        let paymentMsg = {
+          price: this.goodsDetail.platform_price,
+          originPrice: this.goodsDetail.original_price,
+          image: this.goodsDetail.image_url,
+          title: this.goodsDetail.goods_title,
+          stock: this.goodsDetail.stock,
+          goods_id: this.goodsDetail.goods_id,
+          recommend_activity_id: this.activityId,
+          phoneNum: userInfo.mobile,
+          code: this.code,
+          hasPhone: this.hasPhone,
+          shopName: this.goodsDetail.shop_data.name,
+          shopImg: this.goodsDetail.shop_data.image_url,
+          groupType: 'join',
+          groupJoinId: item.id
+        }
+        this.orderGroupType = 'join'
+        await this._joinGroup(paymentMsg, item.id)
       },
       _getGoodsDetail(id, type) {
         switch (type) {
@@ -345,18 +369,36 @@
       },
       async _openGroup(paymentMsg) {
         let data = {
-          group_type: this.groupType,
+          group_type: this.orderGroupType,
           recommend_activity_id: this.activityId,
-          id: this.groupJoinId
+          id: ''
         }
         Goods.checkGroup(data).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
             if (res.can_open) {
-              this.orderGroupType = 'open'
               this.$refs.payment.showOrder(paymentMsg, this.activityType)
             } else {
-              this.$refs.toast.show(res.message)
+              this.$showToast(res.message)
+            }
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
+      async _joinGroup(paymentMsg, joinId) {
+        let data = {
+          group_type: this.orderGroupType,
+          recommend_activity_id: this.activityId,
+          id: joinId
+        }
+        Goods.checkGroup(data).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            if (res.can_join) {
+              this.$refs.payment.showOrder(paymentMsg, this.activityType)
+            } else {
+              this.$showToast(res.message)
             }
           } else {
             this.$showToast(res.message)
@@ -459,6 +501,8 @@
           letter-spacing: 0.6px
           overflow: hidden
           width: 100%
+          white-space: normal
+          word-break: break-all
           text-overflow: ellipsis
           display: -webkit-box
           -webkit-line-clamp: 2
@@ -564,6 +608,7 @@
                   margin-bottom: 4px
                   .red-num
                     margin: 0 2px
+                    color: $color-D32F2F
                 .group-swiper-time-txt
                   font-size: $font-size-12
               .group-swiper-item-btn
