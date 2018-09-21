@@ -2,11 +2,13 @@
   <div class="group-detail">
     <div class="group-goods">
       <div class="shop-msg">
-        <img :src="imageUrl + '/zd-image/mine/icon-shop_order@2x.png'" v-if="imageUrl" class="shop-icon">
-        <div class="shop-name">{{groupDetail.shop_data ? groupDetail.shop_data.name : ''}}</div>
-        <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" v-if="imageUrl" class="arrow-icon">
+        <div class="left" @click="toShop">
+          <img :src="imageUrl + '/zd-image/mine/icon-shop_order@2x.png'" v-if="imageUrl" class="shop-icon">
+          <div class="shop-name">{{groupDetail.shop_data ? groupDetail.shop_data.name : ''}}</div>
+          <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" v-if="imageUrl" class="arrow-icon">
+        </div>
       </div>
-      <div class="goods-msg">
+      <div class="goods-msg" @click="toDetail">
         <img :src="groupDetail.image_url" class="left-img" mode="aspectFill">
         <div class="right">
           <div class="center-msg">
@@ -41,6 +43,7 @@
 <script type="text/ecmascript-6">
   import { Goods } from 'api'
   import Payment from 'components/payment/payment'
+  import {mapGetters} from 'vuex'
   const STATUSOBJ = {
     1: {icon: 'icon-group_ing@2x.png', txt: '拼团中'},
     2: {icon: 'icon-group_success@2x.png', txt: '拼团成功'},
@@ -82,6 +85,12 @@
       this.id = options.groupId
       this._getGroupDetail()
     },
+    onShow() {
+      if (this.groupDetailReq.groupId) {
+        this.id = this.groupDetailReq.groupId
+        this.getGroupDetail(this.id)
+      }
+    },
     methods: {
       toOrderDetail() {
         let url = `/pages/order-detail?id=${this.groupDetail.order_id}&fromPage=groupDetail`
@@ -101,7 +110,7 @@
           title: this.groupDetail.goods_title,
           stock: this.groupDetail.stock,
           goods_id: this.groupDetail.goods_id,
-          recommend_activity_id: this.groupDetail.activity_id,
+          recommend_activity_id: this.groupDetail.recommend_activity_id,
           phoneNum: userInfo.mobile,
           code: this.code,
           hasPhone: this.hasPhone,
@@ -125,8 +134,14 @@
         }
       },
       paySuccess() {
-        console.log(99999)
         this._getGroupDetail()
+      },
+      toShop() {
+        this.$turnShop({ id: this.groupDetail.shop_data.id, url: `/pages/guide` })
+      },
+      toDetail() {
+        let url = `/pages/activity-detail?activityType=group&fromPage=groupDetail&activityId=${this.groupDetail.recommend_activity_id}`
+        wx.navigateTo({ url })
       },
       _getGroupDetail() {
         console.log(this.id)
@@ -150,6 +165,9 @@
       }
     },
     computed: {
+      ...mapGetters([
+        'groupDetailReq'
+      ]),
       statusNum() {
         let status
         if (this.groupDetail.in_group) {
@@ -200,6 +218,10 @@
         align-items: center
         padding-top: 15px
         height: 24px
+        .left
+          display: flex
+          align-items: center
+          height: 24px
         .shop-icon
           width: 18px
           height: 18px
