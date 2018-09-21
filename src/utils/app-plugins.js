@@ -5,17 +5,17 @@ import WeIM from './we-im/index'
 import { ERR_OK, baseURL } from 'api/config'
 import * as wechat from 'common/js/wechat'
 import * as cos from './we-cos/upload'
-import * as cosFileType from './we-cos/fileConfig'
+import {fileType} from './we-cos/fileConfig'
 import base from 'common/mixins/base'
+import { role } from 'common/js/contants'
 
 // // 不需要自动重置data数据的页面
 const unResetPage = []
 // 定义插件
-const somePlugin = {
+const AppPlugin = {
   install: function () {
     Vue.mixin({
-      methods: {
-      },
+      methods: {},
       onUnload() {
         // 重置页面组件的data数据
         if (!this.$mp) return
@@ -38,10 +38,10 @@ const somePlugin = {
     Vue.prototype.$wechat = wechat
     Vue.prototype.$wx = wx
     Vue.prototype.$cos = cos
-    Vue.prototype.$cosFileType = cosFileType
+    Vue.prototype.$cosFileType = fileType
     Vue.prototype.$store = store
+    Vue.prototype.$role = role
   }
 }
-// console.log(somePlugin)
 // 使用插件
-Vue.use(somePlugin)
+Vue.use(AppPlugin)

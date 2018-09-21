@@ -1,21 +1,21 @@
 <template>
-  <div class="coupon-code" v-if="isShow" :animation="maskAnimation">
+  <div class="coupon-code" v-if="isShow" :animation="maskAnimation" @click="cancel">
     <div class="content" :animation="modalAnimation">
       <img mode="widthFix" :src="imageUrl + '/zd-image/mine/pic-coupon_code@2x.png'" class="content-image">
       <div class="shop-msg">
         <div class="shop-header-box">
-          <img v-if="couponMsg.image_url" :src="couponMsg.image_url" class="shop-header">
+          <img v-if="couponMsg.goods_image" :src="couponMsg.goods_image" class="shop-header">
         </div>
         <div class="shop-content">
-          <p class="shop-name">sadfsagfdjkaglkdfg;lkaj;lkgjklsdahgklhdsglhsdlgahlasafasfasfassafafasasshfjk</p>
-          <p class="shop-time">有效期至 2018-09-09</p>
+          <p class="shop-name">{{couponMsg.name}}</p>
+          <p class="shop-time">有效期至 {{couponMsg.time}}</p>
         </div>
         <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
       </div>
       <div class="code-box">
-        <img :src="couponMsg.image_url" v-if="couponMsg.image_url" class="code">
+        <img :src="couponMsg.qrcode_url" v-if="couponMsg.qrcode_url" class="code">
       </div>
-      <div class="code-num">8234 5678 91</div>
+      <div class="code-num">{{couponMsg.code}}</div>
       <p class="code-tip">该券码用于线下门店核销使用</p>
     </div>
   </div>
@@ -37,6 +37,9 @@
         modalAnimation: '',
         imageUrl: this.$imageUrl
       }
+    },
+    onLoad() {
+      this.isShow = false
     },
     methods: {
       show() {
@@ -84,6 +87,7 @@
           this.modalAnimation = modalAnimation.export()
           this.isShow = false
         }, 300)
+        this.$emit('cancel')
       }
     }
   }
@@ -92,6 +96,7 @@
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
   .coupon-code
+    z-index: 100
     background: $color-mask-bgc
     word-break: break-all
     fill-box()
@@ -156,7 +161,6 @@
       .code
         height: 37.07vw
         width: @height
-        background: $color-D2D2D2
         z-index: 2
         position: relative
         display: block

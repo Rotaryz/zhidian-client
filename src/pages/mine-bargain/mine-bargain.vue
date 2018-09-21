@@ -6,7 +6,7 @@
         <p class="order-status">倒计时:142天58时10分36</p>
       </div>
       <div class="order-msg">
-        <img src="" class="order-pic">
+        <img src="" mode="aspectFill" class="order-pic">
         <div class="shop-content">
           <p class="shop-name">sadfsagfdjkaglkdfg;lkaj;lkgjklsdahgklhdsglhsdlgahlasafasfasfassafafasasshfjk</p>
           <p class="shop-price">￥45</p>
@@ -132,9 +132,9 @@
     align-items: center
 
   .shop-num
-    font-size: $font-size-14
+    font-size: $font-size-12
     margin-left: 5px
-    color: $color-99A0AA
+    color: $color-455A64
     line-height: 1
 
   .mine-serve-avatarBox-item

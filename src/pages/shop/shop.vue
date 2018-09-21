@@ -1,14 +1,14 @@
 <template>
   <article class="shop">
     <shop-header :shopInfo="shopInfo" :employee="employee"></shop-header>
-    <shop-content></shop-content>
+    <shop-content :goodsList="goodsList" @changeTab="changeTab"></shop-content>
   </article>
 </template>
 
 <script type="text/ecmascript-6">
   import ShopHeader from 'components/shop-header/shop-header'
   import ShopContent from 'components/shop-content/shop-content'
-  import { Jwt } from 'api'
+  import { Guide, Shop } from 'api'
 
   export default {
     components: {
@@ -18,29 +18,66 @@
     data() {
       return {
         shopInfo: {},
-        employee: {}
+        employee: {},
+        goodsList: [],
+        page: 1,
+        more: true
       }
     },
     async onShow() {
       await this.getBaseInfo()
     },
+    async onReachBottom() {
+      if (!this.more) return
+      this.page++
+      await this._getGoodsList()
+      this.$wechat.hideLoading()
+    },
     methods: {
+      async changeTab(index) {
+        if (index === 0) {
+          this.page = 1
+          this.more = true
+          await this._getGoodsList()
+          this.$wechat.hideLoading()
+        }
+      },
       async getBaseInfo() {
         this.$wechat.showLoading()
         await Promise.all([
-          this._getShopInfo(false)
+          this._getShopInfo(false),
+          this._getGoodsList(false)
         ])
         this.$wechat.hideLoading()
       },
       async _getShopInfo(loading) {
         try {
-          let res = await Jwt.getShopInfo({}, loading)
+          let res = await Guide.getShopInfo({}, loading)
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return
           }
           this.shopInfo = res.data
           this.employee = res.data.employee
+        } catch (e) {
+          console.error(e)
+        }
+      },
+      async _getGoodsList() {
+        if (!this.more) return
+        try {
+          let res = await Shop.getGoodsList({page: this.page})
+          if (res.error !== this.$ERR_OK) {
+            this.$showToast(res.message)
+            return
+          }
+          if (this.page === 1) {
+            this.goodsList = res.data
+          } else {
+            let arr = this.goodsList.concat(res.data)
+            this.goodsList = arr
+          }
+          this.more = this.goodsList.length < res.meta.total
         } catch (e) {
           console.error(e)
         }

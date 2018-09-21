@@ -25,6 +25,12 @@
         authorizationCount: 0
       }
     },
+    onLoad() {
+      wx.setStorageSync('errPage', '/pages/login/login')
+    },
+    onUnload() {
+      wx.setStorageSync('errPage', '')
+    },
     methods: {
       async _authorization() {
         const wxUser = await this.$wechat.getUserInfo()
@@ -41,7 +47,7 @@
           await this._authorization()
           return
         } else if (Json.error !== this.$ERR_OK && this.authorizationCount > 5) {
-          this.$wx.showToast({title: '登录失败，请重新登录', icon: 'none', duration: 1000})
+          this.$showToast('登录失败，请重新登录')
           return false
         }
         this.authorizationCount = 1
@@ -70,32 +76,41 @@
         }
         try {
           res = await Jwt.getToken(data)
-          this.$wechat.hideLoading()
           let userInfo, token
           if (res.data.unauthorized) {
             let resMsgJson = await this._authorization()
             userInfo = resMsgJson.userInfo
             token = resMsgJson.token
           } else {
-            console.log(res)
             userInfo = res.data.customer_info
             token = res.data.access_token
           }
-          console.log(userInfo, token)
+          this.$wechat.hideLoading()
           this.$wx.setStorageSync('userInfo', userInfo)
           this.$wx.setStorageSync('token', token)
-          let isLoginPage = this.targetPage.indexOf(LOGINPAGE)
-          if (isLoginPage !== -1) {
-            wx.switchTab({url: INDEX})
-          } else {
-            if (checkIsTabPage(this.targetPage)) {
-              wx.switchTab({url: this.targetPage})
-            } else {
-              wx.redirectTo({url: this.targetPage})
-            }
-          }
+          this._makeConnect()
         } catch (e) {
           e && this.$showToast(e.msg)
+        }
+      },
+      _switchPage() {
+        let isLoginPage = this.targetPage.indexOf(LOGINPAGE)
+        if (isLoginPage !== -1) {
+          wx.switchTab({url: INDEX})
+        } else {
+          if (checkIsTabPage(this.targetPage)) {
+            wx.switchTab({url: this.targetPage})
+          } else {
+            wx.redirectTo({url: this.targetPage})
+          }
+        }
+      },
+      async _makeConnect() {
+        try {
+          // await this.loginIm()
+          this._switchPage()
+        } catch (e) {
+          console.error(e)
         }
       }
     },

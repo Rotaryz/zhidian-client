@@ -9,18 +9,18 @@
       </div>
     </section>
     <ul class="server-wrapper" v-if="selectTab === 0">
-      <li class="coupon-item" v-for="(item,index) in '12345'" :key="index">
-        <div class="logo"><img class="logo-pic" mode="aspectFill" :src="url" alt=""></div>
+      <li class="coupon-item" v-if="goodsList.length" v-for="(item,index) in goodsList" :key="index" @click="toGoodsDetail(item)">
+        <div class="logo"><img class="logo-pic" mode="aspectFill" :src="item.image_url" alt=""></div>
         <article class="detail">
-          <div class="title">养发项目优惠券套餐==养发项目优惠券套餐养发项目优惠券套餐养发项目优惠券套餐</div>
+          <div class="title">{{item.goods_title}}</div>
           <div class="money">
-            <div class="price">¥99</div>
-            <span class="old-price">599元</span>
+            <div class="price">¥{{item.platform_price}}</div>
+            <span class="old-price">{{item.original_price}}元</span>
           </div>
         </article>
         <div class="btn-wrapper">
           <div class="btn">购买</div>
-          <div class="txt">已售28份</div>
+          <div class="txt">已售{{item.sale_count}}份</div>
         </div>
       </li>
     </ul>
@@ -77,6 +77,12 @@
   }
   const tabList = [{title: '服务项目'}, {title: '品牌故事'}]
   export default {
+    props: {
+      goodsList: {
+        type: Array,
+        default: []
+      }
+    },
     data() {
       return {
         url: this.$parent.$imageUrl + `/zd-image/test-img/4@1x.png`,
@@ -91,6 +97,10 @@
     methods: {
       changeTab(index) {
         this.selectTab = index
+        this.$emit('changeTab', index)
+      },
+      toGoodsDetail(item) {
+        this.$wx.navigateTo({url: `/pages/goods-detail?goodsId=${item.goods_id}`})
       }
     }
   }
