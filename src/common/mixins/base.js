@@ -23,7 +23,7 @@ export default {
     ...mapActions(['setIsLoadDy']),
     $showToast(title, duration = 1500, mask = true, icon = 'none') {
       if (!title) return
-      this.$wx.showToast({ title, icon, duration, mask })
+      this.$wx.showToast({title, icon, duration, mask})
     },
     $openSetting() {
       // todo
@@ -45,6 +45,13 @@ export default {
     },
     $hasShop() {
       return this.$wx.getStorageSync('userInfoExtend').shop_id
+    },
+    $checkIsMyShop(callback) {
+      Jwt.checkIsMyShop().then(res => {
+        if (res.error !== this.$ERR_OK) return
+        res.data && this.$wx.setStorageSync('userInfoExtend', res.data)
+        callback && callback()
+      }).catch(e => console.error(e))
     }
   }
 }
