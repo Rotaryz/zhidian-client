@@ -165,7 +165,7 @@
         })
       },
       toShare(item) {
-        console.log(22222)
+        console.log(item)
       }
     }
   }
