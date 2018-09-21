@@ -195,10 +195,12 @@
       letter-spacing: 0.6px
     .distance-wrapper
       layout(row, block, nowrap)
+      align-items: center
       .left
         width: 67%
         .address
           width: 100%
+          min-height: 1px
           margin: 25px 0 6px
           text-align: justify
           word-break: break-all
@@ -211,7 +213,7 @@
           word-break: break-all
       .btn-group
         flex: 1
-        margin-top: 31px
+        overflow: hidden
         layout(row)
         justify-content: flex-end
         .line

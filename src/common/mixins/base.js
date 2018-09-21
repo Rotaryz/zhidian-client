@@ -54,8 +54,18 @@ export default {
     $entryType(options) {
       return _entryType(options)
     },
-    $turnShop(data) { // 切换店铺
+    async $turnShop(data) { // 切换店铺
+      const {id, url} = data
       this.setIsLoadDy(true) // 设置动态刷新
+      this.$wechat.showLoading('跳转中')
+      this.$wx.setStorageSync('shopId', id)
+      await this.getEmployeeConect()
+      this.$wechat.hideLoading()
+      if (checkIsTabPage(url)) {
+        this.$wx.switchTab({path: url})
+      } else {
+        this.$wx.navigateTo({path: url})
+      }
     },
     $isBoss() {
       return +this.$wx.getStorageSync('userInfoExtend').role_id === this.$role.ROLE_BOSS

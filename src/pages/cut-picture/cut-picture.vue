@@ -94,8 +94,8 @@
       _updateImgHandle(res) {
         switch (this.cutType) {
           case 'avatar':
-            let path = res[0].url
-            Guide.setShopImage({path}).then(res => {
+            let id = res[0].id
+            Guide.setShopImage({image_id: id}).then(res => {
               this.$wechat.hideLoading()
               if (res.error !== this.$ERR_OK) {
                 this.$showToast(res.message)
