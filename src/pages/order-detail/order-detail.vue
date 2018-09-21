@@ -148,6 +148,7 @@
             })
             break
           default:
+            this.$turnShop({ id: this.detail.shop_id, url: `/pages/group-detail?groupId=${this.groupDetail.group_id}` })
         }
       },
       async _orderDetail(id, loading) {
@@ -162,22 +163,15 @@
         if (this.groupDetail) {
           let status = this.groupDetail.group_end_timestamp
           // 拼团状态
+          this.groundNow = status + 1
           switch (status) {
+            case 0:
+              this.groundStatus = GROUND_STATUS
+              break
             case 1:
+              this.groundStatus = GROUND_STATUS
+              break
             case 2:
-              this.groundNow = 1
-              this.groundStatus = GROUND_STATUS
-              break
-            case 3:
-              this.groundNow = 2
-              this.groundStatus = GROUND_STATUS
-              break
-            case 5:
-              this.groundNow = 2
-              this.groundStatus = GROUND_END
-              break
-            case 6:
-              this.groundNow = 3
               this.groundStatus = GROUND_END
               break
           }

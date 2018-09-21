@@ -98,9 +98,10 @@
             })
             break
           case 'waiting_groupon': // 拼团详情
-            // wx.navigateTo({
-            //   url: `/pages/order-detail?id=${item.id}`
-            // })
+            this.$turnShop({ id: this.detail.shop_id, url: `/pages/group-detail?groupId=${item.id}` })
+            wx.navigateTo({
+              url: `/pages/group-detail?groupId=${item.id}`
+            })
             break
           case 'fail_groupon': // 退款详情
           case 'refund':

@@ -30,7 +30,7 @@ export default {
       for (let value in query) {
         string = `&${value}=${query[value]}`
       }
-      url = `${url}?${string.slice(1)}`
+      url = string ? `${url}?${string.slice(1)}` : url
     }
     if (url.includes('pages/error') || url.includes('pages/error-network')) {
       return
