@@ -11,13 +11,13 @@
       </div>
     </section>
     <div class="used-box" v-if="selectTab * 1 === 0">
-      <div class="item" v-for="(item, index) in unusedList" v-bind:key="index">
+      <div class="item" v-for="(item, index) in unusedList" v-bind:key="index" v-if="unusedList">
         <coupon-item @clickUsedBtn="clickUsedBtn" :couponInfo="item"></coupon-item>
       </div>
       <blank v-if="isUnNull && unusedList.length * 1 === 0"></blank>
     </div>
     <div class="used-box" v-if="selectTab * 1 === 1">
-      <div class="item" v-for="(item, index) in usedList" v-bind:key="index">
+      <div class="item" v-for="(item, index) in usedList" v-bind:key="index" v-if="usedList">
         <coupon-item :coupontype="1" :couponInfo="item"></coupon-item>
       </div>
       <blank v-if="isNull && unusedList.length * 1 === 0"></blank>
@@ -220,7 +220,13 @@
           width: 65px
           background: $color-D32F2F
           border-radius: 3px
-
-  .z
-    width: 11px
+  .album-list-active
+    min-height: 100vh
+    box-sizing: border-box
+    position: fixed
+    left: 0
+    padding-top: 50px
+    top: 0
+    width:100%
+    z-index: 2
 </style>
