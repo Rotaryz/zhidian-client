@@ -81,7 +81,7 @@
         }).exec()
       },
       async _fileImage () {
-        // this.setShowType(true)
+        this.setShowType(true)
         // let param = this._infoImage(e.target.files[0])
         this.$wx.chooseImage({
           count: 9 - this.showImage.length,
@@ -121,7 +121,6 @@
         }
         let imageArr = []
         this.image.map((item) => {
-          console.log(item)
           imageArr.push({type: 1, detail_id: item})
         })
         let data = {

@@ -218,13 +218,12 @@
         testImg: '', // 重要，勿删
         testShow: 0, // 重要，勿删
         isShowBox: true,
-        qrCode: ''
+        qrCode: '',
+        isMine: false
       }
     },
     async onLoad(option) {
       await this._getQuery(option)
-      this.$wx.setStorageSync('shopId', 12)
-      this.$wx.setStorageSync('token', '4a8adf760e38f485d3fd4be40ca2a8e0c4cb1b1c')
       this.loadMoreDy = true
       this.dynamicList = []
       this.page = 1
@@ -303,8 +302,10 @@
       _getDrawPosterInfo() {
         const data = {
           'patch': 'pages/dynamic/dynamic',
-          'from_id': this.$wx.getStorageSync('userInfo').id,
-          'shopId': this.$wx.getStorageSync('shopId')
+          data: {
+            'from_id': this.$wx.getStorageSync('userInfo').id,
+            'shopId': this.$wx.getStorageSync('shopId')
+          }
         }
         Dynamic.createMiniCode(data, false).then(res => {
           if (res.error !== this.$ERR_OK) {
@@ -424,6 +425,7 @@
         })
       },
       _seeImage(index, image) {
+        this.setShowType(false)
         let imageArr = image.map(item => item.file_url)
         this.$wx.previewImage({
           current: imageArr[index], // 当前显示图片的http链接
