@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Page from './error-none'
+import Page from './error'
 
 const page = new Vue(Page)
 page.$mount()

@@ -30,7 +30,7 @@ fly.interceptors.response.use((response) => {
 fly.config.baseURL = baseURL.api
 
 // 检查http状态码
-function checkStatus (response) {
+function checkStatus(response) {
   // login
   // 如果http状态码正常，则直接返回数据
   if (response && (response.status === 200 || response.status === 304 || response.status === 422)) {
@@ -49,7 +49,7 @@ function checkStatus (response) {
  * @param res
  * @returns {string|Object[]|CanvasPixelArray}
  */
-function checkCode (res) {
+function checkCode(res) {
   // 如果code异常(这里已经包括网络错误，服务器错误，后端抛出的错误)，可以弹出一个错误提示，告诉用户
   if (res.status === ERR_NO) {
     console.warn(res.msg)
@@ -83,7 +83,6 @@ function checkCode (res) {
         wx.setStorageSync('frozen', true)
         return res.data
     }
-    console.warn(res.data.message)
     throw requestException(res)
   }
   return res.data
@@ -94,7 +93,7 @@ function checkCode (res) {
  * @param res
  * @returns {{}}
  */
-function requestException (res) {
+function requestException(res) {
   hideLoading()
   const error = {}
   error.statusCode = res.status
@@ -109,7 +108,7 @@ function requestException (res) {
 }
 
 export default {
-  post (url, data, loading = true) {
+  post(url, data, loading = true) {
     if (loading) {
       showLoading()
     }
@@ -122,7 +121,7 @@ export default {
       return checkCode(res)
     })
   },
-  get (url, params, loading = true) {
+  get(url, params, loading = true) {
     if (loading) {
       showLoading()
     }
@@ -135,7 +134,7 @@ export default {
       return checkCode(res)
     })
   },
-  put (url, data, loading = true) {
+  put(url, data, loading = true) {
     if (loading) {
       showLoading()
     }
@@ -148,7 +147,7 @@ export default {
       return checkCode(res)
     })
   },
-  delete (url, data, loading = true) {
+  delete(url, data, loading = true) {
     if (loading) {
       showLoading()
     }
