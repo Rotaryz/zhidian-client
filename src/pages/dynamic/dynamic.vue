@@ -5,15 +5,16 @@
     </div>
     <div class="dynamic-item" v-for="(item, index) in dynamicList" :key="index" v-if="!testShow && item.live_log_detail.length">
       <!-- 转发按钮-->
-      <img class="copy-item" @click="_goCopy(item.live_log_detail, item.content, item)" v-if="isMine && imageUrl" :src="imageUrl + '/ws-image/btn-share@2x.png'">
+      <!--<img class="copy-item" @click="_goCopy(item.live_log_detail, item.content, item)" v-if="isMine && imageUrl" :src="imageUrl + '/ws-image/btn-share@2x.png'">-->
+      <div class="copy-item"  @click="_goCopy(item.live_log_detail, item.content, item)" v-if="isMine && imageUrl">一键分享</div>
       <!-- 内容-->
       <div class="find-item img-one" v-if="item.live_log_detail[0].type === 1 && item.live_log_detail.length === 1">
         <div class="find-box">
           <div class="cainter">
             <div class="user">
               <!-- 头像-->
-              <img class="header" mode="aspectFill" v-if="imageUrl" :src="!item.is_default ? item.employee_image_url: imageUrl + '/ws-image/pic-zanbo_logo@2x.png'">
-              <p class="nickname">{{!item.is_default ? item.employee_name : '赞播微商'}}</p>
+              <img class="header" mode="aspectFill" v-if="imageUrl" :src="!item.is_default ? item.employee_image_url : imageUrl + '/zd-image/dynamic/pic-zanbo_logo@2x.png'">
+              <p class="nickname">{{!item.is_default ? item.employee_name : '赞播智店'}}</p>
             </div>
             <!--{{comment?'':'special'}}-->
             <text class="words">{{item.content}}</text>
@@ -28,31 +29,31 @@
           <div class="information">
             <div class="time">
               {{item.created_at}}
-              <p v-if="item.can_delete" class="del" @click="_delItem(index)">删除</p>
+              <p  class="del" @click="_delItem(index)">删除</p>
             </div>
             <div class="share" :class="{'share-active': item.show}">
               <div class="share-item comment" @click="_comment(item.id)">
-                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/ws-image/icon-review@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-comments@2x.png'">
               </div>
               <div class="share-item" @click="_goodLike(index)">
-                <img class="find-icon" v-if="imageUrl" :src="item.is_like ? imageUrl + '/ws-image/icon-like_pressed@2x.png' : imageUrl + '/ws-image/icon-like@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="item.is_like ? imageUrl + '/zd-image/dynamic/icon-like_pressed@2x.png' : imageUrl + '/zd-image/dynamic/icon-zan@2x.png'">
               </div>
               <div class="share-item" @click.stop="_showCover(item)">
-                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/ws-image/icon-share_trends@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-share@2x.png'">
               </div>
               <!--{{find.is_like ? 'thumbs-up' : ''}}-->
             </div>
           </div>
           <div class="likes-peo" v-if="item.live_log_like.length || item.live_log_comment.length">
-            <img :src="imageUrl + '/zd-image/dynamic/pic-trends_zan1@2x.png'" class="likes-peo-bg" mode="widthFix">
+            <!--<img :src="imageUrl + '/zd-image/dynamic/pic-trends_zan1@2x.png'" class="likes-peo-bg" mode="widthFix">-->
             <div class="peo-big-box">
-              <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/ws-image/icon-like_show@2x.png'" class="like-icon">
+              <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/zd-image/dynamic/icon-like@2x.png'" class="like-icon">
               <div class="like-name">
                 <span v-for="(items,idx) in item.live_log_like" :key="idx">{{idx > 0 ? '，' : ''}}{{items.employee_name || items.customer_name}}</span>
               </div>
             </div>
             <div class="comment-peo" v-for="(com, comIdx) in item.live_log_comment" :key="comIdx"><span class="ro-peo-name">{{com.customer_name}}：</span><span class="comment-name">{{com.content}}</span></div>
-            <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan3@2x.png'" class="likes-peo-bg" mode="widthFix">
+            <!--<img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan3@2x.png'" class="likes-peo-bg" mode="widthFix">-->
           </div>
         </div>
       </div>
@@ -60,8 +61,8 @@
         <div class="find-box">
           <div class="cainter">
             <div class="user">
-              <img class="header" mode="aspectFill" v-if="imageUrl" :src="!item.is_default ? item.employee_image_url: imageUrl + '/ws-image/pic-zanbo_logo@2x.png'">
-              <p class="nickname">{{!item.is_default ? item.employee_name : '赞播微商'}}</p>
+              <img class="header" mode="aspectFill" v-if="imageUrl" :src="!item.is_default ? item.employee_image_url: imageUrl + '/zd-image/dynamic/pic-zanbo_logo@2x.png'">
+              <p class="nickname">{{!item.is_default ? item.employee_name : '赞播智店'}}</p>
             </div>
             <text class="words">{{item.content}}</text>
             <div class="img-item-two">
@@ -79,27 +80,27 @@
             </div>
             <div class="share" :class="{'share-active': item.show}">
               <div class="share-item comment" @click="_comment(item.id)">
-                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/ws-image/icon-review@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-comments@2x.png'">
               </div>
               <div class="share-item" @click="_goodLike(index)">
-                <img class="find-icon" v-if="imageUrl" :src="item.is_like ? imageUrl + '/ws-image/icon-like_pressed@2x.png' : imageUrl + '/ws-image/icon-like@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="item.is_like ? imageUrl + '/zd-image/dynamic/icon-like_pressed@2x.png' : imageUrl + '/zd-image/dynamic/icon-zan@2x.png'">
               </div>
               <div class="share-item" @click.stop="_showCover(item)">
-                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/ws-image/icon-share_trends@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-share@2x.png'">
               </div>
               <!--{{find.is_like ? 'thumbs-up' : ''}}-->
             </div>
           </div>
           <div class="likes-peo" v-if="item.live_log_like.length || item.live_log_comment.length">
-            <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan1@2x.png'" class="likes-peo-bg" mode="widthFix">
+            <!--<img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan1@2x.png'" class="likes-peo-bg" mode="widthFix">-->
             <div class="peo-big-box">
-              <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/ws-image/icon-like_show@2x.png'" class="like-icon">
+              <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/zd-image/dynamic/icon-like@2x.png'" class="like-icon">
               <div class="like-name">
                 <span v-for="(items,idx) in item.live_log_like" :key="idx">{{idx > 0 ? '，' : ''}}{{items.employee_name || items.customer_name}}</span>
               </div>
             </div>
             <div class="comment-peo" v-for="(com, comIdx) in item.live_log_comment" :key="comIdx"><span class="ro-peo-name">{{com.customer_name}}：</span><span class="comment-name">{{com.content}}</span></div>
-            <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan3@2x.png'" class="likes-peo-bg" mode="widthFix">
+            <!--<img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan3@2x.png'" class="likes-peo-bg" mode="widthFix">-->
           </div>
         </div>
       </div>
@@ -107,8 +108,8 @@
         <div class="find-box">
           <div class="cainter">
             <div class="user">
-              <img class="header" v-if="imageUrl" mode="aspectFill" :src="!item.is_default ? item.employee_image_url: imageUrl + '/ws-image/pic-zanbo_logo@2x.png'">
-              <p class="nickname">{{!item.is_default ? item.employee_name : '赞播微商'}}</p>
+              <img class="header" v-if="imageUrl" mode="aspectFill" :src="!item.is_default ? item.employee_image_url: imageUrl + '/zd-image/dynamic/pic-zanbo_logo@2x.png'">
+              <p class="nickname">{{!item.is_default ? item.employee_name : '赞播智店'}}</p>
             </div>
             <!--{{comment?'':'special'}}"-->
             <text class="words">{{item.content}}</text>
@@ -127,33 +128,34 @@
             </div>
             <div class="share" :class="{'share-active': item.show}">
               <div class="share-item comment" @click="_comment(item.id)">
-                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/ws-image/icon-review@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-comments@2x.png'">
               </div>
               <div class="share-item" @click="_goodLike(index)">
-                <img class="find-icon" v-if="imageUrl" :src="item.is_like ? imageUrl + '/ws-image/icon-like_pressed@2x.png' : imageUrl + '/ws-image/icon-like@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="item.is_like ? imageUrl + '/zd-image/dynamic/icon-like_pressed@2x.png' : imageUrl + '/zd-image/dynamic/icon-zan@2x.png'">
               </div>
               <div class="share-item" @click.stop="_showCover(item)">
-                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/ws-image/icon-share_trends@2x.png'">
+                <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-share@2x.png'">
               </div>
               <!--{{find.is_like ? 'thumbs-up' : ''}}-->
             </div>
           </div>
           <div class="likes-peo" v-if="item.live_log_like.length || item.live_log_comment.length">
-            <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan1@2x.png'" class="likes-peo-bg" mode="widthFix">
+            <!--<img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan1@2x.png'" class="likes-peo-bg" mode="widthFix">-->
             <div class="peo-big-box">
-              <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/ws-image/icon-like_show@2x.png'" class="like-icon">
+              <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/zd-image/dynamic/icon-like@2x.png'" class="like-icon">
               <div class="like-name">
                 <span v-for="(items,idx) in item.live_log_like" :key="idx">{{idx > 0 ? '，' : ''}}{{items.employee_name || items.customer_name}}</span>
               </div>
             </div>
             <div class="comment-peo" v-for="(com, comIdx) in item.live_log_comment" :key="comIdx"><span class="ro-peo-name">{{com.customer_name}}：</span><span class="comment-name">{{com.content}}</span></div>
-            <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan3@2x.png'" class="likes-peo-bg" mode="widthFix">
+            <!--<img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/pic-trends_zan3@2x.png'" class="likes-peo-bg" mode="widthFix">-->
           </div>
         </div>
       </div>
     </div>
-    <navigator hover-class="none" v-if="isMine" url="/pages/edit-dynamic/edit-dynamic" class="new-dynamic">
-      <img mode="widthFix" v-if="imageUrl" :src="imageUrl + '/ws-image/radar/icon-release_dynamic@2x.png'" class="new-dynamic-img">
+    <div v-if="!loadMoreDy && dynamicList.length > 1" class="no-more"><div class="line"></div><div class="txt">再拉也没有了</div></div>
+    <navigator hover-class="none" v-if="isMine" url="edit-dynamic" class="new-dynamic">
+      <img mode="widthFix" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-write@2x.png'" class="new-dynamic-img">
     </navigator>
     <confirm-msg ref="confirm" @confirm="_sureDel" @cancel="cancel"></confirm-msg>
     <div class="chat-input border-top-1px" v-if="textArea">
@@ -169,25 +171,29 @@
         <div class="down-image-btn" @click="_hideDown">确定</div>
       </div>
     </div>
+    <dynamic-share :item.sync="pictureObj" ref="dynamic" @drawDone="drawDone" :qrCodeUrlTmp.sync="qrCode"></dynamic-share>
     <!--<div class="bottom-box-big" :class="showCover ? 'bottom-box-big-show' : ''">-->
-    <div class="bottom-box" :class="showCover ? 'show' : ''">
-      <button open-type="share" hover-class="none" class="share-item">发给好友</button>
-      <div class="share-item border-top-1px" @click.stop="makePoster()">保存图片</div>
-      <div class="share-item last" @click="_closeCover">取消</div>
-    </div>
+      <!--<div class="bottom-box" :class="showCover ? 'show' : ''">-->
+        <!--<button open-type="share" hover-class="none" class="share-item">发给好友</button>-->
+        <!--<div class="share-item border-top" @click.stop="makePoster()">生成图片 保存分享</div>-->
+        <!--<div class="share-item last" @click="_closeCover">取消</div>-->
+      <!--</div>-->
     <!--</div>-->
+    <share ref="share" @getPicture="makePoster" @friendShare="friendShare"/>
   </article>
 </template>
 
 <script type="text/ecmascript-6">
   import {Dynamic} from 'api'
   import {baseURL} from 'api/config'
-  import base from 'common/mixins/base'
   import ConfirmMsg from 'components/confirm-msg/confirm-msg'
   import { resolveQrCode } from 'common/js/util'
+  import DynamicShare from 'components/dynamic-share/dynamic-share'
+  import Share from 'components/share/share'
+  import imMixin from 'common/mixins/im-mixin'
 
   export default {
-    mixins: [base],
+    mixins: [imMixin],
     name: 'dynamic',
     data() {
       return {
@@ -207,17 +213,27 @@
         showDown: false,
         showSmallDown: false,
         showCover: false,
-        posterInfo: null,
         pictureObj: null,
-        forzenTimer: '',
         testImg: '', // 重要，勿删
         testShow: 0, // 重要，勿删
         isShowBox: true,
+        qrCode: '',
         isMine: true
       }
     },
-    onLoad() {
-      this._getList()
+    async onLoad(option) {
+      await this._getQuery(option)
+      // this.$wx.setStorageSync('employeeId', 100001)
+      // this.$wx.setStorageSync('token', '8ab4795567cb2e07245d89bbd1ea1a8e2d05416a')
+      this.loadMoreDy = true
+      this.dynamicList = []
+      this.page = 1
+      setTimeout(() => {
+        this._getList()
+        this.shopId = this.$wx.getStorageSync('shopId') ? wx.getStorageSync('shopId') * 1 : ''
+        this.myShopId = this.$wx.getStorageSync('myShopId') ? wx.getStorageSync('myShopId') * 1 : null
+        this._getDrawPosterInfo() // 获取画海报的信息
+      }, 500)
     },
     onShow() {
       this.$wx.setNavigationBarTitle({ title: '动态' })
@@ -228,10 +244,10 @@
     },
     onShareAppMessage() {
       let id = this.$wx.getStorageSync('userInfo').id
-      let employeeId = this.$wx.getStorageSync('employeeId')
+      let shopId = wx.getStorageSync('shopId')
       return {
         title: '',
-        path: `/pages/dynamic/dynamic?fromType=3&fromId=${id}&employeeId=${employeeId}`,
+        path: `/pages/dynamic/dynamic?fromType=3&fromId=${id}&shopId=${shopId}`,
         success: (res) => {
           // 转发成功
         },
@@ -244,85 +260,53 @@
       cancel() {
         this.isShowBox = true
       },
-      async _getQuery() {
+      async _getQuery(option) {
         // 分享进来的
-        let entryId = this.$route.query.employeeId
+        let entryId = option.shopId
         if (entryId) {
-          wx.setStorageSync('employeeId', entryId)
+          this.$wx.setStorageSync('shopId', entryId)
         }
         // 二维码扫描进入 - 永久
-        let scene = this.$route.query.scene
+        let scene = option.scene
         if (scene) {
           let sceneMsg = decodeURIComponent(scene)
           const params = resolveQrCode(sceneMsg)
           if (params.e) {
-            this.$wx.setStorageSync('employeeId', params.e)
+            this.$wx.setStorageSync('shopId', params.e)
           }
         }
       },
       _getDrawPosterInfo() {
-        const houseInfo = this.$wx.getStorageSync('houseInfo')
-        let avatarUrl = houseInfo.avatar || `${baseURL.image}/ws-image/pic-headshot@2x.png`
-        let name = houseInfo.name || ''
-        let qrCodeUrl = ''
-        let defaultAvatar = baseURL.image + '/ws-image/pic-zanbo_logo@2x.png'
-        let defaultName = '赞播微商'
-        let userInfo = this.$wx.getStorageSync('userInfo')
         const data = {
-          'type': 'dynamic',
-          data: {
-            'from_id': 'c' + userInfo.id,
-            'employee_id': this.$wx.getStorageSync('employeeId')
-          }
+          'patch': 'pages/dynamic/dynamic',
+          'width': '430',
+          'is_forever': '0',
+          'is_hyaline': '1'
         }
         Dynamic.createMiniCode(data, false).then(res => {
           if (res.error !== this.$ERR_OK) {
-            // this.$refs.toast.show(res.message)
+            this.$wechat.hideLoading()
+            this.$showToast(res.message)
             return
           }
-          qrCodeUrl = res.data.image_url || (baseURL.image + '/ws-image/pic-headshot@2x.png')
-          let arr = [avatarUrl, qrCodeUrl, defaultAvatar]
-          this._downloadPictures(arr, res => {
-            // console.log(res, '-----------=-')
-            getApp().globalData.drawInfo = {
-              avatarUrl: res[0].tempFilePath,
-              qrCodeUrl: res[1].tempFilePath,
-              name,
-              defaultAvatar: res[2].tempFilePath,
-              defaultName
-            }
-          })
-        })
-      },
-      _downloadPictures(arr, callback) {
-        // wechat.showLoading()
-        let flag = arr.every(val => val)
-        if (!flag) {
-          // wechat.hideLoading()
-          // return this.$refs.to、ast.show('请添加图片')
-        }
-        arr = arr.map(item => {
-          return this.$wechat.downloadFile({ url: item })
-        })
-        Promise.all(arr).then(callback).catch((err) => {
-          console.warn(err)
-          // wechat.hideLoading()
-          // this.$refs.toast.sho、w('下载图片失败，请重新尝试！')
+          this.$wechat.hideLoading()
+          this.qrCode = res.data.image_url
         })
       },
       drawDone() {
         this.pictureObj = null
       },
       makePoster() {
-        this.$refs.poster.action()
-        this._closeCover()
-      },
-      _closeCover() {
-        this.showCover = false
+        this.$refs.share.closeCover()
+        this.$refs.dynamic.action()
       },
       _showCover(item) {
         this.pictureObj = item
+        this.$refs.share.show()
         this.showCover = true
+      },
+      friendShare() {
+        this.$refs.share.closeCover()
       },
       _hideDown() {
         this.showSmallDown = false
@@ -333,15 +317,13 @@
         if (!this.loadMoreDy) {
           return
         }
-        Dynamic.liveLogs({ page: this.page }).then((res) => {
+        Dynamic.liveLogsList({ page: this.page }).then((res) => {
           // this.testShow = res.check_code ? 1 : 0
           // if (this.testShow) {
           //   Im.getCount(1, false)
           // }
           // this.testImg = res.check_image_url ? res.check_image_url : ''
-          console.log('getList')
           if (res.error === this.$ERR_OK) {
-            console.log('success')
             this.$wechat.hideLoading()
             if (res.data.length) {
               res = res.data.map((item) => {
@@ -363,7 +345,7 @@
       },
       _goCopy(imgArr, title) {
         this.dynamicCopy = imgArr
-        wx.setClipboardData({
+        this.$wx.setClipboardData({
           data: title,
           success: (res) => {
             this.showDown = true
@@ -382,7 +364,7 @@
       },
       // 下载图片
       _downItem(i) {
-        wx.downloadFile({
+        this.$wx.downloadFile({
           url: this.dynamicCopy[i].file_url,
           success: (res) => {
             this.downList.push(res.tempFilePath)
@@ -397,7 +379,7 @@
       },
       // 保存图片进相册
       _saveImgae(i) {
-        wx.saveImageToPhotosAlbum({
+        this.$wx.saveImageToPhotosAlbum({
           filePath: this.downList[i],
           success: (res) => {
             if (i >= this.downList.length - 1) {
@@ -448,13 +430,13 @@
             this.dynamicList[index].show = false
             this.dynamicList[index].live_log_like = res.data
             if (this.dynamicList[index].is_like) {
-              this.sendCustomMsg(30002)
+              this.sendCustomMsg(50005)
             }
             // 点赞之后加入
             return
           }
           this.$wechat.hideLoading()
-          this.$refs.toast.show(res.message)
+          this.$showToast(res.message)
         })
       },
       _closeLong() {
@@ -462,16 +444,16 @@
           item.show = false
           return item
         })
-        this._closeCover()
+        // this._closeCover()
       },
       sendMsg() {
         if (!this.inputMsg) {
-          this.showToast('评论不能为空')
+          this.$showToast('评论不能为空')
           return
         }
         let msgTxt = this.inputMsg.toString().trim()
         if (!msgTxt) {
-          this.showToast('评论不能为空')
+          this.$showToast('评论不能为空')
           return
         }
         let data = {
@@ -484,27 +466,28 @@
         Dynamic.commentLog(data).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
+            this.$wechat.hideLoading()
             this.dynamicList[this.comIndex].live_log_comment.push(res.data)
             this.textArea = false
-            this.sendCustomMsg(30003)
+            this.sendCustomMsg(50004)
             return
           }
-          this.showToast(res.message)
+          this.$showToast(res.message)
         })
       },
       // 是否确认删除
       _sureDel() {
-        // Live.delLogsList(this.dynamicList[this.delIndex].id).then((res) => {
-        //   if (res.error === ERR_OK) {
-        //     this.dynamicList.splice(this.delIndex, 1)
-        //     this.$refs.toast.show('删除动态成功')
-        //     this.$wechat.hideLoading()
-        //     return
-        //   }
-        //   this.$wechat.hideLoading()
-        //   this.isShowBox = false
-        //   this.$refs.toast.show(res.message)
-        // })
+        Dynamic.delLogs(this.dynamicList[this.delIndex].id).then((res) => {
+          if (res.error === this.$ERR_OK) {
+            this.dynamicList.splice(this.delIndex, 1)
+            this.$showToast('删除动态成功')
+            this.$wechat.hideLoading()
+            return
+          }
+          this.$wechat.hideLoading()
+          this.isShowBox = false
+          this.$showToast(res.message)
+        })
       },
       _showLong(index, status) {
         let showIdx = this.dynamicList.findIndex(item => item.show)
@@ -520,8 +503,10 @@
         return status
       }
     },
-    conponents: {
-      ConfirmMsg
+    components: {
+      ConfirmMsg,
+      DynamicShare,
+      Share
     }
   }
 </script>
@@ -537,8 +522,7 @@
     right: 14px
     top: 13px
     position: absolute
-    height: 25px
-    width: 94px
+    share-button-style()
 
   .find-item
     word-break: break-word
@@ -598,13 +582,14 @@
         justify-content: space-between
         align-items: center
         .del
-          color: #839FC0
+          color: $color-466889
           margin-left: 3.2vw
         .find-num, .time
           white-space: nowrap
           font-size: $font-size-12
           font-family: $font-family-regular
           color: $color-828AA2
+          color: $color-99A0AA
           display: flex
         .share
           display: flex
@@ -640,45 +625,53 @@
         position: relative
         width: 79.73vw
         box-sizing: border-box
+        border-radius: 5px
+        background: $color-F4F5F7
+        padding-bottom: 3px
+        &:before
+          content: ''
+          width: 0
+          height: 0
+          border: 8px solid $color-F4F5F7
+          border-top-color: transparent
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          position: absolute
+          left: 20px
+          top: -15px
         .likes-peo-bg
           display: block
           width: 100%
         .peo-big-box
           width: 100%
           box-sizing: border-box
-          border-right-1px(rgba(0, 0, 0, 0.10), solid)
-          border-left-1px(rgba(0, 0, 0, 0.10), solid)
-          background: #F9F9F9
           padding: 3px 0
           display: flex
         .like-icon
           margin: 4px 0 0 10px
           z-index: 10
           width: 14px
-          height: 12.963px
+          height: 14px
         .like-name
           font-size: $font-size-14
-          color: #596C94
+          color: $color-466889
           margin-left: 5px
           z-index: 10
           line-height: 21px
           flex: 1
         .comment-peo
-          border-right-1px(rgba(0, 0, 0, 0.10))
-          border-left-1px(rgba(0, 0, 0, 0.10))
           padding: 0 10px
           width: 100%
           box-sizing: border-box
-          background: #F9F9F9
           font-size: $font-size-14
           line-height: 22px
-          color: #596C94
+          color: $color-466889
           .ro-peo-name
             font-family: $font-family-medium
             white-space: nowrap
           .comment-name
             font-family: $font-family-regular
-            color: $color-374B63
+            color: $color-1F1F1F
 
 
 
@@ -834,24 +827,14 @@
       margin: 15px 0 19px
       line-height: 24px
     .down-image-btn
-      background: $color-F94C5F
       font-size: $font-size-14
       font-family: $font-family-regular
       color: $color-FFFFFF
-      box-shadow: 0 4px 16px 0 rgba(249, 76, 95, 0.30)
       border-radius: 50px
-      text-align: center
       line-height: 32px
       width: 100px
       height: 32px
-
-  .copy-item
-    z-index: 60
-    right: 14px
-    top: 13px
-    position: absolute
-    height: 25px
-    width: 94px
+      button-style(normal, 50px)
 
   /*转发*/
   .bottom-box-big
@@ -893,11 +876,32 @@
       &:before, &:after
         border: 0 none
         border-radius: 0
-      &:first-child
-        border-bottom-1px()
     .last
       margin-top: 10px
+    .border-top
+      border-top-1px($color-E0E2E5)
 
   .bottom-box.show
     bottom: 0
+  .no-more
+    font-size: 14px
+    color: $color-99A0AA
+    text-align: center
+    line-height: 28px
+    position: relative
+    height: 28px
+    margin: 10px auto
+    background: $color-FFFFFF
+    width: 94px
+    .txt
+      row-center()
+      top: 0
+      width: 94px
+      background: $color-FFFFFF
+    .line
+      width: 114px
+      height: 1px
+      background: $color-99A0AA
+      col-center()
+      row-center()
 </style>

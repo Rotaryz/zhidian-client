@@ -1,0 +1,354 @@
+<template>
+  <div class="edit-dynamic">
+    <div class="compile">
+      <textarea class="words-span" :style="{height: textHeight + 'px'}" maxlength="-1" placeholder="这一刻的想法…" v-model="title" @input="_setTop" @linechange="getLine"></textarea>
+      <!--:style="height: {{comHeight}}px"-->
+      <div class="com-box">
+        <div class="com-image" v-for="(item, index) in showImage" :key="index">
+          <img class="img-item" :src="item.image_url" mode="aspectFill">
+          <!--<input type="file" class="image-file" @change="_fileImage($event)" accept="image/*" multiple>-->
+          <div class="close-icon" @click.stop="_delImage(index)">
+            <img class="close-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-del@2x.png'" mode="widthFix">
+          </div>
+        </div>
+        <div class="com-image" v-if="image.length < 9">
+          <img class="img-item" :src="imageUrl + '/zd-image/dynamic/Group3@2x.png'" @click="_fileImage">
+          <!--<input type="file" class="image-file" @change="_fileImage($event)" accept="image/*" multiple>-->
+        </div>
+      </div>
+      <div class="synchronization" v-if="isBoss">
+        <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-member@2x.png'" class="synchronization-icon">
+        <span class="synchronization-text">将动态同步全部成员</span>
+        <switch :checked="isChecked" color="#56BA15" class="synchronization-switch" @change="_synchronization"></switch>
+      </div>
+      <!--style="bottom: {{height}}px"-->
+    </div>
+    <div class="btn">
+      <div class="btn-item" :class="{'btn-disable': !isSend}" @click="_liveLogs">发布</div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import { Dynamic } from 'api'
+  import { mapActions } from 'vuex'
+
+  export default {
+    name: 'edit-dynamic',
+    data () {
+      return {
+        imageUrl: this.$imageUrl,
+        title: '',
+        image: [],
+        send: true,
+        bottom: 0,
+        height: 0,
+        comHeight: 0,
+        auto: true,
+        textHeight: 56,
+        showImage: [],
+        sortArr: [],
+        isChecked: false
+      }
+    },
+    computed: {
+      isSend () {
+        return this.title && this.image.length
+      }
+    },
+    onShow () {
+      this.send = true
+    },
+    methods: {
+      ...mapActions(['setShowType']),
+      _synchronization (e) {
+        this.isChecked = e.mp.detail.value
+      },
+      getLine (e) {
+        if (e.mp.detail.lineCount > 1 && e.mp.detail.lineCount <= 5) {
+          this.textHeight = e.mp.detail.height + 16
+          // console.log(this.textHeight)
+        }
+      },
+      _setTop (e) {
+        this.$wx.createSelectorQuery().select('.words-span').boundingClientRect(function(rect) {
+          if (rect.height >= 112.5) {
+            this.auto = false
+            // console.log(this.auto)
+          }
+          // console.log(rect)
+        }).exec()
+      },
+      async _fileImage () {
+        // this.setShowType(true)
+        // let param = this._infoImage(e.target.files[0])
+        this.$wx.chooseImage({
+          count: 9 - this.showImage.length,
+          success: async (res) => {
+            await this._upLoad(res.tempFilePaths)
+          }
+        })
+      },
+      async _upLoad (data) {
+        await Promise.all(data.map(async (val, index) => {
+          // let image = await Dynamic.upLoadImage({ file: val, sort: index })
+          let image = await this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, [val])
+          // let imageItem = { type: 1, detail_id: image.id, image_url: image.url, sort: image.sort * 1 }
+          this.image.push(image[0].id)
+          console.log(image, this.image)
+        }))
+        // data.map((val, index) => {
+        //   this.image.push(data[index])
+        // })
+
+        // this.image.sort(this._sort)
+        data.forEach((item) => {
+          let obj = { image_url: item }
+          this.showImage.push(obj)
+        })
+      },
+      async boss() {
+        let res = await Dynamic.isBoss()
+        this.isBoss = res.data
+      },
+      _sort (a, b) {
+        return a.sort - b.sort
+      },
+      _delImage (index) {
+        this.image.splice(index, 1)
+        this.showImage.splice(index, 1)
+      },
+      _liveLogs () {
+        if (!this.send) {
+          return
+        }
+        if (!this.title) {
+          this.$showToast('发布内容不能为空')
+          return
+        } else if (!this.image.length) {
+          this.$showToast('发布图片不能为空')
+          return
+        }
+        let imageArr = []
+        this.image.map((item) => {
+          console.log(item)
+          imageArr.push({type: 1, detail_id: item})
+        })
+        let data = {
+          content: this.title,
+          live_log_details: imageArr,
+          is_sync: this.isChecked
+        }
+        Dynamic.liveLogs(data).then((res) => {
+          this.send = false
+          if (res.error === this.$ERR_OK) {
+            this.$showToast('发布成功')
+            this.$emit('refresh')
+            setTimeout(() => {
+              this.image = []
+              this.showImage = []
+              this.title = ''
+              // this.setIsLoadDy(true)
+              this._back()
+            }, 2010)
+            this.$wechat.hideLoading()
+            return
+          }
+          this.$wechat.hideLoading()
+          this.send = true
+        })
+      },
+      _back () {
+        // this.$router.back()
+        this.$wx.navigateBack({
+          delta: 1
+        })
+      }
+    },
+    components: {
+    }
+  }
+</script>
+<style lang="stylus" rel="stylesheet/stylus">
+  @import "~common/stylus/private"
+  .edit-dynamic
+    .words-span
+      margin-top: 14px
+      padding: 0 15px
+      line-height: 18px
+      outline: none
+      resize: none
+      width: 100vw
+      border: none
+      box-sizing: border-box
+      font-size: $font-size-14
+      color: $color-text
+      &::-webkit-input-placeholder
+        font-family: $font-family-regular
+        font-size: $font-size-medium-x
+        color: #CCCCCC
+    .com-box
+      margin-top: 20px
+      overflow-y: auto
+      padding: 0 4vw 0 2.4vw
+    .com-words
+      color: #CCCCCC
+      font-size: $font-size-medium-x
+    .words-text
+      height: 19.467vw
+      font-size: $font-size-medium-x
+      color: $color-text
+      width: 100%
+      box-sizing: border-box
+      padding: 10.5px 24px 0 15px
+
+  .com-tab
+    background: $color-white
+    position: fixed
+    width: 100%
+    bottom: 0
+    border-top: 0.5px solid $color-split-line
+    border-bottom: 0.5px solid $color-split-line
+    height: 8.6vh
+    display: flex
+    margin-top: 4.56vh
+    .com-addrss
+      z-index: 100
+      position: absolute
+      top: -36px
+      left: 15px
+      height: 29px
+      max-width: 82%
+      background: $color-background
+      border-radius: 50px
+      padding: 0 13px
+      display: flex
+      align-items: center
+      justify-content: center
+      font-size: $font-size-medium
+      color: $color-text-tr
+      .add-title
+        no-wrap()
+      .com-add-icons
+        width: 16px
+        height: @width
+    .com-addrss-active
+      color: $color-text
+    .com-tab-item
+      height: 100%
+      flex: 2.5
+      line-height: 49px
+      border-right: 0.5px solid $color-split-line
+      display: flex
+      flex-direction: column
+      justify-content: center
+      align-items: center
+      .com-tab-icon
+        height: 22px
+        width: @height
+      .com-tab-item-title
+        font-size: $font-size-10
+        color: $color-text-tr
+        margin-top: 5px
+      &:last-child
+        flex: 5
+        color: $color-assist-pink
+        opacity: 0.5
+        border-right: none
+        text-align: center
+    .com-tab-item-active
+      opacity: 1 !important
+
+  .com-image
+    position: relative
+    display: inline-block
+    .img-item
+      height: 28.4vw
+      margin: 1.6vw 0 0 1.6vw
+      width: @height
+      position: relative
+      .play
+        all-center()
+        width: 36.363%
+        height: @width
+    .close-icon
+      height: 16.5px
+      width: 16.5px
+      line-height: 16.5px
+      text-align: center
+      background: rgba(0, 0, 0, 0.20)
+      color: $color-white
+      font-size: $font-size-10
+      position: absolute
+      right: 0px
+      top: 3px
+      background: $color-background
+      .close-icon
+        cll-center()
+        height: 16.5px
+        width: 16.5px
+    .img-add
+      display: inline-block
+      height: 29.6vw
+      width: @height
+      margin: 1.6vw 0 0 1.6vw
+      position: relative
+      .add-image
+        height: 98%
+        width: @height
+
+  .btn
+    background: $color-FFFFFF
+    position: fixed
+    z-index: 10
+    bottom: 0
+    width: 100vw
+    height: 62px
+    .btn-item
+      margin-top: 8.5px
+      margin-left: 4vw
+      font-family: $font-family-regular
+      normal-button-style(normal, 92vw, 45px, 50px, $font-size-16)
+    .btn-disable
+      normal-button-style(un-click, 92vw, 45px, 50px, $font-size-16)
+
+  .image-file
+    opacity: 0
+    height: 76%
+    width: 76%
+    all-center()
+
+  .synchronization
+    display: flex
+    height: 49px
+    width: 92vw
+    margin: 0 auto
+    align-items: center
+    margin-top: 30px
+    border-bottom-1px()
+    border-top-1px()
+    .synchronization-icon
+      width: 19.5px
+      height: @width
+    .synchronization-text
+      font-size: $font-size-14
+      font-family: $font-family-regular
+      color: $color-374B63
+      white-space: nowrap
+      margin-left: 10.5px
+    .synchronization-switch
+      display: block
+      right: 1px
+      col-center()
+    .wx-switch-input
+      width: 51px !important
+      height: 30px !important
+      &::before
+        width: 49px !important
+        height: 28px !important
+      &::after
+        width: 28px !important
+        height: 28px !important
+
+
+</style>

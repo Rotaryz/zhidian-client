@@ -5,7 +5,7 @@ export default {
    * 店铺/员工动态列表
    * @return {*}
    */
-  liveLogs(data, loading) {
+  liveLogsList(data, loading) {
     let url = '/api/customer/live-logs'
     return request.get(url, data, loading)
   },
@@ -25,8 +25,28 @@ export default {
     let url = '/api/customer/comment-log'
     return request.post(url, data)
   },
+  /**
+   * 生成小程序二维码
+   * @returns {*}
+   */
   createMiniCode (data) {
     let url = '/api/customer/create-mini-qrcode'
     return request.get(url, data)
+  },
+  /**
+   * 发布动态
+   * @returns {*}
+   */
+  liveLogs (data) {
+    let url = '/api/customer/live-logs'
+    return request.post(url, data)
+  },
+  /**
+   * 删除动态
+   * @returns {*}
+   */
+  delLogs (id) {
+    let url = `/api/customer/live-logs/${id}`
+    return request.delete(url)
   }
 }
