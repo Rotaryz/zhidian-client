@@ -1,5 +1,5 @@
 /* 深度拷贝 */
-export function objDeepCopy (source) {
+export function objDeepCopy(source) {
   let sourceCopy = source instanceof Array ? [] : {}
   for (let item in source) {
     sourceCopy[item] = typeof source[item] === 'object' ? objDeepCopy(source[item]) : source[item]
@@ -8,7 +8,7 @@ export function objDeepCopy (source) {
 }
 
 /* 格式数字 */
-export function formatNumber (n) {
+export function formatNumber(n) {
   const str = n.toString()
   return str[1] ? str : `0${str}`
 }
@@ -17,7 +17,7 @@ export function formatNumber (n) {
 export const now = Date.now()
 
 /* 格式化时间 */
-export function formatTime (date = now) {
+export function formatTime(date = now) {
   date = new Date(date)
   const year = date.getFullYear()
   const month = date.getMonth() + 1
@@ -39,7 +39,7 @@ export function formatTime (date = now) {
  * @param str 连接符
  * @returns {string}
  */
-export function formatTimeYMD (date = now, str = '-') {
+export function formatTimeYMD(date = now, str = '-') {
   date = new Date(date)
   const year = date.getFullYear()
   const month = date.getMonth() + 1
@@ -53,7 +53,7 @@ export function formatTimeYMD (date = now, str = '-') {
 /**
  * 记录当前页面栈详细
  */
-export function resolvePageDetail (url, options) {
+export function resolvePageDetail(url, options) {
   // 拼接url的参数
   let urlWithArgs = '/' + url + '?'
   for (let key in options) {
@@ -71,7 +71,7 @@ export function resolvePageDetail (url, options) {
  * @param path
  * @returns {*}
  */
-export function checkIsTabPage (path) {
+export function checkIsTabPage(path) {
   const TAB_REG = /(pages\/guide)|(pages\/shop)|(pages\/dynamic)|(pages\/mine)/
   return TAB_REG.test(path)
 }
@@ -81,7 +81,7 @@ export function checkIsTabPage (path) {
  * @param scene
  * @returns {{}}
  */
-export function resolveQrCode (scene) {
+export function resolveQrCode(scene) {
   if (!scene) {
     return {}
   }

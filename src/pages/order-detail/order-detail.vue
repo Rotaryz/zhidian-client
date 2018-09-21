@@ -254,7 +254,7 @@
           height: 18px
         .order-name
           height: $font-size-16
-          line-height: 1.1
+          line-height: 1
           font-family: $font-family-medium
           font-size: $font-size-16
           color: $color-1F1F1F

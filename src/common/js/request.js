@@ -10,6 +10,7 @@ const COMMON_HEADER = {}
 
 const LOGINPAGE = '/pages/login'
 const ERRORPAGE = `/pages/error`
+const NETPAGE = `/pages/error-network`
 const SHOP_END = 12001
 
 // 请求拦截器
@@ -33,9 +34,14 @@ fly.config.baseURL = baseURL.api
 function checkStatus(response) {
   // login
   // 如果http状态码正常，则直接返回数据
+  if (response.status === 200) {
+    wx.reLaunch({ url: NETPAGE })
+  }
   if (response && (response.status === 200 || response.status === 304 || response.status === 422)) {
     return response
     // 如果不需要除了data之外的数据，可以直接 return response.data
+  } else if (response.status >= 500) {
+    wx.reLaunch({ url: NETPAGE })
   }
   // 异常状态下，把错误信息返回去
   return {

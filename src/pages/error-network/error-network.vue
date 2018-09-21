@@ -1,22 +1,28 @@
 <template>
   <div class="error-none">
-    <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/pic-nopage@2x.png'" class="blank-img">
-    <p class="blank-title">抱歉！ 您访问的页面失联啦-</p>
-    <p class="btn" @click="_goGuide">返回首页</p>
+    <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/pic-nointernet@2x.png'" class="blank-img">
+    <p class="blank-title">网络好像不太给力， 请稍后再试哦~</p>
+    <p class="btn" @click="_goGuide">重新加载</p>
   </div>
 </template>
 
 <script>
+  import { checkIsTabPage } from 'common/js/util'
+
   export default {
     name: 'error-none',
-    onLoad() {
-      // let res = getCurrentPages()
-      console.log(this.$root.$mp)
-    },
     methods: {
       _goGuide() {
-        console.log('dd')
-        wx.switchTab({ url: '/pages/guide' })
+        let url = '/' + wx.getStorageSync('errorUrl')
+        let status = checkIsTabPage(url)
+        if (status) {
+          wx.switchTab({ url })
+          return
+        }
+        wx.reLaunch({ url })
+        // 返回上一页
+        // console.log('dd')
+        // wx.switchTab({ url: '/pages/guide' })
       }
     }
   }
@@ -37,6 +43,8 @@
     width: 168px
 
   .blank-title
+    width: 126px
+    text-align center
     margin-top: 4px
     font-size: $font-size-14
     font-family: $font-family-regular
