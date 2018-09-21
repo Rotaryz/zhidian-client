@@ -33,6 +33,12 @@
         roleType: 'group'
       }
     },
+    onUnload() {
+      console.log(this)
+      this.roleAnimation = ''
+      this.coverAnimation = ''
+      this.showCover = false
+    },
     methods: {
       closeCover() {
         let roleAnimation = wx.createAnimation({
@@ -46,7 +52,7 @@
           delay: 0
         })
         coverAnimation.opacity(0).step()
-        roleAnimation.scale(0.3).step()
+        roleAnimation.scale(0.5).step()
         this.roleAnimation = roleAnimation.export()
         this.coverAnimation = coverAnimation.export()
         setTimeout(() => {
@@ -70,7 +76,7 @@
           delay: 0
         })
         coverAnimation.opacity(0).step()
-        roleAnimation.scale(0.3).step()
+        roleAnimation.scale(0.5).step()
         this.roleAnimation = roleAnimation.export()
         this.coverAnimation = coverAnimation.export()
         this.showCover = true
