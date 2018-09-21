@@ -1,7 +1,7 @@
 <template>
   <article class="guide">
     <guide-header :shopInfo="shopInfo" :employee="employee"></guide-header>
-    <guide-active :groupList="groupData.list" :cutList="cutData.list" @changeTab="changeTab"></guide-active>
+    <guide-active :groupList="groupData.list" :cutList="cutData.list" :selectTab="selectTab" @changeTab="changeTab"></guide-active>
   </article>
 </template>
 
@@ -21,17 +21,17 @@
         employee: {},
         groupData: {
           list: [],
-          type: 1, // 团购
+          rule_id: 1, // 团购
           page: 1,
           more: true
         },
         cutData: {
           list: [],
-          type: 3, // 砍价
+          rule_id: 3, // 砍价
           page: 1,
           more: true
         },
-        selectTab: null
+        selectTab: 1
       }
     },
     onLoad() {
@@ -44,13 +44,13 @@
         case 0:
           if (!this.cutData.more) return
           this.cutData.page++
-          await this._getCutList({type: this.cutData.type, page: this.cutData.page})
+          await this._getCutList({rule_id: this.cutData.rule_id, page: this.cutData.page})
           this.$wechat.hideLoading()
           break
         case 1:
           if (!this.groupData.more) return
           this.groupData.page++
-          await this._getGroupList({type: this.groupData.type, page: this.groupData.page})
+          await this._getGroupList({rule_id: this.groupData.rule_id, page: this.groupData.page})
           this.$wechat.hideLoading()
           break
         default:
@@ -64,13 +64,13 @@
           case 0:
             this.cutData.page = 1
             this.cutData.more = true
-            this._getCutList({type: this.cutData.type, page: this.cutData.page})
+            this._getCutList({rule_id: this.cutData.rule_id, page: this.cutData.page})
             this.$wechat.hideLoading()
             break
           case 1:
             this.groupData.page = 1
             this.groupData.more = true
-            this._getGroupList({type: this.groupData.type, page: this.groupData.page})
+            this._getGroupList({rule_id: this.groupData.rule_id, page: this.groupData.page})
             this.$wechat.hideLoading()
             break
           default:
@@ -81,8 +81,8 @@
         this.$wechat.showLoading()
         await Promise.all([
           this._getShopInfo(false),
-          this._getGroupList({type: this.groupData.type, page: this.groupData.page}, false),
-          this._getCutList({type: this.cutData.type, page: this.cutData.page}, false)
+          this._getGroupList({rule_id: this.groupData.rule_id, page: this.groupData.page}, false),
+          this._getCutList({rule_id: this.cutData.rule_id, page: this.cutData.page}, false)
         ])
         this.$wechat.hideLoading()
       },

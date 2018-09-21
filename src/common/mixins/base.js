@@ -34,6 +34,15 @@ export default {
     },
     $turnShop(data) { // 切换店铺
       // todo
+    },
+    $isBoss() {
+      return +this.$wx.getStorageSync('userInfoExtend').role_id === this.$role.ROLE_BOSS
+    },
+    $isMyShop() {
+      return +this.$wx.getStorageSync('userInfoExtend').shop_id === +this.$wx.getStorageSync('shopId')
+    },
+    $hasShop() {
+      return this.$wx.getStorageSync('userInfoExtend').shop_id
     }
   }
 }
