@@ -20,5 +20,10 @@ export default {
   shareAction(data, loading) {
     const url = `/api/customer/share-goods`
     return request.post(url, data, loading)
+  },
+  // 设置店铺图片
+  setShopImage(data, loading) {
+    const url = `/api/customer/shops/image`
+    return request.post(url, data, loading)
   }
 }

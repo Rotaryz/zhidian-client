@@ -7,11 +7,11 @@
           <img class="icon-btn" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-video@2x.png'" alt="">
         </div>
       </div>
-      <div class="item pics">
-        <img mode="aspectFill" class="pic" :src="url" alt="">
+      <div class="item pics" @click="toPhotos">
+        <img mode="aspectFill" class="pic" v-if="photoInfo.pic" :src="photoInfo.pic" alt="">
         <div class="button-pic">
           <img class="icon-pic" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-pic@2x.png'" alt="">
-          <span class="txt">66</span>
+          <span class="txt">{{photoInfo.total}}</span>
         </div>
       </div>
     </section>
@@ -82,6 +82,9 @@
       videoChange() {
         this.isPlay && this.ctx && this.ctx.pause()
       },
+      toPhotos() {
+        this.$wx.navigateTo({url: '/pages/album'})
+      },
       async toMap() {
         try {
           this.$wechat.showLoading()
@@ -94,7 +97,6 @@
         }
       },
       toMobile() {
-        console.log(this.$wx)
         if (!this.shopInfo.telephone) {
           this.$showToast('商家暂未上传手机号码')
           return
