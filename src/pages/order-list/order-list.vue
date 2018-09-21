@@ -1,5 +1,5 @@
 <template>
-  <div class="order-list">
+  <div class="order-list" :class="{'order-none': showNone}">
     <div class="order-item" @click="_goDetail(item.id)" v-for="(item, index) in orderList" :key="index">
       <div class="order-shop">
         <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-shop_order@2x.png'" class="home">
@@ -21,14 +21,16 @@
         <div class="btn" @click.stop="_goUse(item)">{{manager[item.status]}}</div>
       </div>
     </div>
-    <div class="block"></div>
+    <div class="block" v-if="!showNone"></div>
     <panel-end v-if="showEnd"></panel-end>
+    <Blank v-if="showNone"></Blank>
   </div>
 </template>
 
 <script>
   import { Order } from 'api'
   import PanelEnd from 'components/panel-end/panel-end'
+  import Blank from 'components/blank/blank'
 
   const MANAGER = { payment: '付款', waiting_received: '去使用', finish: '查看订单', close: '查看订单', refund: '退款进度', waiting_groupon: '拼团详情', success_groupon: '去使用', fail_groupon: '退款进度' }
   export default {
@@ -39,7 +41,8 @@
         page: 1,
         status: '',
         length: 0,
-        manager: MANAGER
+        manager: MANAGER,
+        showNone: false
       }
     },
     computed: {
@@ -122,6 +125,7 @@
         this.length = res.meta.total
         if (this.page === 1) {
           this.orderList = res.data
+          this.showNone = !this.orderList.length
         } else {
           this.orderList = this.orderList.concat(res.data)
         }
@@ -129,7 +133,8 @@
       }
     },
     components: {
-      PanelEnd
+      PanelEnd,
+      Blank
     }
   }
 </script>
@@ -224,4 +229,7 @@
           color: $color-1F1F1F
         .btn
           manager-button-style()
+
+  .order-none
+    background: $color-white
 </style>

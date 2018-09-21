@@ -96,17 +96,19 @@
       }
     },
     async onLoad(option) {
-      await this._orderDetail(option.id, true)
+      let id = option.id || 0
+      await this._orderDetail(id, true)
     },
     methods: {
       async cancel() {
         await this._orderDetail(this.detail.id, false)
+        this.couponDetail = {}
       },
       _useCoupon(coupon) {
         if (coupon.status !== 0) {
           return
         }
-        this.couponDetail = { name: this.detail.goods_title, goods_image: this.detail.goods_image_url, time: this.detail.create_at, qrcode_url: coupon.qrcode_url, code: coupon.code }
+        this.couponDetail = { name: this.detail.goods_title, goods_image: this.detail.goods_image_url, time: coupon.end_at, qrcode_url: coupon.qrcode_url, code: coupon.code }
         this.$refs.couponCode.show()
       },
       _goShop() {
@@ -114,7 +116,7 @@
         //  跳转店铺首页，切店
       },
       _goCommodity() {
-        this.$turnShop({ id: this.detail.shop_id, url: `/pages/goods-detail?goodsId=${this.detail.id}` })
+        this.$turnShop({ id: this.detail.shop_id, url: `/pages/activity-detail?goodsId=${this.detail.id}` })
         //  跳转商品详情，切店
       },
       async _deal() {
@@ -438,8 +440,8 @@
           font-family: DINAlternate-Bold
           font-size: $font-size-16
         .coupon-btn
-          manager-button-style(nomal, 57px, 29px)
+          share-button-style(nomal, 57px, 29px)
         .coupon-btn-disable
-          manager-button-style(un-click, 57px, 29px)
+          share-button-style(un-click, 57px, 29px)
 
 </style>

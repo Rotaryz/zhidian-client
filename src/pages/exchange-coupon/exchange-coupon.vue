@@ -28,9 +28,11 @@
   import CouponItem from 'components/coupon-item/coupon-item'
   import { Shop } from 'api'
   import CouponCode from 'components/coupon-code/coupon-code'
+  import clearWatch from 'common/mixins/clear-watch'
 
   const tabList = [{ title: '未使用' }, { title: '不可用' }]
   export default {
+    mixins: [clearWatch],
     name: 'exchange-coupon',
     data() {
       return {
@@ -58,6 +60,7 @@
     },
     methods: {
       async cancel() {
+        this.couponDetail = {}
         this.getUnusedList()
         this.getUsedList()
       },
