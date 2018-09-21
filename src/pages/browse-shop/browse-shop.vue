@@ -1,7 +1,7 @@
 <template>
   <div class="browse-shop">
     <div class="browse-shop-small">
-      <div class="browse-shop-item" v-for="(item, index) in browseList" :key="index">
+      <div class="browse-shop-item" v-for="(item, index) in browseShopList" :key="index" v-if="browseShopList">
         <img :src="item.employee.avatar" class="browse-shop-logo">
         <span class="browse-shop-name">{{item.name}}</span>
         <img :src="image_url + '/zd-image/mine/icon-pressed@2x.png'" class="list-way">
@@ -13,7 +13,7 @@
 
 <script type="text/ecmascript-6">
   import PanelEnd from 'components/panel-end/panel-end'
-  import { mapGetters } from 'vuex'
+  import { Shop } from 'api'
 
   export default {
     name: 'browse-shop',
@@ -21,16 +21,52 @@
       return {
         page: 1,
         upMore: false,
-        image_url: this.$imageUrl
+        image_url: this.$imageUrl,
+        browseShopList: []
       }
     },
-    mounted() {},
-    methods: {},
+    onShow() {
+      this.getBrowserList()
+    },
+    onReachBottom () {
+      this.page++
+      this.getMoreBrowserList()
+    },
+    methods: {
+      getBrowserList() {
+        this.page = 1
+        this.upMore = false
+        Shop.getBrowseShop({page: this.page, limit: 10}).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            this.browseShopList = res.data
+            this._isUpList(res)
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
+      _isUpList (res) {
+        this.page++
+        if (this.browseShopList.length >= res.meta.total * 1) {
+          this.upMore = true
+        }
+      },
+      getMoreBrowserList() {
+        if (this.upMore) return
+        Shop.getMerchantsImg({page: this.page, limit: 10}).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            this.shopList.push(res.data)
+            this._isUpList(res)
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      }
+    },
     components: {
       PanelEnd
-    },
-    computed: {
-      ...mapGetters(['browseList'])
     }
   }
 </script>
