@@ -4,7 +4,7 @@ const mutations = {
   [types.ROLE_TYPE](state, role) {
     state.role = role
   },
-  [types.SET_TARGET_PAGE] (state, page) {
+  [types.SET_TARGET_PAGE](state, page) {
     state.targetPage = page
   },
   [types.SET_SHOW_TYPE](state, boolean) {
@@ -19,7 +19,7 @@ const mutations = {
   [types.BROWSE_LIST](state, browseList) {
     state.browseList = browseList
   },
-  [types.SET_ORDER_RESULT] (state, obj) {
+  [types.SET_ORDER_RESULT](state, obj) {
     state.orderResult = obj
   },
   [types.SET_FROM_MSG] (state, msg) {

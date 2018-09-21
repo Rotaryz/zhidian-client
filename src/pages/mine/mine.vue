@@ -108,9 +108,9 @@
           font-size: $font-size-12
           color: $color-6E6E6E
     .manager-list
+      margin-top: 20px
       .manager-item
-        height: 25px
-        margin-top: 32px
+        height: 56px
         display: flex
         position: relative
         align-items: center
