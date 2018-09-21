@@ -15,11 +15,12 @@
         </div>
         <div class="name">{{employee.nickname || '刘辉'}}</div>
         <div class="detail">
-          <div class="position">{{employee.role_id || '美容导师'}}</div>
+          <!--<div class="position">{{employee.role_id || '美容导师'}}</div>-->
+          <div class="position">{{'美容导师'}}</div>
           <div class="company">{{shopInfo.name || '广州国颐堂养发SPA馆'}}</div>
         </div>
       </article>
-      <div class="down">"{{shopInfo.intro || '黑色给了我黑色的眼睛我却用它来寻找光明'}}"</div>
+      <div class="down">"{{shopInfo.intro || '黑夜给了我黑色的眼睛我却用它来寻找光明'}}"</div>
     </section>
   </div>
 </template>
@@ -131,6 +132,11 @@
           line-height: 1.2
           .position
             margin-bottom: 2px
+            text-align :justify
+            word-break :break-all
+          .company
+            text-align :justify
+            word-break :break-all
       .down
         padding: 26.5px 0 35px
         font-size: $font-size-16
@@ -138,4 +144,5 @@
         letter-spacing: 0.34px
         line-height: 1.2
         word-break: break-all
+        text-align :justify
 </style>

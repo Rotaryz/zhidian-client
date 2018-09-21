@@ -15,7 +15,8 @@ const SHOP_END = 12001
 // 请求拦截器
 fly.interceptors.request.use((request) => {
   request.headers['Authorization'] = wx.getStorageSync('token') || '0f60e1f448a1765e1236ffeb4b3c9967432da3d4'
-  request.headers['Current-Shop'] = wx.getStorageSync('shopId') || wx.getStorageSync('defaultShop')
+  // request.headers['Current-Shop'] = wx.getStorageSync('shopId') || wx.getStorageSync('defaultShop')
+  request.headers['Current-Shop'] = 12
   return request
 })
 

@@ -50,11 +50,15 @@
               <div class="jh-wrapper" @click="toLike(item)">
                 <img class="icon" v-if="imageUrl && item.is_like" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
                 <img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
-                <div class="number">{{item.like_count}}</div>
+                <div class="number-wrapper">
+                  <div class="number">{{item.like_count}}</div>
+                </div>
               </div>
               <div class="jh-wrapper" @click="toShare(item)">
                 <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">
-                <div class="number">{{item.share_count}}</div>
+                <div class="number-wrapper">
+                  <div class="number">{{item.like_count}}</div>
+                </div>
               </div>
             </article>
           </div>
@@ -103,11 +107,15 @@
               <div class="jh-wrapper" @click="toLike(item)">
                 <img class="icon" v-if="imageUrl && item.is_like" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
                 <img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
-                <div class="number">{{item.like_count}}</div>
+                <div class="number-wrapper">
+                  <div class="number">{{item.like_count}}</div>
+                </div>
               </div>
               <div class="jh-wrapper" @click="toShare(item)">
                 <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">
-                <div class="number">{{item.share_count}}</div>
+                <div class="number-wrapper">
+                  <div class="number">{{item.share_count}}</div>
+                </div>
               </div>
             </article>
           </div>
@@ -165,7 +173,13 @@
         })
       },
       toShare(item) {
-        console.log(22222)
+        Guide.shareAction({recommend_activity_id: item.activity_id, recommend_goods_id: item.goods_id}, false).then(res => {
+          if (res.error !== this.$ERR_OK) {
+            this.$showToast(res.message)
+            return
+          }
+          item.share_count++
+        })
       }
     }
   }
@@ -176,6 +190,7 @@
 
   .guide-active
     position: relative
+    padding-bottom: 26px
     .tab-container
       height: 30px
       margin: 0 15px
@@ -214,8 +229,6 @@
         card-shadow()
         border-radius: 6px
         position: relative
-        &:last-child
-          margin-bottom: 26px
         .item-container
           fill-box()
           layout()
@@ -366,16 +379,23 @@
               align-items: center
               .jh-wrapper
                 layout(row)
-                &:first-child
-                  margin-right: 20px
+                extend-click()
+                position: relative
+                margin-right: 35.5px
+                &:last-child
+                  margin-right: 15.5px
                 .icon
                   height: 16px
                   width: 16px
-                .number
-                  font-family: $font-family-medium
-                  font-size: $font-size-10
-                  color: $color-99A0AA
-                  position: relative
+                  padding-right: 3.5px
+                .number-wrapper
+                  position: absolute
                   top: -5px
-                  margin-left: 3.5px
+                  right: -3.5px
+                  .number
+                    position: absolute
+                    left: 0
+                    font-family: $font-family-medium
+                    font-size: $font-size-10
+                    color: $color-99A0AA
 </style>
