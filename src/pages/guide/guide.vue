@@ -9,8 +9,10 @@
   import GuideHeader from 'components/guide-header/guide-header'
   import GuideActive from 'components/guide-active/guide-active'
   import { Guide } from 'api'
+  import clearWatch from 'common/mixins/clear-watch'
 
   export default {
+    mixins: [clearWatch],
     components: {
       GuideHeader,
       GuideActive
@@ -31,7 +33,7 @@
           page: 1,
           more: true
         },
-        selectTab: 1
+        selectTab: 0
       }
     },
     onLoad() {
@@ -93,8 +95,8 @@
             this.$showToast(res.message)
             return
           }
-          this.shopInfo = res.data
-          this.employee = res.data.employee
+          this.shopInfo = res.data || {}
+          this.employee = res.data.employee || {}
         } catch (e) {
           console.error(e)
         }

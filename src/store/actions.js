@@ -4,12 +4,11 @@ export const saveRole = ({ commit, state }, role) => {
   commit(types.ROLE_TYPE, role)
 }
 
-export const setIsLoadDy = ({ commit, state }, msg) => {
-  commit(types.SET_DYNAMIC, msg)
+export const setIsLoadDy = ({ commit, state }, boolean) => {
+  commit(types.SET_DYNAMIC, boolean)
 }
 
 export const setShowType = ({ commit, state }, boolean) => {
-  console.log('showtype')
   commit(types.SET_SHOW_TYPE, boolean)
 }
 

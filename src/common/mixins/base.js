@@ -1,3 +1,5 @@
+import { Jwt } from 'api'
+import { mapActions } from 'vuex'
 import { checkIsTabPage } from 'common/js/util'
 
 const shareArr = [1007, 1008, 1036, 1044, 1073, 1074]
@@ -38,9 +40,10 @@ export default {
     wx.setStorageSync('errorUrl', url)
   },
   methods: {
+    ...mapActions(['setIsLoadDy']),
     $showToast(title, duration = 1500, mask = true, icon = 'none') {
       if (!title) return
-      this.$wx.showToast({ title, icon, duration, mask })
+      this.$wx.showToast({title, icon, duration, mask})
     },
     $openSetting() {
       // todo
@@ -52,7 +55,7 @@ export default {
       return _entryType(options)
     },
     $turnShop(data) { // 切换店铺
-      // todo
+      this.setIsLoadDy(true) // 设置动态刷新
     },
     $isBoss() {
       return +this.$wx.getStorageSync('userInfoExtend').role_id === this.$role.ROLE_BOSS
@@ -62,6 +65,13 @@ export default {
     },
     $hasShop() {
       return this.$wx.getStorageSync('userInfoExtend').shop_id
+    },
+    $checkIsMyShop(callback) {
+      Jwt.checkIsMyShop().then(res => {
+        if (res.error !== this.$ERR_OK) return
+        res.data && this.$wx.setStorageSync('userInfoExtend', res.data)
+        callback && callback()
+      }).catch(e => console.error(e))
     }
   }
 }

@@ -10,5 +10,10 @@ export default {
   getDefaultShop(data, loading = false) {
     const url = `/default_shop`
     return request.get(url, data, loading)
+  },
+  // 获取默认店铺
+  checkIsMyShop(data, loading = false) {
+    const url = `/api/customer/checkout-shop`
+    return request.get(url, data, loading)
   }
 }

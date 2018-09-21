@@ -13,20 +13,26 @@
       <li class="item-wrapper" v-if="cutList.length" v-for="(item,index) in cutList" :key="index">
         <div class="item-container">
           <article class="top" @click="goToDetail(item)">
-            <div class="img-wrapper">
-              <img class="img" mode="aspectFill" :src="item.image_url" alt="">
-              <div class="tag cut">仅剩{{item.stock}}份</div>
-            </div>
-            <div class="title-wrapper">
-              <div class="explain-wrapper">
-                <div class="title">{{item.goods_title}}</div>
-                <div class="explain">{{item.goods_subtitle}}</div>
+            <section class="top-wrapper">
+              <div class="img-wrapper">
+                <div class="img-container">
+                  <img class="img" mode="aspectFill" :src="item.image_url" alt="">
+                </div>
+                <div class="tag cut">仅剩{{item.stock}}份</div>
               </div>
-              <div class="money-wrapper">
-                <div class="money">¥{{item.platform_price}}</div>
-                <div class="button">开始砍价</div>
+              <div class="title-wrapper">
+                <div class="title-container">
+                  <div class="explain-wrapper">
+                    <div class="title">{{item.goods_title}}</div>
+                    <div class="explain">{{item.goods_subtitle}}</div>
+                  </div>
+                  <div class="money-wrapper">
+                    <div class="money">¥{{item.platform_price}}</div>
+                    <div class="button">开始砍价</div>
+                  </div>
+                </div>
               </div>
-            </div>
+            </section>
           </article>
           <div class="down">
             <article class="mine-serve-avatar-box">
@@ -44,36 +50,47 @@
               <div class="jh-wrapper" @click="toLike(item)">
                 <img class="icon" v-if="imageUrl && item.is_like" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
                 <img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
-                <div class="number">{{item.like_count}}</div>
+                <div class="number-wrapper">
+                  <div class="number">{{item.like_count}}</div>
+                </div>
               </div>
               <div class="jh-wrapper" @click="toShare(item)">
                 <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">
-                <div class="number">{{item.share_count}}</div>
+                <div class="number-wrapper">
+                  <div class="number">{{item.like_count}}</div>
+                </div>
               </div>
             </article>
           </div>
         </div>
       </li>
     </ul>
+    <blank v-if="selectTab===0 && cutList.length===0" styles="padding:50px 0"></blank>
     <!--拼团-->
     <ul class="active-wrapper" v-if="selectTab === 1">
       <li class="item-wrapper" v-if="groupList.length" v-for="(item,index) in groupList" :key="index">
         <div class="item-container">
           <article class="top" @click="goToDetail(item)">
-            <div class="img-wrapper">
-              <img class="img" mode="aspectFill" :src="url" alt="">
-              <div class="tag group">仅剩{{item.stock}}份</div>
-            </div>
-            <div class="title-wrapper">
-              <div class="explain-wrapper">
-                <div class="title">{{item.goods_title}}阿斯达啊实打实多大萨达爱的速递撒</div>
-                <div class="explain">{{item.goods_subtitle}}阿斯达啊实打实多阿斯达啊实打实多阿斯达啊实打实多大萨达爱的速递撒</div>
+            <section class="top-wrapper">
+              <div class="img-wrapper">
+                <div class="img-container">
+                  <img class="img" mode="aspectFill" :src="url" alt="">
+                </div>
+                <div class="tag group">仅剩{{item.stock}}份</div>
               </div>
-              <div class="money-wrapper">
-                <div class="money">¥{{item.platform_price}}999999999</div>
-                <div class="button">开始拼团</div>
+              <div class="title-wrapper">
+                <div class="title-container">
+                  <div class="explain-wrapper">
+                    <div class="title">{{item.goods_title}}</div>
+                    <div class="explain">{{item.goods_subtitle}}</div>
+                  </div>
+                  <div class="money-wrapper">
+                    <div class="money">¥{{item.platform_price}}</div>
+                    <div class="button">开始拼团</div>
+                  </div>
+                </div>
               </div>
-            </div>
+            </section>
           </article>
           <div class="down">
             <article class="mine-serve-avatar-box">
@@ -91,25 +108,34 @@
               <div class="jh-wrapper" @click="toLike(item)">
                 <img class="icon" v-if="imageUrl && item.is_like" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
                 <img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
-                <div class="number">{{item.like_count}}</div>
+                <div class="number-wrapper">
+                  <div class="number">{{item.like_count}}</div>
+                </div>
               </div>
               <div class="jh-wrapper" @click="toShare(item)">
                 <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">
-                <div class="number">{{item.share_count}}</div>
+                <div class="number-wrapper">
+                  <div class="number">{{item.share_count}}</div>
+                </div>
               </div>
             </article>
           </div>
         </div>
       </li>
     </ul>
+    <blank v-if="selectTab===1 && groupList.length===0" styles="padding:50px 0"></blank>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import { Guide } from 'api'
+  import Blank from 'components/blank/blank'
 
   const tabList = [{title: '砍价抢购'}, {title: '火爆拼团'}]
   export default {
+    components: {
+      Blank
+    },
     props: {
       cutList: {
         type: Array,
@@ -153,7 +179,13 @@
         })
       },
       toShare(item) {
-        console.log(22222)
+        Guide.shareAction({recommend_activity_id: item.activity_id, recommend_goods_id: item.goods_id}, false).then(res => {
+          if (res.error !== this.$ERR_OK) {
+            this.$showToast(res.message)
+            return
+          }
+          item.share_count++
+        })
       }
     }
   }
@@ -164,10 +196,12 @@
 
   .guide-active
     position: relative
+    padding-bottom: 26px
     .tab-container
-      height: 30px
+      height: 26px
       margin: 0 15px
       position: relative
+      padding-bottom :8px
       .tab-wrapper
         position: relative
         height: 100%
@@ -202,80 +236,99 @@
         card-shadow()
         border-radius: 6px
         position: relative
-        &:last-child
-          margin-bottom: 26px
         .item-container
           fill-box()
           layout()
           .top
-            padding: 15px 10px
-            layout(row, block, nowrap)
-            border-bottom-1px(#E0E0E0, dashed)
-            .img-wrapper
-              width: 24vw
-              height: 24vw
-              position: relative
-              margin-right: 15px
-              border-radius: 6px
-              .img
-                width: 100%
-                height: 100%
-              .tag
+            height: 0
+            padding-top: 34.78261%
+            position: relative
+            .top-wrapper
+              fill-box()
+              layout(row, block, nowrap)
+              align-items: center
+              &:after
+                content: ""
                 position: absolute
-                top: 5px
-                left: 0
-                padding: 0 4px
-                height: 16px
-                border-radius: 0 100px 100px 0
-                font-family: $font-family-medium
-                font-size: $font-size-10
-                color: $color-FFFFFF
-                line-height: @height
-                text-align: center
-                &.group
-                  background-image: linear-gradient(116deg, #FFD411 0%, #FFA807 95%)
-                &.cut
-                  background-image: linear-gradient(116deg, #FF86BF 0%, #FF6C86 95%)
-            .title-wrapper
-              line-height: 1.1
-              position: relative
-              flex: 1
-              layout(column, block, nowrap)
-              justify-content: space-between
-              .explain-wrapper
-                .title
-                  font-size: $font-size-16
-                  color: $color-1F1F1F
-                  letter-spacing: 0.6px
-                  max-width :60vw
-                  no-wrap()
-                .explain
-                  margin-top: 9px
-                  font-size: $font-size-14
-                  color: $color-99A0AA
-                  max-width :60vw
-                  no-wrap-plus()
-                  line-height :1.2
-              .money-wrapper
-                layout(row, block, nowrap)
-                justify-content: space-between
-                align-items: center
-                .money
+                bottom: 0
+                right: 10px
+                left: 10px
+                transform: scaleY(.5) translateZ(0)
+                border-bottom: 1px #E0E0E0 dashed
+              .img-wrapper
+                height: 0
+                width: 26.08696%
+                padding-top: 26.08696%
+                border-radius: 6px
+                position: relative
+                margin: 0 15px 0 10px
+                .img-container
+                  fill-box()
+                  .img
+                    width: 100%
+                    height: 100%
+                    display: block
+                .tag
+                  position: absolute
+                  top: 5px
+                  left: 0
+                  padding: 0 4px
+                  height: 16px
+                  border-radius: 0 100px 100px 0
                   font-family: $font-family-medium
-                  font-size: $font-size-24
-                  color: $color-455A64
-                  padding-right: 5px
-                  max-width :37.9vw
-                  no-wrap()
-                  &:first-letter
-                    font-family: $font-family-medium
-                    font-size: $font-size-12
-                    color: $color-455A64
-                    margin: 0 3px 6px 0
-                .button
-                  normal-button-style(normal, 85px, 32px)
-                  font-family: $font-family-bold
-                  border-radius: 32.5px
+                  font-size: $font-size-10
+                  color: $color-FFFFFF
+                  line-height: @height
+                  text-align: center
+                  &.group
+                    background-image: linear-gradient(116deg, #FFD411 0%, #FFA807 95%)
+                  &.cut
+                    background-image: linear-gradient(116deg, #FF86BF 0%, #FF6C86 95%)
+              .title-wrapper
+                width: 63.7681159%
+                height: 0
+                padding-top: 34.78261%
+                position: relative
+                .title-container
+                  fill-box()
+                  layout(column, block, nowrap)
+                  justify-content: space-between
+                  margin: 15px 0
+                  .explain-wrapper
+                    .title
+                      font-size: $font-size-16
+                      color: $color-1F1F1F
+                      letter-spacing: 0.6px
+                      width: 90%
+                      no-wrap()
+                      line-height: 1.2
+                      margin-bottom: 6px
+                    .explain
+                      font-size: $font-size-12
+                      color: $color-99A0AA
+                      no-wrap()
+                      line-height: 1.2
+                  .money-wrapper
+                    layout(row, block, nowrap)
+                    justify-content: space-between
+                    align-items: center
+                    .money
+                      font-family: $font-family-medium
+                      font-size: $font-size-24
+                      color: $color-455A64
+                      padding-right: 5px
+                      max-width: 37.9vw
+                      no-wrap()
+                      &:first-letter
+                        font-family: $font-family-medium
+                        font-size: $font-size-12
+                        color: $color-455A64
+                        margin: 0 3px 6px 0
+                    .button
+                      normal-button-style(normal, 85px, 32px)
+                      font-family: $font-family-bold
+                      border-radius: 32.5px
+                      font-size: $font-size-14
           .down
             padding: 0 10px
             flex: 1
@@ -333,16 +386,23 @@
               align-items: center
               .jh-wrapper
                 layout(row)
-                &:first-child
-                  margin-right: 20px
+                extend-click()
+                position: relative
+                margin-right: 35.5px
+                &:last-child
+                  margin-right: 15.5px
                 .icon
                   height: 16px
                   width: 16px
-                .number
-                  font-family: $font-family-medium
-                  font-size: $font-size-10
-                  color: $color-99A0AA
-                  position: relative
+                  padding-right: 3.5px
+                .number-wrapper
+                  position: absolute
                   top: -5px
-                  margin-left: 3.5px
+                  right: -3.5px
+                  .number
+                    position: absolute
+                    left: 0
+                    font-family: $font-family-medium
+                    font-size: $font-size-10
+                    color: $color-99A0AA
 </style>
