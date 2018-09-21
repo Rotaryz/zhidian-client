@@ -10,11 +10,19 @@ export default {
     return request.get(url, loading)
   },
   /**
-   * 获取商品详情
+   * 获取团购活动详情
    * @return {*}
    */
   getGroupDetail(id, loading) {
     let url = `/api/customer/groupon-show/${id}`
+    return request.get(url, loading)
+  },
+  /**
+   * 获取某个团的详情
+   * @return {*}
+   */
+  getGroupInDetail(id, loading) {
+    let url = `/api/customer/groupon-detail/${id}`
     return request.get(url, loading)
   },
   /**
