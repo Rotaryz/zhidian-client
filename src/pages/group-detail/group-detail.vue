@@ -34,7 +34,7 @@
       <div class="group-btn" v-if="statusNum == 3 || statusNum == 5" @click="toIndex">查看更多精彩</div>
       <div class="group-btn" v-if="statusNum == 4" @click="joinGroup">我要参团</div>
     </div>
-    <payment ref="payment" :paySuccess="paySuccess"></payment>
+    <payment ref="payment" @paySuccess="paySuccess"></payment>
   </div>
 </template>
 
@@ -125,6 +125,7 @@
         }
       },
       paySuccess() {
+        console.log(99999)
         this._getGroupDetail()
       },
       _getGroupDetail() {
