@@ -1,3 +1,5 @@
+import { Jwt } from 'api'
+
 const shareArr = [1007, 1008, 1036, 1044, 1073, 1074]
 const qrCordArr = [1047, 1048, 1049, 1011, 1012, 1013]
 
@@ -21,7 +23,7 @@ export default {
   methods: {
     $showToast(title, duration = 1500, mask = true, icon = 'none') {
       if (!title) return
-      this.$wx.showToast({ title, icon, duration, mask })
+      this.$wx.showToast({title, icon, duration, mask})
     },
     $openSetting() {
       // todo
@@ -43,6 +45,13 @@ export default {
     },
     $hasShop() {
       return this.$wx.getStorageSync('userInfoExtend').shop_id
+    },
+    $checkIsMyShop(callback) {
+      Jwt.checkIsMyShop().then(res => {
+        if (res.error !== this.$ERR_OK) return
+        res.data && this.$wx.setStorageSync('userInfoExtend', res.data)
+        callback && callback()
+      }).catch(e => console.error(e))
     }
   }
 }

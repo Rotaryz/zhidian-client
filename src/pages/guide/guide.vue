@@ -9,8 +9,10 @@
   import GuideHeader from 'components/guide-header/guide-header'
   import GuideActive from 'components/guide-active/guide-active'
   import { Guide } from 'api'
+  import clearWatch from 'common/mixins/clear-watch'
 
   export default {
+    mixins: [clearWatch],
     components: {
       GuideHeader,
       GuideActive
