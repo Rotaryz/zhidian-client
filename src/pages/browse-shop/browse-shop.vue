@@ -8,11 +8,13 @@
       </div>
     </div>
     <panel-end v-if="upMore && browseShopList.length * 1 !== 0"></panel-end>
+    <blank v-if="isNull && browseShopList.length * 1 === 0"></blank>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import PanelEnd from 'components/panel-end/panel-end'
+  import Blank from 'components/blank/blank'
   import { Shop } from 'api'
 
   export default {
@@ -22,7 +24,8 @@
         page: 1,
         upMore: false,
         image_url: this.$imageUrl,
-        browseShopList: []
+        browseShopList: [],
+        isNull: false
       }
     },
     onShow() {
@@ -40,6 +43,7 @@
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
             this.browseShopList = res.data
+            this.isNull = true
             this._isUpList(res)
           } else {
             this.$showToast(res.message)
@@ -57,7 +61,7 @@
         Shop.getMerchantsImg({page: this.page, limit: 10}).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
-            this.shopList.push(res.data)
+            this.shopList.push(...res.data)
             this._isUpList(res)
           } else {
             this.$showToast(res.message)
@@ -66,7 +70,8 @@
       }
     },
     components: {
-      PanelEnd
+      PanelEnd,
+      Blank
     }
   }
 </script>
