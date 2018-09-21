@@ -1,17 +1,19 @@
 <template>
     <div class="album">
-      <div class="album-list">
+      <div class="album-list" v-if="shopList">
         <div class="item-list" v-for="(item, index) in shopList" v-bind:key="index">
           <div class="item-box" @click="previewImg(item)">
             <img :src="item.url" class="item-img" mode="aspectFill">
           </div>
         </div>
       </div>
+      <blank v-if="isNull && shopList.length * 1 === 0"></blank>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import wx from 'common/js/wx'
+  import Blank from 'components/blank/blank'
+
   import { Shop, Guide } from 'api'
   export default {
     name: 'album',
@@ -19,6 +21,7 @@
       return {
         shopList: [],
         upMore: false,
+        isNull: false,
         page: 1
       }
     },
@@ -31,7 +34,7 @@
     },
     methods: {
       previewImg(item) {
-        wx.previewImage({urls: [item.url]})
+        this.$wx.previewImage({urls: [item.url]})
       },
       getImgList() {
         this.page = 1
@@ -40,6 +43,7 @@
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
             this.shopList = res.data
+            this.isNull = true
             this._isUpList(res)
           } else {
             this.$showToast(res.message)
@@ -57,7 +61,7 @@
         Shop.getMerchantsImg({page: this.page, limit: 10}).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
-            this.shopList.push(res.data)
+            this.shopList.push(...res.data)
             this._isUpList(res)
           } else {
             this.$showToast(res.message)
@@ -68,12 +72,15 @@
         Guide.getShopInfo().then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
-            wx.setNavigationBarTitle({title: res.data.name})
+            this.$wx.setNavigationBarTitle({title: res.data.name})
           } else {
             this.$showToast(res.message)
           }
         })
       }
+    },
+    components: {
+      Blank
     }
   }
 </script>

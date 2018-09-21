@@ -73,16 +73,20 @@ manager-button-style($type = normal, $width = 77px, $height = 29px)
     border-1px($color-B1B1B1, 15px)
     color: $color-B1B1B1
 
-share-button-style($width = 66px, $height = 24px)
+share-button-style($type = normal, $width = 66px, $height = 24px)
   font-family: $font-family-medium
   font-size: $font-size-12
   color: $color-D32F2F
   border: 1px solid $color-D32F2F
-  border-radius: 12px
+  border-radius: 15px
   width: $width
   height: $height
   line-height: $height
   text-align: center
+  if ($type == un-click )
+    font-size: $font-size-12
+    border: 1px solid $color-B1B1B1
+    color: $color-B1B1B1
 
 card-shadow()
   box-shadow: 0 0 10px 0 rgba(141, 151, 158, 0.20)

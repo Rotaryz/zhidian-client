@@ -14,11 +14,13 @@
       <div class="item" v-for="(item, index) in unusedList" v-bind:key="index">
         <coupon-item @clickUsedBtn="clickUsedBtn" :couponInfo="item"></coupon-item>
       </div>
+      <blank v-if="isUnNull && unusedList.length * 1 === 0"></blank>
     </div>
     <div class="used-box" v-if="selectTab * 1 === 1">
       <div class="item" v-for="(item, index) in usedList" v-bind:key="index">
         <coupon-item :coupontype="1" :couponInfo="item"></coupon-item>
       </div>
+      <blank v-if="isNull && unusedList.length * 1 === 0"></blank>
     </div>
     <coupon-code ref="couponCode" :couponMsg.sync="couponDetail" @cancel="cancel"></coupon-code>
   </div>
@@ -28,9 +30,12 @@
   import CouponItem from 'components/coupon-item/coupon-item'
   import { Shop } from 'api'
   import CouponCode from 'components/coupon-code/coupon-code'
+  import clearWatch from 'common/mixins/clear-watch'
+  import Blank from 'components/blank/blank'
 
   const tabList = [{ title: '未使用' }, { title: '不可用' }]
   export default {
+    mixins: [clearWatch],
     name: 'exchange-coupon',
     data() {
       return {
@@ -42,7 +47,9 @@
         usedList: [],
         usedPage: 1,
         usedMore: false,
-        couponDetail: {}
+        couponDetail: {},
+        isUnNull: false,
+        isNull: false
       }
     },
     onShow() {
@@ -58,6 +65,7 @@
     },
     methods: {
       async cancel() {
+        this.couponDetail = {}
         this.getUnusedList()
         this.getUsedList()
       },
@@ -82,6 +90,7 @@
           if (res.error === this.$ERR_OK) {
             this.unusedList = res.data
             this._isUnusedList(res)
+            this.isUnNull = true
           } else {
             this.$showToast(res.message)
           }
@@ -103,7 +112,7 @@
         Shop.getCouponList(data).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
-            this.unusedList.push(res.data)
+            this.unusedList.push(...res.data)
             this._isUnusedList(res)
           } else {
             this.$showToast(res.message)
@@ -123,6 +132,7 @@
           if (res.error === this.$ERR_OK) {
             this.usedList = res.data
             this._isUsedList(res)
+            this.isNull = true
           } else {
             this.$showToast(res.message)
           }
@@ -144,7 +154,7 @@
         Shop.getCouponList(data).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
-            this.usedList.push(res.data)
+            this.usedList.push(...res.data)
             this._isUsedList(res)
           } else {
             this.$showToast(res.message)
@@ -154,7 +164,8 @@
     },
     components: {
       CouponItem,
-      CouponCode
+      CouponCode,
+      Blank
     }
   }
 </script>
