@@ -27,6 +27,9 @@ const mutations = {
   },
   [types.SET_SCENE] (state, scene) {
     state.scene = scene
+  },
+  [types.SET_DYNAMIC] (state, boolean) {
+    state.isLoadDy = boolean
   }
 }
 

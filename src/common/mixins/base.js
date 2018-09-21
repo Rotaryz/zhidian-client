@@ -1,3 +1,4 @@
+import {mapActions} from 'vuex'
 const shareArr = [1007, 1008, 1036, 1044, 1073, 1074]
 const qrCordArr = [1047, 1048, 1049, 1011, 1012, 1013]
 
@@ -19,6 +20,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['setIsLoadDy']),
     $showToast(title, duration = 1500, mask = true, icon = 'none') {
       if (!title) return
       this.$wx.showToast({ title, icon, duration, mask })
@@ -33,7 +35,7 @@ export default {
       return _entryType(options)
     },
     $turnShop(data) { // 切换店铺
-      // todo
+      this.setIsLoadDy(true) // 设置动态刷新
     },
     $isBoss() {
       return +this.$wx.getStorageSync('userInfoExtend').role_id === this.$role.ROLE_BOSS
