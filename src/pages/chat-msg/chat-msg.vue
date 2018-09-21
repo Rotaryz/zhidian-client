@@ -146,15 +146,14 @@
 </template>
 
 <script>
-  import Toast from 'components/toast/toast'
   import {mapActions, mapGetters} from 'vuex'
-  import webimHandler from 'common/js/webim_handler'
   import {Im, UpLoad} from 'api'
   import { ERR_OK, TIMELAG, baseURL } from 'api/config'
   import wx from 'common/js/wx'
   import * as wechat from 'common/js/wechat'
   import {emotionsFaceArr} from 'common/js/contants'
 
+  let webimHandler
   const MORELIST = [
     {txt: '图片', icon: baseURL.image + '/ws-image/radar/icon-picture@2x.png', type: 1}
   ]
@@ -447,7 +446,6 @@
       }
     },
     components: {
-      Toast
     },
     computed: {
       ...mapGetters([
