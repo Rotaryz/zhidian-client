@@ -247,6 +247,7 @@
       _draw () {
         this.showCanvas = true
         let arr = [this.goodsUrl]
+        this._loadImgs(arr, res => {
           let goodsImgs = res
           console.log(arr, res)
           const SketchUp = this.sketchUp
@@ -516,7 +517,8 @@
     .share-container
       margin: 4vw 9.3vw 6.1vw
       min-height: 132.8vw
-      poster-shadow()
+      box-shadow: 0 4px 9px 0 rgba(55, 75, 99, 0.15)
+      border-radius: 6px
       overflow: hidden
       .goods-wrapper
         width: 100%
@@ -532,7 +534,7 @@
             width: 6.4vw
             height: 6.4vw
             border-radius: 50%
-            border: 3px solid #FFFFFF;
+            border: 3px solid $color-FFFFFF
             box-shadow: 0 8px 16px 0 rgba(74, 144, 226, 0.15)
             margin-right: 2.66vw
           .name
