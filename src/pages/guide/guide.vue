@@ -59,6 +59,20 @@
           break
       }
     },
+    onShareAppMessage() {
+      let id = this.$wx.getStorageSync('userInfo').id
+      let shopId = this.$wx.getStorageSync('shopId')
+      return {
+        title: '',
+        path: `pages/guide?fromType=3&fromId=${id}&shopId=${shopId}`,
+        success: (res) => {
+          // 转发成功
+        },
+        fail: (res) => {
+          // 转发失败
+        }
+      }
+    },
     methods: {
       changeTab(index) {
         this.selectTab = index
