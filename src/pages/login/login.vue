@@ -107,7 +107,7 @@
       },
       async _makeConnect() {
         try {
-          // await this.loginIm()
+          await this.loginIm()
           this._switchPage()
         } catch (e) {
           console.error(e)
