@@ -269,7 +269,7 @@
       let shopId = this.$wx.getStorageSync('shopId')
       return {
         title: '',
-        path: `/pages/dynamic/dynamic?fromType=3&fromId=${id}&shopId=${shopId}`,
+        path: `/pages/dynamic?fromType=3&fromId=${id}&shopId=${shopId}`,
         success: (res) => {
           // 转发成功
         },
@@ -301,7 +301,7 @@
       },
       _getDrawPosterInfo() {
         const data = {
-          'patch': 'pages/dynamic/dynamic',
+          'patch': 'pages/dynamic',
           data: {
             'from_id': this.$wx.getStorageSync('userInfo').id,
             'shopId': this.$wx.getStorageSync('shopId')

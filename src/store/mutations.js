@@ -30,6 +30,9 @@ const mutations = {
   },
   [types.SET_DYNAMIC] (state, boolean) {
     state.isLoadDy = boolean
+  },
+  [types.GOODS_DRAW_INFO] (state, obj) {
+    state.goodsDrawInfo = obj
   }
 }
 

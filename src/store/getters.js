@@ -19,3 +19,5 @@ export const scene = state => state.scene
 export const fromMsg = state => state.fromMsg
 
 export const isLoadDy = state => state.isLoadDy
+
+export const goodsDrawInfo = state => state.goodsDrawInfo

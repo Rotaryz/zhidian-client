@@ -34,3 +34,7 @@ export const setFromMsg = ({ commit, state }, msg) => {
 export const setScene = ({ commit, state }, scene) => {
   commit(types.SET_SCENE, scene)
 }
+
+export const setGoodsDrawInfo = ({ commit, state }, obj) => {
+  commit(types.GOODS_DRAW_INFO, obj)
+}

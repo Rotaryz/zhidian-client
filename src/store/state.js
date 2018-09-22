@@ -9,7 +9,8 @@ const state = {
   imLogin: false, // im的登录态
   fromMsg: {}, // 来源信息 fromType, fromId, source
   scene: 0, // 0为普通，1为转发，2为扫码
-  isLoadDy: false
+  isLoadDy: false,
+  goodsDrawInfo: {} // 商品海报对象
 }
 
 export default state
