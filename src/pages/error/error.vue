@@ -9,10 +9,6 @@
 <script>
   export default {
     name: 'error-none',
-    onLoad() {
-      // let res = getCurrentPages()
-      console.log(this.$root.$mp)
-    },
     methods: {
       _goGuide() {
         console.log('dd')
