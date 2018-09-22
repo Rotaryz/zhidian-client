@@ -27,6 +27,7 @@
 <script type="text/ecmascript-6">
   import MpvueCropper from 'components/mpvue-cropper/mpvue-cropper'
   import { CUT_CONFIG } from './contants'
+  import { Guide } from 'api'
 
   let wecropper
 
@@ -40,14 +41,15 @@
         cropperOpt: null,
         src: null,
         show: false,
-        confirmFlag: false
+        confirmFlag: false,
+        cutType: ''
       }
     },
     onLoad(option) {
       let cutType = option.cutType === 'undefined' ? 'default' : option.cutType
+      this.cutType = cutType
       this.show = true
       this.src = '' + getApp().globalData.imgUrl
-      // this.src = 'http://tmp/wx98f8d6aa65913a3b.o6zAJs4DdKC174WQnBFVcWO3PZsA.vcXfwtu5Ioi60432d4e8558047226344dce461778ca9.jpg' // todo
       this.cropperOpt = CUT_CONFIG[cutType]
     },
     mounted() {
@@ -79,11 +81,8 @@
         this.$wechat.showLoading('正在裁切图片')
         try {
           let filePaths = await wecropper.getCropperImage()
-          console.log(this.$cosFileType, '---=-=')
           let res = await this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, [filePaths])
-          this.$wechat.hideLoading()
-          this.pageBack()
-          console.log(res)
+          this._updateImgHandle(res)
         } catch (e) {
           this.confirmFlag = false
           e && this.$showToast(e.message)
@@ -91,6 +90,26 @@
       },
       pageBack(number = 1) {
         this.$wx.navigateBack({delta: number})
+      },
+      _updateImgHandle(res) {
+        switch (this.cutType) {
+          case 'avatar':
+            let id = res[0].id
+            Guide.setShopImage({image_id: id}).then(res => {
+              this.$wechat.hideLoading()
+              if (res.error !== this.$ERR_OK) {
+                this.$showToast(res.message)
+                return
+              }
+              this.$wechat.tipSuccess('修改图片成功')
+              setTimeout(() => {
+                this.pageBack()
+              }, 2000)
+            }).catch(e => console.error(e))
+            break
+          default:
+            break
+        }
       }
     }
   }

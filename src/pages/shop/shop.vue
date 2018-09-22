@@ -63,7 +63,8 @@
             this.$showToast(res.message)
             return
           }
-          this.photoInfo = res.data
+          this.photoInfo.pic = res.data[0].url
+          this.photoInfo.total = res.meta.total
           console.log(res)
         } catch (e) {
           console.error(e)

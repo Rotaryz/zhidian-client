@@ -165,7 +165,18 @@
         this.$emit('changeTab', index)
       },
       goToDetail(item) {
-        this.$wx.navigateTo({url: `/pages/goods-detail?activityId=${item.activity_id}`})
+        let activityType
+        switch (item.rule_id) {
+          case 1:
+            activityType = 'group'
+            break
+          case 3:
+            activityType = 'bargain'
+            break
+          default:
+            break
+        }
+        this.$wx.navigateTo({url: `/pages/activity-detail?activityId=${item.recommend_activity_id}&activityType=${activityType}`})
       },
       toLike(item) {
         Guide.likeAction({recommend_activity_id: item.activity_id, recommend_goods_id: item.goods_id, like: !item.is_like ? '1' : '0'}).then(res => {
@@ -201,7 +212,7 @@
       height: 26px
       margin: 0 15px
       position: relative
-      padding-bottom :8px
+      padding-bottom: 8px
       .tab-wrapper
         position: relative
         height: 100%
