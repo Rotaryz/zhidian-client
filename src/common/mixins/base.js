@@ -32,7 +32,7 @@ export default {
       for (let value in query) {
         string = `&${value}=${query[value]}`
       }
-      url = `${url}?${string.slice(1)}`
+      url = string ? `${url}?${string.slice(1)}` : url
     }
     if (url.includes('pages/error') || url.includes('pages/error-network')) {
       return
@@ -62,9 +62,9 @@ export default {
       await this.getEmployeeConect()
       this.$wechat.hideLoading()
       if (checkIsTabPage(url)) {
-        this.$wx.switchTab({path: url})
+        this.$wx.switchTab({url})
       } else {
-        this.$wx.navigateTo({path: url})
+        this.$wx.navigateTo({url})
       }
     },
     $isBoss() {

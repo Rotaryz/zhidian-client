@@ -1,5 +1,5 @@
 <template>
-  <div class="shop">
+  <div class="shop" v-if="mineShop">
     <div class="back-shop">
       <p class="back-name">您正在浏览</p>
       <p class="back-title">{{name}}</p>
@@ -18,13 +18,18 @@
         name: ''
       }
     },
+    computed: {
+      mineShop() {
+        return !this.$isMyShop() && this.$hasShop()
+      }
+    },
     async onLoad() {
       await this._getShopMsg()
     },
     methods: {
-      _goBack() {
+      async _goBack() {
         let userInfoExtend = wx.getStorageSync('userInfoExtend')
-        this.$turnShop({ id: userInfoExtend.shop_id, url: '/pages/guide' })
+        await this.$turnShop({ id: userInfoExtend.shop_id, url: '/pages/guide' })
       },
       async _getShopMsg() {
         let res = await Guide.getShopInfo({}, false)

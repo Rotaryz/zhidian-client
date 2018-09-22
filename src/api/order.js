@@ -8,8 +8,8 @@ export default {
   },
   // 订单详情
   orderDetail(id, loading) {
-    console.log(loading)
     const url = `/api/customer/customer-order/${id}`
+    console.log(url)
     return request.get(url, {}, loading)
   },
   // 订单详情

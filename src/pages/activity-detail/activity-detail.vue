@@ -132,9 +132,7 @@
     data() {
       return {
         imageUrl: this.$imageUrl,
-        bannerImgs: [{image: {url: 'https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png'}},
-          {image: {url: 'https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png'}},
-          {image: {url: 'https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png'}}],
+        bannerImgs: [],
         currentNum: 1,
         activityTime: {
           day: '00',
@@ -170,8 +168,8 @@
           wx.setStorageSync('shopId', params.s)
         }
       } else {
-        this.activityId = options.activityId ? options.activityId : '1'
-        this.activityType = options.activityType ? options.activityType : 'group'
+        this.activityId = options.activityId ? options.activityId : ''
+        this.activityType = options.activityType ? options.activityType : ''
       }
       await this._getGoodsDetail(this.activityId, this.activityType)
     },
@@ -251,7 +249,7 @@
         Goods.getGroupDetail(id).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
-            // this.bannerImgs = res.data.goods_banner_images
+            this.bannerImgs = res.data.goods_banner_images
             this.goodsDetail = res.data
             this.activityStatus = res.activity_status
             let groupList = res.data.open_groupon_lists
