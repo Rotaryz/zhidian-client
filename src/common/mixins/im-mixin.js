@@ -4,13 +4,12 @@ import { mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapGetters([
-      // 'currentMsg',
+      'currentMsg',
       // 'imIng',
-      // 'behaviorList',
-      // 'imLogin',
-      // 'descMsg',
+      'behaviorList',
+      'imLogin',
+      'descMsg',
       'fromMsg'
-      // 'postUpImage'
     ])
   },
   methods: {
@@ -132,10 +131,11 @@ export default {
       }
     },
     async sendCustomMsg(code, obj) {
+      code = +code
       let descMsg
       if (!descMsg) return // todo
-      if (code * 1 === 20005) {
-        let type = obj.type * 1
+      if (code === 20005) {
+        let type = +obj.type
         switch (type) {
           case 0:
             descMsg = Object.assign({}, this.descMsg, {log_type: 3})
@@ -146,6 +146,11 @@ export default {
           case 3:
             descMsg = Object.assign({}, this.descMsg, {log_type: 5})
             break
+          case 20:
+            descMsg = Object.assign({}, this.descMsg, {log_type: 20})
+            break
+          default:
+            break
         }
       } else {
         descMsg = Object.assign({}, this.descMsg, {log_type: 1})
@@ -153,7 +158,7 @@ export default {
       let desc = JSON.stringify(descMsg)
       let ext = code.toString()
       let data = JSON.stringify({})
-      switch (code * 1) {
+      switch (code) {
         case 20005:
           data = obj.product
           break

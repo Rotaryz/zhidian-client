@@ -21,7 +21,10 @@
           <article class="detail">
             <div class="title">{{item.goods_title}}</div>
             <div class="money">
-              <div class="price">¥{{item.platform_price}}</div>
+              <div class="price">
+                <div class="unit">¥</div>
+                <div class="numbers">{{item.platform_price}}</div>
+              </div>
               <span class="old-price">{{item.original_price}}元</span>
             </div>
           </article>
@@ -182,12 +185,15 @@
               layout(row, block, nowrap)
               align-items: flex-end
               .price
+                layout(row, block, nowrap)
+                align-items: flex-end
                 font-family: $font-family-bold
-                font-size: 26px
                 color: #000028
-                &:first-letter
+                .numbers
+                  font-size: 26px
+                .unit
                   font-size: $font-size-12
-                  margin-right: 3px
+                  padding: 0 3px 4.5px 0
               .old-price
                 no-wrap()
                 max-width: 50%

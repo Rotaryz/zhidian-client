@@ -106,7 +106,7 @@
                 <span class="more-item"></span>
                 <span class="more-item"></span>
               </div>
-              <span class="shop-num">{{item.join_count}}人已成功砍价</span>
+              <span class="shop-num">{{item.join_count}}人已成功拼团</span>
             </article>
             <article class="right-box">
               <div class="jh-wrapper" @click="toLike(item)">

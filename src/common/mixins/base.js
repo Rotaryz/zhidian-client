@@ -79,7 +79,7 @@ export default {
     // 手机formId
     $getFormId(e) {
       let id = e.mp.detail.formId
-      console.log(id)
+      Jwt.updateFormId({form_ids: [id]})
     },
     $entryType(options) {
       return _entryType(options)
