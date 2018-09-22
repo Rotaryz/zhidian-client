@@ -2,18 +2,23 @@
   <article class="shop">
     <shop-header :shopInfo="shopInfo" :employee="employee" :photoInfo="photoInfo"></shop-header>
     <shop-content :goodsList="goodsList" :selectTab="selectTab" :storyInfo="storyInfo" @changeTab="changeTab"></shop-content>
+    <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
   </article>
 </template>
 
 <script type="text/ecmascript-6">
   import ShopHeader from 'components/shop-header/shop-header'
   import ShopContent from 'components/shop-content/shop-content'
+  import ImFixed from 'components/im-fixed/im-fixed'
   import { Guide, Shop } from 'api'
+  import clearWatch from 'common/mixins/clear-watch'
 
   export default {
+    mixins: [clearWatch],
     components: {
       ShopHeader,
-      ShopContent
+      ShopContent,
+      ImFixed
     },
     data() {
       return {
@@ -132,6 +137,11 @@
           arr = new Array(5).fill(0)
         }
         return arr
+      }
+    },
+    computed: {
+      isMyShop() {
+        return !!this.$isMyShop()
       }
     }
   }

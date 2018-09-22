@@ -20,5 +20,13 @@ export default {
   updateFormId(data, loading = false) {
     const url = `/api/customer/templates/forms`
     return request.post(url, data, loading)
+  },
+  /**
+   * 手机号授权
+   * @return {*}
+   */
+  setCustomerPhone(data, loading) {
+    let url = '/api/customer/profile/mobile'
+    return request.post(url, data, loading)
   }
 }

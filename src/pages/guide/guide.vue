@@ -3,6 +3,7 @@
     <back-shop v-if="mineShop"></back-shop>
     <guide-header :shopInfo="shopInfo" :employee="employee" :isMyShop="isMyShop"></guide-header>
     <guide-active :groupList="groupData.list" :cutList="cutData.list" :selectTab="selectTab" @changeTab="changeTab"></guide-active>
+    <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
   </article>
 </template>
 
@@ -10,6 +11,7 @@
   import GuideHeader from 'components/guide-header/guide-header'
   import GuideActive from 'components/guide-active/guide-active'
   import BackShop from 'components/back-shop/back-shop'
+  import ImFixed from 'components/im-fixed/im-fixed'
   import { Guide } from 'api'
   import clearWatch from 'common/mixins/clear-watch'
 
@@ -18,7 +20,8 @@
     components: {
       GuideHeader,
       GuideActive,
-      BackShop
+      BackShop,
+      ImFixed
     },
     data() {
       return {

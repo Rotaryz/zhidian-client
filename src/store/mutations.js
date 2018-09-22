@@ -132,6 +132,9 @@ const mutations = {
         state.nowChat = [{type: 10000}, ...state.nowChat]
       }
     }
+  },
+  [types.SET_CHAT_BTNTYPE] (state, type) {
+    state.chatBtnType = type
   }
 }
 
