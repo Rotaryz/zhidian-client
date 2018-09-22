@@ -28,7 +28,7 @@
     <section class="distance-wrapper">
       <article class="left">
         <div class="explain address">{{shopInfo.address}}</div>
-        <div class="distance">距你340m，步行需要9分钟</div>
+        <div class="distance">{{shopInfo.distance}}</div>
       </article>
       <article class="btn-group">
         <img class="icon left" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-maps@2x.png'" alt="" @click="toMap">
@@ -86,10 +86,25 @@
         this.$wx.navigateTo({url: '/pages/album'})
       },
       async toMap() {
+        // try {
+        //   this.$wechat.showLoading()
+        //   const res = await this.$wechat.getLocation('gcj02') // todo
+        //   const {latitude, longitude, name = this.shopInfo.name, address = this.shopInfo.address} = res
+        //   await this.$wechat.openLocation({latitude, longitude, name, address})
+        //   this.$wechat.hideLoading()
+        // } catch (e) {
+        //   console.error(e)
+        // }
         try {
+          const name = this.shopInfo.name
+          const address = this.shopInfo.address
+          const latitude = this.shopInfo.latitude
+          const longitude = this.shopInfo.longitude
+          if (!latitude || !longitude) {
+            this.$showToast('商家暂未上传门店地址')
+            return
+          }
           this.$wechat.showLoading()
-          const res = await this.$wechat.getLocation('gcj02') // todo
-          const {latitude, longitude, name = this.shopInfo.name, address = this.shopInfo.address} = res
           await this.$wechat.openLocation({latitude, longitude, name, address})
           this.$wechat.hideLoading()
         } catch (e) {

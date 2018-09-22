@@ -2,11 +2,11 @@
   <div class="guide-header">
     <section class="logo-wrapper">
       <img class="img" mode="aspectFill" :src="shopInfo.image_url" alt="">
-      <button class="share-btn">
+      <button class="share-btn" open-type="share">
         <img class="share-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share_dg@2x.png'" alt="">
         <div class="share-txt">分享</div>
       </button>
-      <img class="btn-editor" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-exchange@2x.png'" alt="" @click="editorAvatar">
+      <img class="btn-editor" v-if="isMyShop && imageUrl" :src="imageUrl + '/zd-image/1.1/icon-exchange@2x.png'" alt="" @click="editorAvatar">
     </section>
     <section class="content">
       <article class="top">
@@ -34,10 +34,29 @@
       employee: {
         type: Object,
         default: {}
+      },
+      isMyShop: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
       return {}
+    },
+    onShareAppMessage() {
+      // this.sendCustomMsg(60004) // 转发给好友
+      let id = wx.getStorageSync('userInfo').id
+      let shopId = wx.getStorageSync('shopId')
+      return {
+        title: this.shopInfo.name,
+        path: `/pages/guide?fromType=3&fromId=${id}&shopId=${shopId}`,
+        success: (res) => {
+          // 转发成功
+        },
+        fail: (res) => {
+          // 转发失败
+        }
+      }
     },
     created() {
     },

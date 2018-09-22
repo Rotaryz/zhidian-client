@@ -1,7 +1,7 @@
 <template>
   <article class="guide">
     <back-shop v-if="mineShop"></back-shop>
-    <guide-header :shopInfo="shopInfo" :employee="employee"></guide-header>
+    <guide-header :shopInfo="shopInfo" :employee="employee" :isMyShop="isMyShop"></guide-header>
     <guide-active :groupList="groupData.list" :cutList="cutData.list" :selectTab="selectTab" @changeTab="changeTab"></guide-active>
   </article>
 </template>
@@ -160,6 +160,9 @@
     computed: {
       mineShop() {
         return !this.$isMyShop() && this.$hasShop()
+      },
+      isMyShop() {
+        return !!this.$isMyShop()
       }
     }
   }
