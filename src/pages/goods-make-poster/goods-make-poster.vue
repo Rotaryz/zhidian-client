@@ -247,71 +247,74 @@
       _draw () {
         this.showCanvas = true
         let arr = [this.goodsUrl]
-        let goodsImgs = arr
-        const SketchUp = this.sketchUp
-        const useType = this.useType
-        let iconUrl = ''
-        // 0普通 1团购 3砍价
-        switch (useType) {
-          case 1 : {
-            iconUrl = this.groupPic
-            break
+        this._loadImgs(arr, res => {
+          let goodsImgs = res
+          console.log(arr, res)
+          const SketchUp = this.sketchUp
+          const useType = this.useType
+          let iconUrl = ''
+          // 0普通 1团购 3砍价
+          switch (useType) {
+            case 1 : {
+              iconUrl = this.groupPic
+              break
+            }
+            case 3 : {
+              iconUrl = this.cutPic
+              break
+            }
+            default: {
+              break
+            }
           }
-          case 3 : {
-            iconUrl = this.cutPic
-            break
-          }
-          default: {
-            break
-          }
-        }
-        const ctx = this.ctx
-        this._getRelativePosition(() => {
-          let query = this.$wx.createSelectorQuery()
-          SketchUp
-            .select(query, '.goods-wrapper')
-            .select(query, '.header > .avatar')
-            .select(query, '.header > .name')
-            .select(query, '.header > .icon')
-            .select(query, '.goods-img')
-            .select(query, '.footer > .title')
-            .select(query, '.footer > .explain')
-            .select(query, '.footer > .mark')
-            .select(query, '.footer > .unit')
-            .select(query, '.footer > .money')
-            .select(query, '.footer > .qr-code')
-          query.exec(res => {
-            SketchUp.fillRect('#fff', res[0])
-            ctx.save()
-            ctx.beginPath()
-            ctx.setFillStyle('#fff')
-            SketchUp.drawCircle((res[1].width / 2 + 3) * this.prop, res[1])
-            ctx.setShadow(0, 0.5 * vw, 10, 'rgba(74, 144, 226, 0.15)')
-            // 0 8px 16px 0 rgba(74, 144, 226, 0.15)
-            ctx.fill()
-            ctx.restore()
-            ctx.save()
-            ctx.beginPath()
-            SketchUp.drawCircle(res[1].width / 2 * this.prop, res[1])
-            // ctx.setShadow(0, 0.5 * vw, 10, 'rgba(55,75,99,0.15)')
-            ctx.clip()
-            SketchUp.drawImg(this.avatarUrl, res[1])
-            ctx.restore()
-            SketchUp.drawText(this.name, '#374B63', 3.2 * vw, 'left', res[2])
-            SketchUp.drawImg(iconUrl, res[3])
-            SketchUp.drawImg(goodsImgs[0].imgUrl, res[4], 0, 0, 'aspectFill', goodsImgs[0].imgInfo, '#fff')
-            let linePro = 1
-            // let linePro = this._formatStr(this.title)
-            SketchUp.drawMultiText(this.title, '#374B63', 4.26 * vw, 'left', res[5], 1.4, 'top', 'all', 0, 0, linePro)
-            // linePro = this._formatStr(this.explain)
-            SketchUp.drawMultiText(this.explain, '#828AA2', 3.2 * vw, 'left', res[6], 1.4, 'top', 'all', 0, 0, linePro)
-            SketchUp.drawText(this.mark, '#F94C5F', 2.9 * vw, 'left', res[7])
-            SketchUp.drawText('￥', '#374B63', 3.33 * vw, 'left', res[8])
-            SketchUp.drawText(this.money, '#374B63', 7.46 * vw, 'left', res[9])
-            SketchUp.drawImg(this.qrCodeUrl, res[10])
-            this._canvasDraw()
-          })
-        }, '.goods-wrapper')
+          const ctx = this.ctx
+          this._getRelativePosition(() => {
+            let query = this.$wx.createSelectorQuery()
+            SketchUp
+              .select(query, '.goods-wrapper')
+              .select(query, '.header > .avatar')
+              .select(query, '.header > .name')
+              .select(query, '.header > .icon')
+              .select(query, '.goods-img')
+              .select(query, '.footer > .title')
+              .select(query, '.footer > .explain')
+              .select(query, '.footer > .mark')
+              .select(query, '.footer > .unit')
+              .select(query, '.footer > .money')
+              .select(query, '.footer > .qr-code')
+            query.exec(res => {
+              SketchUp.fillRect('#fff', res[0])
+              ctx.save()
+              ctx.beginPath()
+              ctx.setFillStyle('#fff')
+              SketchUp.drawCircle((res[1].width / 2 + 3) * this.prop, res[1])
+              ctx.setShadow(0, 0.5 * vw, 10, 'rgba(74, 144, 226, 0.15)')
+              // 0 8px 16px 0 rgba(74, 144, 226, 0.15)
+              ctx.fill()
+              ctx.restore()
+              ctx.save()
+              ctx.beginPath()
+              SketchUp.drawCircle(res[1].width / 2 * this.prop, res[1])
+              // ctx.setShadow(0, 0.5 * vw, 10, 'rgba(55,75,99,0.15)')
+              ctx.clip()
+              SketchUp.drawImg(this.avatarUrl, res[1])
+              ctx.restore()
+              SketchUp.drawText(this.name, '#374B63', 3.2 * vw, 'left', res[2])
+              SketchUp.drawImg(iconUrl, res[3])
+              SketchUp.drawImg(goodsImgs[0].imgUrl, res[4], 0, 0, 'aspectFill', goodsImgs[0].imgInfo, '#fff')
+              let linePro = 1
+              // let linePro = this._formatStr(this.title)
+              SketchUp.drawMultiText(this.title, '#374B63', 4.26 * vw, 'left', res[5], 1.4, 'top', 'all', 0, 0, linePro)
+              // linePro = this._formatStr(this.explain)
+              SketchUp.drawMultiText(this.explain, '#828AA2', 3.2 * vw, 'left', res[6], 1.4, 'top', 'all', 0, 0, linePro)
+              SketchUp.drawText(this.mark, '#F94C5F', 2.9 * vw, 'left', res[7])
+              SketchUp.drawText('￥', '#374B63', 3.33 * vw, 'left', res[8])
+              SketchUp.drawText(this.money, '#374B63', 7.46 * vw, 'left', res[9])
+              SketchUp.drawImg(this.qrCodeUrl, res[10])
+              this._canvasDraw()
+            })
+          }, '.goods-wrapper')
+        })
       },
       _formatStr (str) {
         let reg = /[\u4e00-\u9fa5]/g
@@ -514,7 +517,8 @@
     .share-container
       margin: 4vw 9.3vw 6.1vw
       min-height: 132.8vw
-      poster-shadow()
+      box-shadow: 0 4px 9px 0 rgba(55, 75, 99, 0.15)
+      border-radius: 6px
       overflow: hidden
       .goods-wrapper
         width: 100%
@@ -530,7 +534,7 @@
             width: 6.4vw
             height: 6.4vw
             border-radius: 50%
-            border: 3px solid #FFFFFF;
+            border: 3px solid $color-FFFFFF
             box-shadow: 0 8px 16px 0 rgba(74, 144, 226, 0.15)
             margin-right: 2.66vw
           .name
