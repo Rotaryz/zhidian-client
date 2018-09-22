@@ -62,9 +62,9 @@ export default {
       await this.getEmployeeConect()
       this.$wechat.hideLoading()
       if (checkIsTabPage(url)) {
-        this.$wx.switchTab({path: url})
+        this.$wx.switchTab({url})
       } else {
-        this.$wx.navigateTo({path: url})
+        this.$wx.navigateTo({url})
       }
     },
     $isBoss() {

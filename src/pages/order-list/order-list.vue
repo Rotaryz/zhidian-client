@@ -1,7 +1,7 @@
 <template>
   <div class="order-list" :class="{'order-none': showNone}">
     <div class="order-item" @click="_goDetail(item.id)" v-for="(item, index) in orderList" :key="index">
-      <div class="order-shop">
+      <div class="order-shop" @click.stop="_goShop(item)">
         <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-shop_order@2x.png'" class="home">
         <p class="order-name">
           {{item.shop_data.name}}
@@ -67,6 +67,10 @@
           url: `/pages/order-detail?id=${id}`
         })
       },
+      async _goShop(item) {
+        //  跳转店铺首页，切店
+        await this.$turnShop({ id: item.shop_id, url: '/pages/guide' })
+      },
       async _goUse(item) {
         let status = item.status
         switch (status) {
@@ -99,7 +103,7 @@
             })
             break
           case 'waiting_groupon': // 拼团详情
-            this.$turnShop({ id: this.detail.shop_id, url: `/pages/group-detail?groupId=${item.groupon_data.group_id}` })
+            await this.$turnShop({ id: this.detail.shop_id, url: `/pages/group-detail?groupId=${item.groupon_data.group_id}` })
             break
           case 'fail_groupon': // 退款详情
           case 'refund':

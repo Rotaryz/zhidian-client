@@ -113,12 +113,16 @@
         this.couponDetail = { name: this.detail.goods_title, goods_image: this.detail.goods_image_url, time: coupon.end_at, qrcode_url: coupon.qrcode_url, code: coupon.code }
         this.$refs.couponCode.show()
       },
-      _goShop() {
-        this.$turnShop({ id: this.detail.shop_id, url: '/pages/guide' })
+      async _goShop() {
         //  跳转店铺首页，切店
+        await this.$turnShop({ id: this.detail.shop_id, url: '/pages/guide' })
       },
-      _goCommodity() {
-        this.$turnShop({ id: this.detail.shop_id, url: `/pages/activity-detail?goodsId=${this.detail.id}` })
+      async _goCommodity() {
+        if (this.groupDetail) {
+          await this.$turnShop({ id: this.detail.shop_id, url: `/pages/activity-detail?goodsId=${this.groupDetail.group_id}` })
+          return
+        }
+        await this.$turnShop({ id: this.detail.shop_id, url: `/pages/activity-detail?goodsId=${this.detail.order_details[0].goods_id}` })
         //  跳转商品详情，切店
       },
       async _deal() {
@@ -151,7 +155,7 @@
             break
           default:
             // wx.navigateTo({ url: `/pages/group-detail?groupId=${this.groupDetail.group_id}` })
-            this.$turnShop({ id: this.detail.shop_id, url: `/pages/group-detail?groupId=${this.groupDetail.group_id}` })
+            await this.$turnShop({ id: this.detail.shop_id, url: `/pages/group-detail?groupId=${this.groupDetail.group_id}` })
         }
       },
       async _orderDetail(id, loading) {

@@ -1,6 +1,6 @@
 <template>
   <div class="big-mine">
-    <back-shop v-if="!mineShop"></back-shop>
+    <back-shop></back-shop>
     <div class="mine">
       <div class="mine-msg">
         <img class="mine-header" mode="aspectFill" :src="userInfo.avatar">
@@ -59,9 +59,6 @@
       this._getBrowserList()
     },
     computed: {
-      mineShop() {
-        return this.$isMyShop()
-      },
       openShop() {
         let type = this.$isMyShop() ? '' : 'contact'
         return type
