@@ -1,5 +1,6 @@
 <template>
   <article class="guide">
+    <back-shop></back-shop>
     <guide-header :shopInfo="shopInfo" :employee="employee"></guide-header>
     <guide-active :groupList="groupData.list" :cutList="cutData.list" :selectTab="selectTab" @changeTab="changeTab"></guide-active>
   </article>
@@ -8,6 +9,7 @@
 <script type="text/ecmascript-6">
   import GuideHeader from 'components/guide-header/guide-header'
   import GuideActive from 'components/guide-active/guide-active'
+  import BackShop from 'components/back-shop/back-shop'
   import { Guide } from 'api'
   import clearWatch from 'common/mixins/clear-watch'
 
@@ -15,7 +17,8 @@
     mixins: [clearWatch],
     components: {
       GuideHeader,
-      GuideActive
+      GuideActive,
+      BackShop
     },
     data() {
       return {
