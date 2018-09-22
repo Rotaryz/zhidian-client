@@ -1,5 +1,6 @@
-import {Im} from 'api'
-import {mapGetters} from 'vuex'
+import { Im } from 'api'
+import { mapGetters } from 'vuex'
+
 export default {
   computed: {
     ...mapGetters([
@@ -16,6 +17,11 @@ export default {
     async loginIm() {
       let userInfo = wx.getStorageSync('userInfo')
       let imAccount = userInfo.im_account
+      this.$checkIsMyShop(() => {
+        console.log(this.$isBoss())
+        console.log(this.$isMyShop())
+        console.log(this.$hasShop())
+      })
       // let shopId = wx.getStorageSync('myShopId')
       // Im.checkHasShop(false).then((res) => {
       //   if (res.error === this.$ERR_OK) {
@@ -65,7 +71,7 @@ export default {
           let avatar = userInfo.avatar
           this.$webimHandler.sdkLogin(loginInfo, listeners, options, avatar).then(async () => {
             // this.setImLogin(true)
-            await this.getEmployeeConect()
+            // await this.getEmployeeConect()
           })
         }
       }).catch(e => console.error(e))
@@ -75,7 +81,6 @@ export default {
       let userInfo = wx.getStorageSync('userInfo')
       // 建立连接
       let shopId = wx.getStorageSync('shopId')
-      console.log(userInfo)
       if (shopId) {
         let reqData = {
           customer_id: userInfo.id,
@@ -84,9 +89,8 @@ export default {
           from_type: this.fromMsg.fromType,
           from_id: this.fromMsg.fromId
         }
-        console.log(reqData, '----')
         let resData = await Im.getConect(reqData, false)
-        console.log(resData)
+        console.log(resData, '==========')
         if (resData.error === this.$ERR_OK) {
           let currentMsg = {
             shopId: resData.data.shop_id,
@@ -134,17 +138,17 @@ export default {
         let type = obj.type * 1
         switch (type) {
           case 0:
-            descMsg = Object.assign({}, this.descMsg, { log_type: 3 })
+            descMsg = Object.assign({}, this.descMsg, {log_type: 3})
             break
           case 1:
-            descMsg = Object.assign({}, this.descMsg, { log_type: 4 })
+            descMsg = Object.assign({}, this.descMsg, {log_type: 4})
             break
           case 3:
-            descMsg = Object.assign({}, this.descMsg, { log_type: 5 })
+            descMsg = Object.assign({}, this.descMsg, {log_type: 5})
             break
         }
       } else {
-        descMsg = Object.assign({}, this.descMsg, { log_type: 1 })
+        descMsg = Object.assign({}, this.descMsg, {log_type: 1})
       }
       let desc = JSON.stringify(descMsg)
       let ext = code.toString()

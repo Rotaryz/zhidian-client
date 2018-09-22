@@ -7,32 +7,36 @@
           <img class="icon-btn" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-video@2x.png'" alt="">
         </div>
       </div>
-      <div class="item pics">
-        <img mode="aspectFill" class="pic" :src="url" alt="">
+      <div class="item pics" @click="toPhotos">
+        <img mode="aspectFill" class="pic" v-if="photoInfo.pic" :src="photoInfo.pic" alt="">
         <div class="button-pic">
           <img class="icon-pic" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-pic@2x.png'" alt="">
-          <span class="txt">66</span>
+          <span class="txt">{{photoInfo.total}}</span>
         </div>
       </div>
     </section>
-    <div class="shop-name">国颐堂养发SPA馆（白云店）</div>
+    <div class="shop-name">{{shopInfo.name}}</div>
     <div class="evaluate">
-      <div class="star" v-for="(item, idx) in stars" :key="idx">
+      <div class="star" v-for="(item, idx) in shopInfo.rate" :key="idx">
         <img class="star-icon" mode="widthFix" v-if="imageUrl && item === 0.5" :src="imageUrl + '/zd-image/1.1/icon-halfstar@2x.png'" alt="">
         <img class="star-icon" mode="widthFix" v-if="imageUrl && item === 1" :src="imageUrl + '/zd-image/1.1/icon-star@2x.png'" alt="">
         <img class="star-icon" mode="widthFix" v-if="imageUrl && item === 0" :src="imageUrl + '/zd-image/1.1/icon-greystar@2x.png'" alt="">
       </div>
       <span class="txt">大众点评</span>
     </div>
-    <div class="explain open-time">营业时间：11:00-21:00</div>
-    <div class="explain address">广州市海珠区 TIT 创意园A9</div>
-    <div class="distance">距你340m，步行需要9分钟</div>
-    <div class="btn-group">
-      <img class="icon left" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-maps@2x.png'" alt="" @click="toMap">
-      <div class="line"></div>
-      <img class="icon right" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-tel@2x.png'" alt="" @click="toMobile">
-    </div>
-    <video class="my-video" id="my-video" :src="video"></video>
+    <div class="explain open-time">营业时间：{{shopInfo.opening_hours}}</div>
+    <section class="distance-wrapper">
+      <article class="left">
+        <div class="explain address">{{shopInfo.address}}</div>
+        <div class="distance">距你340m，步行需要9分钟</div>
+      </article>
+      <article class="btn-group">
+        <img class="icon left" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-maps@2x.png'" alt="" @click="toMap">
+        <div class="line"></div>
+        <img class="icon right" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-tel@2x.png'" alt="" @click="toMobile">
+      </article>
+    </section>
+    <video class="my-video" id="my-video" :src="video" @fullscreenchange="videoChange" @play="videoPlay" @pause="videoPause"></video>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -40,9 +44,15 @@
     props: {
       shopInfo: {
         type: Object,
-        default: {}
+        default: {
+          rate: new Array(5).fill(0)
+        }
       },
       employee: {
+        type: Object,
+        default: {}
+      },
+      photoInfo: {
         type: Object,
         default: {}
       }
@@ -51,20 +61,35 @@
       return {
         url: this.$parent.$imageUrl + `/zd-image/test-img/5@1x.png`,
         video: 'http://14.29.86.17/vlive.qqvideo.tc.qq.com/AuOCHUj_W0--tQeJANCWNmtOqXc5ZjplRKBdW5LSw1Vk/m0200c2wagp.p201.1.mp4?level=0&vkey=9897261EB2D341D0AEF807E49A29F6FBA9B95815912FB21A55F674FB72A98A91BD1BB9C0943FC026576483868EF21587F2B80F5B90A0BDF1D1822E3226EF18EB9E0F52091D20F7215F0001FE81470D37574F42D2BF747672150194DF8DB2B914DBD40C2104BCEE4EA88B8F9EC423B8344581AC018693EC79&sdtfrom=&fmt=shd&platform=10901&locid=97f27211-cd66-44cd-ad0c-56244cbde333&size=2562617&ocid=350887852',
-        stars: [1, 1, 1, 0.5, 0]
+        stars: [1, 1, 1, 0.5, 0],
+        ctx: null,
+        isPlay: false
       }
     },
     methods: {
+      videoPlay() {
+        this.isPlay = true
+      },
+      videoPause() {
+        this.isPlay = false
+      },
       playVideo() {
         const ctx = this.$wx.createVideoContext('my-video')
-        ctx.requestFullScreen({direction: 90})
         ctx.play()
+        ctx.requestFullScreen({direction: 90})
+        this.ctx = ctx
+      },
+      videoChange() {
+        this.isPlay && this.ctx && this.ctx.pause()
+      },
+      toPhotos() {
+        this.$wx.navigateTo({url: '/pages/album'})
       },
       async toMap() {
         try {
           this.$wechat.showLoading()
-          const res = await this.$wechat.getLocation('gcj02')
-          const {latitude, longitude, name = '国颐堂养发SPA馆（白云店', address = '广州市海珠区 TIT 创意园A9'} = res
+          const res = await this.$wechat.getLocation('gcj02') // todo
+          const {latitude, longitude, name = this.shopInfo.name, address = this.shopInfo.address} = res
           await this.$wechat.openLocation({latitude, longitude, name, address})
           this.$wechat.hideLoading()
         } catch (e) {
@@ -72,8 +97,11 @@
         }
       },
       toMobile() {
-        console.log(this.$wx)
-        this.$wx.makePhoneCall && this.$wx.makePhoneCall({phoneNumber: '15197865308'})
+        if (!this.shopInfo.telephone) {
+          this.$showToast('商家暂未上传手机号码')
+          return
+        }
+        this.$wx.makePhoneCall && this.$wx.makePhoneCall({phoneNumber: '' + this.shopInfo.telephone})
       }
     }
   }
@@ -108,8 +136,9 @@
           justify-content: center
           align-items: center
           .icon-btn
-            width: 40px
-            height: 40px
+            transform: scale(0.5)
+            width: 80px
+            height: 80px
             border-radius: 50%
             border: 1px solid $color-FFFFFF
             box-sizing: border-box
@@ -143,6 +172,8 @@
     .evaluate
       layout(row, block, nowrap)
       margin: 8px 0 25px
+      position: relative
+      left: 1px
       .star
         width: 15px
         height: 15px
@@ -151,7 +182,7 @@
         .star-icon
           width: 100%
           height: 100%
-          display :block
+          display: block
       .txt
         margin-left: 3px
         font-size: $font-size-12
@@ -162,25 +193,36 @@
       font-size: $font-size-14
       color: $color-1F1F1F
       letter-spacing: 0.6px
-    .address
-      margin: 25px 0 6px
-    .distance
-      font-size: $font-size-12
-      color: $color-99A0AA
-      padding-bottom: 40px
-    .btn-group
-      position: absolute
-      bottom: 45px
-      right: 15px
-      layout(row)
+    .distance-wrapper
+      layout(row, block, nowrap)
       align-items: center
-      .line
-        width: 1px
-        height: 19px
-        background: $color-99A0AA
-        opacity: 0.3
-      .icon
-        width: 22px
-        height: 22px
-        margin: 0 15px
+      .left
+        width: 67%
+        .address
+          width: 100%
+          min-height: 1px
+          margin: 25px 0 6px
+          text-align: justify
+          word-break: break-all
+        .distance
+          width: 95%
+          font-size: $font-size-12
+          color: $color-99A0AA
+          padding-bottom: 40px
+          text-align: justify
+          word-break: break-all
+      .btn-group
+        flex: 1
+        overflow: hidden
+        layout(row)
+        justify-content: flex-end
+        .line
+          width: 1px
+          height: 19px
+          background: $color-99A0AA
+          opacity: 0.3
+          margin: 3px 15px
+        .icon
+          width: 24px
+          height: 24px
 </style>

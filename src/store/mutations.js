@@ -8,7 +8,7 @@ const mutations = {
     state.targetPage = page
   },
   [types.SET_SHOW_TYPE](state, boolean) {
-    state.showType = boolean
+    state.appShowType = boolean
   },
   [types.SET_SHOW_TYPE](state, boolean) {
     state.appShowType = boolean
@@ -27,6 +27,9 @@ const mutations = {
   },
   [types.SET_SCENE](state, scene) {
     state.scene = scene
+  },
+  [types.SET_DYNAMIC] (state, boolean) {
+    state.isLoadDy = boolean
   }
 }
 
