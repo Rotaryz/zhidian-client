@@ -31,7 +31,7 @@
           <image class="avatar-icon" :src="imageUrl + '/zd-image/mine/pic-_@2x.png'" v-if="imageUrl && !item.img_url"></image>
         </div>
       </div>
-      <button open-type="share" hover-class="none" class="group-btn" v-if="statusNum == 1">邀请好友参团</button>
+      <button open-type="share" hover-class="none" class="group-btn" v-if="statusNum == 1" @click="sharePeople">邀请好友参团</button>
       <div class="group-btn" v-if="statusNum == 2" @click="toOrderDetail">查看订单详情</div>
       <div class="group-btn" v-if="statusNum == 3 || statusNum == 5" @click="toIndex">查看更多精彩</div>
       <div class="group-btn" v-if="statusNum == 4" @click="joinGroup">我要参团</div>
@@ -43,6 +43,7 @@
 <script type="text/ecmascript-6">
   import { Goods } from 'api'
   import Payment from 'components/payment/payment'
+  import ImMixin from 'common/mixins/im-mixin'
   const STATUSOBJ = {
     1: {icon: 'icon-group_ing@2x.png', txt: '拼团中'},
     2: {icon: 'icon-group_success@2x.png', txt: '拼团成功'},
@@ -51,6 +52,7 @@
     5: {icon: 'icon-group_over@2x.png', txt: '拼团结束'}
   }
   export default {
+    mixins: [ImMixin],
     data() {
       return {
         imageUrl: this.$imageUrl,
@@ -94,6 +96,10 @@
         let url = '/pages/shop'
         wx.switchTab({url})
       },
+      sharePeople() {
+        let msgData = {title: this.groupDetail.goods_title, goods_id: this.groupDetail.recommend_activity_id}
+        this.sendCustomMsg(30011, msgData)
+      },
       async joinGroup() {
         await this._checkHasPhone()
         let userInfo = wx.getStorageSync('userInfo')
@@ -115,6 +121,8 @@
           groupJoinId: this.id
         }
         this.$refs.payment.showOrder(paymentMsg, 'group')
+        let msgData = {title: this.groupDetail.goods_title, goods_id: this.groupDetail.recommend_activity_id}
+        this.sendCustomMsg(30012, msgData)
       },
       async _checkHasPhone() {
         let userInfo = wx.getStorageSync('userInfo')

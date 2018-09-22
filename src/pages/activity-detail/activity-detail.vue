@@ -139,7 +139,9 @@
   import { Goods } from 'api'
   import { getParams } from 'common/js/util'
   import { mapActions } from 'vuex'
+  import ImMixin from 'common/mixins/im-mixin'
   export default {
+    mixins: [ImMixin],
     data() {
       return {
         imageUrl: this.$imageUrl,
@@ -217,6 +219,20 @@
         this.activityType = options.activityType ? options.activityType : ''
       }
       await this._getGoodsDetail(this.activityId, this.activityType)
+      let msgData = {title: this.goodsDetail.goods_title, goods_id: this.activityId}
+      let msgCode
+      switch (this.scene * 1) {
+        case 0:
+          msgCode = this.activityType === 'group' ? 30006 : 30015
+          break
+        case 1:
+          msgCode = this.activityType === 'group' ? 30005 : 30014
+          break
+        case 2:
+          msgCode = this.activityType === 'group' ? 30004 : 30013
+          break
+      }
+      this.sendCustomMsg(msgCode, msgData)
     },
     methods: {
       ...mapActions([
@@ -255,12 +271,14 @@
           shopName: this.goodsDetail.shop_data.name,
           shopImg: this.goodsDetail.shop_data.image_url
         }
+        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.activityId}
         switch (this.activityType) {
           case 'group':
             this.orderGroupType = 'open'
             paymentMsg.groupType = this.orderGroupType
             paymentMsg.groupJoinId = this.groupJoinId
             await this._openGroup(paymentMsg)
+            this.sendCustomMsg(30007, msgData)
             break
           case 'bargain':
             break
@@ -270,9 +288,15 @@
         this.$refs.role.showModel(type)
       },
       friendShare() {
+        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.activityId}
+        let msgCode = this.activityType === 'group' ? 30002 : 30016
+        this.sendCustomMsg(msgCode, msgData)
         this._shareReq()
       },
       getPicture () {
+        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.activityId}
+        let msgCode = this.activityType === 'group' ? 30003 : 30017
+        this.sendCustomMsg(msgCode, msgData)
         this._shareReq()
         let type = this.activityType === 'group' ? 1 : 3
         let id = this.activityId
@@ -308,7 +332,9 @@
           groupJoinId: item.id
         }
         this.orderGroupType = 'join'
+        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.activityId}
         await this._joinGroup(paymentMsg, item.id)
+        this.sendCustomMsg(30008, msgData)
       },
       _getGoodsDetail(id, type) {
         switch (type) {

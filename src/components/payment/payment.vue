@@ -54,7 +54,9 @@
 <script type="text/ecmascript-6">
   import { Customer, Goods } from 'api'
   import { mapActions } from 'vuex'
+  import ImMixin from 'common/mixins/im-mixin'
   export default {
+    mixins: [ImMixin],
     data () {
       return {
         imageUrl: this.$imageUrl,
@@ -121,12 +123,16 @@
         })
       },
       submitOrder() {
-        let data
+        let data, msgCode
         let goods = [{
           goods_id: this.paymentMsg.goods_id,
           num: this.orderNum,
           goods_title: this.paymentMsg.title
         }]
+        let msgData = {
+          title: this.paymentMsg.title,
+          total: this.total
+        }
         switch (this.type) {
           case 'default':
             data = {
@@ -135,6 +141,7 @@
               order_id: 0,
               recommend_goods_id: this.paymentMsg.recommend_goods_id
             }
+            msgCode = 40006
             break
           case 'group':
             data = {
@@ -146,13 +153,23 @@
               group_id: this.paymentMsg.groupJoinId,
               recommend_activity_id: this.paymentMsg.recommend_activity_id
             }
+            msgCode = 30010
             break
           case 'bargain':
+            msgCode = 30023
             break
         }
         Goods.payOrder(data).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
+            switch (this.type) {
+              case 'group':
+                this.sendCustomMsg(30009, msgData)
+                break
+              case 'bargain':
+                this.sendCustomMsg(30022, msgData)
+                break
+            }
             let payRes = res.data
             const { timestamp, nonceStr, signType, paySign } = payRes
             this.setShowType(true)
@@ -163,6 +180,7 @@
               signType,
               paySign,
               success: () => {
+                this.sendCustomMsg(msgCode, msgData)
                 if (this.type === 'group' && this.paymentMsg.currentPage !== 'groupDetail') {
                   this.$wechat.showLoading()
                   setTimeout(() => {

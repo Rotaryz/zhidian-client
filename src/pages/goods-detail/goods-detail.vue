@@ -58,7 +58,9 @@
   import { Goods } from 'api'
   import { getParams } from 'common/js/util'
   import {mapGetters, mapActions} from 'vuex'
+  import ImMixin from 'common/mixins/im-mixin'
   export default {
+    mixins: [ImMixin],
     data() {
       return {
         imageUrl: this.$imageUrl,
@@ -116,6 +118,20 @@
       }
       await this._getGoodsDetail(this.reqGoodsId)
       await this._checkHasPhone()
+      let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
+      let msgCode
+      switch (this.scene * 1) {
+        case 0:
+          msgCode = 40003
+          break
+        case 1:
+          msgCode = 40002
+          break
+        case 2:
+          msgCode = 40001
+          break
+      }
+      this.sendCustomMsg(msgCode, msgData)
     },
     methods: {
       ...mapActions([
@@ -138,10 +154,14 @@
         wx.switchTab({url})
       },
       friendShare() {
+        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
+        this.sendCustomMsg(40004, msgData)
         this._shareReq()
       },
       getPicture () {
         this._shareReq()
+        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
+        this.sendCustomMsg(40005, msgData)
         let type = 0
         let id = this.reqGoodsId
         let picMsg = {
@@ -204,7 +224,8 @@
     },
     computed: {
       ...mapGetters([
-        'targetPage'
+        'targetPage',
+        'scene'
       ])
     }
   }

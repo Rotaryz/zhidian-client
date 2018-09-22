@@ -92,3 +92,16 @@ export function resolveQrCode(scene) {
   }
   return params
 }
+
+// 解析永久二维码参数
+export function getParams (scene) {
+  if (!scene) {
+    return {}
+  }
+  let params = {}
+  let strs = scene.split('&')
+  for (let i = 0; i < strs.length; i++) {
+    params[strs[i].split('=')[0]] = unescape(strs[i].split('=')[1])
+  }
+  return params
+}
