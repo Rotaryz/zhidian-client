@@ -36,8 +36,8 @@
       </div>
       <div class="goods-msg-right">
         <div class="right-box-container" @click="showShareModel">
+          <img :src="imageUrl + '/zd-image/mine/icon-share_xq@2x.png'" v-if="imageUrl" class="msg-right-icon">
           <span class="msg-right-txt">{{goodsDetail.share_count}}人分享</span>
-          <img :src="imageUrl + '/zd-image/mine/icon-share@2x.png'" v-if="imageUrl" class="msg-right-icon">
         </div>
       </div>
     </div>
@@ -90,16 +90,16 @@
         <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" v-if="imageUrl" class="right">
       </div>
     </div>
-    <detail-content ref="detailContent" :goodsDetail="goodsDetail"></detail-content>
+    <detail-content ref="detailContent" :goodsDetail="goodsDetail" @noRefresh="noRefresh"></detail-content>
     <div class="pay-order-bottom border-top-1px">
       <div class="left-box">
-        <div class="left-item">
+        <div class="left-item" @click="toIndex">
           <img :src="imageUrl + '/zd-image/mine/icon-shop_xq@2x.png'" v-if="imageUrl" class="item-icon">
-          <div class="item-txt">进店铺</div>
+          <div class="item-txt">进入店铺</div>
         </div>
         <div class="left-item">
           <img :src="imageUrl + '/zd-image/mine/icon-service@2x.png'" v-if="imageUrl" class="item-icon">
-          <div class="item-txt">客服</div>
+          <div class="item-txt">联系店家</div>
         </div>
       </div>
       <div class="right-box" @click="payOrderMsg" v-if="activityType === 'group' && goodsDetail.stock">¥ {{goodsDetail.platform_price}} {{groupType === 'join' ? '参团' : '开团'}}</div>
@@ -116,7 +116,7 @@
       </div>
     </div>
     <payment ref="payment"></payment>
-    <share ref="share"></share>
+    <share ref="share" @friendShare="friendShare" @getPicture="getPicture"></share>
     <activity-role ref="role"></activity-role>
   </div>
 </template>
@@ -128,6 +128,7 @@
   import ActivityRole from 'components/activity-role/activity-role'
   import { Goods } from 'api'
   import { getParams } from 'common/js/util'
+  import { mapActions } from 'vuex'
   export default {
     data() {
       return {
@@ -150,10 +151,16 @@
         groupType: 'open', // 团购页面参与类型
         orderGroupType: 'open', // 团购订单类型
         code: '',
-        hasPhone: ''
+        hasPhone: '',
+        refreshPage: true
       }
     },
-    async onLoad(options) {
+    async onShow() {
+      if (!this.refreshPage) {
+        this.refreshPage = true
+        return
+      }
+      let options = this.$root.$mp.page.options
       if (options.shopId) {
         this.shopId = options.shopId
         wx.setStorageSync('shopId', options.shopId)
@@ -174,14 +181,24 @@
       await this._getGoodsDetail(this.activityId, this.activityType)
     },
     methods: {
+      ...mapActions([
+        'setGoodsDrawInfo'
+      ]),
       test() {
         this.$showToast('askjdhakdhashd')
+      },
+      noRefresh() {
+        this.refreshPage = false
       },
       bannerChange(e) {
         this.currentNum = e.mp.detail.current * 1 + 1
       },
       showShareModel() {
         this.$refs.share.show()
+      },
+      toIndex() {
+        let url = `/pages/guide`
+        wx.switchTab({url})
       },
       async payOrderMsg() {
         await this._checkHasPhone()
@@ -213,6 +230,21 @@
       },
       showRule(type) {
         this.$refs.role.showModel(type)
+      },
+      friendShare() {
+
+      },
+      getPicture () {
+        let picMsg = {
+          title: this.goodsDetail.goods_title,
+          explain: '',
+          mark: this.activityType === 'group' ? this.goodsDetail.join_count + '人团' : `仅剩${this.goodsDetail.stock}件`,
+          price: this.goodsDetail.platform_price,
+          goodsImg: this.goodsDetail.image_url
+        }
+        this.setGoodsDrawInfo(picMsg)
+        let type = this.activityType === 'group' ? 1 : 3
+        this.$wx.navigateTo({url: `goods-make-poster?type=${type}&id=${this.activityId}`})
       },
       async joinGroup(item) {
         await this._checkHasPhone()
@@ -436,7 +468,6 @@
           .item-img
             width: 100%
             height: 100%
-            background: #ccc
       .page-box
         position: absolute
         right: 15px
@@ -484,12 +515,15 @@
             font-family: DINAlternate-Bold
             color: $color-white
     .goods-msg
-      padding: 10px 15px
+      padding: 0 15px
       background: $color-white
       display: flex
+      min-height: 84px
       justify-content: space-between
+      align-items: center
       .goods-msg-left
         flex: 1
+        padding: 10px 0
         overflow: hidden
         .goods-title
           font-family: $font-family-medium
@@ -528,24 +562,21 @@
             font-size: $font-size-14
             margin-bottom: 2px
       .goods-msg-right
-        width: 85px
-        display: flex
-        align-items: center
-        justify-content: flex-end
+        height: 100%
         .right-box-container
-          height: 36px
+          height: 100%
           display: flex
+          flex-direction: column
           align-items: center
-          justify-content: flex-end
+          justify-content: center
           font-size: 0
           .msg-right-txt
             font-family: $font-family-regular
             color: $color-99A0AA
-            font-size: $font-size-14
-            margin-right: 5px
+            font-size: $font-size-12
           .msg-right-icon
-            width: 16px
-            height: 16px
+            width: 60px
+            height: 60px
 
     .group-list-box
       padding: 0 15px
@@ -684,7 +715,7 @@
       display: flex
       align-items: center
       .left-box
-        width: 110px
+        width: 130px
         display: flex
         align-items: center
         .left-item
@@ -698,7 +729,7 @@
           .item-icon
             width: 22px
             height: 22px
-            margin-bottom: 4px
+            margin-bottom: 6px
           .item-txt
             font-size: $font-size-10
             font-family: $font-family-regular
