@@ -111,7 +111,7 @@
         if (!token || !userInfo) {
           wx.reLaunch({ url: `/pages/login` })
         } else {
-          // await this.loginIm()
+          await this.loginIm()
         }
       },
       ...mapActions([

@@ -199,12 +199,12 @@
           }
           item.share_count++
         })
-        let type = item.rule_id // 0普通 1团购 3砍价
+        let type = +item.rule_id // 0普通 1团购 3砍价
         const obj = {
           type: type,
           title: item.goods_title,
           explain: item.goods_subtitle,
-          mark: +type === 1 ? item.group_number + '人团' : +type === 3 ? '仅剩' + item.stock + '份' : '',
+          mark: type === 1 ? item.group_number + '人团' : type === 3 ? '仅剩' + item.stock + '份' : '',
           price: item.platform_price,
           goodsImg: item.image_url,
           id: item.recommend_activity_id
