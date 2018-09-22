@@ -103,7 +103,7 @@
             })
             break
           case 'waiting_groupon': // 拼团详情
-            await this.$turnShop({ id: this.detail.shop_id, url: `/pages/group-detail?groupId=${item.groupon_data.group_id}` })
+            await this.$turnShop({ id: item.shop_id, url: `/pages/group-detail?groupId=${item.groupon_data.group_id}` })
             break
           case 'fail_groupon': // 退款详情
           case 'refund':

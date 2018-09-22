@@ -1,6 +1,6 @@
 <template>
   <div class="big-mine">
-    <back-shop></back-shop>
+    <back-shop v-if="mineShop"></back-shop>
     <div class="mine">
       <div class="mine-msg">
         <img class="mine-header" mode="aspectFill" :src="userInfo.avatar">
@@ -59,6 +59,9 @@
       this._getBrowserList()
     },
     computed: {
+      mineShop() {
+        return !this.$isMyShop() && this.$hasShop()
+      },
       openShop() {
         let type = this.$isMyShop() ? '' : 'contact'
         return type
@@ -72,7 +75,6 @@
       _getBrowserList() {
         Order.summary().then((res) => {
           this.$wechat.hideLoading()
-          console.log(res)
           if (res.error === this.$ERR_OK) {
             this.length = res.data.total
             this.shopList = res.data.list
