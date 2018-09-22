@@ -11,7 +11,8 @@ const state = {
   scene: 0, // 0为普通，1为转发，2为扫码
   groupDetail: {}, // 团购详情跳转商品详情再打开团购详情时存储请求参数
   groupGoods: {}, // 商品详情跳转团购详情再打开商品时存储请求参数
-  isLoadDy: false
+  isLoadDy: false,
+  goodsDrawInfo: {} // 商品海报对象
 }
 
 export default state

@@ -6,17 +6,17 @@ export default {
     const url = `/api/customer/shops/profile`
     return request.get(url, data, loading)
   },
-  // 获取店铺信息
+  // 获取活动列表
   getActiveList(data, loading) {
     const url = `/api/customer/activity`
     return request.get(url, data, loading)
   },
-  // 获取店铺信息
+  // 点赞
   likeAction(data, loading) {
     const url = `/api/customer/like-goods`
     return request.post(url, data, loading)
   },
-  // 获取店铺信息
+  // 分享
   shareAction(data, loading) {
     const url = `/api/customer/share-goods`
     return request.post(url, data, loading)

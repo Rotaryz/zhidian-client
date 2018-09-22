@@ -8,6 +8,7 @@ import order from './order'
 import guide from './guide'
 import customer from './customer'
 import shop from './shop'
+import activeCode from './active-code'
 
 // 雷达消息im
 export const Im = im
@@ -32,3 +33,5 @@ export const Guide = guide
 
 // 顾客
 export const Customer = customer
+// 二维码
+export const ActiveCode = activeCode

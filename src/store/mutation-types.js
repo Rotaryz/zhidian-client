@@ -15,3 +15,5 @@ export const SET_ORDER_RESULT = 'SET_ORDER_RESULT' // 设置订单支付结果�
 export const SET_FROM_MSG = 'SET_FROM_MSG' // 设置来源信息
 
 export const SET_SCENE = 'SET_SCENE'
+
+export const GOODS_DRAW_INFO = 'GOODS_DRAW_INFO' // 画图信息
