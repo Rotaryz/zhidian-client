@@ -9,26 +9,9 @@ import {fileType} from './we-cos/fileConfig'
 import base from 'common/mixins/base'
 import { role } from 'common/js/contants'
 
-// // 不需要自动重置data数据的页面
-const unResetPage = []
 // 定义插件
 const AppPlugin = {
   install: function () {
-    Vue.mixin({
-      methods: {},
-      onUnload() {
-        // 重置页面组件的data数据
-        if (!this.$mp) return
-        // 重置页面的data数据
-        let flag = unResetPage.some(value => {
-          let reg = new RegExp(value)
-          return reg.test(this.$options.__file)
-        })
-        if (!flag && this.$options.data) {
-          Object.assign(this.$data, this.$options.data())
-        }
-      }
-    })
     Vue.mixin(base)
     if (!Vue.prototype.$webimHandler) {
       Vue.prototype.$webimHandler = new WeIM()

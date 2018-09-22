@@ -1,6 +1,6 @@
 <template>
   <div class="guide-header">
-    <section class="logo-wrapper">
+    <section class="logo-wrapper" @click="test">
       <img class="img" mode="aspectFill" :src="shopInfo.image_url" alt="">
       <button class="share-btn">
         <img class="share-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share_dg@2x.png'" alt="">
@@ -37,12 +37,15 @@
       }
     },
     data() {
-      return {
-      }
+      return {}
     },
     created() {
     },
     methods: {
+      test() {
+        this.$getFormId()
+        console.log(1231)
+      },
       async editorAvatar() {
         try {
           let res = await this.$wechat.chooseImage()
@@ -130,11 +133,11 @@
           line-height: 1.2
           .position
             margin-bottom: 2px
-            text-align :justify
-            word-break :break-all
+            text-align: justify
+            word-break: break-all
           .company
-            text-align :justify
-            word-break :break-all
+            text-align: justify
+            word-break: break-all
       .down
         padding: 26.5px 0 35px
         font-size: $font-size-16
@@ -142,5 +145,5 @@
         letter-spacing: 0.34px
         line-height: 1.2
         word-break: break-all
-        text-align :justify
+        text-align: justify
 </style>
