@@ -51,7 +51,7 @@
   import Share from 'components/share/share'
   import { Goods } from 'api'
   import { getParams } from 'common/js/util'
-  import {mapGetters} from 'vuex'
+  import {mapGetters, mapActions} from 'vuex'
   export default {
     data() {
       return {
@@ -92,6 +92,9 @@
       await this._checkHasPhone()
     },
     methods: {
+      ...mapActions([
+        'setGoodsDrawInfo'
+      ]),
       test() {
         this.$showToast('askjdhakdhashd')
       },
@@ -107,6 +110,21 @@
       toIndex() {
         let url = `/pages/guide`
         wx.switchTab({url})
+      },
+      friendShare() {
+
+      },
+      getPicture () {
+        let picMsg = {
+          title: this.goodsDetail.goods_title,
+          explain: '',
+          mark: '',
+          price: this.goodsDetail.platform_price,
+          goodsImg: this.goodsDetail.image_url
+        }
+        this.setGoodsDrawInfo(picMsg)
+        let type = 0
+        this.$wx.navigateTo({url: `goods-make-poster?type=${type}&id=${this.reqGoodsId}`})
       },
       async payOrderMsg() {
         await this._checkHasPhone()

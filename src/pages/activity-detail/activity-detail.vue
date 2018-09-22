@@ -116,7 +116,7 @@
       </div>
     </div>
     <payment ref="payment"></payment>
-    <share ref="share"></share>
+    <share ref="share" @friendShare="friendShare" @getPicture="getPicture"></share>
     <activity-role ref="role"></activity-role>
   </div>
 </template>
@@ -128,6 +128,7 @@
   import ActivityRole from 'components/activity-role/activity-role'
   import { Goods } from 'api'
   import { getParams } from 'common/js/util'
+  import { mapActions } from 'vuex'
   export default {
     data() {
       return {
@@ -180,6 +181,9 @@
       await this._getGoodsDetail(this.activityId, this.activityType)
     },
     methods: {
+      ...mapActions([
+        'setGoodsDrawInfo'
+      ]),
       test() {
         this.$showToast('askjdhakdhashd')
       },
@@ -226,6 +230,21 @@
       },
       showRule(type) {
         this.$refs.role.showModel(type)
+      },
+      friendShare() {
+
+      },
+      getPicture () {
+        let picMsg = {
+          title: this.goodsDetail.goods_title,
+          explain: '',
+          mark: this.activityType === 'group' ? this.goodsDetail.join_count + '人团' : `仅剩${this.goodsDetail.stock}件`,
+          price: this.goodsDetail.platform_price,
+          goodsImg: this.goodsDetail.image_url
+        }
+        this.setGoodsDrawInfo(picMsg)
+        let type = this.activityType === 'group' ? 1 : 3
+        this.$wx.navigateTo({url: `goods-make-poster?type=${type}&id=${this.activityId}`})
       },
       async joinGroup(item) {
         await this._checkHasPhone()
