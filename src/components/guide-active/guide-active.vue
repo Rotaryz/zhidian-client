@@ -130,6 +130,7 @@
 <script type="text/ecmascript-6">
   import { Guide } from 'api'
   import Blank from 'components/blank/blank'
+  import { mapActions } from 'vuex'
 
   const tabList = [{title: '砍价抢购'}, {title: '火爆拼团'}]
   export default {
@@ -155,12 +156,8 @@
         url: this.$parent.$imageUrl + '/zd-image/test-img/4@1x.png',
         tabList,
         header: [1, 1, 1],
-        isLike: false,
-        paramId: ''
+        isLike: false
       }
-    },
-    onLoad(option) {
-      this._getQuery(option)
     },
     created() {
     },
@@ -194,41 +191,7 @@
           item.is_like ? item.like_count++ : item.like_count--
         })
       },
-      // toShare(item) {
-      //   let obj = {
-      //     title: item.goods_title,
-      //     explain: item.goods_subtitle,
-      //     mark: item.join_count ? item.join_count + '人团' : '',
-      //     price: item.platform_price,
-      //     goodsImg: item.image_url
-      //   }
-      //   this.setGoodsDrawInfo(obj)
-      //   this.paramId = item.recommend_activity_id
-      //   this.$refs.share.show()
-      // },
-      // friendShare () {
-      //   this.$refs.share.closeCover()
-      // },
-      // getPicture() {
-      //   this.$refs.share.closeCover()
-      //   let type = 1 // 0普通 1团购 3砍价
-      //   this.$wx.navigateTo({url: `goods-make-poster?type=${type}&id=${this.paramId}`})
-      // },
-      // async _getQuery(option) {
-      //   // 分享进来的
-      //   let entryId = option.shopId
-      //   if (entryId) {
-      //     this.$wx.setStorageSync('shopId', entryId)
-      //   }
-      //   // 二维码扫描进入 - 永久
-      //   let scene = option.scene
-      //   if (scene) {
-      //     let sceneMsg = decodeURIComponent(scene)
-      //     const params = resolveQrCode(sceneMsg)
-      //     if (params.e) {
-      //       this.$wx.setStorageSync('shopId', params.e)
-      //     }
-      //   }
+      toShare(item) {
         Guide.shareAction({recommend_activity_id: item.activity_id, recommend_goods_id: item.goods_id}, false).then(res => {
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
@@ -236,10 +199,19 @@
           }
           item.share_count++
         })
-      // }
-    },
-    components: {
-      Share
+        let type = item.rule_id // 0普通 1团购 3砍价
+        const obj = {
+          type: type,
+          title: item.goods_title,
+          explain: item.goods_subtitle,
+          mark: +type === 1 ? item.group_number + '人团' : +type === 3 ? '仅剩' + item.stock + '份' : '',
+          price: item.platform_price,
+          goodsImg: item.image_url,
+          id: item.recommend_activity_id
+        }
+        this.setGoodsDrawInfo(obj)
+        this.$wx.navigateTo({url: `/pages/goods-make-poster`})
+      }
     }
   }
 </script>
