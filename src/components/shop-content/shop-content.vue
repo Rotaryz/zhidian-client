@@ -53,7 +53,7 @@
       </ul>
       <div class="end">END</div>
     </section>
-    <blank v-if="selectTab===1 && storyInfo.details.length===0" styles="padding:50px 0"></blank>
+    <blank v-if="selectTab===1 && !storyInfo.title && storyInfo.details.length===0" styles="padding:50px 0"></blank>
   </div>
 </template>
 

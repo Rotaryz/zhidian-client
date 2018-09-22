@@ -25,7 +25,7 @@
                 <div class="activity-title">参加拼团/砍价活动</div>
                 <img :src="imgUrl + '/ws-image/radar/icon-activity.png'" v-if="imgUrl" class="title-icon">
               </div>
-              <button class="welcome-group" :open-type="welcomeMsg.have_personal_qrcode ? 'contact' : ''"	:session-from="'request_friend,' + employeeId" send-message-title="点击下方消息加微信" :send-message-img="imgUrl + '/ws-image/ws1.2/pic-additivepeople@2x.png'" :show-message-card="true" @click="weixinShow">
+              <button class="welcome-group" :open-type="welcomeMsg.have_personal_qrcode ? 'contact' : ''" :session-from="'request_friend,' + employeeId" send-message-title="点击下方消息加微信" :send-message-img="imgUrl + '/ws-image/ws1.2/pic-additivepeople@2x.png'" :show-message-card="true" @click="weixinShow">
                 <div class="group-top">
                   <div class="activity-title">添加我的微信号</div>
                   <img :src="imgUrl + '/ws-image/radar/icon-weixin.png'" v-if="imgUrl" class="title-icon">
@@ -56,7 +56,7 @@
               </div>
             </div>
             <div class="chat-msg-qrCode other" v-if="item.type * 1 === 6">
-              <button class="qrCode-content" open-type="contact"	:session-from="'request_friend,' + employeeId" send-message-title="点击下方消息加微信" :send-message-img="imgUrl + '/ws-image/ws1.2/pic-additivepeople@2x.png'" :show-message-card="true">
+              <button class="qrCode-content" open-type="contact" :session-from="'request_friend,' + employeeId" send-message-title="点击下方消息加微信" :send-message-img="imgUrl + '/ws-image/ws1.2/pic-additivepeople@2x.png'" :show-message-card="true">
                 <p class="qrCode-title">欢迎光临我的小店</p>
                 <div class="qrCode-text-content">
                   <div class="qrCode-txt">点击本条消息加微信，随时找我聊天</div>
@@ -65,7 +65,7 @@
               </button>
             </div>
             <div class="chat-msg-qrCode other" v-if="item.type * 1 === 7">
-              <button class="qrCode-content" open-type="contact"	:session-from="'wx_group,' + employeeId" send-message-title="点击下方消息进群" :send-message-img="imgUrl + '/ws-image/ws1.2/pic-additivegroup@2x.png'" :show-message-card="true">
+              <button class="qrCode-content" open-type="contact" :session-from="'wx_group,' + employeeId" send-message-title="点击下方消息进群" :send-message-img="imgUrl + '/ws-image/ws1.2/pic-additivegroup@2x.png'" :show-message-card="true">
                 <p class="qrCode-title">欢迎加入我的微信福利群</p>
                 <div class="qrCode-text-content">
                   <div class="qrCode-txt">点击本条消息加入微信群，不定时抢购福利</div>
@@ -141,24 +141,21 @@
         </div>
       </div>
     </div>
-    <toast ref="toast"></toast>
   </div>
 </template>
 
 <script>
-  import {mapActions, mapGetters} from 'vuex'
-  import {Im, UpLoad} from 'api'
+  import { mapActions, mapGetters } from 'vuex'
+  import { Im, UpLoad } from 'api'
   import { ERR_OK, TIMELAG, baseURL } from 'api/config'
-  import wx from 'common/js/wx'
   import * as wechat from 'common/js/wechat'
-  import {emotionsFaceArr} from 'common/js/contants'
+  import { emotionsFaceArr } from 'utils/im-plugins'
 
   let webimHandler
   const MORELIST = [
     {txt: '图片', icon: baseURL.image + '/ws-image/radar/icon-picture@2x.png', type: 1}
   ]
   export default {
-    name: 'Chat',
     created() {
     },
     onShow() {
@@ -229,6 +226,43 @@
       // this.emojiShow = false
       // this.focus = false
     },
+    data() {
+      return {
+        imgUrl: this.$imageUrl,
+        inputMsg: '',
+        id: '',
+        userInfo: {},
+        imAccount: '',
+        scrollId: 'item0',
+        moreLists: MORELIST,
+        emojiList: emotionsFaceArr,
+        emojiShow: false,
+        mortListShow: false,
+        shopName: '',
+        welcomeMsg: {},
+        from: '',
+        focus: false,
+        employeeId: ''
+      }
+    },
+    computed: {
+      ...mapGetters([
+        'currentMsg',
+        'nowChat',
+        'imLogin'
+      ]),
+      endDate() {
+        if (this.nowChat.length) {
+          if (!this.nowChat[0].created_at && !this.nowChat[0].msgTimeStamp) {
+            return this.nowChat[1] ? this.nowChat[1].created_at ? this.nowChat[1].created_at : this.nowChat[1].msgTimeStamp : ''
+          } else {
+            return this.nowChat[0].created_at ? this.nowChat[0].created_at : this.nowChat[0].msgTimeStamp
+          }
+        } else {
+          return ''
+        }
+      }
+    },
     methods: {
       ...mapActions([
         'setNowChat',
@@ -238,8 +272,8 @@
         'setChatGoods'
       ]),
       textFocus() {
-        this.mortListShow = false
-        this.emojiShow = false
+        // this.mortListShow = false
+        // this.emojiShow = false
         setTimeout(() => {
           this.focus = true
         }, 20)
@@ -267,9 +301,9 @@
       //   this.$refs.toast.show('商家暂时没有上传微信，给商家留言吧！')
       // },
       showPic(item) {
-        // this.setShowType(true)
+        this.setShowType(true)
         this.scrollId = ''
-        wx.previewImage({urls: [item.url]})
+        this.$wx.previewImage({urls: [item.url]})
       },
       // toDetail(item) {
       //   if (this.from !== 'goodsDetail') {
@@ -320,7 +354,7 @@
       sendMsg() {
         let value = this.inputMsg.trim()
         if (!value) {
-          this.$refs.toast.show('发送消息不能为空')
+          this.$showToast('发送消息不能为空')
           return
         }
         let timeStamp = parseInt(Date.parse(new Date()) / 1000)
@@ -352,7 +386,7 @@
         this.scrollId = 'item' + (list.length - 1)
         webimHandler.onSendMsg(value, this.currentMsg.account).then(res => {
         }, () => {
-          this.$refs.toast.show('消息发送失败，尝试重新发送')
+          this.$showToast('消息发送失败，尝试重新发送')
         })
       },
       textInput(e) {
@@ -405,7 +439,7 @@
                 this.scrollId = 'item' + (list.length - 1)
                 webimHandler.onSendCustomMsg(opt, this.currentMsg.account).then(res => {
                 }, () => {
-                  this.$refs.toast.show('消息发送失败，尝试重新发送')
+                  this.$showToast('消息发送失败，尝试重新发送')
                 })
               })
             }
@@ -425,45 +459,6 @@
         this.mortListShow = !this.mortListShow
         this.emojiShow = false
       }
-    },
-    data() {
-      return {
-        imgUrl: baseURL.image,
-        inputMsg: '',
-        id: '',
-        userInfo: {},
-        imAccount: '',
-        scrollId: 'item0',
-        moreLists: MORELIST,
-        emojiList: emotionsFaceArr,
-        emojiShow: false,
-        mortListShow: false,
-        shopName: '',
-        welcomeMsg: {},
-        from: '',
-        focus: false,
-        employeeId: ''
-      }
-    },
-    components: {
-    },
-    computed: {
-      ...mapGetters([
-        'currentMsg',
-        'nowChat',
-        'imLogin'
-      ]),
-      endDate() {
-        if (this.nowChat.length) {
-          if (!this.nowChat[0].created_at && !this.nowChat[0].msgTimeStamp) {
-            return this.nowChat[1] ? this.nowChat[1].created_at ? this.nowChat[1].created_at : this.nowChat[1].msgTimeStamp : ''
-          } else {
-            return this.nowChat[0].created_at ? this.nowChat[0].created_at : this.nowChat[0].msgTimeStamp
-          }
-        } else {
-          return ''
-        }
-      }
     }
   }
 </script>
@@ -476,7 +471,7 @@
   .chat
     width: 100vw
     height: 100vh
-    background: $color-F1F1F2
+    background: #F1F1F2
     position: relative
     .chat-container
       width: 100%
@@ -501,7 +496,7 @@
             border-radius: 2px
             font-family: $font-family-regular
             font-size: $font-size-12
-            color: $color-white
+            color: #fff
             line-height: 14px
         .chat-content
           display: flex
@@ -527,10 +522,10 @@
               word-break: break-all
               vertical-align: middle
             .chat-msg-content.other
-              background: $color-white
+              background: #fff
               border: 0.5px solid #D6DCE0
             .chat-msg-content.mine
-              background: $color-green
+              background: #A1E563
           .other.chat-msg-box
             margin-right: 50px
             .arrow-box
@@ -538,20 +533,20 @@
               height: 45px
               position: relative
               .gray-arrow
-                width:0
-                height:0
+                width: 0
+                height: 0
                 border-width: 5px 6px 5px 0
                 border-style: solid
-                border-color: transparent #D6DCE0 transparent transparent/*透明 灰 透明 透明 */
+                border-color: transparent #D6DCE0 transparent transparent /*透明 灰 透明 透明 */
                 position: absolute
                 right: 0
                 top: 17.5px
                 .white-arrow
-                  width:0
-                  height:0
+                  width: 0
+                  height: 0
                   border-width: 5px 6px 5px 0
                   border-style: solid
-                  border-color: transparent #FFF transparent transparent/*透明 灰 透明 透明 */
+                  border-color: transparent #FFF transparent transparent /*透明 灰 透明 透明 */
                   position: absolute
                   left: 1px
                   top: -5px
@@ -564,11 +559,11 @@
               height: 45px
               position: relative
               .green-arrow
-                width:0
-                height:0
+                width: 0
+                height: 0
                 border-width: 5px 0 5px 6px
                 border-style: solid
-                border-color: transparent transparent transparent $color-green/*透明 灰 透明 透明 */
+                border-color: transparent transparent transparent #A1E563 /*透明 灰 透明 透明 */
                 position: absolute
                 left: 0
                 top: 17.5px
@@ -584,9 +579,9 @@
             .qrCode-content
               width: 230px
               padding: 10px 12px
-              border: 0.5px solid rgba(0,0,0,0.10)
+              border: 0.5px solid rgba(0, 0, 0, 0.10)
               border-radius: 4px
-              background: $color-white
+              background: #fff
               overflow: hidden
               text-align: left
               &:before, &:after
@@ -594,7 +589,7 @@
               .qrCode-title
                 font-family: $font-family-regular
                 font-size: $font-size-16
-                color: $color-20202E
+                color: #20202E
                 margin-bottom: 6px
               .qrCode-text-content
                 width: 100%
@@ -605,7 +600,7 @@
                   overflow: hidden
                   line-height: 18px
                   font-size: $font-size-12
-                  color: $color-888888
+                  color: #888
                   font-family: $font-family-regular
                 .qrCode-img
                   width: 45px
@@ -613,9 +608,9 @@
                   margin-left: 12px
           .chat-msg-new-goods
             width: 226px
-            border: 0.5px solid rgba(0,0,0,0.10)
+            border: 0.5px solid rgba(0, 0, 0, 0.10)
             border-radius: 4px
-            background: $color-white
+            background: #fff
             overflow: hidden
             font-size: 0
             .new-goods-top
@@ -629,7 +624,7 @@
                 .shop-icon
                   width: 18px
                   height: 18px
-                  border: 0.5px solid rgba(0,0,0,0.10)
+                  border: 0.5px solid rgba(0, 0, 0, 0.10)
                   border-radius: 50%
                   margin-right: 6px
                 .shop-name
@@ -677,14 +672,14 @@
           .welcome-msg
             width: 210px
             padding: 15px
-            background: $color-white
+            background: #fff
             margin-left: 10px
-            border: 0.5px solid rgba(0,0,0,0.10)
+            border: 0.5px solid rgba(0, 0, 0, 0.10)
             border-radius: 4px
             .welcome-txt
               font-family: $font-family-regular
               font-size: $font-size-14
-              color: $color-text
+              color: #374B63
               line-height: 19px
               margin-bottom: 15px
             .welcome-activity
@@ -710,7 +705,7 @@
               overflow: hidden
               font-size: 0
               margin-top: 15px
-              background: $color-white
+              background: #fff
               padding: 0
               &:before, &:after
                 border: 0 none
@@ -724,9 +719,9 @@
                 width: 100%
           .chat-msg-goods
             width: 200px
-            border: 0.5px solid rgba(0,0,0,0.10)
+            border: 0.5px solid rgba(0, 0, 0, 0.10)
             border-radius: 8px
-            background: $color-white
+            background: #fff
             margin-right: 10px
             overflow: hidden
             font-size: 0
@@ -740,14 +735,14 @@
               overflow: hidden
               text-overflow: ellipsis
               white-space: nowrap
-              color: $color-text
+              color: #374B63
         .chat-content.mine
           justify-content: flex-end
     .chat-input
       width: 100%
       box-sizing: border-box
       min-height: 38px
-      background: $color-background-f9
+      background: #f9f9f9
       padding: 6px 0
       position: absolute
       left: 0
@@ -780,9 +775,9 @@
           width: 43px
           height: 36px
           margin: 0 5px
-          border: 1px solid rgba(0,0,0,0.10)
+          border: 1px solid rgba(0, 0, 0, 0.10)
           border-radius: 2px
-          background: $color-white
+          background: #fff
           text-align: center
           line-height: 36px
           font-size: $font-size-14
@@ -791,8 +786,8 @@
         .input-container
           flex: 1
           min-height: 36px
-          border: 1px solid rgba(0,0,0,0.10)
-          background: $color-white
+          border: 1px solid rgba(0, 0, 0, 0.10)
+          background: #fff
           overflow-y: auto
           padding: 0 10px
           display: flex
