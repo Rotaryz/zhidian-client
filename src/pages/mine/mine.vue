@@ -75,7 +75,6 @@
       _getBrowserList() {
         Order.summary().then((res) => {
           this.$wechat.hideLoading()
-          console.log(res)
           if (res.error === this.$ERR_OK) {
             this.length = res.data.total
             this.shopList = res.data.list
