@@ -32,6 +32,7 @@
         <div class="txt">保存</div>
       </div>
     </section>
+    <we-paint ref="wePaint" @drawDone="drawDone"></we-paint>
   </div>
 </template>
 
@@ -40,6 +41,7 @@
   import SketchUp from 'common/js/sketch-up'
   import { mapGetters } from 'vuex'
   import imMixin from 'common/mixins/im-mixin'
+  import WePaint from 'components/we-paint/we-paint'
 
   const device = wx.getSystemInfoSync()
   const width = device.windowWidth
@@ -51,6 +53,7 @@
     mixins: [imMixin],
     name: 'goods-make-poster',
     components: {
+      WePaint
     },
     data () {
       return {
@@ -103,6 +106,7 @@
       this._getDrawPosterInfo()
     },
     onLoad (option) {
+      console.log(option)
       this._loadStatic()
       if (!this.ctx || !this.sketchUp) {
         this.ctx = this.$wx.createCanvasContext(canvasId)
@@ -116,9 +120,11 @@
       let shopId = this.$wx.getStorageSync('shopId')
       let path
       if (this.useType * 1 === 0) {
-        path = `pages/goods-detail?type=${this.useType * 1}&fromType=3&fromId=${id}&shopId=${shopId}&goodId=${this.id}`
-      } else {
-        path = `pages/goods-detail?type=${this.useType * 1}&fromType=3&fromId=${id}&shopId=${shopId}&ActivityId=${this.id}`
+        path = `pages/goods-detail?fromType=3&fromId=${id}&shopId=${shopId}&goodId=${this.id}`
+      } else if (this.useType * 1 === 1) {
+        path = `pages/activity-detail?activityType=group&fromType=3&fromId=${id}&shopId=${shopId}&activityId=${this.id}`
+      } else if (this.useType * 1 === 3) {
+        path = `pages/activity-detail?activityType=bargain&fromType=3&fromId=${id}&shopId=${shopId}&activityId=${this.id}`
       }
       if (res.from === 'button') {
         // 来自页面内转发按钮
@@ -153,17 +159,19 @@
         }
         this.id = option.id
         const {explain, goodsImg, mark, price, title} = this.goodsDrawInfo
-        console.log(this.goodsDrawInfo, 'drawinfo')
         this.title = title
         this.explain = explain
         this.mark = mark
         this.money = price
-        this.goodsUrl = goodsImg
+        console.log(goodsImg)
+        // this.goodsUrl = goodsImg
+        this.goodsUrl = 'https://zhidian-img.jkweixin.com/100011/2018/09/21/153751629158931.png'
       },
       // 加载静态资源
       _loadStatic () {
         let groupPic = this.imageUrl + '/ws-image/poster-goods/pic-collage@2x.png'
         let cutPic = this.imageUrl + '/ws-image/poster-goods/pic-cut@2x.png'
+        console.log(groupPic, cutPic, 'pic')
         let arr = [groupPic, cutPic]
         this._downloadPictures(arr, res => {
           this.groupPic = res[0].tempFilePath
@@ -199,7 +207,7 @@
         this.$wechat.showLoading()
         const userInfo = this.$wx.getStorageSync('userInfo')
         let avatarUrl = userInfo.avatar || `${this.imageUrl}/ws-image/pic-headshot@2x.png`
-        let name = userInfo.name || ''
+        let name = userInfo.nickname || ''
         let qrCodeUrl = ''
         const qrData = this._formateQrCodeData()
         const data = {
@@ -213,7 +221,6 @@
           }
           qrCodeUrl = res.data.image_url || (this.imageUrl + '/ws-image/pic-headshot@2x.png')
           let arr = [avatarUrl, qrCodeUrl]
-          console.log(arr, 'download')
           this._downloadPictures(arr, res => {
             this.avatarUrl = res[0].tempFilePath
             this.qrCodeUrl = res[1].tempFilePath
@@ -249,7 +256,6 @@
         let arr = [this.goodsUrl]
         this._loadImgs(arr, res => {
           let goodsImgs = res
-          console.log(arr, res)
           const SketchUp = this.sketchUp
           const useType = this.useType
           let iconUrl = ''
@@ -315,6 +321,96 @@
             })
           }, '.goods-wrapper')
         })
+      },
+      _action () {
+        // let arr = [this.goodsUrl]
+        let avatar = this.$wx.getStorageSync('userInfo').avatar
+        let name = this.$wx.getStorageSync('userInfo').nickname
+        // let goodsImgs = arr
+        const useType = this.useType
+        let iconUrl = ''
+        // 0普通 1团购 3砍价
+        switch (useType) {
+          case 1 : {
+            iconUrl = this.groupPic
+            break
+          }
+          case 3 : {
+            iconUrl = this.cutPic
+            break
+          }
+          default: {
+            break
+          }
+        }
+        let options = {
+          canvasId: 'we-paint',
+          multiple: 1,
+          panel: {
+            el: '.goods-wrapper'
+          },
+          els: [
+            {
+              el: '.goods-wrapper',
+              drawType: 'rect',
+              color: '#fff'
+            },
+            {
+              el: '.avatar',
+              drawType: 'circle',
+              source: avatar
+            },
+            {
+              el: '.name',
+              drawType: 'text',
+              source: name
+            },
+            {
+              el: '.icon',
+              drawType: 'img',
+              source: iconUrl
+            },
+            {
+              el: '.goods-img',
+              drawType: 'img',
+              source: this.goodsUrl,
+              mode: 'aspectFill',
+              color: '#fff'
+            },
+            {
+              el: '.title',
+              drawType: 'Multitext',
+              source: this.title
+            },
+            {
+              el: '.explain',
+              drawType: 'Multitext',
+              source: this.explain
+            },
+            {
+              el: '.mark',
+              drawType: 'text',
+              source: this.mark
+            },
+            {
+              el: '.unit',
+              drawType: 'text',
+              source: '￥'
+            },
+            {
+              el: '.money',
+              drawType: 'text',
+              source: this.money
+            },
+            {
+              el: '.qr-code',
+              drawType: 'img',
+              source: this.qrCodeUrl
+            }
+          ]
+        }
+        console.log(options, 'options')
+        this.$refs.wePaint.action(options)
       },
       _formatStr (str) {
         let reg = /[\u4e00-\u9fa5]/g
@@ -436,7 +532,7 @@
         let data = {title}
         let dataJson = JSON.stringify(data)
         this.sendCustomMsg(30003, dataJson)
-        this._draw()
+        this._action()
         // this.sendCustomMsg(60005) // 保存图片
         // if (this.useType) {
         //   this.downLoadSave()
