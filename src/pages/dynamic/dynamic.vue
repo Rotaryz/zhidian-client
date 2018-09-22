@@ -184,7 +184,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {Dynamic} from 'api'
+  import {Dynamic, ActiveCode} from 'api'
   import {baseURL} from 'api/config'
   import ConfirmMsg from 'components/confirm-msg/confirm-msg'
   import { resolveQrCode } from 'common/js/util'
@@ -294,20 +294,21 @@
         if (scene) {
           let sceneMsg = decodeURIComponent(scene)
           const params = resolveQrCode(sceneMsg)
-          if (params.e) {
-            this.$wx.setStorageSync('shopId', params.e)
+          if (params.s) {
+            this.$wx.setStorageSync('shopId', params.s)
           }
         }
       },
       _getDrawPosterInfo() {
         const data = {
-          'patch': 'pages/dynamic',
+          'type': 'pages/dynamic',
+          'source': 'c',
           data: {
-            'from_id': this.$wx.getStorageSync('userInfo').id,
+            'from_id': 'c' + this.$wx.getStorageSync('userInfo').id,
             'shopId': this.$wx.getStorageSync('shopId')
           }
         }
-        Dynamic.createMiniCode(data, false).then(res => {
+        ActiveCode.createMiniCode(data, false).then(res => {
           if (res.error !== this.$ERR_OK) {
             this.$wechat.hideLoading()
             this.$showToast(res.message)

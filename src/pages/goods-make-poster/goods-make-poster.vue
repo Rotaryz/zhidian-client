@@ -5,17 +5,17 @@
       <div class="goods-wrapper">
         <header class="header">
           <img class="avatar" :src="avatarUrl" alt="">
-          <div class="name">{{name || '海报'}}</div>
+          <div class="name">{{name}}</div>
           <img class="icon" :src="posterIconUrl" v-if="posterIconUrl">
         </header>
         <img class="goods-img" mode="aspectFill" :src="goodsUrl" alt="">
         <footer class="footer">
-          <div class="title">{{title || '拼团'}}</div>
-          <div class="explain">{{explain || '海报'}}</div>
-          <div class="mark">{{mark || '海报'}}</div>
+          <div class="title">{{title}}</div>
+          <div class="explain">{{explain}}</div>
+          <div class="mark">{{mark}}</div>
           <div class="unit">￥</div>
           <div class="empty"></div>
-          <div class="money">{{money || '100'}}</div>
+          <div class="money">{{money}}</div>
           <img class="qr-code" mode="aspectFill" :src="qrCodeUrl" alt="">
         </footer>
       </div>
@@ -32,23 +32,18 @@
         <div class="txt">保存</div>
       </div>
     </section>
-    <we-paint ref="wePaint" @drawDone="drawDone"></we-paint>
+    <we-paint ref="wePaint" @drawDone="drawDone" @downloadFile="downloadFile"></we-paint>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import { ActiveCode } from 'api'
-  import SketchUp from 'common/js/sketch-up'
+  import { ActiveCode, Guide } from 'api'
   import { mapGetters } from 'vuex'
   import imMixin from 'common/mixins/im-mixin'
   import WePaint from 'components/we-paint/we-paint'
 
-  const device = wx.getSystemInfoSync()
-  const width = device.windowWidth
-  const prop = 1
-  const vw = width / 100 * prop
-  const canvasId = 'dynamic-share'
-
+  // const width = wx.getSystemInfoSync().width
+  // const vw = width / 100
   export default {
     mixins: [imMixin],
     name: 'goods-make-poster',
@@ -70,15 +65,7 @@
         explain: '',
         mark: '',
         money: '',
-        price: '',
-        ctx: null, // canvas上下文
-        sketchUp: null,
-        canvasStyle: '',
-        divW: 0, // 目标盒子宽度
-        divH: 0, // 目标盒子高度
-        prop,
-        vw,
-        showCanvas: true
+        price: ''
       }
     },
     onUnload () {
@@ -96,22 +83,12 @@
       this.mark = ''
       this.money = ''
       this.price = ''
-      this.ctx = null // canvas上下文
-      this.sketchUp = null
-      this.canvasStyle = ''
-      this.divW = 0 // 目标盒子宽度
-      this.divH = 0 // 目标盒子高度
     },
     onShow () {
       this._getDrawPosterInfo()
     },
     onLoad (option) {
-      console.log(option)
       this._loadStatic()
-      if (!this.ctx || !this.sketchUp) {
-        this.ctx = this.$wx.createCanvasContext(canvasId)
-        this.sketchUp = new SketchUp({ctx: this.ctx})
-      }
       this._getParams(option)
     },
     onShareAppMessage (res) {
@@ -151,27 +128,24 @@
         }
       },
       _getParams (option) {
-        this.useType = Number(option.type)
+        this.useType = +this.goodsDrawInfo.type
         if (this.useType !== 0) {
           this.$wx.setNavigationBarTitle({
             title: '活动海报'
           })
         }
-        this.id = option.id
+        this.id = this.goodsDrawInfo.id
         const {explain, goodsImg, mark, price, title} = this.goodsDrawInfo
         this.title = title
         this.explain = explain
         this.mark = mark
         this.money = price
-        console.log(goodsImg)
-        // this.goodsUrl = goodsImg
-        this.goodsUrl = 'https://zhidian-img.jkweixin.com/100011/2018/09/21/153751629158931.png'
+        this.goodsUrl = goodsImg
       },
       // 加载静态资源
       _loadStatic () {
         let groupPic = this.imageUrl + '/ws-image/poster-goods/pic-collage@2x.png'
         let cutPic = this.imageUrl + '/ws-image/poster-goods/pic-cut@2x.png'
-        console.log(groupPic, cutPic, 'pic')
         let arr = [groupPic, cutPic]
         this._downloadPictures(arr, res => {
           this.groupPic = res[0].tempFilePath
@@ -203,23 +177,23 @@
         return data
       },
       // 画图基础信息
-      _getDrawPosterInfo () {
+      async _getDrawPosterInfo () {
         this.$wechat.showLoading()
-        const userInfo = this.$wx.getStorageSync('userInfo')
-        let avatarUrl = userInfo.avatar || `${this.imageUrl}/ws-image/pic-headshot@2x.png`
-        let name = userInfo.nickname || ''
+        const houseInfo = await Guide.getShopInfo()
+        let avatarUrl = houseInfo.data.employee.avatar || `${this.imageUrl}/ws-image/pic-headshot@2x.png`
+        let name = houseInfo.data.name || ''
         let qrCodeUrl = ''
         const qrData = this._formateQrCodeData()
         const data = {
-          'type': 'goods-detail',
+          'type': 'pages/goods-detail',
+          'source': 'c',
           data: qrData
         }
         ActiveCode.createMiniCode(data, false).then(res => {
           if (res.error !== this.$ERR_OK) {
-            // this.$refs.toast.show(res.message)
-            return
+            this.$showToast(res.message)
           }
-          qrCodeUrl = res.data.image_url || (this.imageUrl + '/ws-image/pic-headshot@2x.png')
+          qrCodeUrl = (res.data && res.data.image_url) || (this.imageUrl + '/ws-image/pic-headshot@2x.png')
           let arr = [avatarUrl, qrCodeUrl]
           this._downloadPictures(arr, res => {
             this.avatarUrl = res[0].tempFilePath
@@ -251,82 +225,7 @@
           // this.$refs.toast.sho、w('下载图片失败，请重新尝试！')
         })
       },
-      _draw () {
-        this.showCanvas = true
-        let arr = [this.goodsUrl]
-        this._loadImgs(arr, res => {
-          let goodsImgs = res
-          const SketchUp = this.sketchUp
-          const useType = this.useType
-          let iconUrl = ''
-          // 0普通 1团购 3砍价
-          switch (useType) {
-            case 1 : {
-              iconUrl = this.groupPic
-              break
-            }
-            case 3 : {
-              iconUrl = this.cutPic
-              break
-            }
-            default: {
-              break
-            }
-          }
-          const ctx = this.ctx
-          this._getRelativePosition(() => {
-            let query = this.$wx.createSelectorQuery()
-            SketchUp
-              .select(query, '.goods-wrapper')
-              .select(query, '.header > .avatar')
-              .select(query, '.header > .name')
-              .select(query, '.header > .icon')
-              .select(query, '.goods-img')
-              .select(query, '.footer > .title')
-              .select(query, '.footer > .explain')
-              .select(query, '.footer > .mark')
-              .select(query, '.footer > .unit')
-              .select(query, '.footer > .money')
-              .select(query, '.footer > .qr-code')
-            query.exec(res => {
-              SketchUp.fillRect('#fff', res[0])
-              ctx.save()
-              ctx.beginPath()
-              ctx.setFillStyle('#fff')
-              SketchUp.drawCircle((res[1].width / 2 + 3) * this.prop, res[1])
-              ctx.setShadow(0, 0.5 * vw, 10, 'rgba(74, 144, 226, 0.15)')
-              // 0 8px 16px 0 rgba(74, 144, 226, 0.15)
-              ctx.fill()
-              ctx.restore()
-              ctx.save()
-              ctx.beginPath()
-              SketchUp.drawCircle(res[1].width / 2 * this.prop, res[1])
-              // ctx.setShadow(0, 0.5 * vw, 10, 'rgba(55,75,99,0.15)')
-              ctx.clip()
-              SketchUp.drawImg(this.avatarUrl, res[1])
-              ctx.restore()
-              SketchUp.drawText(this.name, '#374B63', 3.2 * vw, 'left', res[2])
-              SketchUp.drawImg(iconUrl, res[3])
-              SketchUp.drawImg(goodsImgs[0].imgUrl, res[4], 0, 0, 'aspectFill', goodsImgs[0].imgInfo, '#fff')
-              let linePro = 1
-              // let linePro = this._formatStr(this.title)
-              SketchUp.drawMultiText(this.title, '#374B63', 4.26 * vw, 'left', res[5], 1.4, 'top', 'all', 0, 0, linePro)
-              // linePro = this._formatStr(this.explain)
-              SketchUp.drawMultiText(this.explain, '#828AA2', 3.2 * vw, 'left', res[6], 1.4, 'top', 'all', 0, 0, linePro)
-              SketchUp.drawText(this.mark, '#F94C5F', 2.9 * vw, 'left', res[7])
-              SketchUp.drawText('￥', '#374B63', 3.33 * vw, 'left', res[8])
-              SketchUp.drawText(this.money, '#374B63', 7.46 * vw, 'left', res[9])
-              SketchUp.drawImg(this.qrCodeUrl, res[10])
-              this._canvasDraw()
-            })
-          }, '.goods-wrapper')
-        })
-      },
       _action () {
-        // let arr = [this.goodsUrl]
-        let avatar = this.$wx.getStorageSync('userInfo').avatar
-        let name = this.$wx.getStorageSync('userInfo').nickname
-        // let goodsImgs = arr
         const useType = this.useType
         let iconUrl = ''
         // 0普通 1团购 3砍价
@@ -352,216 +251,94 @@
           els: [
             {
               el: '.goods-wrapper',
-              drawType: 'rect',
-              color: '#fff'
+              drawType: 'rect'
             },
             {
               el: '.avatar',
-              drawType: 'circle',
-              source: avatar
+              drawType: 'img',
+              shape: 'circle',
+              shapeBg: '#fff',
+              source: this.avatarUrl,
+              unLoad: true,
+              shadow: [0, 6, 10, 'rgba(74,144,226,0.15)', '#fff', 0]
             },
             {
               el: '.name',
               drawType: 'text',
-              source: name
+              source: this.name,
+              fontSize: 12,
+              color: '#374b63'
             },
             {
               el: '.icon',
               drawType: 'img',
-              source: iconUrl
+              source: iconUrl,
+              unLoad: true
             },
             {
               el: '.goods-img',
               drawType: 'img',
               source: this.goodsUrl,
               mode: 'aspectFill',
-              color: '#fff'
+              unLoad: false
             },
             {
               el: '.title',
-              drawType: 'Multitext',
-              source: this.title
+              drawType: 'text',
+              source: this.title,
+              fontSize: 16,
+              color: '#374b63'
             },
             {
               el: '.explain',
-              drawType: 'Multitext',
-              source: this.explain
+              drawType: 'text-area',
+              source: this.explain,
+              textMargin: 1.2,
+              fontSize: 11,
+              color: '#828AA2'
             },
             {
               el: '.mark',
               drawType: 'text',
-              source: this.mark
+              source: this.mark,
+              fontSize: 11,
+              color: '#F94C5F'
             },
             {
               el: '.unit',
               drawType: 'text',
-              source: '￥'
+              source: '¥',
+              fontSize: 14,
+              color: '#374b63'
             },
             {
               el: '.money',
               drawType: 'text',
-              source: this.money
+              source: this.money,
+              fontSize: 28,
+              color: '#374b63'
             },
             {
               el: '.qr-code',
               drawType: 'img',
-              source: this.qrCodeUrl
+              source: this.qrCodeUrl,
+              unLoad: true
             }
           ]
         }
-        console.log(options, 'options')
         this.$refs.wePaint.action(options)
-      },
-      _formatStr (str) {
-        let reg = /[\u4e00-\u9fa5]/g
-        let pro = str.match(reg).length / str.length * 0.9 / 0.3953488372093023
-        return Math.min(1, pro)
-      },
-      /**
-       * canvas绘图
-       * @private
-       */
-      _canvasDraw () {
-        const ctx = this.sketchUp.ctx
-        this.$wechat.draw(ctx).then(res => {
-          setTimeout(() => {
-            this._canvasToFile(ctx)
-          }, 380)
-        }).catch(err => {
-          console.info(err)
-          this.$wechat.hideLoading()
-          this.$showToast('绘图失败，请重新尝试！')
-        })
-      },
-      /**
-       * 导出canvas绘图
-       * @param ctx 上下文
-       * @private
-       */
-      _canvasToFile (ctx) {
-        this.$wechat.canvasToTempFilePath({
-          x: 0,
-          y: 0,
-          width: this.divW * this.prop,
-          height: this.divH * this.prop,
-          destWidth: this.divW * 3,
-          destHeight: this.divH * 3,
-          canvasId: canvasId,
-          fileType: 'jpg'
-        }, ctx).then(res => {
-          this.$wechat.hideLoading()
-          this.showCanvas = false
-          this.$wechat.saveImageToPhotosAlbum({filePath: res.tempFilePath}).then(resp => {
-            if (resp.errMsg === 'saveImageToPhotosAlbum:ok') {
-              this.$wechat.tipSuccess('保存成功')
-              this.$wechat.previewImage({urls: [res.tempFilePath]})
-            }
-          }).catch(err => {
-            console.info(err)
-          })
-          console.info(res.tempFilePath)
-        }).catch(err => {
-          console.info(err)
-          this.$wechat.hideLoading()
-          this.$showToast('请重新尝试！')
-        })
-      },
-      /**
-       * 获取目标元素的相对位置
-       * @param callback 回调函数
-       * @param cBoard 目标元素的信息
-       * @private
-       */
-      _getRelativePosition (callback, cBoard = '.target-div') {
-        if (this.canvasStyle) {
-          callback && callback()
-          return
-        }
-        let query = this.$wx.createSelectorQuery()
-        this.sketchUp.select(query, cBoard)
-        query.exec(res => {
-          this.divW = res[0].width
-          this.divH = res[0].height
-          this.canvasStyle = `opacity: 0;width: ${100 * this.prop}vw;height: ${this.divH / this.divW * 100 * this.prop}vw;transform: scale(${1 / this.prop})`
-          this.sketchUp.setParams(prop, res[0], width)
-          setTimeout(() => {
-            callback && callback()
-          }, 300)
-        })
-      },
-      /**
-       * 下载动态图片的信息
-       */
-      _loadImgs (imgs, callback) {
-        this._downloadPictures(imgs, res => {
-          let imgArr = res.map(item => item.tempFilePath)
-          this._getImgArrInfo(imgArr, newImgArr => {
-            callback(newImgArr)
-          })
-        })
-      },
-      /**
-       * 获取动态评论的图片信息
-       * @param arr
-       * @param callback
-       * @private
-       */
-      _getImgArrInfo (arr, callback) {
-        let newArr = []
-        let infoArr = arr.map(item => {
-          return new Promise((resolve, reject) => {
-            this.$wx.downloadFile({
-              url: item,
-              success: resolve,
-              fail: reject
-            })
-          })
-        })
-        Promise.all(infoArr).then((res) => {
-          arr.map((item, index) => {
-            newArr.push({imgUrl: item, imgInfo: res[index]})
-          })
-          callback(newArr)
-        }).catch((err) => {
-          console.warn(err)
-        })
       },
       saveImage () {
         this.$wechat.showLoading()
         let title = this.title
         let data = {title}
         let dataJson = JSON.stringify(data)
-        this.sendCustomMsg(30003, dataJson)
+        if (this.useType === 1) {
+          this.sendCustomMsg(30017, dataJson)
+        } else {
+          this.sendCustomMsg(30003, dataJson)
+        }
         this._action()
-        // this.sendCustomMsg(60005) // 保存图片
-        // if (this.useType) {
-        //   this.downLoadSave()
-        // } else {
-        //   this.$wechat.saveImageToPhotosAlbum({filePath: this.shareImg}).then(res => {
-        //     if (res.errMsg === 'saveImageToPhotosAlbum:ok') {
-        //       this.$wechat.tipSuccess('保存成功')
-        //       this.$wechat.previewImage({urls: [this.shareImg]})
-        //     }
-        //   })
-        // }
-      },
-      downLoadSave () {
-        // const self = this
-        // this.$wechat.showLoading()
-        // this.$wechat.downloadFile({url: this.shareImg}).then(res => {
-        //   if (res.errMsg === 'downloadFile:ok') {
-        //     this.$wechat.hideLoading()
-        //     const filePath = res.tempFilePath
-        //     this.$wechat.saveImageToPhotosAlbum({filePath}).then(res => {
-        //       if (res.errMsg === 'saveImageToPhotosAlbum:ok') {
-        //         this.$wechat.tipSuccess('保存成功')
-        //         this.$wechat.previewImage({urls: [filePath]})
-        //       }
-        //     }).catch(() => {
-        //       self.$refs.toast.show('保存失败')
-        //     })
-        //   }
-        // })
       }
     },
     computed: {
