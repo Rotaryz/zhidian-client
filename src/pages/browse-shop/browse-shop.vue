@@ -1,7 +1,7 @@
 <template>
   <div class="browse-shop">
     <div class="browse-shop-small" v-if="browseShopList">
-      <div class="browse-shop-item" v-for="(item, index) in browseShopList" :key="index">
+      <div class="browse-shop-item" v-for="(item, index) in browseShopList" :key="index" @click="checkShop(item)">
         <img :src="item.employee.avatar" class="browse-shop-logo">
         <span class="browse-shop-name">{{item.name}}</span>
         <img :src="image_url + '/zd-image/mine/icon-pressed@2x.png'" class="list-way">
@@ -69,6 +69,9 @@
             this.$showToast(res.message)
           }
         })
+      },
+      async checkShop(item) {
+        await this.$turnShop({ id: item.id, url: '/pages/guide' })
       }
     },
     components: {
