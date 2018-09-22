@@ -15,5 +15,10 @@ export default {
   checkIsMyShop(data, loading = false) {
     const url = `/api/customer/checkout-shop`
     return request.get(url, data, loading)
+  },
+  // 获取默认店铺
+  updateFormId(data, loading = false) {
+    const url = `/api/customer/templates/forms`
+    return request.post(url, data, loading)
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="coupon-code" v-if="isShow" :animation="maskAnimation" @click="cancel">
     <div class="content" :animation="modalAnimation">
-      <img mode="widthFix" :src="imageUrl + '/zd-image/mine/pic-coupon_code@2x.png'" class="content-image">
+      <img mode="aspectFill" :src="imageUrl + '/zd-image/mine/pic-coupon_code@2x.png'" class="content-image">
       <div class="shop-msg">
         <div class="shop-header-box">
           <img v-if="couponMsg.goods_image" :src="couponMsg.goods_image" class="shop-header">
@@ -13,7 +13,7 @@
         <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
       </div>
       <div class="code-box">
-        <img :src="couponMsg.qrcode_url" v-if="couponMsg.qrcode_url" class="code">
+        <img :src="couponMsg.qrcode_url" v-if="couponMsg.qrcode_url" class="code" mode="aspectFill">
       </div>
       <div class="code-num">{{couponMsg.code}}</div>
       <p class="code-tip">该券码用于线下门店核销使用</p>
@@ -99,7 +99,11 @@
     z-index: 100
     background: $color-mask-bgc
     word-break: break-all
-    fill-box()
+    position: fixed
+    top: 0
+    left: 0
+    bottom: 0
+    right: 0
     display: flex
     align-items: center
     justify-content: center

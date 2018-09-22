@@ -36,8 +36,8 @@
       </div>
       <div class="goods-msg-right">
         <div class="right-box-container" @click="showShareModel">
+          <img :src="imageUrl + '/zd-image/mine/icon-share_xq@2x.png'" v-if="imageUrl" class="msg-right-icon">
           <span class="msg-right-txt">{{goodsDetail.share_count}}人分享</span>
-          <img :src="imageUrl + '/zd-image/mine/icon-share@2x.png'" v-if="imageUrl" class="msg-right-icon">
         </div>
       </div>
     </div>
@@ -90,22 +90,32 @@
         <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" v-if="imageUrl" class="right">
       </div>
     </div>
-    <detail-content ref="detailContent" :goodsDetail="goodsDetail"></detail-content>
+    <detail-content ref="detailContent" :goodsDetail="goodsDetail" @noRefresh="noRefresh"></detail-content>
     <div class="pay-order-bottom border-top-1px">
       <div class="left-box">
-        <div class="left-item">
-          <img :src="imageUrl + '/zd-image/mine/icon-shop_xq@2x.png'" v-if="imageUrl" class="item-icon">
-          <div class="item-txt">进店铺</div>
-        </div>
-        <div class="left-item">
-          <img :src="imageUrl + '/zd-image/mine/icon-service@2x.png'" v-if="imageUrl" class="item-icon">
-          <div class="item-txt">客服</div>
-        </div>
+        <form report-submit class="left-item" @submit="$getFormId">
+          <button hover-class="none" formType="submit" class="left-item" @click="toIndex">
+            <img :src="imageUrl + '/zd-image/mine/icon-shop_xq@2x.png'" v-if="imageUrl" class="item-icon">
+            <div class="item-txt">进入店铺</div>
+          </button>
+        </form>
+        <form report-submit class="left-item" @submit="$getFormId">
+          <button hover-class="none" formType="submit" class="left-item">
+            <img :src="imageUrl + '/zd-image/mine/icon-service@2x.png'" v-if="imageUrl" class="item-icon">
+            <div class="item-txt">联系店家</div>
+          </button>
+        </form>
       </div>
-      <div class="right-box" @click="payOrderMsg" v-if="activityType === 'group' && goodsDetail.stock">¥ {{goodsDetail.platform_price}} {{groupType === 'join' ? '参团' : '开团'}}</div>
+      <form class="right-box outSide" report-submit @submit="$getFormId" v-if="activityType === 'group' && goodsDetail.stock">
+       <button hover-class="none" formType="submit" class="right-box" @click="payOrderMsg" v-if="activityType === 'group' && goodsDetail.stock">¥ {{goodsDetail.platform_price}} {{groupType === 'join' ? '参团' : '开团'}}</button>
+      </form>
       <div class="right-box un-click" v-if="activityType === 'group' && goodsDetail.stock == 0">已抢光</div>
-      <div class="right-box" @click="payOrderMsg" v-if="activityType === 'bargain'">去砍价</div>
-      <div class="right-box" @click="payOrderMsg" v-if="activityType === 'bargain'">底价 ¥ 90立即购买</div>
+      <form class="right-box outSide" report-submit @submit="$getFormId" v-if="activityType === 'bargain'">
+        <button hover-class="none" formType="submit" class="right-box" @click="payOrderMsg" v-if="activityType === 'bargain'">去砍价</button>
+      </form>
+      <form class="right-box outSide" report-submit @submit="$getFormId" v-if="activityType === 'bargain'">
+        <button hover-class="none" formType="submit" class="right-box" @click="payOrderMsg" v-if="activityType === 'bargain'">底价 ¥ 90立即购买</button>
+      </form>
       <div class="right-box un-click" v-if="activityType === 'bargain' && !timeEnd && goodsDetail.status && !goodsDetail.stock">已抢光</div>
       <div class="two-right-box" v-if="activityType === 'bargain'">
         <div class="right-btn black">
@@ -116,7 +126,7 @@
       </div>
     </div>
     <payment ref="payment"></payment>
-    <share ref="share"></share>
+    <share ref="share" @friendShare="friendShare" @getPicture="getPicture"></share>
     <activity-role ref="role"></activity-role>
   </div>
 </template>
@@ -128,13 +138,12 @@
   import ActivityRole from 'components/activity-role/activity-role'
   import { Goods } from 'api'
   import { getParams } from 'common/js/util'
+  import { mapActions } from 'vuex'
   export default {
     data() {
       return {
         imageUrl: this.$imageUrl,
-        bannerImgs: [{image: {url: 'https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png'}},
-          {image: {url: 'https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png'}},
-          {image: {url: 'https://img.jerryf.cn/defaults/zd-image/test-img/5@1x.png'}}],
+        bannerImgs: [],
         currentNum: 1,
         activityTime: {
           day: '00',
@@ -145,6 +154,7 @@
         goodsDetail: {},
         groupOrList: [],
         kanList: [],
+        activityId: '',
         activityType: 'group', // 活动类型
         timer: '',
         timeEnd: false,
@@ -152,10 +162,43 @@
         groupType: 'open', // 团购页面参与类型
         orderGroupType: 'open', // 团购订单类型
         code: '',
-        hasPhone: ''
+        hasPhone: '',
+        refreshPage: true
       }
     },
-    async onLoad(options) {
+    async onPullDownRefresh() {
+      this.$refs.payment.hideOrder()
+      this.$refs.share.closeCover()
+      this.$refs.role.closeCover()
+      await this._getGoodsDetail(this.activityId, this.activityType)
+      wx.stopPullDownRefresh()
+    },
+    onShareAppMessage(res) {
+      let title = this.goodsDetail.goods_title ? this.goodsDetail.goods_title : ''
+      let id = wx.getStorageSync('userInfo').id
+      let shopId = wx.getStorageSync('shopId')
+      let type
+      if (this.goodsType * 1 === 1) {
+        type = 'group'
+      } else {
+        type = 'bargain'
+      }
+      let path = `/pages/activity-detail?type=${type}&fromType=3&fromId=${id}&shopId=${shopId}&activityId=${this.activityId}`
+      if (res.from === 'button') {
+        // 来自页面内转发按钮
+      }
+      return {
+        title: title,
+        path,
+        imageUrl: this.goodsDetail.image_url
+      }
+    },
+    async onShow() {
+      if (!this.refreshPage) {
+        this.refreshPage = true
+        return
+      }
+      let options = this.$root.$mp.page.options
       if (options.shopId) {
         this.shopId = options.shopId
         wx.setStorageSync('shopId', options.shopId)
@@ -164,26 +207,36 @@
         let scene = decodeURIComponent(options.scene)
         let params = getParams(scene)
         this.activityId = params.a ? params.a : ''
-        this.activityType = params.t ? params.t : ''
+        this.activityType = params.t * 1 === 1 ? 'group' : 'bargain'
         if (params.s) {
           this.shopId = params.s
           wx.setStorageSync('shopId', params.s)
         }
       } else {
-        this.activityId = options.activityId ? options.activityId : '1'
-        this.activityType = options.activityType ? options.activityType : 'group'
+        this.activityId = options.activityId ? options.activityId : ''
+        this.activityType = options.activityType ? options.activityType : ''
       }
       await this._getGoodsDetail(this.activityId, this.activityType)
     },
     methods: {
+      ...mapActions([
+        'setGoodsDrawInfo'
+      ]),
       test() {
         this.$showToast('askjdhakdhashd')
+      },
+      noRefresh() {
+        this.refreshPage = false
       },
       bannerChange(e) {
         this.currentNum = e.mp.detail.current * 1 + 1
       },
       showShareModel() {
         this.$refs.share.show()
+      },
+      toIndex() {
+        let url = `/pages/guide`
+        wx.switchTab({url})
       },
       async payOrderMsg() {
         await this._checkHasPhone()
@@ -215,6 +268,25 @@
       },
       showRule(type) {
         this.$refs.role.showModel(type)
+      },
+      friendShare() {
+        this._shareReq()
+      },
+      getPicture () {
+        this._shareReq()
+        let type = this.activityType === 'group' ? 1 : 3
+        let id = this.activityId
+        let picMsg = {
+          title: this.goodsDetail.goods_title,
+          explain: '',
+          mark: this.activityType === 'group' ? this.goodsDetail.group_number + '人团' : `仅剩${this.goodsDetail.stock}件`,
+          price: this.goodsDetail.platform_price,
+          goodsImg: this.goodsDetail.image_url,
+          type,
+          id
+        }
+        this.setGoodsDrawInfo(picMsg)
+        this.$wx.navigateTo({url: `goods-make-poster`})
       },
       async joinGroup(item) {
         await this._checkHasPhone()
@@ -251,7 +323,7 @@
         Goods.getGroupDetail(id).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
-            // this.bannerImgs = res.data.goods_banner_images
+            this.bannerImgs = res.data.goods_banner_images
             this.goodsDetail = res.data
             this.activityStatus = res.activity_status
             let groupList = res.data.open_groupon_lists
@@ -404,6 +476,9 @@
             this.$showToast(res.message)
           }
         })
+      },
+      _shareReq() {
+        Goods.goodsShare(this.activityId, false)
       }
     },
     components: {
@@ -438,7 +513,6 @@
           .item-img
             width: 100%
             height: 100%
-            background: #ccc
       .page-box
         position: absolute
         right: 15px
@@ -486,12 +560,15 @@
             font-family: DINAlternate-Bold
             color: $color-white
     .goods-msg
-      padding: 10px 15px
+      padding: 0 15px
       background: $color-white
       display: flex
+      min-height: 84px
       justify-content: space-between
+      align-items: center
       .goods-msg-left
         flex: 1
+        padding: 10px 0
         overflow: hidden
         .goods-title
           font-family: $font-family-medium
@@ -530,24 +607,21 @@
             font-size: $font-size-14
             margin-bottom: 2px
       .goods-msg-right
-        width: 85px
-        display: flex
-        align-items: center
-        justify-content: flex-end
+        height: 100%
         .right-box-container
-          height: 36px
+          height: 100%
           display: flex
+          flex-direction: column
           align-items: center
-          justify-content: flex-end
+          justify-content: center
           font-size: 0
           .msg-right-txt
             font-family: $font-family-regular
             color: $color-99A0AA
-            font-size: $font-size-14
-            margin-right: 5px
+            font-size: $font-size-12
           .msg-right-icon
-            width: 16px
-            height: 16px
+            width: 60px
+            height: 60px
 
     .group-list-box
       padding: 0 15px
@@ -686,10 +760,11 @@
       display: flex
       align-items: center
       .left-box
-        width: 110px
+        width: 130px
         display: flex
         align-items: center
         .left-item
+          reset-button()
           flex: 1
           display: flex
           font-size: 0
@@ -700,15 +775,15 @@
           .item-icon
             width: 22px
             height: 22px
-            margin-bottom: 4px
+            margin-bottom: 6px
           .item-txt
             font-size: $font-size-10
             font-family: $font-family-regular
             color: $color-455A64
       .right-box
+        reset-button()
         flex: 1
         overflow: hidden
-        margin-right: 10px
         height: 45px
         line-height: 44px
         font-size: $font-size-16
@@ -717,6 +792,8 @@
         button-style(normal, 22.5px)
         &:active
           button-style(click, 22.5px)
+      .outSide.right-box
+        margin-right: 10px
       .un-click.right-box
         button-style(un-click, 22.5px)
       .two-right-box

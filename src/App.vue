@@ -21,6 +21,10 @@
       console.log('onlaunch')
     },
     async onShow(options) {
+      if (this.appShowType) {
+        this.setShowType(false)
+        return
+      }
       this._saveTargetPage(options)
       this._resolveQrCode(options)
       this._decideEntryType(options)
@@ -30,8 +34,20 @@
     onHide() {
       console.log('onHide')
     },
+    computed: {
+      ...mapGetters([
+        'appShowType'
+      ])
+    },
     methods: {
-      ...mapActions(['setTargetPage']),
+      ...mapActions([
+        'setTargetPage',
+        'setShowType',
+        'setScene',
+        'setFromMsg'
+        // 'setShowType',
+        // 'setAction'
+      ]),
       async _setDefaultShop() {
         try {
           let res = await Jwt.getDefaultShop()
@@ -113,18 +129,7 @@
         } else {
           // await this.loginIm()
         }
-      },
-      ...mapActions([
-        'setScene',
-        'setFromMsg'
-        // 'setShowType',
-        // 'setAction'
-      ])
-    },
-    computed: {
-      ...mapGetters([
-        'showType'
-      ])
+      }
     }
   }
 </script>

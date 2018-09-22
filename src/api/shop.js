@@ -20,5 +20,10 @@ export default {
   getCouponList(data, loading) {
     const url = `/api/customer/customer-promotion`
     return request.get(url, data, loading)
+  },
+  // 获取品牌故事
+  getStory(data, loading) {
+    const url = `/api/customer/merchants/contents`
+    return request.get(url, data, loading)
   }
 }

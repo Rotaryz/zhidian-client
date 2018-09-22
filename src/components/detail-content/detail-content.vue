@@ -3,10 +3,25 @@
     <div class="f4-line"></div>
     <div class="store-container">
       <div class="detail-title border-bottom-1px">门店信息</div>
-      <div class="store-detail">
+      <div class="store-star-box" @click="toShop">
+        <div class="left">
+          <div class="top">{{goodsDetail.shop_data ? goodsDetail.shop_data.name : ''}}</div>
+          <div class="down">
+            <div class="starts">
+              <image class="start" v-if="imageUrl" :src="imageUrl + '/zd-image/mine/' + (goodsDetail.shop_data ? goodsDetail.shop_data.rate === 0.5 ? 'icon-halfstar@2x.png' : goodsDetail.shop_data.rate >= 1 ? 'icon-star@2x.png' : 'icon-greystar@2x.png' : 'icon-star@2x.png')"></image>
+              <image class="start" v-if="imageUrl" :src="imageUrl + '/zd-image/mine/' + (goodsDetail.shop_data ? goodsDetail.shop_data.rate === 1.5 ? 'icon-halfstar@2x.png' : goodsDetail.shop_data.rate >= 2 ? 'icon-star@2x.png' : 'icon-greystar@2x.png' : 'icon-star@2x.png')"></image>
+              <image class="start" v-if="imageUrl" :src="imageUrl + '/zd-image/mine/' + (goodsDetail.shop_data ? goodsDetail.shop_data.rate === 2.5 ? 'icon-halfstar@2x.png' : goodsDetail.shop_data.rate >= 3 ? 'icon-star@2x.png' : 'icon-greystar@2x.png' : 'icon-star@2x.png')"></image>
+              <image class="start" v-if="imageUrl" :src="imageUrl + '/zd-image/mine/' + (goodsDetail.shop_data ? goodsDetail.shop_data.rate === 3.5 ? 'icon-halfstar@2x.png' : goodsDetail.shop_data.rate >= 4 ? 'icon-star@2x.png' : 'icon-greystar@2x.png' : 'icon-star@2x.png')"></image>
+              <image class="start" v-if="imageUrl" :src="imageUrl + '/zd-image/mine/' + (goodsDetail.shop_data ? goodsDetail.shop_data.rate === 4.5 ? 'icon-halfstar@2x.png' : goodsDetail.shop_data.rate >= 5 ? 'icon-star@2x.png' : 'icon-greystar@2x.png' : 'icon-star@2x.png')"></image>
+            </div>
+            <div class="remark-txt">大众点评</div>
+          </div>
+        </div>
+        <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" v-if="imageUrl" class="right-icon">
+      </div>
+      <div class="store-detail border-top-1px">
         <div class="store-left">
-          <div class="store-title">{{goodsDetail.shop_data ? goodsDetail.shop_data.name : ''}}</div>
-          <div class="store-sub-title">距你340m，步行需要9分钟</div>
+          <div class="store-sub-title">{{goodsDetail.distance}}</div>
         </div>
         <div class="store-right">
           <div class="right-icon-box" @click="showLocation">
@@ -68,6 +83,7 @@
     },
     methods: {
       showLocation() {
+        this.$emit('noRefresh')
         let data = {
           longitude: this.goodsDetail.shop_data.longitude,
           latitude: this.goodsDetail.shop_data.latitude,
@@ -77,9 +93,14 @@
         wx.openLocation(data)
       },
       callShop() {
+        this.$emit('noRefresh')
         wx.makePhoneCall({
-          phoneNumber: this.goodsDetail.shop_data.telephone
+          phoneNumber: this.goodsDetail.shop_data.mobile
         })
+      },
+      toShop() {
+        let url = '/pages/shop'
+        wx.switchTab({url})
       }
     }
   }
@@ -103,8 +124,44 @@
       letter-spacing: 0.8px
     .store-container
       padding-left: 15px
+      .store-star-box
+        height: 66px
+        display: flex
+        align-items: center
+        justify-content: space-between
+        .left
+          height: 38px
+          display: flex
+          flex-direction: column
+          justify-content: space-between
+          .top
+            font-family: $font-family-regular
+            font-size: $font-size-14
+            color: $color-1F1F1F
+          .down
+            display: flex
+            .remark-txt
+              font-family: $font-family-regular
+              font-size: $font-size-12
+              color: $color-99A0AA
+              letter-spacing: 0.28px
+              margin-top: 1px
+            .starts
+              display: flex
+              margin-right: 12px
+              transform: translate(0, -0.5px)
+              .start
+                width: 15px
+                height: 15px
+                margin-right: 3.5px
+                &:last-child
+                  margin-right: 0
+        .right-icon
+          width: 7.5px
+          height: 12.5px
+          margin-right: 15px
       .store-detail
-        height: 70px
+        height: 50px
         display: flex
         justify-content: space-between
         align-items: center
@@ -122,8 +179,8 @@
             margin-bottom: 6px
           .store-sub-title
             font-family: $font-family-regular
-            color: $color-99A0AA
-            font-size: $font-size-12
+            color: $color-1F1F1F
+            font-size: $font-size-14
             width: 100%
             overflow: hidden
             white-space: nowrap

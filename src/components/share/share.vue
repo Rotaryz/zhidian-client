@@ -16,6 +16,10 @@
         contentAnimation: ''
       }
     },
+    onUnload() {
+      this.showCover = false
+      this.contentAnimation = ''
+    },
     methods: {
       show() {
         if (this.showCover) {
@@ -49,9 +53,11 @@
         }, 200)
       },
       friendShare() {
+        this.closeCover()
         this.$emit('friendShare')
       },
       getPicture() {
+        this.closeCover()
         this.$emit('getPicture')
       }
     }

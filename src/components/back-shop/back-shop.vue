@@ -22,9 +22,9 @@
       await this._getShopMsg()
     },
     methods: {
-      _goBack() {
+      async _goBack() {
         let userInfoExtend = wx.getStorageSync('userInfoExtend')
-        this.$turnShop({ id: userInfoExtend.shop_id, url: '/pages/guide' })
+        await this.$turnShop({ id: userInfoExtend.shop_id, url: '/pages/guide' })
       },
       async _getShopMsg() {
         let res = await Guide.getShopInfo({}, false)

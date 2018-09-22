@@ -24,9 +24,6 @@
           return
         }
         wx.reLaunch({ url })
-        // 返回上一页
-        // console.log('dd')
-        // wx.switchTab({ url: '/pages/guide' })
       }
     }
   }

@@ -4,7 +4,7 @@
     <div class="payment-content" :class="orderShow ? 'show' : ''" @click.stop="" @touchmove="">
       <div class="payment-top border-bottom-1px">
         <div class="payment-img-box">
-          <img :src="paymentMsg.image" class="payment-img">
+          <img :src="paymentMsg.image" class="payment-img" mode="aspectFill">
         </div>
         <div class="payment-top-right">
           <div class="payment-title">{{paymentMsg.title}}</div>
@@ -70,6 +70,10 @@
     },
     onUnload() {
       this.orderShow = false
+      this.orderNum = 1
+      this.paymentMsg = {}
+      this.code = ''
+      this.type = ''
     },
     methods: {
       ...mapActions([
@@ -81,7 +85,7 @@
         this.paymentMsg = msg
         this.code = msg.code
         this.orderShow = true
-        console.log(msg)
+        this.orderNum = 1
         this.total = (this.orderNum * this.paymentMsg.price).toFixed(2)
       },
       hideOrder() {
@@ -159,6 +163,20 @@
               signType,
               paySign,
               success: () => {
+                if (this.type === 'group' && this.paymentMsg.currentPage !== 'groupDetail') {
+                  this.$wechat.showLoading()
+                  setTimeout(() => {
+                    this.$wechat.hideLoading()
+                    let url = `/pages/group-detail?groupId=${payRes.group_id}`
+                    this.orderShow = false
+                    wx.navigateTo({ url })
+                  }, 2000)
+                  return
+                } else if (this.type === 'group' && this.paymentMsg.currentPage === 'groupDetail') {
+                  this.orderShow = false
+                  this.$emit('paySuccess')
+                  return
+                }
                 let resultData = {
                   avatar: this.paymentMsg.shopImg,
                   nickName: this.paymentMsg.shopName
@@ -328,6 +346,8 @@
           font-family: $font-family-medium
           color: $color-white
           button-style(normal, 22.5px)
+          &:active
+            button-style(click, 22.5px)
         .buy-btn.un-click
           button-style(un-click, 22.5px)
     .show.payment-content

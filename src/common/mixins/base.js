@@ -4,7 +4,8 @@ import { checkIsTabPage } from 'common/js/util'
 
 const shareArr = [1007, 1008, 1036, 1044, 1073, 1074]
 const qrCordArr = [1047, 1048, 1049, 1011, 1012, 1013]
-
+// // 不需要自动重置data数据的页面
+const unResetPage = []
 // 判定场景值 0普通 1分享 2扫码
 function _entryType(options) {
   if (!options && options.scene) return 0
@@ -18,7 +19,7 @@ function _entryType(options) {
 export default {
   data() {
     return {
-      formId: '',
+      formId: [],
       imageUrl: this.$imageUrl
     }
   },
@@ -32,15 +33,42 @@ export default {
       for (let value in query) {
         string = `&${value}=${query[value]}`
       }
-      url = `${url}?${string.slice(1)}`
+      url = string ? `${url}?${string.slice(1)}` : url
     }
     if (url.includes('pages/error') || url.includes('pages/error-network')) {
       return
     }
     wx.setStorageSync('errorUrl', url)
   },
+  onHide() {
+  },
+  onUnload() {
+    // await this._sendFormId()
+    this.timer && clearTimeout(this.timer)
+    this.timer && clearInterval(this.timer)
+    this._resetData()
+  },
   methods: {
     ...mapActions(['setIsLoadDy']),
+    // async _sendFormId() {
+    //   let arr = this.formId
+    //   console.log(arr)
+    //   let formIds = [...arr]
+    //   formIds.length && console.log(arr)
+    //   this.formId = []
+    // },
+    _resetData() {
+      // 重置页面组件的data数据
+      if (!this.$mp) return
+      // 重置页面的data数据
+      let flag = unResetPage.some(value => {
+        let reg = new RegExp(value)
+        return reg.test(this.$options.__file)
+      })
+      if (!flag && this.$options.data) {
+        Object.assign(this.$data, this.$options.data())
+      }
+    },
     $showToast(title, duration = 1500, mask = true, icon = 'none') {
       if (!title) return
       this.$wx.showToast({title, icon, duration, mask})
@@ -48,8 +76,10 @@ export default {
     $openSetting() {
       // todo
     },
+    // 手机formId
     $getFormId(e) {
-      this.formId = e.mp.detail.formId
+      let id = e.mp.detail.formId
+      Jwt.updateFormId({form_ids: [id]})
     },
     $entryType(options) {
       return _entryType(options)
@@ -62,9 +92,9 @@ export default {
       await this.getEmployeeConect()
       this.$wechat.hideLoading()
       if (checkIsTabPage(url)) {
-        this.$wx.switchTab({path: url})
+        this.$wx.switchTab({url})
       } else {
-        this.$wx.navigateTo({path: url})
+        this.$wx.navigateTo({url})
       }
     },
     $isBoss() {

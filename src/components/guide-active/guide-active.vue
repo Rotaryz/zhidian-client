@@ -1,13 +1,17 @@
 <template>
   <div class="guide-active">
-    <section class="tab-container">
-      <ul class="tab-wrapper">
-        <li class="tab-item" v-for="(item, index) in tabList" :key="index" @click="changeTab(index)">{{item.title}}</li>
-      </ul>
+    <div class="tab-container">
+      <form report-submit @submit="$getFormId">
+        <ul class="tab-wrapper">
+          <li class="tab-item" v-for="(item, index) in tabList" :key="index" @click="changeTab(index)">
+            <button formType="submit">{{item.title}}</button>
+          </li>
+        </ul>
+      </form>
       <div class="tab-line-wrapper" :style="'transform: translate3d(' + selectTab*100 + '%,0,0)'">
         <div class="tab-line"></div>
       </div>
-    </section>
+    </div>
     <!--砍价-->
     <ul class="active-wrapper" v-if="selectTab === 0">
       <li class="item-wrapper" v-if="cutList.length" v-for="(item,index) in cutList" :key="index">
@@ -102,7 +106,7 @@
                 <span class="more-item"></span>
                 <span class="more-item"></span>
               </div>
-              <span class="shop-num">{{item.join_count}}人已成功砍价</span>
+              <span class="shop-num">{{item.join_count}}人已成功拼团</span>
             </article>
             <article class="right-box">
               <div class="jh-wrapper" @click="toLike(item)">
@@ -218,6 +222,10 @@
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
+
+  button
+    reset-button()
+    display: inline-block
 
   .guide-active
     position: relative

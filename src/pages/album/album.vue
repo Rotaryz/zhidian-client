@@ -1,13 +1,15 @@
 <template>
     <div class="album">
-      <div class="album-list" v-if="shopList">
-        <div class="item-list" v-for="(item, index) in shopList" v-bind:key="index">
-          <div class="item-box" @click="previewImg(item)">
-            <img :src="item.url" class="item-img" mode="aspectFill">
+      <div class="album-box" :class="{'album-list-active' : isNull && shopList.length * 1 === 0}">
+        <div class="album-list" v-if="shopList">
+          <div class="item-list" v-for="(item, index) in shopList" v-bind:key="index">
+            <div class="item-box" @click="previewImg(item)">
+              <img :src="item.url" class="item-img" mode="aspectFill">
+            </div>
           </div>
         </div>
+        <blank v-if="isNull && shopList.length * 1 === 0"></blank>
       </div>
-      <blank v-if="isNull && shopList.length * 1 === 0"></blank>
     </div>
 </template>
 
@@ -25,7 +27,7 @@
         page: 1
       }
     },
-    onShow() {
+    onLoad() {
       this.getMerchantsTitle()
       this.getImgList()
     },
@@ -90,10 +92,11 @@
   .album
     min-height: 100vh
     background: $color-background
-    padding: 10px 15px
     box-sizing: border-box
   .album-list
+    padding: 10px 15px
     layout(row)
+    box-sizing: border-box
     align-items: center
     .item-list
       width: 50%
@@ -116,4 +119,8 @@
         border-radius: 2px
         display: block
 
+  .album-list-active
+    min-height: 100vh
+    background: $color-FFFFFF
+    box-sizing: border-box
 </style>
