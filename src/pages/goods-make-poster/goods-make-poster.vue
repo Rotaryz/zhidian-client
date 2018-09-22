@@ -161,15 +161,15 @@
         let data = {
           from_id: f,
           shopId: e,
-          type: t
+          rule_id: t
         }
         switch (this.useType) {
           case 0:
-            data.goods_id = g
+            data.recommend_goods_id = g
             break
           case 1:
           case 3:
-            data.activity_id = a
+            data.recommend_activity_id = a
             break
           default:
             break
@@ -185,10 +185,11 @@
         let qrCodeUrl = ''
         const qrData = this._formateQrCodeData()
         const data = {
-          'type': 'pages/goods-detail',
+          'type': this.useType ? 'activity_detail' : 'goods_detail',
           'source': 'c',
-          data: qrData
+          ...qrData
         }
+        console.log(this.useType)
         ActiveCode.createMiniCode(data, false).then(res => {
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)

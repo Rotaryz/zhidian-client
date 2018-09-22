@@ -231,15 +231,14 @@
         this._getList()
         this.shopId = this.$wx.getStorageSync('shopId') ? this.$wx.getStorageSync('shopId') * 1 : ''
         this.myShopId = this.$wx.getStorageSync('myShopId') ? this.$wx.getStorageSync('myShopId') * 1 : null
-        this._getDrawPosterInfo() // 获取画海报的信息
       }, 500)
     },
     onShow() {
       this.$wx.setNavigationBarTitle({ title: '动态' })
       this.isMine = this.$isMyShop()
       this._getDrawPosterInfo() // 获取画海报的信息
-      this.shopId = wx.getStorageSync('shopId') ? this.$wx.getStorageSync('shopId') * 1 : ''
-      this.myShopId = wx.getStorageSync('myShopId') ? this.$wx.getStorageSync('myShopId') * 1 : null
+      this.shopId = this.$wx.getStorageSync('shopId') ? this.$wx.getStorageSync('shopId') * 1 : ''
+      this.myShopId = this.$wx.getStorageSync('myShopId') ? this.$wx.getStorageSync('myShopId') * 1 : null
       this.sendCustomMsg(50001)
       if (this.isLoadDy) {
         this.loadMoreDy = true
@@ -301,7 +300,7 @@
       },
       _getDrawPosterInfo() {
         const data = {
-          'type': 'pages/dynamic',
+          'type': 'dynamic',
           'source': 'c',
           data: {
             'from_id': 'c' + this.$wx.getStorageSync('userInfo').id,
