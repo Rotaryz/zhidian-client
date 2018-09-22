@@ -24,7 +24,7 @@
         <div class="ground-name">
           <div class="ground-text">拼团状态</div>
           <div class="ground-time-name">剩余时间:</div>
-          <div class="ground-time" :class="groupDetail.group_status > 2 || timeEnd ? 'time-down' : ''">{{groupDetail.group_status > 2 ? '00:00:00' : groupEndTime}}</div>
+          <div class="ground-time" :class="groupDetail.group_status !== 0 || timeEnd ? 'time-down' : ''">{{groupDetail.group_status > 2 ? '00:00:00' : groupEndTime}}</div>
         </div>
         <div class="progress-success">
           <!--<span class="progress-item"></span>-->
@@ -75,7 +75,7 @@
   import CouponCode from 'components/coupon-code/coupon-code'
 
   const MANAGER = { payment: '去支付', waiting_groupon: '拼团详情', success_groupon: '拼团详情', fail_groupon: '拼团详情' }
-
+  let timer = ''
   const GROUND_STATUS = ['拼团中', '拼团成功']
   const GROUND_END = ['拼团中', '拼团失败', '退款成功']
   export default {
@@ -88,7 +88,6 @@
         manager: MANAGER,
         couponDetail: {},
         timeEnd: false,
-        timer: '',
         groupEndTime: '00:00:00',
         groupDetail: null
       }
@@ -98,8 +97,7 @@
       await this._orderDetail(id, true)
     },
     onUnload() {
-      clearTimeout(this.timer)
-      this.groupDetail = {}
+      clearInterval(timer)
     },
     methods: {
       async cancel() {
@@ -187,19 +185,19 @@
         this.$wechat.hideLoading()
       },
       _groupTimePlay() {
-        clearInterval(this.timer)
-        let res = this._groupTimeCheckout(this.groupDetail.group_end_timestamp)
+        clearInterval(timer)
+        let res = this._groupTimeCheckout(this.groupDetail.group_end_timestamp, this.groupDetail.group_status)
         this.groupEndTime = `${res.hour}:${res.minute}:${res.second}`
-        this.timer = setInterval(() => {
-          let res = this._groupTimeCheckout(this.groupDetail.group_end_timestamp)
+        timer = setInterval(() => {
+          let res = this._groupTimeCheckout(this.groupDetail.group_end_timestamp, this.groupDetail.group_status)
           this.groupEndTime = `${res.hour}:${res.minute}:${res.second}`
           if (this.timeEnd) {
-            clearInterval(this.timer)
+            clearInterval(timer)
           }
         }, 1000)
       },
       // 引入时间戳（秒）换算出时间差
-      _groupTimeCheckout(time) {
+      _groupTimeCheckout(time, status) {
         let nowSecond = parseInt(Date.now() / 1000)
         let differ = time * 1 - nowSecond
         let hour = Math.floor(differ / (60 * 60))
@@ -209,7 +207,7 @@
         let second = Math.floor(differ) - (hour * 60 * 60) - (minute * 60)
         second = second >= 10 ? second : '0' + second
         let times
-        if (differ > 0) {
+        if (differ > 0 && +status === 0) {
           times = {
             hour,
             minute,
