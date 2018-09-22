@@ -19,7 +19,8 @@
           <div class="company">{{shopInfo.name}}</div>
         </div>
       </article>
-      <div class="down">"{{shopInfo.intro}}"</div>
+      <div class="down" v-if="shopInfo.intro">"{{shopInfo.intro}}"</div>
+      <div class="down" v-else></div>
     </section>
   </div>
 </template>

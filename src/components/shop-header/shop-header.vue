@@ -211,6 +211,7 @@
     .distance-wrapper
       layout(row, block, nowrap)
       align-items: center
+      padding-bottom: 20px
       .left
         width: 67%
         .address
