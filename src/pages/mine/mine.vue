@@ -183,6 +183,7 @@
             border: 1.5px solid $color-FFFFFF
             border-radius: 50%
             position: relative
+            box-sizing: border-box
             .bargain-circle-box
               position: absolute
               all-center()
