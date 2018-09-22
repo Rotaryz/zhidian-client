@@ -91,7 +91,7 @@
         wx.navigateTo({ url })
       },
       toIndex() {
-        let url = '/pages/guide'
+        let url = '/pages/shop'
         wx.switchTab({url})
       },
       async joinGroup() {

@@ -16,6 +16,10 @@
         contentAnimation: ''
       }
     },
+    onUnload() {
+      this.showCover = false
+      this.contentAnimation = ''
+    },
     methods: {
       show() {
         if (this.showCover) {

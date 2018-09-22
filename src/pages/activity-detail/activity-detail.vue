@@ -36,8 +36,8 @@
       </div>
       <div class="goods-msg-right">
         <div class="right-box-container" @click="showShareModel">
+          <img :src="imageUrl + '/zd-image/mine/icon-share_xq@2x.png'" v-if="imageUrl" class="msg-right-icon">
           <span class="msg-right-txt">{{goodsDetail.share_count}}人分享</span>
-          <img :src="imageUrl + '/zd-image/mine/icon-share@2x.png'" v-if="imageUrl" class="msg-right-icon">
         </div>
       </div>
     </div>
@@ -93,7 +93,7 @@
     <detail-content ref="detailContent" :goodsDetail="goodsDetail" @noRefresh="noRefresh"></detail-content>
     <div class="pay-order-bottom border-top-1px">
       <div class="left-box">
-        <div class="left-item">
+        <div class="left-item" @click="toIndex">
           <img :src="imageUrl + '/zd-image/mine/icon-shop_xq@2x.png'" v-if="imageUrl" class="item-icon">
           <div class="item-txt">进入店铺</div>
         </div>
@@ -191,6 +191,10 @@
       },
       showShareModel() {
         this.$refs.share.show()
+      },
+      toIndex() {
+        let url = `/pages/guide`
+        wx.switchTab({url})
       },
       async payOrderMsg() {
         await this._checkHasPhone()
@@ -492,12 +496,15 @@
             font-family: DINAlternate-Bold
             color: $color-white
     .goods-msg
-      padding: 10px 15px
+      padding: 0 15px
       background: $color-white
       display: flex
+      min-height: 84px
       justify-content: space-between
+      align-items: center
       .goods-msg-left
         flex: 1
+        padding: 10px 0
         overflow: hidden
         .goods-title
           font-family: $font-family-medium
@@ -536,24 +543,21 @@
             font-size: $font-size-14
             margin-bottom: 2px
       .goods-msg-right
-        width: 85px
-        display: flex
-        align-items: center
-        justify-content: flex-end
+        height: 100%
         .right-box-container
-          height: 36px
+          height: 100%
           display: flex
+          flex-direction: column
           align-items: center
-          justify-content: flex-end
+          justify-content: center
           font-size: 0
           .msg-right-txt
             font-family: $font-family-regular
             color: $color-99A0AA
-            font-size: $font-size-14
-            margin-right: 5px
+            font-size: $font-size-12
           .msg-right-icon
-            width: 16px
-            height: 16px
+            width: 60px
+            height: 60px
 
     .group-list-box
       padding: 0 15px
