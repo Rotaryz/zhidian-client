@@ -1,6 +1,5 @@
 <template>
   <article class="guide">
-    <button @click="test2">123</button>
     <back-shop v-if="mineShop"></back-shop>
     <guide-header :shopInfo="shopInfo" :employee="employee"></guide-header>
     <guide-active :groupList="groupData.list" :cutList="cutData.list" :selectTab="selectTab" @changeTab="changeTab"></guide-active>
@@ -78,9 +77,6 @@
       }
     },
     methods: {
-      test2() {
-        this.$getFormId()
-      },
       changeTab(index) {
         this.selectTab = index
         switch (index) {

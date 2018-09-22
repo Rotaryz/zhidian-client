@@ -41,10 +41,11 @@ export default {
     wx.setStorageSync('errorUrl', url)
   },
   onHide() {
-    this._sendFormId()
   },
   onUnload() {
     // await this._sendFormId()
+    this.timer && clearTimeout(this.timer)
+    this.timer && clearInterval(this.timer)
     this._resetData()
   },
   methods: {

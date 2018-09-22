@@ -1,6 +1,6 @@
 <template>
   <div class="guide-header">
-    <section class="logo-wrapper" @click="test">
+    <section class="logo-wrapper">
       <img class="img" mode="aspectFill" :src="shopInfo.image_url" alt="">
       <button class="share-btn">
         <img class="share-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share_dg@2x.png'" alt="">
@@ -42,10 +42,6 @@
     created() {
     },
     methods: {
-      test() {
-        this.$getFormId()
-        console.log(1231)
-      },
       async editorAvatar() {
         try {
           let res = await this.$wechat.chooseImage()

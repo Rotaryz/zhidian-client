@@ -1,9 +1,13 @@
 <template>
   <div class="shop-content">
     <section class="tab-container">
-      <ul class="tab-wrapper">
-        <li class="tab-item" v-for="(item, index) in tabList" :key="index" @click="changeTab(index)">{{item.title}}</li>
-      </ul>
+      <form report-submit @submit="$getFormId">
+        <ul class="tab-wrapper">
+          <li class="tab-item" v-for="(item, index) in tabList" :key="index" @click="changeTab(index)">
+            <button formType="submit">{{item.title}}</button>
+          </li>
+        </ul>
+      </form>
       <div class="tab-line-wrapper" :style="'transform: translate3d(' + selectTab*100 + '%,0,0)'">
         <div class="tab-line"></div>
       </div>
@@ -96,6 +100,10 @@
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
+
+  button
+    reset-button()
+    display: inline-block
 
   .shop-content
     position: relative
