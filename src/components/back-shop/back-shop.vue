@@ -1,5 +1,5 @@
 <template>
-  <div class="shop" v-if="mineShop">
+  <div class="shop">
     <div class="back-shop">
       <p class="back-name">您正在浏览</p>
       <p class="back-title">{{name}}</p>
@@ -16,11 +16,6 @@
     data() {
       return {
         name: ''
-      }
-    },
-    computed: {
-      mineShop() {
-        return !this.$isMyShop() && this.$hasShop()
       }
     },
     async onLoad() {
