@@ -1,7 +1,7 @@
 <template>
   <div class="guide-header">
     <section class="logo-wrapper">
-      <img class="img" mode="aspectFill" :src="employee.head_image_url || url" alt="">
+      <img class="img" mode="aspectFill" :src="shopInfo.image_url" alt="">
       <button class="share-btn">
         <img class="share-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share_dg@2x.png'" alt="">
         <div class="share-txt">分享</div>
@@ -11,15 +11,15 @@
     <section class="content">
       <article class="top">
         <div class="avatar-wrapper">
-          <img class="avatar" mode="aspectFill" :src="employee.avatar || url" alt="">
+          <img class="avatar" mode="aspectFill" :src="employee.avatar" alt="">
         </div>
-        <div class="name">{{employee.nickname || '刘辉'}}</div>
+        <div class="name">{{employee.nickname}}</div>
         <div class="detail">
-          <div class="position">{{shopInfo.position || '美容导师'}}</div>
-          <div class="company">{{shopInfo.name || '广州国颐堂养发SPA馆'}}</div>
+          <div class="position">{{shopInfo.position}}</div>
+          <div class="company">{{shopInfo.name}}</div>
         </div>
       </article>
-      <div class="down">"{{shopInfo.intro || '黑夜给了我黑色的眼睛我却用它来寻找光明'}}"</div>
+      <div class="down">"{{shopInfo.intro}}"</div>
     </section>
   </div>
 </template>
@@ -38,7 +38,6 @@
     },
     data() {
       return {
-        url: this.$parent.$imageUrl + '/zd-image/test-img/1@1x.png'// todo
       }
     },
     created() {

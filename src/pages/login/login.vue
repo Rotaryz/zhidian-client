@@ -16,9 +16,11 @@
   import { Jwt } from 'api'
   import {mapGetters} from 'vuex'
   import { checkIsTabPage } from 'common/js/util'
+  import ImMixin from 'common/mixins/im-mixin'
   const LOGINPAGE = '/pages/login'
   const INDEX = '/pages/guide'
   export default {
+    mixins: [ImMixin],
     data() {
       return {
         imgUrl: this.$imageUrl,

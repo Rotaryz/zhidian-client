@@ -104,7 +104,7 @@
               this.$wechat.tipSuccess('修改图片成功')
               setTimeout(() => {
                 this.pageBack()
-              }, 2000)
+              }, 530)
             }).catch(e => console.error(e))
             break
           default:
