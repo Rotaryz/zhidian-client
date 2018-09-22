@@ -51,3 +51,27 @@ export const setCurrentMsg = ({ commit, state }, info) => {
 export const setImIng = ({ commit, state }, boolean) => {
   commit(types.SET_IMING, boolean)
 }
+
+export const setImLogin = ({ commit, state }, boolean) => {
+  commit(types.SET_IM_LOGIN, boolean)
+}
+
+export const setDescMsg = ({ commit, state }, scene) => {
+  commit(types.DESC_MSG, scene)
+}
+
+export const clearBehaviorList = ({ commit, state }) => {
+  commit(types.CLEAR_BEHAVIOR_LIST)
+}
+
+export const setNowCountNum = ({ commit, state }, num) => {
+  commit(types.SET_NOW_COUNT_NUM, num)
+}
+
+export const setNowCount = ({ commit, state }, type) => {
+  commit(types.SET_NOW_COUNT, type)
+}
+
+export const addNowChat = ({ commit, state }, msg) => {
+  commit(types.ADD_NOW_CHAT, msg)
+}

@@ -23,3 +23,15 @@ export const SET_BEHAVIOR_LIST = 'SET_BEHAVIOR_LIST'
 export const SET_CURRENT_MSG = 'SET_CURRENT_MSG'
 
 export const SET_IMING = 'SET_IMING'
+
+export const SET_IM_LOGIN = 'SET_IM_LOGIN'
+
+export const DESC_MSG = 'DESC_MSG'
+
+export const CLEAR_BEHAVIOR_LIST = 'CLEAR_BEHAVIOR_LIST'
+
+export const SET_NOW_COUNT_NUM = 'SET_NOW_COUNT_NUM'
+
+export const SET_NOW_COUNT = 'SET_NOW_COUNT' // 设置当前对象未读数
+
+export const ADD_NOW_CHAT = 'ADD_NOW_CHAT'
