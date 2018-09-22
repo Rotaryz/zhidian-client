@@ -1,11 +1,11 @@
 import { Im } from 'api'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   computed: {
     ...mapGetters([
       'currentMsg',
-      // 'imIng',
+      'imIng',
       'behaviorList',
       'imLogin',
       'descMsg',
@@ -13,23 +13,18 @@ export default {
     ])
   },
   methods: {
+    ...mapActions([
+      'setImLogin',
+      'setCurrentMsg',
+      'setDescMsg',
+      'clearBehaviorList',
+      'setNowCountNum'
+    ]),
     async loginIm() {
       let userInfo = wx.getStorageSync('userInfo')
       let imAccount = userInfo.im_account
       this.$checkIsMyShop(() => {
-        console.log(this.$isBoss())
-        console.log(this.$isMyShop())
-        console.log(this.$hasShop())
       })
-      // let shopId = wx.getStorageSync('myShopId')
-      // Im.checkHasShop(false).then((res) => {
-      //   if (res.error === this.$ERR_OK) {
-      //     if (res.data.is_shop) {
-      //       wx.setStorageSync('myShopId', res.data.employee_id)
-      //     }
-      //     this.setBoss(res.data.is_boss)
-      //   }
-      // })
       Im.getImInfo(imAccount, false).then(async (res) => {
         if (res.error === this.$ERR_OK) {
           let imInfo = res.data
@@ -49,14 +44,13 @@ export default {
             }, // 选填
             'onMsgNotify': async (msg) => {
               let res = await this.$webimHandler.onMsgNotify(msg)
-              console.log(res)
-              // if (this.currentMsg.account && (res.fromAccount === this.currentMsg.account)) {
-              //   if (!this.imIng) {
-              //     this.setNowCount('add')
-              //   } else {
-              //     this.addNowChat(res)
-              //   }
-              // }
+              if (this.currentMsg.account && (res.fromAccount === this.currentMsg.account)) {
+                if (!this.imIng) {
+                  this.setNowCount('add')
+                } else {
+                  this.addNowChat(res)
+                }
+              }
             }, // 监听新消息(私聊(包括普通消息和全员推送消息)，普通群(非直播聊天室)消息)事件，必填
             'onGroupSystemNotifys': (msg) => {
             } // 监听（多终端同步）群系统消息事件，必填
@@ -69,8 +63,8 @@ export default {
 
           let avatar = userInfo.avatar
           this.$webimHandler.sdkLogin(loginInfo, listeners, options, avatar).then(async () => {
-            // this.setImLogin(true)
-            // await this.getEmployeeConect()
+            this.setImLogin(true)
+            await this.getEmployeeConect()
           })
         }
       }).catch(e => console.error(e))
@@ -89,7 +83,6 @@ export default {
           from_id: this.fromMsg.fromId
         }
         let resData = await Im.getConect(reqData, false)
-        console.log(resData, '==========')
         if (resData.error === this.$ERR_OK) {
           let currentMsg = {
             shopId: resData.data.shop_id,
@@ -100,37 +93,35 @@ export default {
           }
           let descMsg = {
             flow_id: resData.data.flow_id,
-            card_holder_id: resData.data.card_holder_id,
+            store_id: resData.data.store_id,
             merchant_id: resData.data.merchant_id,
             shop_id: resData.data.shop_id,
             customer_id: userInfo.id,
             customer_name: userInfo.nickname
           }
-          console.log(currentMsg)
-          console.log(descMsg)
-          // wx.setStorageSync('merchantId', resData.data.merchant_id)
-          // this.setCurrentMsg(currentMsg)
-          // this.setDescMsg(descMsg)
-          // // 执行待完成的行为动作数组
-          // if (this.behaviorList.length && shopId) {
-          //   Promise.all(this.behaviorList.map((item) => {
-          //     let opt = Object.assign({}, item, { desc: JSON.stringify(descMsg) })
-          //     return this.$webimHandler.onSendCustomMsg(opt, this.currentMsg.account)
-          //   })).then(() => {
-          //     this.clearBehaviorList()
-          //   })
-          // }
-          // // 读取当前员工的未读信息, 没有则设置成1(欢迎语)
-          // if (resData.data.ever_talked) {
-          //   let count = await this.$webimHandler.getAnyUnread(this.currentMsg.account)
-          //   this.setNowCountNum(count)
-          // } else {
-          //   this.setNowCountNum(1)
-          // }
+          wx.setStorageSync('merchantId', resData.data.merchant_id)
+          this.setCurrentMsg(currentMsg)
+          this.setDescMsg(descMsg)
+          // 执行待完成的行为动作数组
+          if (this.behaviorList.length && shopId) {
+            Promise.all(this.behaviorList.map((item) => {
+              let opt = Object.assign({}, item, { desc: JSON.stringify(descMsg) })
+              return this.$webimHandler.onSendCustomMsg(opt, this.currentMsg.account)
+            })).then(() => {
+              this.clearBehaviorList()
+            })
+          }
+          // 读取当前员工的未读信息, 没有则设置成1(欢迎语)
+          if (resData.data.ever_talked) {
+            let count = await this.$webimHandler.getAnyUnread(this.currentMsg.account)
+            this.setNowCountNum(count)
+          } else {
+            this.setNowCountNum(1)
+          }
         }
       }
     },
-    async sendCustomMsg(code, obj) {
+    async sendCustomMsg(code, obj = {}) {
       code = +code
       let descMsg
       if (code === 20005) {
@@ -156,58 +147,12 @@ export default {
       }
       let desc = JSON.stringify(descMsg)
       let ext = code.toString()
-      let data = JSON.stringify({})
+      let data = JSON.stringify(obj)
       switch (code) {
         case 20005:
-          data = obj.product
+          data = JSON.stringify(obj.product)
           break
-        case 10001:
-        case 10002:
-        case 10003:
-        case 10004:
-        case 10005:
-        case 10006:
-        case 10007:
-        case 30001:
-        case 30002:
-        case 30003:
-        case 30004:
-        case 30005:
-        case 30006:
-        case 30007:
-        case 30008:
-        case 30009:
-        case 30010:
-        case 30011:
-        case 30012:
-        case 30013:
-        case 30014:
-        case 30015:
-        case 30016:
-        case 30017:
-        case 30018:
-        case 30019:
-        case 30020:
-        case 30021:
-        case 30022:
-        case 30023:
-        case 40001:
-        case 40002:
-        case 40003:
-        case 40004:
-        case 40005:
-        case 40006:
-        case 40007:
-        case 50001:
-        case 50002:
-        case 50003:
-        case 50004:
-        case 50005:
-        case 60001:
-        case 60002:
-        case 60003:
-        case 60004:
-          data = obj
+        default:
           break
       }
       let option = {
