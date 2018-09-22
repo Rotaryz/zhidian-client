@@ -34,7 +34,6 @@
       }
     },
     onUnload() {
-      console.log(this)
       this.roleAnimation = ''
       this.coverAnimation = ''
       this.showCover = false

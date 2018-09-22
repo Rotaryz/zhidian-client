@@ -20,21 +20,21 @@
       </div>
       <div class="goods-msg-right">
         <div class="right-box-container" @click="showShareModel">
+          <img :src="imageUrl + '/zd-image/mine/icon-share_xq@2x.png'" v-if="imageUrl" class="msg-right-icon">
           <span class="msg-right-txt">{{goodsDetail.share_count}}人分享</span>
-          <img :src="imageUrl + '/zd-image/mine/icon-share@2x.png'" v-if="imageUrl" class="msg-right-icon">
         </div>
       </div>
     </div>
-    <detail-content ref="detailContent" :goodsDetail="goodsDetail"></detail-content>
+    <detail-content ref="detailContent" :goodsDetail="goodsDetail" @noRefresh="noRefresh"></detail-content>
     <div class="pay-order-bottom border-top-1px">
       <div class="left-box">
-        <div class="left-item">
+        <div class="left-item" @click="toIndex">
           <img :src="imageUrl + '/zd-image/mine/icon-shop_xq@2x.png'" v-if="imageUrl" class="item-icon">
-          <div class="item-txt">进店铺</div>
+          <div class="item-txt">进入店铺</div>
         </div>
         <div class="left-item">
           <img :src="imageUrl + '/zd-image/mine/icon-service@2x.png'" v-if="imageUrl" class="item-icon">
-          <div class="item-txt">客服</div>
+          <div class="item-txt">联系店家</div>
         </div>
       </div>
       <div class="right-box" @click="payOrderMsg" v-if="goodsDetail.stock">立即购买</div>
@@ -51,7 +51,7 @@
   import Share from 'components/share/share'
   import { Goods } from 'api'
   import { getParams } from 'common/js/util'
-  import {mapGetters} from 'vuex'
+  import {mapGetters, mapActions} from 'vuex'
   export default {
     data() {
       return {
@@ -63,10 +63,16 @@
         goodsDetail: {},
         code: '',
         hasPhone: false,
-        userInfo: {}
+        userInfo: {},
+        refreshPage: true
       }
     },
-    async onLoad(options) {
+    async onShow() {
+      if (!this.refreshPage) {
+        this.refreshPage = true
+        return
+      }
+      let options = this.$root.$mp.page.options
       if (options.shopId) {
         this.shopId = options.shopId
         wx.setStorageSync('shopId', options.shopId)
@@ -86,14 +92,39 @@
       await this._checkHasPhone()
     },
     methods: {
+      ...mapActions([
+        'setGoodsDrawInfo'
+      ]),
       test() {
         this.$showToast('askjdhakdhashd')
+      },
+      noRefresh() {
+        this.refreshPage = false
       },
       bannerChange(e) {
         this.currentNum = e.mp.detail.current * 1 + 1
       },
       showShareModel() {
         this.$refs.share.show()
+      },
+      toIndex() {
+        let url = `/pages/guide`
+        wx.switchTab({url})
+      },
+      friendShare() {
+
+      },
+      getPicture () {
+        let picMsg = {
+          title: this.goodsDetail.goods_title,
+          explain: '',
+          mark: '',
+          price: this.goodsDetail.platform_price,
+          goodsImg: this.goodsDetail.image_url
+        }
+        this.setGoodsDrawInfo(picMsg)
+        let type = 0
+        this.$wx.navigateTo({url: `goods-make-poster?type=${type}&id=${this.reqGoodsId}`})
       },
       async payOrderMsg() {
         await this._checkHasPhone()
@@ -181,12 +212,15 @@
           font-size: $font-size-16
           color: $color-white
     .goods-msg
-      padding: 10px 15px
+      padding: 0 15px
       background: $color-white
       display: flex
+      min-height: 84px
       justify-content: space-between
+      align-items: center
       .goods-msg-left
         flex: 1
+        padding: 10px 0
         overflow: hidden
         .goods-title
           font-family: $font-family-medium
@@ -196,6 +230,8 @@
           letter-spacing: 0.6px
           overflow: hidden
           width: 100%
+          white-space: normal
+          word-break: break-all
           text-overflow: ellipsis
           display: -webkit-box
           -webkit-line-clamp: 2
@@ -223,24 +259,21 @@
             font-size: $font-size-14
             margin-bottom: 2px
       .goods-msg-right
-        padding-left: 15px
-        display: flex
-        align-items: center
-        justify-content: flex-end
+        height: 100%
         .right-box-container
-          height: 36px
+          height: 100%
           display: flex
+          flex-direction: column
           align-items: center
-          justify-content: flex-end
+          justify-content: center
           font-size: 0
           .msg-right-txt
             font-family: $font-family-regular
             color: $color-99A0AA
-            font-size: $font-size-14
-            margin-right: 5px
+            font-size: $font-size-12
           .msg-right-icon
-            width: 16px
-            height: 16px
+            width: 60px
+            height: 60px
 
     .pay-order-bottom
       width: 100vw
@@ -253,7 +286,7 @@
       display: flex
       align-items: center
       .left-box
-        width: 110px
+        width: 130px
         display: flex
         align-items: center
         .left-item
@@ -267,7 +300,7 @@
           .item-icon
             width: 22px
             height: 22px
-            margin-bottom: 4px
+            margin-bottom: 6px
           .item-txt
             font-size: $font-size-10
             font-family: $font-family-regular

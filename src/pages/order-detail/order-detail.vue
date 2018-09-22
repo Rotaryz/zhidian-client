@@ -73,14 +73,12 @@
 <script>
   import { Order } from 'api'
   import CouponCode from 'components/coupon-code/coupon-code'
-  import clearWatch from 'common/mixins/clear-watch'
 
   const MANAGER = { payment: '去支付', waiting_groupon: '拼团详情', success_groupon: '拼团详情', fail_groupon: '拼团详情' }
 
   const GROUND_STATUS = ['拼团中', '拼团成功']
   const GROUND_END = ['拼团中', '拼团失败', '退款成功']
   export default {
-    mixins: [clearWatch],
     name: 'order-detail',
     data() {
       return {
@@ -95,9 +93,13 @@
         groupDetail: null
       }
     },
-    async onLoad(option) {
-      let id = option.id || 0
+    async onShow() {
+      let id = this.$root.$mp.page.options.id
       await this._orderDetail(id, true)
+    },
+    onUnload() {
+      clearTimeout(this.timer)
+      this.groupDetail = {}
     },
     methods: {
       async cancel() {
@@ -111,12 +113,16 @@
         this.couponDetail = { name: this.detail.goods_title, goods_image: this.detail.goods_image_url, time: coupon.end_at, qrcode_url: coupon.qrcode_url, code: coupon.code }
         this.$refs.couponCode.show()
       },
-      _goShop() {
-        this.$turnShop({ id: this.detail.shop_id, url: '/pages/guide' })
+      async _goShop() {
         //  跳转店铺首页，切店
+        await this.$turnShop({ id: this.detail.shop_id, url: '/pages/guide' })
       },
-      _goCommodity() {
-        this.$turnShop({ id: this.detail.shop_id, url: `/pages/activity-detail?goodsId=${this.detail.id}` })
+      async _goCommodity() {
+        if (this.groupDetail) {
+          await this.$turnShop({ id: this.detail.shop_id, url: `/pages/activity-detail?goodsId=${this.groupDetail.group_id}` })
+          return
+        }
+        await this.$turnShop({ id: this.detail.shop_id, url: `/pages/activity-detail?goodsId=${this.detail.order_details[0].goods_id}` })
         //  跳转商品详情，切店
       },
       async _deal() {
@@ -148,6 +154,8 @@
             })
             break
           default:
+            // wx.navigateTo({ url: `/pages/group-detail?groupId=${this.groupDetail.group_id}` })
+            await this.$turnShop({ id: this.detail.shop_id, url: `/pages/group-detail?groupId=${this.groupDetail.group_id}` })
         }
       },
       async _orderDetail(id, loading) {
@@ -160,24 +168,17 @@
         this.detail = res.data
         this.groupDetail = this.detail.groupon_data.length === 0 ? null : this.detail.groupon_data
         if (this.groupDetail) {
-          let status = this.groupDetail.group_end_timestamp
+          let status = this.groupDetail.group_status
           // 拼团状态
+          this.groundNow = status + 1
           switch (status) {
+            case 0:
+              this.groundStatus = GROUND_STATUS
+              break
             case 1:
+              this.groundStatus = GROUND_STATUS
+              break
             case 2:
-              this.groundNow = 1
-              this.groundStatus = GROUND_STATUS
-              break
-            case 3:
-              this.groundNow = 2
-              this.groundStatus = GROUND_STATUS
-              break
-            case 5:
-              this.groundNow = 2
-              this.groundStatus = GROUND_END
-              break
-            case 6:
-              this.groundNow = 3
               this.groundStatus = GROUND_END
               break
           }
@@ -254,7 +255,7 @@
           height: 18px
         .order-name
           height: $font-size-16
-          line-height: 1.1
+          line-height: 1
           font-family: $font-family-medium
           font-size: $font-size-16
           color: $color-1F1F1F

@@ -1,5 +1,5 @@
 <template>
-  <div class="blank">
+  <div class="blank" :style="styles">
     <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/pic-empty@2x.png'" class="blank-img">
     <p class="blank-title">空空如也~</p>
   </div>
@@ -7,7 +7,11 @@
 
 <script>
   export default {
-    name: 'blank'
+    name: 'blank',
+    props: {
+      styles: String,
+      default: ''
+    }
   }
 </script>
 

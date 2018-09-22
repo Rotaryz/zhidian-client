@@ -57,3 +57,5 @@ export default {
     }
   }
 }
+
+export const _this = app

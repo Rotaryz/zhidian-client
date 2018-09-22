@@ -29,7 +29,7 @@
           <div class="information">
             <div class="time">
               {{item.created_at}}
-              <p  class="del" @click="_delItem(index)">删除</p>
+              <p v-if="item.can_delete" class="del" @click="_delItem(index)">删除</p>
             </div>
             <div class="share" :class="{'share-active': item.show}">
               <div class="share-item comment" @click="_comment(item.id)">
@@ -191,6 +191,7 @@
   import DynamicShare from 'components/dynamic-share/dynamic-share'
   import Share from 'components/share/share'
   import imMixin from 'common/mixins/im-mixin'
+  import {mapGetters, mapActions} from 'vuex'
 
   export default {
     mixins: [imMixin],
@@ -218,25 +219,46 @@
         testShow: 0, // 重要，勿删
         isShowBox: true,
         qrCode: '',
-        isMine: true
+        isMine: false
       }
     },
     async onLoad(option) {
       await this._getQuery(option)
-      // this.$wx.setStorageSync('employeeId', 100001)
-      // this.$wx.setStorageSync('token', '8ab4795567cb2e07245d89bbd1ea1a8e2d05416a')
       this.loadMoreDy = true
       this.dynamicList = []
       this.page = 1
       setTimeout(() => {
         this._getList()
-        this.shopId = this.$wx.getStorageSync('shopId') ? wx.getStorageSync('shopId') * 1 : ''
-        this.myShopId = this.$wx.getStorageSync('myShopId') ? wx.getStorageSync('myShopId') * 1 : null
+        this.shopId = this.$wx.getStorageSync('shopId') ? this.$wx.getStorageSync('shopId') * 1 : ''
+        this.myShopId = this.$wx.getStorageSync('myShopId') ? this.$wx.getStorageSync('myShopId') * 1 : null
         this._getDrawPosterInfo() // 获取画海报的信息
       }, 500)
     },
     onShow() {
       this.$wx.setNavigationBarTitle({ title: '动态' })
+      this.isMine = this.$isMyShop()
+      this._getDrawPosterInfo() // 获取画海报的信息
+      this.shopId = wx.getStorageSync('shopId') ? this.$wx.getStorageSync('shopId') * 1 : ''
+      this.myShopId = wx.getStorageSync('myShopId') ? this.$wx.getStorageSync('myShopId') * 1 : null
+      this.sendCustomMsg(50001)
+      if (this.isLoadDy) {
+        this.loadMoreDy = true
+        this.dynamicList = []
+        this.page = 1
+        this._getList()
+        this.setIsLoadDy(false)
+      }
+      this.$wx.getSetting({
+        success: (data) => {
+          if (data.authSetting['scope.writePhotosAlbum'] && this.activeInd !== 0) {
+            this.$wechat.showLoading('正在下载图片')
+            this._downImage()
+            this.activeInd = 0
+          } else if (!data.authSetting['scope.writePhotosAlbum']) {
+            this.showDown = false
+          }
+        }
+      })
     },
     onReachBottom() {
       this.page++
@@ -244,10 +266,10 @@
     },
     onShareAppMessage() {
       let id = this.$wx.getStorageSync('userInfo').id
-      let shopId = wx.getStorageSync('shopId')
+      let shopId = this.$wx.getStorageSync('shopId')
       return {
         title: '',
-        path: `/pages/dynamic/dynamic?fromType=3&fromId=${id}&shopId=${shopId}`,
+        path: `/pages/dynamic?fromType=3&fromId=${id}&shopId=${shopId}`,
         success: (res) => {
           // 转发成功
         },
@@ -257,6 +279,7 @@
       }
     },
     methods: {
+      ...mapActions(['setIsLoadDy', 'setShowType']),
       cancel() {
         this.isShowBox = true
       },
@@ -278,10 +301,11 @@
       },
       _getDrawPosterInfo() {
         const data = {
-          'patch': 'pages/dynamic/dynamic',
-          'width': '430',
-          'is_forever': '0',
-          'is_hyaline': '1'
+          'patch': 'pages/dynamic',
+          data: {
+            'from_id': this.$wx.getStorageSync('userInfo').id,
+            'shopId': this.$wx.getStorageSync('shopId')
+          }
         }
         Dynamic.createMiniCode(data, false).then(res => {
           if (res.error !== this.$ERR_OK) {
@@ -401,6 +425,7 @@
         })
       },
       _seeImage(index, image) {
+        this.setShowType(false)
         let imageArr = image.map(item => item.file_url)
         this.$wx.previewImage({
           current: imageArr[index], // 当前显示图片的http链接
@@ -498,10 +523,11 @@
       }
     },
     computed: {
-      isMine() {
-        let status = this.myShopId && this.shopId && this.myShopId === this.shopId
-        return status
-      }
+      ...mapGetters(['isLoadDy'])
+      // isMine() {
+      //   let status = this.myShopId && this.shopId && this.myShopId === this.shopId
+      //   return status
+      // }
     },
     components: {
       ConfirmMsg,

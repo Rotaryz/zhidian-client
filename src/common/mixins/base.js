@@ -1,3 +1,7 @@
+import { Jwt } from 'api'
+import { mapActions } from 'vuex'
+import { checkIsTabPage } from 'common/js/util'
+
 const shareArr = [1007, 1008, 1036, 1044, 1073, 1074]
 const qrCordArr = [1047, 1048, 1049, 1011, 1012, 1013]
 
@@ -18,10 +22,28 @@ export default {
       imageUrl: this.$imageUrl
     }
   },
+  onLoad() {
+    // 记录页面栈
+    let url = this.$root.$mp.page.route
+    let status = checkIsTabPage(url)
+    let query = this.$root.$mp.query
+    if (!status) {
+      let string = ''
+      for (let value in query) {
+        string = `&${value}=${query[value]}`
+      }
+      url = string ? `${url}?${string.slice(1)}` : url
+    }
+    if (url.includes('pages/error') || url.includes('pages/error-network')) {
+      return
+    }
+    wx.setStorageSync('errorUrl', url)
+  },
   methods: {
+    ...mapActions(['setIsLoadDy']),
     $showToast(title, duration = 1500, mask = true, icon = 'none') {
       if (!title) return
-      this.$wx.showToast({ title, icon, duration, mask })
+      this.$wx.showToast({title, icon, duration, mask})
     },
     $openSetting() {
       // todo
@@ -32,8 +54,18 @@ export default {
     $entryType(options) {
       return _entryType(options)
     },
-    $turnShop(data) { // 切换店铺
-      // todo
+    async $turnShop(data) { // 切换店铺
+      const {id, url} = data
+      this.setIsLoadDy(true) // 设置动态刷新
+      this.$wechat.showLoading('跳转中')
+      this.$wx.setStorageSync('shopId', id)
+      await this.getEmployeeConect()
+      this.$wechat.hideLoading()
+      if (checkIsTabPage(url)) {
+        this.$wx.switchTab({url})
+      } else {
+        this.$wx.navigateTo({url})
+      }
     },
     $isBoss() {
       return +this.$wx.getStorageSync('userInfoExtend').role_id === this.$role.ROLE_BOSS
@@ -43,6 +75,13 @@ export default {
     },
     $hasShop() {
       return this.$wx.getStorageSync('userInfoExtend').shop_id
+    },
+    $checkIsMyShop(callback) {
+      Jwt.checkIsMyShop().then(res => {
+        if (res.error !== this.$ERR_OK) return
+        res.data && this.$wx.setStorageSync('userInfoExtend', res.data)
+        callback && callback()
+      }).catch(e => console.error(e))
     }
   }
 }

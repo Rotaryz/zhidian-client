@@ -1,6 +1,6 @@
 <template>
   <div class="big-mine">
-    <back-shop v-if="!mineShop"></back-shop>
+    <back-shop></back-shop>
     <div class="mine">
       <div class="mine-msg">
         <img class="mine-header" mode="aspectFill" :src="userInfo.avatar">
@@ -26,7 +26,7 @@
         </navigator>
         <button class="manager-item" v-if="isHasShop" :open-type="openShop">
           <img :src="imageUrl + '/zd-image/mine/icon-openshop@2x.png'" class="manager-image">
-          <p class="manager-image-title">AI雷达智店，我要开店</p>
+          <p class="manager-image-title">我要开店</p>
           <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
         </button>
       </div>
@@ -59,9 +59,6 @@
       this._getBrowserList()
     },
     computed: {
-      mineShop() {
-        return this.$isMyShop()
-      },
       openShop() {
         let type = this.$isMyShop() ? '' : 'contact'
         return type
