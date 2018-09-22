@@ -33,6 +33,15 @@ const mutations = {
   },
   [types.GOODS_DRAW_INFO] (state, obj) {
     state.goodsDrawInfo = obj
+  },
+  [types.SET_BEHAVIOR_LIST] (state, opt) {
+    state.behaviorList.push(opt)
+  },
+  [types.SET_CURRENT_MSG] (state, info) {
+    state.currentMsg = info
+  },
+  [types.SET_IMING] (state, boolean) {
+    state.imIng = boolean
   }
 }
 

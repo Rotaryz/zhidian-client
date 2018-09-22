@@ -21,3 +21,9 @@ export const fromMsg = state => state.fromMsg
 export const isLoadDy = state => state.isLoadDy
 
 export const goodsDrawInfo = state => state.goodsDrawInfo
+
+export const descMsg = state => state.descMsg // im信息des数据
+
+export const behaviorList = state => state.behaviorList
+
+export const imIng = state => state.imIng // 是否正在对话(聊天页面)

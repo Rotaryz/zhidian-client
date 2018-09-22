@@ -1,7 +1,7 @@
 <template>
   <article class="guide">
-    <back-shop></back-shop>
-    <guide-header :shopInfo="shopInfo" :employee="employee"></guide-header>
+    <back-shop v-if="mineShop"></back-shop>
+    <guide-header :shopInfo="shopInfo" :employee="employee" :isMyShop="isMyShop"></guide-header>
     <guide-active :groupList="groupData.list" :cutList="cutData.list" :selectTab="selectTab" @changeTab="changeTab"></guide-active>
   </article>
 </template>
@@ -155,6 +155,14 @@
         } catch (e) {
           console.error(e)
         }
+      }
+    },
+    computed: {
+      mineShop() {
+        return !this.$isMyShop() && this.$hasShop()
+      },
+      isMyShop() {
+        return !!this.$isMyShop()
       }
     }
   }

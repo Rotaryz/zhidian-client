@@ -38,3 +38,16 @@ export const setScene = ({ commit, state }, scene) => {
 export const setGoodsDrawInfo = ({ commit, state }, obj) => {
   commit(types.GOODS_DRAW_INFO, obj)
 }
+
+export const setBehaviorList = ({ commit, state }, opt) => {
+  commit(types.SET_BEHAVIOR_LIST, opt)
+}
+
+// 当前名片信息
+export const setCurrentMsg = ({ commit, state }, info) => {
+  commit(types.SET_CURRENT_MSG, info)
+}
+
+export const setImIng = ({ commit, state }, boolean) => {
+  commit(types.SET_IMING, boolean)
+}

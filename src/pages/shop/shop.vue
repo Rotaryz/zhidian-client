@@ -67,7 +67,6 @@
             this.$showToast(res.message)
             return
           }
-          console.log(res, '-----0-0-')
           this.storyInfo = res.data || {details: []}
         } catch (e) {
           console.error(e)
@@ -82,7 +81,6 @@
           }
           this.photoInfo.pic = res.data[0].url
           this.photoInfo.total = res.meta.total
-          console.log(res)
         } catch (e) {
           console.error(e)
         }
@@ -94,7 +92,6 @@
             this.$showToast(res.message)
             return
           }
-          console.log(res)
           this.shopInfo = res.data || {}
           this.employee = res.data.employee || {}
           this.shopInfo.rate = this._formatStars(this.shopInfo.rate)

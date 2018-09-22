@@ -1,9 +1,13 @@
 <template>
   <div class="shop-content">
     <section class="tab-container">
-      <ul class="tab-wrapper">
-        <li class="tab-item" v-for="(item, index) in tabList" :key="index" @click="changeTab(index)">{{item.title}}</li>
-      </ul>
+      <form report-submit @submit="$getFormId">
+        <ul class="tab-wrapper">
+          <li class="tab-item" v-for="(item, index) in tabList" :key="index" @click="changeTab(index)">
+            <button formType="submit">{{item.title}}</button>
+          </li>
+        </ul>
+      </form>
       <div class="tab-line-wrapper" :style="'transform: translate3d(' + selectTab*100 + '%,0,0)'">
         <div class="tab-line"></div>
       </div>
@@ -17,7 +21,10 @@
           <article class="detail">
             <div class="title">{{item.goods_title}}</div>
             <div class="money">
-              <div class="price">¥{{item.platform_price}}</div>
+              <div class="price">
+                <div class="unit">¥</div>
+                <div class="numbers">{{item.platform_price}}</div>
+              </div>
               <span class="old-price">{{item.original_price}}元</span>
             </div>
           </article>
@@ -97,6 +104,10 @@
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
 
+  button
+    reset-button()
+    display: inline-block
+
   .shop-content
     position: relative
     &:after
@@ -174,12 +185,15 @@
               layout(row, block, nowrap)
               align-items: flex-end
               .price
+                layout(row, block, nowrap)
+                align-items: flex-end
                 font-family: $font-family-bold
-                font-size: 26px
                 color: #000028
-                &:first-letter
+                .numbers
+                  font-size: 26px
+                .unit
                   font-size: $font-size-12
-                  margin-right: 3px
+                  padding: 0 3px 4.5px 0
               .old-price
                 no-wrap()
                 max-width: 50%

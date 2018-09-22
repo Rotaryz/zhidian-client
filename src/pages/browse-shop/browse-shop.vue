@@ -1,14 +1,16 @@
 <template>
   <div class="browse-shop">
-    <div class="browse-shop-small">
-      <div class="browse-shop-item" v-for="(item, index) in browseShopList" :key="index" v-if="browseShopList">
+    <div class="browse-shop-small" v-if="browseShopList">
+      <div class="browse-shop-item" v-for="(item, index) in browseShopList" :key="index" @click="checkShop(item)">
         <img :src="item.employee.avatar" class="browse-shop-logo">
         <span class="browse-shop-name">{{item.name}}</span>
         <img :src="image_url + '/zd-image/mine/icon-pressed@2x.png'" class="list-way">
       </div>
     </div>
     <panel-end v-if="upMore && browseShopList.length * 1 !== 0"></panel-end>
-    <blank v-if="isNull && browseShopList.length * 1 === 0"></blank>
+    <div class="browse-shop" :class="{'album-list-active' : isNull && browseShopList.length * 1 === 0}">
+      <blank v-if="isNull && browseShopList.length * 1 === 0"></blank>
+    </div>
   </div>
 </template>
 
@@ -67,6 +69,9 @@
             this.$showToast(res.message)
           }
         })
+      },
+      async checkShop(item) {
+        await this.$turnShop({ id: item.id, url: '/pages/guide' })
       }
     },
     components: {

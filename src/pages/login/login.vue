@@ -3,7 +3,7 @@
     <img :src="imgUrl + '/ws-image/pic-logo@2x.png'" v-if="imgUrl" class="login-logo">
     <div class="login-title" @click="test">当销冠 用智推</div>
     <img :src="imgUrl + '/ws-image/pic-WeChat authorization_radar@2x.png'" v-if="imgUrl" class="login-icon">
-    <form class="btn-box" report-submit @submit="getFormId">
+    <form class="btn-box" report-submit @submit="$getFormId">
       <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo" class="login-btn" hover-class="none" formType="submit">
         <img :src="imgUrl + '/ws-image/icon-wechat@2x.png'" v-if="imgUrl" class="btn-icon">
         <span class="btn-txt">微信授权</span>
