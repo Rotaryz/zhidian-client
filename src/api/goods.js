@@ -40,5 +40,27 @@ export default {
   checkGroup(data, loading) {
     let url = `/api/customer/groupon-check`
     return request.post(url, data, loading)
+  },
+  /**
+   * 活动分享
+   * @return {*}
+   */
+  goodsShare(id, loading) {
+    let url = `/api/customer/share-goods`
+    let data = {
+      recommend_goods_id: id
+    }
+    return request.post(url, data, loading)
+  },
+  /**
+   * 活动分享
+   * @return {*}
+   */
+  activityShare(id, loading) {
+    let url = `/api/customer/share-goods`
+    let data = {
+      recommend_activity_id: id
+    }
+    return request.post(url, data, loading)
   }
 }

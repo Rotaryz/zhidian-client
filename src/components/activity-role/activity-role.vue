@@ -41,47 +41,47 @@
     methods: {
       closeCover() {
         let roleAnimation = wx.createAnimation({
-          duration: 300,
+          duration: 500,
           timingFunction: 'linear',
           delay: 0
         })
         let coverAnimation = wx.createAnimation({
-          duration: 300,
+          duration: 500,
           timingFunction: 'linear',
           delay: 0
         })
         coverAnimation.opacity(0).step()
-        roleAnimation.scale(0.5).step()
+        roleAnimation.scale(0.2).rotate(360).step()
         this.roleAnimation = roleAnimation.export()
         this.coverAnimation = coverAnimation.export()
         setTimeout(() => {
           coverAnimation.opacity(1).step()
-          roleAnimation.scale(1).step()
+          roleAnimation.scale(1).rotate(0).step()
           this.roleAnimation = roleAnimation.export()
           this.coverAnimation = coverAnimation.export()
           this.showCover = false
-        }, 300)
+        }, 500)
       },
       showModel(type) {
         this.roleType = type || 'group'
         let roleAnimation = wx.createAnimation({
-          duration: 500,
-          timingFunction: 'cubic-bezier(1, -0.07, 0.51, 1.48)',
+          duration: 300,
+          timingFunction: 'linear',
           delay: 0
         })
         let coverAnimation = wx.createAnimation({
-          duration: 500,
+          duration: 300,
           timingFunction: 'linear',
           delay: 0
         })
         coverAnimation.opacity(0).step()
-        roleAnimation.scale(0.5).step()
+        roleAnimation.scale(0.3).rotate(0).step()
         this.roleAnimation = roleAnimation.export()
         this.coverAnimation = coverAnimation.export()
         this.showCover = true
         setTimeout(() => {
           coverAnimation.opacity(1).step()
-          roleAnimation.scale(1).step()
+          roleAnimation.scale(1).rotate(0).step()
           this.roleAnimation = roleAnimation.export()
           this.coverAnimation = coverAnimation.export()
         }, 300)

@@ -85,6 +85,7 @@
         this.paymentMsg = msg
         this.code = msg.code
         this.orderShow = true
+        this.orderNum = 1
         this.total = (this.orderNum * this.paymentMsg.price).toFixed(2)
       },
       hideOrder() {
@@ -345,6 +346,8 @@
           font-family: $font-family-medium
           color: $color-white
           button-style(normal, 22.5px)
+          &:active
+            button-style(click, 22.5px)
         .buy-btn.un-click
           button-style(un-click, 22.5px)
     .show.payment-content

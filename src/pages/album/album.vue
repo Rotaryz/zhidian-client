@@ -27,7 +27,7 @@
         page: 1
       }
     },
-    onShow() {
+    onLoad() {
       this.getMerchantsTitle()
       this.getImgList()
     },
