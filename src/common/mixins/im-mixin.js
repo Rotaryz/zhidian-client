@@ -133,7 +133,6 @@ export default {
     async sendCustomMsg(code, obj) {
       code = +code
       let descMsg
-      if (!descMsg) return // todo
       if (code === 20005) {
         let type = +obj.type
         switch (type) {
@@ -162,27 +161,52 @@ export default {
         case 20005:
           data = obj.product
           break
-        case 20002:
-        case 20003:
-        case 20004:
-        case 20009:
-        case 20010:
-        case 20011:
-        case 20012:
-        case 20013:
-        case 20014:
-        case 20015:
-        case 20016:
-        case 20017:
-        case 20018:
-        case 20019:
-        case 20020:
-        case 60008:
-        case 60009:
-        case 60010:
-        case 60011:
-        case 60012:
-        case 60013:
+        case 10001:
+        case 10002:
+        case 10003:
+        case 10004:
+        case 10005:
+        case 10006:
+        case 10007:
+        case 30001:
+        case 30002:
+        case 30003:
+        case 30004:
+        case 30005:
+        case 30006:
+        case 30007:
+        case 30008:
+        case 30009:
+        case 30010:
+        case 30011:
+        case 30012:
+        case 30013:
+        case 30014:
+        case 30015:
+        case 30016:
+        case 30017:
+        case 30018:
+        case 30019:
+        case 30020:
+        case 30021:
+        case 30022:
+        case 30023:
+        case 40001:
+        case 40002:
+        case 40003:
+        case 40004:
+        case 40005:
+        case 40006:
+        case 40007:
+        case 50001:
+        case 50002:
+        case 50003:
+        case 50004:
+        case 50005:
+        case 60001:
+        case 60002:
+        case 60003:
+        case 60004:
           data = obj
           break
       }
