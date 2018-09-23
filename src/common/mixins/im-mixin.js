@@ -98,7 +98,8 @@ export default {
             merchant_id: resData.data.merchant_id,
             shop_id: resData.data.shop_id,
             customer_id: userInfo.id,
-            customer_name: userInfo.nickname
+            customer_name: userInfo.nickname,
+            employee_id: resData.data.employee_id
           }
           wx.setStorageSync('merchantId', resData.data.merchant_id)
           this.setCurrentMsg(currentMsg)
@@ -167,6 +168,17 @@ export default {
       } else {
         this.setBehaviorList(option)
       }
+      let sendObj = {
+        event_no: code,
+        log_type: 1,
+        total: obj.total,
+        title: obj.title,
+        goods_id: obj.goodsId
+      }
+      this._sendRecord(Object.assign({}, this.descMsg, sendObj))
+    },
+    _sendRecord(obj) {
+      Im.sendRecord(obj)
     }
   }
 }

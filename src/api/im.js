@@ -1,4 +1,5 @@
 import request from 'common/js/request'
+import {baseURL} from 'api/config'
 
 export default {
   // // 授权
@@ -82,6 +83,14 @@ export default {
   getWelcomeMsg(data, loading) {
     const url = `/api/minimerchant/welcome-info`
     return request.post(url, data, loading)
+  },
+  /**
+   * 采集行为消息
+   * @return {*}
+   */
+  sendRecord(data, loading = false) {
+    let url = baseURL.imRecord + '/api/analysis/send-record'
+    return request.get(url, data, loading)
   }
   // // 统计，重要，勿删
   // getCount(type, loading = true) {
