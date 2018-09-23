@@ -108,9 +108,9 @@
         ])
         this.$wechat.hideLoading()
       },
-      async _getShopInfo(loading) {
+      async _getShopInfo(location, loading) {
         try {
-          let res = await Guide.getShopInfo({}, loading)
+          let res = await Guide.getShopInfo(location, loading)
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return

@@ -58,12 +58,23 @@
       async getBaseInfo() {
         this.$wechat.showLoading()
         await Promise.all([
-          this._getShopInfo(false),
+          this._getLocation(false),
           this._getGoodsList(false),
           this._getMerchantsImg(false),
           this._getStory(false)
         ])
         this.$wechat.hideLoading()
+      },
+      async _getLocation(loading) {
+        let location
+        try {
+          const res = await this.$wechat.getLocation('gcj02')
+          location = res
+        } catch (e) {
+          console.error(e)
+        } finally {
+          await this._getShopInfo(location, loading)
+        }
       },
       async _getStory(loading) {
         try {
@@ -90,9 +101,9 @@
           console.error(e)
         }
       },
-      async _getShopInfo(loading) {
+      async _getShopInfo(location, loading) {
         try {
-          let res = await Guide.getShopInfo({}, loading)
+          let res = await Guide.getShopInfo(location, loading)
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return
