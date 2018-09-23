@@ -5,17 +5,25 @@ export default {
    * 获取商品详情
    * @return {*}
    */
-  getGoodsDetail(id, loading) {
+  getGoodsDetail(id, data, loading) {
     let url = `/api/customer/goods/${id}`
-    return request.get(url, loading)
+    return request.get(url, data, loading)
   },
   /**
    * 获取团购活动详情
    * @return {*}
    */
-  getGroupDetail(id, loading) {
+  getGroupDetail(id, data, loading) {
     let url = `/api/customer/groupon-show/${id}`
-    return request.get(url, loading)
+    return request.get(url, data, loading)
+  },
+  /**
+   * 获取砍价活动详情
+   * @return {*}
+   */
+  getBargainDetail(id, data, loading) {
+    let url = `/api/customer/bargain-show/${id}`
+    return request.get(url, data, loading)
   },
   /**
    * 获取某个团的详情
@@ -62,5 +70,13 @@ export default {
       recommend_activity_id: id
     }
     return request.post(url, data, loading)
+  },
+  /**
+   * 砍一刀
+   * @return {*}
+   */
+  kanAction(id, loading) {
+    let url = `/api/customer/bargain-cut/${id}`
+    return request.post(url, {}, loading)
   }
 }

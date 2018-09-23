@@ -24,7 +24,7 @@
           </div>
           <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
         </navigator>
-        <button class="manager-item" v-if="isHasShop" :open-type="openShop">
+        <button class="manager-item" v-if="isHasShop" open-type="contact" :session-from="'open_service,' + shopId" :send-message-img="imageUrl + '/zd-image/mine/pic-openshop@2x.png'" send-message-title="点击下方消息开店" show-message-card="true">
           <img :src="imageUrl + '/zd-image/mine/icon-openshop@2x.png'" class="manager-image">
           <p class="manager-image-title">我要开店</p>
           <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
@@ -51,11 +51,13 @@
         imageUrl: this.$imageUrl,
         length: 1,
         shopList: [],
-        userInfo: {}
+        userInfo: {},
+        shopId: ''
       }
     },
     onShow() {
       this.userInfo = wx.getStorageSync('userInfo')
+      this.shopId = wx.getStorageSync('shopId')
       this._getBrowserList()
     },
     computed: {

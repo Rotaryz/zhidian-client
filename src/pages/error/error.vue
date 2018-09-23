@@ -9,6 +9,9 @@
 <script>
   export default {
     name: 'error-none',
+    onUnload () {
+      wx.setStorageSync('errPage', '')
+    },
     methods: {
       _goGuide() {
         console.log('dd')

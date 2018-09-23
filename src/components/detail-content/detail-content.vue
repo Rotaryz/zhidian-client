@@ -74,7 +74,9 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import ImMixin from 'common/mixins/im-mixin'
   export default {
+    mixins: [ImMixin],
     props: ['goodsDetail'],
     data () {
       return {
@@ -94,6 +96,7 @@
       },
       callShop() {
         this.$emit('noRefresh')
+        this.sendCustomMsg(60001)
         wx.makePhoneCall({
           phoneNumber: this.goodsDetail.shop_data.mobile
         })
