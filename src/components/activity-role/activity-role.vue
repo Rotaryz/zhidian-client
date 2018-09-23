@@ -51,7 +51,7 @@
           delay: 0
         })
         coverAnimation.opacity(0).step()
-        roleAnimation.scale(0.2).rotate(360).step()
+        roleAnimation.scale(0.2).rotate(0).step()
         this.roleAnimation = roleAnimation.export()
         this.coverAnimation = coverAnimation.export()
         setTimeout(() => {

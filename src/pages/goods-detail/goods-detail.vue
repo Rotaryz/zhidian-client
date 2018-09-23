@@ -8,7 +8,7 @@
           </swiper-item>
         </block>
       </swiper>
-      <span class="page-box"><text class="currentNum">{{currentNum}}</text>/{{bannerImgs.length}}</span>
+      <span class="page-box"><text class="currentNum">{{currentNum}}</text>/{{bannerImgs ? bannerImgs.length : ''}}</span>
     </div>
     <div class="goods-msg">
       <div class="goods-msg-left">
@@ -35,7 +35,7 @@
           </button>
         </form>
         <form report-submit class="left-item" @submit="$getFormId">
-          <button hover-class="none" formType="submit" class="left-item">
+          <button hover-class="none" formType="submit" class="left-item" :open-type="hasPhone ? '' : 'getPhoneNumber'" @getphonenumber="getPhone" @click="toChat">
             <img :src="imageUrl + '/zd-image/mine/icon-service@2x.png'" v-if="imageUrl" class="item-icon">
             <div class="item-txt">联系店家</div>
           </button>
@@ -44,8 +44,9 @@
       <form class="right-box outSide" report-submit @submit="$getFormId">
         <button hover-class="none" formType="submit" class="right-box" @click="payOrderMsg" v-if="goodsDetail.stock">立即购买</button>
       </form>
-      <div class="right-box un-click" v-if="!goodsDetail.stock">已抢光</div>
+      <div class="right-box un-click" v-if="!goodsDetail.stock">已售罄</div>
     </div>
+    <div class=""></div>
     <payment ref="payment"></payment>
     <share ref="share" @friendShare="friendShare" @getPicture="getPicture"></share>
   </div>
@@ -55,7 +56,7 @@
   import DetailContent from 'components/detail-content/detail-content'
   import Payment from 'components/payment/payment'
   import Share from 'components/share/share'
-  import { Goods } from 'api'
+  import { Goods, Customer } from 'api'
   import { getParams } from 'common/js/util'
   import {mapGetters, mapActions} from 'vuex'
   import ImMixin from 'common/mixins/im-mixin'
@@ -72,7 +73,11 @@
         code: '',
         hasPhone: false,
         userInfo: {},
-        refreshPage: true
+        refreshPage: true,
+        location: {
+          longitude: '',
+          latitude: ''
+        }
       }
     },
     async onPullDownRefresh() {
@@ -116,6 +121,17 @@
       } else {
         this.reqGoodsId = options.goodsId ? options.goodsId : ''
       }
+      try {
+        let res = await this.$wechat.getLocation()
+        if (res.errMsg === 'getLocation:ok') {
+          this.location = {
+            longitude: res.longitude,
+            latitude: res.latitude
+          }
+        }
+      } catch (err) {
+        console.log(err)
+      }
       await this._getGoodsDetail(this.reqGoodsId)
       await this._checkHasPhone()
       let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
@@ -153,6 +169,38 @@
         let url = `/pages/guide`
         wx.switchTab({url})
       },
+      toChat() {
+        if (!this.hasPhone) return
+        this._toChatAction()
+      },
+      _toChatAction() {
+        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
+        this.sendCustomMsg(60004, msgData)
+        let url = `/pages/chat-msg`
+        wx.navigateTo({url})
+      },
+      getPhone(event) {
+        const e = event.mp
+        if (e.detail.errMsg !== 'getPhoneNumber:ok') {
+          this._toChatAction()
+          return
+        }
+        const iv = e.detail.iv
+        const encryptedData = e.detail.encryptedData
+        const data = { iv, encrypted_data: encryptedData, code: this.code }
+        Customer.setCustomerPhone(data).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            let userInfo = res.data
+            this.paymentMsg.phoneNum = res.data.mobile
+            wx.setStorageSync('userInfo', userInfo)
+            this._toChatAction()
+          } else {
+            this.$showToast(res.message)
+            this._toChatAction()
+          }
+        })
+      },
       friendShare() {
         let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
         this.sendCustomMsg(40004, msgData)
@@ -160,8 +208,6 @@
       },
       getPicture () {
         this._shareReq()
-        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
-        this.sendCustomMsg(40005, msgData)
         let type = 0
         let id = this.reqGoodsId
         let picMsg = {
@@ -196,7 +242,7 @@
         this.$refs.payment.showOrder(paymentMsg)
       },
       async _getGoodsDetail(id, loading = false) {
-        let res = await Goods.getGoodsDetail(id, loading)
+        let res = await Goods.getGoodsDetail(id, this.location, loading)
         this.$wechat.hideLoading()
         if (res.error === this.$ERR_OK) {
           this.bannerImgs = res.data.goods_banner_images
@@ -211,6 +257,8 @@
           if (login.errMsg === 'login:ok') {
             this.code = login.code
           }
+        } else {
+          this.hasPhone = true
         }
       },
       _shareReq() {

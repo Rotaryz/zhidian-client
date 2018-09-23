@@ -104,8 +104,6 @@
       getPhone(event) {
         const e = event.mp
         if (e.detail.errMsg !== 'getPhoneNumber:ok') {
-          let url = `/pages/chat-msg/chat-msg`
-          wx.navigateTo({ url })
           return
         }
         const iv = e.detail.iv
@@ -142,6 +140,7 @@
               recommend_goods_id: this.paymentMsg.recommend_goods_id
             }
             msgCode = 40006
+            msgData.goods_id = this.paymentMsg.recommend_goods_id
             break
           case 'group':
             data = {
@@ -154,6 +153,7 @@
               recommend_activity_id: this.paymentMsg.recommend_activity_id
             }
             msgCode = 30010
+            msgData.activity_id = this.paymentMsg.recommend_activity_id
             break
           case 'bargain':
             msgCode = 30023

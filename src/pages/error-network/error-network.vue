@@ -15,6 +15,9 @@
   export default {
     mixins: [clearWatch],
     name: 'error-none',
+    onUnload () {
+      wx.setStorageSync('errPage', '')
+    },
     methods: {
       _goGuide() {
         let url = '/' + wx.getStorageSync('errorUrl')

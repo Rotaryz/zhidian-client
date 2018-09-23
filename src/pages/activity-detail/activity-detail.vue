@@ -100,7 +100,7 @@
           </button>
         </form>
         <form report-submit class="left-item" @submit="$getFormId">
-          <button hover-class="none" formType="submit" class="left-item">
+          <button hover-class="none" formType="submit" class="left-item" :open-type="hasPhone ? '' : 'getPhoneNumber'" @getphonenumber="getPhone" @click="toChat">
             <img :src="imageUrl + '/zd-image/mine/icon-service@2x.png'" v-if="imageUrl" class="item-icon">
             <div class="item-txt">联系店家</div>
           </button>
@@ -110,19 +110,45 @@
        <button hover-class="none" formType="submit" class="right-box" @click="payOrderMsg" v-if="activityType === 'group' && goodsDetail.stock">¥ {{goodsDetail.platform_price}} {{groupType === 'join' ? '参团' : '开团'}}</button>
       </form>
       <div class="right-box un-click" v-if="activityType === 'group' && goodsDetail.stock == 0">已抢光</div>
-      <form class="right-box outSide" report-submit @submit="$getFormId" v-if="activityType === 'bargain'">
-        <button hover-class="none" formType="submit" class="right-box" @click="payOrderMsg" v-if="activityType === 'bargain'">去砍价</button>
+      <form class="right-box outSide" report-submit @submit="$getFormId" v-if="!timeEnd && activityType === 'bargain' && goodsDetail.stock && !goodsDetail.is_cuted && goodsDetail.left_cut_num">
+        <button hover-class="none" formType="submit" class="right-box" @click="toKanAction" v-if="!timeEnd && activityType === 'bargain' && goodsDetail.stock && !goodsDetail.is_cuted && goodsDetail.left_cut_num">去砍价</button>
       </form>
-      <form class="right-box outSide" report-submit @submit="$getFormId" v-if="activityType === 'bargain'">
-        <button hover-class="none" formType="submit" class="right-box" @click="payOrderMsg" v-if="activityType === 'bargain'">底价 ¥ 90立即购买</button>
+      <form class="right-box outSide" report-submit @submit="$getFormId" v-if="!timeEnd && activityType === 'bargain' && goodsDetail.stock && !goodsDetail.left_cut_num && (goodsDetail.bottom_price * 1 === goodsDetail.platform_price * 1)">
+        <button hover-class="none" formType="submit" class="right-box" @click="payOrderMsg" v-if="!timeEnd && activityType === 'bargain' && goodsDetail.stock && !goodsDetail.left_cut_num && (goodsDetail.bottom_price * 1 === goodsDetail.platform_price * 1)">底价 ¥ {{goodsDetail.bottom_price}}立即购买</button>
       </form>
-      <div class="right-box un-click" v-if="activityType === 'bargain' && !timeEnd && goodsDetail.status && !goodsDetail.stock">已抢光</div>
-      <div class="two-right-box" v-if="activityType === 'bargain'">
+      <div class="right-box un-click" v-if="activityType === 'bargain' && goodsDetail.stock == 0">已抢光</div>
+      <div class="two-right-box" v-if="activityType === 'bargain' && !timeEnd && goodsDetail.stock && goodsDetail.is_cuted && goodsDetail.left_cut_num && (goodsDetail.bottom_price * 1 !== goodsDetail.platform_price * 1)">
         <div class="right-btn black">
-          <span class="btn-top">¥ 90</span>
+          <span class="btn-top">¥ {{goodsDetail.platform_price}}</span>
           <span class="btn-down">立即购买</span>
         </div>
-        <div class="right-btn red">拉朋友砍</div>
+        <button open-type="share" hover-class="none" class="right-btn red">拉朋友砍</button>
+      </div>
+    </div>
+    <div class="bargain-model-cover" :animation="coverAnimation" v-if="bargainModelShow">
+      <div class="bargain-model-container" :animation="centerAnimation">
+        <img :src="imageUrl + '/zd-image/mine/pic-bargaining_succeess@2x.png'" v-if="imageUrl" class="bg-img">
+        <img :src="imageUrl + '/zd-image/mine/pic-bargaining_out@2x.png'" v-if="imageUrl && false" class="bg-img">
+        <div class="bargain-msg-content">
+          <p class="red-title">砍价成功</p>
+          <p class="msg-txt">恭喜你成功帮自己砍掉<span class="red-money"><span class="big-money">{{kanDetail.cut_money}}</span>元</span></p>
+          <p class="msg-txt">人多力量大，拉朋友一起砍吧</p>
+          <div class="coupon-content">
+            <div class="left">
+              <img :src="kanDetail.exchange.image_url" class="left-img" mode="aspectFill">
+              <div class="left-msg">
+                <p class="left-msg-title">{{kanDetail.exchange ? kanDetail.exchange.goods_title : ''}}</p>
+                <p class="left-msg-time">有效期至:{{kanDetail.exchange ? kanDetail.exchange.end_time : ''}}</p>
+              </div>
+            </div>
+            <div class="right">
+              <div class="right-button gold" v-if="kanDetail.exchange && kanDetail.exchange.stock && !hasGetExchange">领取</div>
+              <div class="right-button white" v-if="hasGetExchange">领取成功</div>
+              <div class="right-button ccc" v-if="kanDetail.exchange && !kanDetail.exchange.stock">已领完</div>
+            </div>
+          </div>
+        </div>
+        <img :src="imageUrl + '/zd-image/mine/icon-del@2x.png'" v-if="imageUrl" class="close-btn" @click.stop="hideBargain">
       </div>
     </div>
     <payment ref="payment"></payment>
@@ -136,7 +162,7 @@
   import Payment from 'components/payment/payment'
   import Share from 'components/share/share'
   import ActivityRole from 'components/activity-role/activity-role'
-  import { Goods } from 'api'
+  import { Goods, Customer } from 'api'
   import { getParams } from 'common/js/util'
   import { mapActions } from 'vuex'
   import ImMixin from 'common/mixins/im-mixin'
@@ -165,7 +191,16 @@
         orderGroupType: 'open', // 团购订单类型
         code: '',
         hasPhone: '',
-        refreshPage: true
+        refreshPage: true,
+        coverAnimation: '',
+        centerAnimation: '',
+        bargainModelShow: false,
+        location: {
+          longitude: '',
+          latitude: ''
+        },
+        kanDetail: {},
+        hasGetExchange: false
       }
     },
     async onPullDownRefresh() {
@@ -218,8 +253,20 @@
         this.activityId = options.activityId ? options.activityId : ''
         this.activityType = options.activityType ? options.activityType : ''
       }
+      try {
+        let res = await this.$wechat.getLocation()
+        if (res.errMsg === 'getLocation:ok') {
+          this.location = {
+            longitude: res.longitude,
+            latitude: res.latitude
+          }
+        }
+      } catch (err) {
+        console.log(err)
+      }
       await this._getGoodsDetail(this.activityId, this.activityType)
-      let msgData = {title: this.goodsDetail.goods_title, goods_id: this.activityId}
+      await this._checkHasPhone()
+      let msgData = {title: this.goodsDetail.goods_title, activity_id: this.activityId}
       let msgCode
       switch (this.scene * 1) {
         case 0:
@@ -254,6 +301,98 @@
         let url = `/pages/guide`
         wx.switchTab({url})
       },
+      _toChatAction() {
+        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
+        let msgCode = this.activityType === 'group' ? 60003 : 60002
+        this.sendCustomMsg(msgCode, msgData)
+        let url = `/pages/chat-msg`
+        wx.navigateTo({url})
+      },
+      toChat() {
+        if (!this.hasPhone) return
+        this._toChatAction()
+      },
+      getPhone(event) {
+        const e = event.mp
+        if (e.detail.errMsg !== 'getPhoneNumber:ok') {
+          this._toChatAction()
+          return
+        }
+        const iv = e.detail.iv
+        const encryptedData = e.detail.encryptedData
+        const data = { iv, encrypted_data: encryptedData, code: this.code }
+        Customer.setCustomerPhone(data).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            let userInfo = res.data
+            this.paymentMsg.phoneNum = res.data.mobile
+            wx.setStorageSync('userInfo', userInfo)
+            this._toChatAction()
+          } else {
+            this.$showToast(res.message)
+            this._toChatAction()
+          }
+        })
+      },
+      showBargain() {
+        let centerAnimation = wx.createAnimation({
+          duration: 300,
+          timingFunction: 'linear',
+          delay: 0
+        })
+        let coverAnimation = wx.createAnimation({
+          duration: 300,
+          timingFunction: 'linear',
+          delay: 0
+        })
+        coverAnimation.opacity(0).step()
+        centerAnimation.scale(0.3).step()
+        this.centerAnimation = centerAnimation.export()
+        this.coverAnimation = coverAnimation.export()
+        this.bargainModelShow = true
+        setTimeout(() => {
+          coverAnimation.opacity(1).step()
+          centerAnimation.scale(1).step()
+          this.centerAnimation = centerAnimation.export()
+          this.coverAnimation = coverAnimation.export()
+        }, 300)
+      },
+      hideBargain() {
+        let centerAnimation = wx.createAnimation({
+          duration: 300,
+          timingFunction: 'linear',
+          delay: 0
+        })
+        let coverAnimation = wx.createAnimation({
+          duration: 300,
+          timingFunction: 'linear',
+          delay: 0
+        })
+        coverAnimation.opacity(0).step()
+        centerAnimation.scale(0.3).step()
+        this.centerAnimation = centerAnimation.export()
+        this.coverAnimation = coverAnimation.export()
+        setTimeout(() => {
+          coverAnimation.opacity(1).step()
+          centerAnimation.scale(1).step()
+          this.centerAnimation = centerAnimation.export()
+          this.coverAnimation = coverAnimation.export()
+          this.bargainModelShow = false
+          this.hasGetExchange = false
+          this.kanDetail = {}
+        }, 300)
+      },
+      toKanAction() {
+        Goods.kanAction(this.activityId).then(res => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            this.kanDetail = res.data
+            this.showBargain()
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
       async payOrderMsg() {
         await this._checkHasPhone()
         let userInfo = wx.getStorageSync('userInfo')
@@ -271,7 +410,7 @@
           shopName: this.goodsDetail.shop_data.name,
           shopImg: this.goodsDetail.shop_data.image_url
         }
-        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.activityId}
+        let msgData = {title: this.goodsDetail.goods_title, activity_id: this.activityId}
         switch (this.activityType) {
           case 'group':
             this.orderGroupType = 'open'
@@ -288,15 +427,12 @@
         this.$refs.role.showModel(type)
       },
       friendShare() {
-        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.activityId}
+        let msgData = {title: this.goodsDetail.goods_title, activity_id: this.activityId}
         let msgCode = this.activityType === 'group' ? 30002 : 30016
         this.sendCustomMsg(msgCode, msgData)
         this._shareReq()
       },
       getPicture () {
-        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.activityId}
-        let msgCode = this.activityType === 'group' ? 30003 : 30017
-        this.sendCustomMsg(msgCode, msgData)
         this._shareReq()
         let type = this.activityType === 'group' ? 1 : 3
         let id = this.activityId
@@ -332,7 +468,7 @@
           groupJoinId: item.id
         }
         this.orderGroupType = 'join'
-        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.activityId}
+        let msgData = {title: this.goodsDetail.goods_title, activity_id: this.activityId}
         await this._joinGroup(paymentMsg, item.id)
         this.sendCustomMsg(30008, msgData)
       },
@@ -342,16 +478,16 @@
             this._getGroupDetail(id)
             break
           case 'bargain':
+            this._getKanDetail(id)
             break
         }
       },
       _getGroupDetail(id) {
-        Goods.getGroupDetail(id).then((res) => {
+        Goods.getGroupDetail(id, this.location).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
             this.bannerImgs = res.data.goods_banner_images
             this.goodsDetail = res.data
-            this.activityStatus = res.activity_status
             let groupList = res.data.open_groupon_lists
             let first = groupList.slice(0, 2)
             let second = groupList.slice(2, 4)
@@ -362,6 +498,19 @@
             })
             this.endTime = res.data.end_at_timestamp
             this._groupTimePlay()
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
+      _getKanDetail(id) {
+        Goods.getBargainDetail(id, this.location).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            this.bannerImgs = res.data.goods_banner_images
+            this.goodsDetail = res.data
+            this.endTime = res.data.end_at_timestamp
+            this._kanTimePlay()
           } else {
             this.$showToast(res.message)
           }
@@ -463,6 +612,8 @@
           if (login.errMsg === 'login:ok') {
             this.code = login.code
           }
+        } else {
+          this.hasPhone = true
         }
       },
       async _openGroup(paymentMsg) {
@@ -828,6 +979,7 @@
         display: flex
         align-items: center
         .right-btn
+          reset-button()
           display: flex
           flex-direction: column
           align-items: center
@@ -856,4 +1008,124 @@
           font-family: $font-family-medium
           &:active
             button-style(click, 22.5px)
+    .bargain-model-cover
+      position: fixed
+      left: 0
+      top: 0
+      bottom: 0
+      right: 0
+      z-index: 100
+      background: rgba(31,31,31,0.8)
+      display: flex
+      justify-content: center
+      .bargain-model-container
+        margin-top: 28vw
+        width: 300px
+        height: 320px
+        overflow: hidden
+        position: relative
+        .bg-img
+          width: 100%
+          height: 100%
+          position: absolute
+          left: 0
+          top: 0
+        .bargain-msg-content
+          width: 100%
+          height: 100%
+          position: absolute
+          left: 0
+          top: 0
+          >p
+           text-align: center
+          .red-title
+            padding-top: 100px
+            font-family: $font-family-medium
+            font-size: $font-size-16
+            color: $color-D32F2F
+            letter-spacing: 0.8px
+            margin-bottom: 15px
+          .msg-txt
+            font-family: $font-family-regular
+            line-height: 21px
+            color: $color-455A64
+            font-size: $font-size-14
+            .red-money
+              color: $color-D32F2F
+              margin-left: 3px
+              .big-money
+                font-family: $font-family-medium
+                font-size: $font-size-18
+          .coupon-content
+            width: 270px
+            height: 78px
+            position: absolute
+            bottom: 12px
+            left: 15px
+            display: flex
+            align-items: center
+            .left
+              width: 195px
+              height: 50px
+              display: flex
+              align-items: center
+              .left-img
+                width: 50px
+                height: 50px
+                margin-left: 15px
+                margin-right: 9px
+              .left-msg
+                flex: 1
+                height: 46px
+                overflow: hidden
+                display: flex
+                flex-direction: column
+                justify-content: space-between
+                .left-msg-title
+                  font-family: $font-family-medium
+                  font-size: $font-size-14
+                  width: 100%
+                  overflow: hidden
+                  text-overflow: ellipsis
+                  white-space: nowrap
+                  color: $color-white
+                .left-msg-time
+                  font-family: $font-family-regular
+                  font-size: $font-size-12
+                  width: 100%
+                  overflow: hidden
+                  text-overflow: ellipsis
+                  white-space: nowrap
+                  color: $color-white
+            .right
+              width: 75px
+              height: 100%
+              display: flex
+              align-items: center
+              justify-content: center
+              .right-button
+                width: 60px
+                height: 24px
+                border-radius: 12px
+                line-height: 24px
+                text-align: center
+                font-family: $font-family-regular
+                font-size: $font-size-12
+              .right-button.gold
+                background: $color-FFEEC3
+                color: #935A1d
+              .right-button.white
+                background: $color-white
+                color: $color-D32F2F
+              .right-button.ccc
+                background: rgba(255, 255, 255, 0.6)
+                color: $color-D2D2D2
+        .close-btn
+          width: 12px
+          height: 12px
+          padding: 10px
+          position: absolute
+          right: 5px
+          top: 30px
+
 </style>
