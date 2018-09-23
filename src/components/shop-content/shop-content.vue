@@ -59,9 +59,11 @@
 
 <script type="text/ecmascript-6">
   import Blank from 'components/blank/blank'
+  import imMixin from 'common/mixins/im-mixin'
 
   const tabList = [{title: '服务项目'}, {title: '品牌故事'}]
   export default {
+    mixins: [imMixin],
     components: {
       Blank
     },
@@ -92,6 +94,7 @@
     },
     methods: {
       changeTab(index) {
+        index === 1 && this.sendCustomMsg(40007)
         this.$emit('changeTab', index)
       },
       toGoodsDetail(item) {

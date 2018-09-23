@@ -1,5 +1,5 @@
 import { Jwt } from 'api'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { checkIsTabPage } from 'common/js/util'
 
 const shareArr = [1007, 1008, 1036, 1044, 1073, 1074]
@@ -47,6 +47,9 @@ export default {
     this.timer && clearTimeout(this.timer)
     this.timer && clearInterval(this.timer)
     this._resetData()
+  },
+  computed: {
+    ...mapGetters(['scene'])
   },
   methods: {
     ...mapActions([

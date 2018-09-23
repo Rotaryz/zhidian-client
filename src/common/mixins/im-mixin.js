@@ -24,8 +24,7 @@ export default {
     async loginIm() {
       let userInfo = wx.getStorageSync('userInfo')
       let imAccount = userInfo.im_account
-      this.$checkIsMyShop(() => {
-      })
+      this.$checkIsMyShop(() => {})
       Im.getImInfo(imAccount, false).then(async (res) => {
         if (res.error === this.$ERR_OK) {
           let imInfo = res.data
@@ -107,7 +106,7 @@ export default {
           // 执行待完成的行为动作数组
           if (this.behaviorList.length && shopId) {
             Promise.all(this.behaviorList.map((item) => {
-              let opt = Object.assign({}, item, { desc: JSON.stringify(descMsg) })
+              let opt = Object.assign({}, item, {desc: JSON.stringify(descMsg)})
               return this.$webimHandler.onSendCustomMsg(opt, this.currentMsg.account)
             })).then(() => {
               this.clearBehaviorList()
@@ -150,11 +149,21 @@ export default {
       let desc = JSON.stringify(descMsg)
       let ext = code.toString()
       let data = JSON.stringify(obj)
+      let sendObj = {
+        event_no: code,
+        log_type: 1,
+        total: obj.total,
+        title: obj.title,
+        goods_id: obj.goods_id,
+        activity_id: obj.activity_id
+      }
       switch (code) {
         case 20005:
           data = JSON.stringify(obj.product)
           break
         default:
+          console.log(sendObj)
+          // this._sendRecord(Object.assign({}, this.descMsg, sendObj))
           break
       }
       let option = {
@@ -168,14 +177,6 @@ export default {
       } else {
         this.setBehaviorList(option)
       }
-      let sendObj = {
-        event_no: code,
-        log_type: 1,
-        total: obj.total,
-        title: obj.title,
-        goods_id: obj.goodsId
-      }
-      this._sendRecord(Object.assign({}, this.descMsg, sendObj))
     },
     _sendRecord(obj) {
       Im.sendRecord(obj)

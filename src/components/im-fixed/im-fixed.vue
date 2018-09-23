@@ -12,8 +12,10 @@
 <script type="text/ecmascript-6">
   import { mapGetters, mapActions } from 'vuex'
   import { Jwt } from 'api'
+  // import imMixin from 'common/mixins/im-mixin'
 
   export default {
+    // mixins: [imMixin],
     props: {
       // 是否需要自定义事件
       custom: {
@@ -26,6 +28,7 @@
     methods: {
       ...mapActions(['setChatBtnType']),
       toChat(e) {
+        // this.sendCustomMsg(60001)
         this.$getFormId(e)
         if (this.custom === 'yes') {
           this.$emit('imCustom')

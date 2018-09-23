@@ -12,9 +12,10 @@
   import ImFixed from 'components/im-fixed/im-fixed'
   import { Guide, Shop } from 'api'
   import clearWatch from 'common/mixins/clear-watch'
+  import imMixin from 'common/mixins/im-mixin'
 
   export default {
-    mixins: [clearWatch],
+    mixins: [clearWatch, imMixin],
     components: {
       ShopHeader,
       ShopContent,
@@ -35,6 +36,9 @@
         more: true,
         selectTab: 0
       }
+    },
+    onLoad() {
+      // this._sendRecord()
     },
     async onShow() {
       await this.getBaseInfo()
@@ -64,6 +68,11 @@
           this._getStory(false)
         ])
         this.$wechat.hideLoading()
+      },
+      _sendRecord() {
+        // 0为普通，1为转发，2为扫码
+        let code = this.scene === 1 ? 10002 : this.scene === 2 ? 10001 : 10003
+        this.sendCustomMsg(code)
       },
       async _getLocation(loading) {
         let location

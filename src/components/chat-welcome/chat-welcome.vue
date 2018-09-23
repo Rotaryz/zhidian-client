@@ -30,7 +30,10 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import imMixin from 'common/mixins/im-mixin'
+
   export default {
+    mixins: [imMixin],
     props: {
       welcomeMsg: {
         type: Object,
@@ -44,6 +47,7 @@
     },
     methods: {
       toMobile() {
+        this.sendCustomMsg(60001)
         let telephone = this.welcomeMsg.telephone
         if (!telephone) {
           this.$showToast('商家暂未上传手机号码')
