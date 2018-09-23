@@ -21,7 +21,7 @@
       </div>
       <div class="store-detail border-top-1px">
         <div class="store-left">
-          <div class="store-sub-title">距你340m，步行需要9分钟</div>
+          <div class="store-sub-title">{{goodsDetail.distance}}</div>
         </div>
         <div class="store-right">
           <div class="right-icon-box" @click="showLocation">

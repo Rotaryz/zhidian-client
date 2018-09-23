@@ -53,9 +53,11 @@
         }, 200)
       },
       friendShare() {
+        this.closeCover()
         this.$emit('friendShare')
       },
       getPicture() {
+        this.closeCover()
         this.$emit('getPicture')
       }
     }

@@ -28,20 +28,26 @@
     <detail-content ref="detailContent" :goodsDetail="goodsDetail" @noRefresh="noRefresh"></detail-content>
     <div class="pay-order-bottom border-top-1px">
       <div class="left-box">
-        <div class="left-item" @click="toIndex">
-          <img :src="imageUrl + '/zd-image/mine/icon-shop_xq@2x.png'" v-if="imageUrl" class="item-icon">
-          <div class="item-txt">进入店铺</div>
-        </div>
-        <div class="left-item">
-          <img :src="imageUrl + '/zd-image/mine/icon-service@2x.png'" v-if="imageUrl" class="item-icon">
-          <div class="item-txt">联系店家</div>
-        </div>
+        <form report-submit class="left-item" @submit="$getFormId">
+          <button hover-class="none" formType="submit" class="left-item" @click="toIndex">
+            <img :src="imageUrl + '/zd-image/mine/icon-shop_xq@2x.png'" v-if="imageUrl" class="item-icon">
+            <div class="item-txt">进入店铺</div>
+          </button>
+        </form>
+        <form report-submit class="left-item" @submit="$getFormId">
+          <button hover-class="none" formType="submit" class="left-item">
+            <img :src="imageUrl + '/zd-image/mine/icon-service@2x.png'" v-if="imageUrl" class="item-icon">
+            <div class="item-txt">联系店家</div>
+          </button>
+        </form>
       </div>
-      <div class="right-box" @click="payOrderMsg" v-if="goodsDetail.stock">立即购买</div>
+      <form class="right-box outSide" report-submit @submit="$getFormId">
+        <button hover-class="none" formType="submit" class="right-box" @click="payOrderMsg" v-if="goodsDetail.stock">立即购买</button>
+      </form>
       <div class="right-box un-click" v-if="!goodsDetail.stock">已抢光</div>
     </div>
     <payment ref="payment"></payment>
-    <share ref="share"></share>
+    <share ref="share" @friendShare="friendShare" @getPicture="getPicture"></share>
   </div>
 </template>
 
@@ -52,7 +58,9 @@
   import { Goods } from 'api'
   import { getParams } from 'common/js/util'
   import {mapGetters, mapActions} from 'vuex'
+  import ImMixin from 'common/mixins/im-mixin'
   export default {
+    mixins: [ImMixin],
     data() {
       return {
         imageUrl: this.$imageUrl,
@@ -65,6 +73,26 @@
         hasPhone: false,
         userInfo: {},
         refreshPage: true
+      }
+    },
+    async onPullDownRefresh() {
+      this.$refs.payment.hideOrder()
+      this.$refs.share.closeCover()
+      await this._getGoodsDetail(this.reqGoodsId)
+      wx.stopPullDownRefresh()
+    },
+    onShareAppMessage(res) {
+      let title = this.goodsDetail.goods_title ? this.goodsDetail.goods_title : ''
+      let id = wx.getStorageSync('userInfo').id
+      let shopId = wx.getStorageSync('shopId')
+      let path = `/pages/goods-detail?fromType=3&fromId=${id}&shopId=${shopId}&goodsId=${this.reqGoodsId}`
+      if (res.from === 'button') {
+        // 来自页面内转发按钮
+      }
+      return {
+        title: title,
+        path,
+        imageUrl: this.goodsDetail.image_url
       }
     },
     async onShow() {
@@ -90,6 +118,20 @@
       }
       await this._getGoodsDetail(this.reqGoodsId)
       await this._checkHasPhone()
+      let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
+      let msgCode
+      switch (this.scene * 1) {
+        case 0:
+          msgCode = 40003
+          break
+        case 1:
+          msgCode = 40002
+          break
+        case 2:
+          msgCode = 40001
+          break
+      }
+      this.sendCustomMsg(msgCode, msgData)
     },
     methods: {
       ...mapActions([
@@ -112,19 +154,27 @@
         wx.switchTab({url})
       },
       friendShare() {
-
+        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
+        this.sendCustomMsg(40004, msgData)
+        this._shareReq()
       },
       getPicture () {
+        this._shareReq()
+        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
+        this.sendCustomMsg(40005, msgData)
+        let type = 0
+        let id = this.reqGoodsId
         let picMsg = {
           title: this.goodsDetail.goods_title,
           explain: '',
           mark: '',
           price: this.goodsDetail.platform_price,
-          goodsImg: this.goodsDetail.image_url
+          goodsImg: this.goodsDetail.image_url,
+          type,
+          id
         }
         this.setGoodsDrawInfo(picMsg)
-        let type = 0
-        this.$wx.navigateTo({url: `goods-make-poster?type=${type}&id=${this.reqGoodsId}`})
+        this.$wx.navigateTo({url: `goods-make-poster`})
       },
       async payOrderMsg() {
         await this._checkHasPhone()
@@ -162,6 +212,9 @@
             this.code = login.code
           }
         }
+      },
+      _shareReq() {
+        Goods.goodsShare(this.reqGoodsId, false)
       }
     },
     components: {
@@ -171,7 +224,8 @@
     },
     computed: {
       ...mapGetters([
-        'targetPage'
+        'targetPage',
+        'scene'
       ])
     }
   }
@@ -290,6 +344,7 @@
         display: flex
         align-items: center
         .left-item
+          reset-button()
           flex: 1
           display: flex
           font-size: 0
@@ -306,15 +361,19 @@
             font-family: $font-family-regular
             color: $color-455A64
       .right-box
+        reset-button()
         flex: 1
         overflow: hidden
-        margin-right: 10px
         height: 45px
         line-height: 44px
         font-size: $font-size-16
         font-family: $font-family-medium
         color: $color-white
         button-style(normal, 22.5px)
+        &:active
+          button-style(click, 22.5px)
+      .outSide.right-box
+        margin-right: 10px
       .un-click.right-box
         button-style(un-click, 22.5px)
 </style>

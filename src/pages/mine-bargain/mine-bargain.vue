@@ -26,7 +26,7 @@
       <div class="order-status">
         <div class="order-type">砍价中</div>
         <div class="border-btn">
-          <div class="btn-one">找人帮砍</div>
+          <div class="btn-one">找人砍价</div>
           <div class="btn">立即购买</div>
         </div>
       </div>
@@ -39,7 +39,7 @@
     name: 'order-list',
     data() {
       return {
-        header: [1, 1, 1, 1, 1, 1]
+        header: [1, 1, 1]
       }
     }
   }
@@ -142,8 +142,9 @@
     height: 23px
     box-sizing: border-box
     border-radius: 50%
-    margin-right: -11px
+    margin-right: -5px
     .mine-serve-avatarBox-img
+      box-sizing: border-box
       background: $color-BC4949
       width: 23px
       height: 23px
