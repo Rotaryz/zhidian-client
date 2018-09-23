@@ -79,3 +79,7 @@ export const addNowChat = ({ commit, state }, msg) => {
 export const setChatBtnType = ({ commit, state }, type) => {
   commit(types.SET_CHAT_BTNTYPE, type)
 }
+
+export const setNowChat = ({ commit, state }, nowChat) => {
+  commit(types.SET_NOW_CHAT, nowChat)
+}

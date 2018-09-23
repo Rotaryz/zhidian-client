@@ -18,7 +18,7 @@ export default {
   getConect(data, loading) {
     const url = `/api/customer/shops/relationship`
     return request.post(url, data, loading)
-  }
+  },
   // // 判断是否有店，有店则返id
   // checkHasShop(loading = true) {
   //   const url = `/api/minimerchant/check-isowner`
@@ -63,11 +63,11 @@ export default {
   //   }
   //   return request.get(url, data, loading)
   // },
-  // // 聊天记录
-  // getMsgList(data, loading = true) {
-  //   const url = `/api/minimerchant/message-logs`
-  //   return request.post(url, data, loading)
-  // },
+  // 聊天记录
+  getMsgList(data, loading) {
+    const url = `/api/minimerchant/message-logs`
+    return request.post(url, data, loading)
+  },
   // // 手机formId
   // getFormId(data, loading = true) {
   //   const url = `/api/minimerchant/collect-formid`
@@ -78,11 +78,11 @@ export default {
   //   const url = `/api/minimerchant/ws-action-logs`
   //   return request.post(url, data, loading)
   // },
-  // // 欢迎语信息
-  // getWelcomeMsg(data, loading = true) {
-  //   const url = `/api/minimerchant/welcome-info`
-  //   return request.post(url, data, loading)
-  // },
+  // 欢迎语信息
+  getWelcomeMsg(data, loading) {
+    const url = `/api/minimerchant/welcome-info`
+    return request.post(url, data, loading)
+  }
   // // 统计，重要，勿删
   // getCount(type, loading = true) {
   //   const url = `/api/minimerchant/check-times`

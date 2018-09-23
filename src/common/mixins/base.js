@@ -49,7 +49,10 @@ export default {
     this._resetData()
   },
   methods: {
-    ...mapActions(['setIsLoadDy']),
+    ...mapActions([
+      'setIsLoadDy',
+      'setShowType'
+    ]),
     // async _sendFormId() {
     //   let arr = this.formId
     //   console.log(arr)

@@ -135,6 +135,20 @@ const mutations = {
   },
   [types.SET_CHAT_BTNTYPE] (state, type) {
     state.chatBtnType = type
+  },
+  [types.SET_NOW_CHAT] (state, nowChat) {
+    state.nowChat = nowChat.map((item) => {
+      let time = item.created_at ? item.created_at : item.msgTimeStamp
+      item.time = radarTimeFormat(time).time
+      item.content = labelEscape(item.content)
+      item.html = msgFaceToHtml(item.content)
+      return item
+    })
+    if (state.nowChat.length) {
+      if (state.nowChat[0].is_first) {
+        state.nowChat = [{type: 10000}, ...state.nowChat]
+      }
+    }
   }
 }
 

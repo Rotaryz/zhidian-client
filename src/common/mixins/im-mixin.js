@@ -18,7 +18,8 @@ export default {
       'setCurrentMsg',
       'setDescMsg',
       'clearBehaviorList',
-      'setNowCountNum'
+      'setNowCountNum',
+      'setNowCount'
     ]),
     async loginIm() {
       let userInfo = wx.getStorageSync('userInfo')
