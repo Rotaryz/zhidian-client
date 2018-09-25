@@ -417,7 +417,7 @@
                   background: #e0e0e0
                   border-radius: 50%
               .shop-num
-                font-size: $font-size-14
+                font-size: $font-size-12
                 margin-left: 5px
                 color: $color-99A0AA
                 line-height: 1

@@ -77,6 +77,7 @@
         ctx.play()
         ctx.requestFullScreen({direction: 90})
         this.ctx = ctx
+        this.setShowType(true)
       },
       videoChange() {
         this.isPlay && this.ctx && this.ctx.pause()
@@ -85,15 +86,6 @@
         this.$wx.navigateTo({url: '/pages/album'})
       },
       async toMap() {
-        // try {
-        //   this.$wechat.showLoading()
-        //   const res = await this.$wechat.getLocation('gcj02') // todo
-        //   const {latitude, longitude, name = this.shopInfo.name, address = this.shopInfo.address} = res
-        //   await this.$wechat.openLocation({latitude, longitude, name, address})
-        //   this.$wechat.hideLoading()
-        // } catch (e) {
-        //   console.error(e)
-        // }
         try {
           const name = this.shopInfo.name
           const address = this.shopInfo.address
@@ -106,16 +98,14 @@
           this.$wechat.showLoading()
           await this.$wechat.openLocation({latitude, longitude, name, address})
           this.$wechat.hideLoading()
+          this.setShowType(true)
         } catch (e) {
           console.error(e)
         }
       },
       toMobile() {
-        if (!this.shopInfo.telephone) {
-          this.$showToast('商家暂未上传手机号码')
-          return
-        }
         this.$wx.makePhoneCall && this.$wx.makePhoneCall({phoneNumber: '' + this.shopInfo.telephone})
+        this.setShowType(true)
       }
     }
   }

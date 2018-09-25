@@ -100,6 +100,7 @@ export default {
       await this.getEmployeeConect()
       this.$wechat.hideLoading()
       if (checkIsTabPage(url)) {
+        console.log(this.$wx)
         this.$wx.switchTab({url})
       } else {
         this.$wx.navigateTo({url})

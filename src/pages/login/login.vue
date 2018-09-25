@@ -1,22 +1,24 @@
 <template>
   <div class="login">
-    <img :src="imgUrl + '/ws-image/pic-logo@2x.png'" v-if="imgUrl" class="login-logo">
-    <div class="login-title" @click="test">当销冠 用智推</div>
-    <img :src="imgUrl + '/ws-image/pic-WeChat authorization_radar@2x.png'" v-if="imgUrl" class="login-icon">
+    <img :src="imgUrl + '/zd-image/login/pic-wxsq@2x.png'" v-if="imgUrl" class="login-icon">
+    <!--<img :src="imgUrl + '/zd-image/login/icon-wechat@2x.png'" v-if="imgUrl" class="login-icon">-->
+    <div class="login-title" @click="test">点赞中国，传播国货</div>
     <form class="btn-box" report-submit @submit="$getFormId">
       <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo" class="login-btn" hover-class="none" formType="submit">
         <img :src="imgUrl + '/ws-image/icon-wechat@2x.png'" v-if="imgUrl" class="btn-icon">
-        <span class="btn-txt">微信授权</span>
+        <span class="btn-txt">微信快捷登录</span>
       </button>
     </form>
+    <div class="explain">登录后可购物，参加优惠活动</div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import { Jwt } from 'api'
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
   import { checkIsTabPage } from 'common/js/util'
   import ImMixin from 'common/mixins/im-mixin'
+
   const LOGINPAGE = '/pages/login'
   const INDEX = '/pages/guide'
   export default {
@@ -143,15 +145,15 @@
       height: 63px
       padding: 15vw 0 15px
     .login-title
-      font-size: $font-size-20
-      font-family: $font-family-medium
-      letter-spacing: 5px
-      margin-bottom: 14vw
-      color: #374B63
+      font-family: FZJUNH_CUJW--GB1-0
+      font-size: 40rpx
+      color: #455A64
+      letter-spacing: 11.11px
+      margin-bottom: 99.5px
     .login-icon
-      width: 170px
-      height: 167.5px
-      margin-bottom: 16vw
+      width: 204px
+      height: 171px
+      padding: 18.13vw 0 28.5px
     .btn-box
       width: 100%
       box-sizing: border-box
@@ -159,9 +161,9 @@
       .login-btn
         width: 100%
         height: 45px
-        border-radius: 2px
-        background: #F94C5F
-        box-shadow: 0 4px 16px 0 #F9CBD0
+        border-radius: 100px
+        background-image: linear-gradient(90deg, #EB5C5C 0%, #D32F2F 100%)
+        box-shadow: 0 4px 16px 0 rgba(211, 47, 47, 0.20)
         display: flex
         align-items: center
         justify-content: center
@@ -176,4 +178,10 @@
           letter-spacing: 0.6px
         &:before, &:after
           border: 0 none
+    .explain
+      margin-top: 20px
+      font-family: PingFangSC-Regular
+      font-size: 14px
+      color: #99A0AA
+      letter-spacing: 0.6px
 </style>

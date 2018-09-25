@@ -1,6 +1,6 @@
 <template>
   <article class="guide">
-    <back-shop v-if="mineShop"></back-shop>
+    <back-shop v-if="showBackBtn" @goBack="goBack"></back-shop>
     <guide-header :shopInfo="shopInfo" :employee="employee" :isMyShop="isMyShop"></guide-header>
     <guide-active :groupList="groupData.list" :cutList="cutData.list" :selectTab="selectTab" @changeTab="changeTab"></guide-active>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
@@ -40,7 +40,9 @@
           page: 1,
           more: true
         },
-        selectTab: 0
+        selectTab: 0,
+        showBackBtn: false,
+        isMyShop: false
       }
     },
     onTabItemTap() {
@@ -50,6 +52,8 @@
       this._sendRecord()
     },
     async onShow() {
+      this.showBackBtn = this.$hasShop() && !this.$isMyShop()
+      this.isMyShop = !!this.$isMyShop()
       await this.getBaseInfo()
     },
     async onReachBottom() {
@@ -103,6 +107,11 @@
           default:
             break
         }
+      },
+      async goBack() { // 返回自己的店铺
+        this.showBackBtn = this.$hasShop() && !this.$isMyShop()
+        this.isMyShop = !!this.$isMyShop()
+        await this.getBaseInfo()
       },
       _sendRecord() {
         // 0为普通，1为转发，2为扫码
@@ -171,13 +180,13 @@
       }
     },
     computed: {
-      mineShop() {
-        return !this.$isMyShop() && this.$hasShop()
-      },
-      isMyShop() {
-        console.log(!!this.$isMyShop())
-        return !!this.$isMyShop()
-      }
+      // mineShop() {
+      //   return !this.$isMyShop() && this.$hasShop()
+      // },
+      // isMyShop() {
+      //   console.log(!!this.$isMyShop(), '---+++------')
+      //   return !!this.$isMyShop()
+      // }
     }
   }
 </script>

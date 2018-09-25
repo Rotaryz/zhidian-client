@@ -54,7 +54,7 @@
           return
         }
         this.$wx.makePhoneCall && this.$wx.makePhoneCall({phoneNumber: telephone})
-        this.setShowType(false)
+        this.setShowType(true)
       },
       copyWX() {
         let wxCode = this.welcomeMsg.wx_code
