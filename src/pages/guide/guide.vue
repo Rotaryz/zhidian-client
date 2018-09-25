@@ -175,6 +175,7 @@
         return !this.$isMyShop() && this.$hasShop()
       },
       isMyShop() {
+        console.log(!!this.$isMyShop())
         return !!this.$isMyShop()
       }
     }

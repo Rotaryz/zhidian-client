@@ -1,6 +1,7 @@
 import { Jwt } from 'api'
 import { mapActions, mapGetters } from 'vuex'
 import { checkIsTabPage } from 'common/js/util'
+import imMixin from 'common/mixins/im-mixin'
 
 const shareArr = [1007, 1008, 1036, 1044, 1073, 1074]
 const qrCordArr = [1047, 1048, 1049, 1011, 1012, 1013]
@@ -17,6 +18,7 @@ function _entryType(options) {
 }
 
 export default {
+  mixins: [imMixin],
   data() {
     return {
       formId: [],

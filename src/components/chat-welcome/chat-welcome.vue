@@ -59,7 +59,7 @@
       copyWX() {
         let wxCode = this.welcomeMsg.wx_code
         if (!wxCode) {
-          this.$showToast('商家暂未上传手机号码')
+          this.$showToast('商家暂未上传微信号')
           return
         }
         this.$wechat.setClipboardData(wxCode).then(res => {
