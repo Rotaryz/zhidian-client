@@ -78,7 +78,7 @@
       </div>
     </div>
     <div class="bargain-box" v-if="activityType === 'bargain'">
-      <div class="list-head border-bottom-1px">参与砍价（{{'21'}}人）</div>
+      <div class="list-head border-bottom-1px">参与砍价（{{goodsDetail.join_count}}人）</div>
       <div class="avatar-list" v-if="kanList.length">
         <img :src="item" class="avatar-item" v-for="(item, index) in kanList" :key="index">
       </div>
@@ -118,11 +118,11 @@
       </form>
       <div class="right-box un-click" v-if="activityType === 'bargain' && goodsDetail.stock == 0">已抢光</div>
       <div class="two-right-box" v-if="activityType === 'bargain' && !timeEnd && goodsDetail.stock && goodsDetail.is_cuted && goodsDetail.left_cut_num && (goodsDetail.bottom_price * 1 !== goodsDetail.platform_price * 1)">
-        <div class="right-btn black">
+        <div class="right-btn black" @click="payOrderMsg">
           <span class="btn-top">¥ {{goodsDetail.platform_price}}</span>
           <span class="btn-down">立即购买</span>
         </div>
-        <button open-type="share" hover-class="none" class="right-btn red">拉朋友砍</button>
+        <button open-type="share" hover-class="none" class="right-btn red" @click="kanShare">拉朋友砍</button>
       </div>
     </div>
     <div class="bargain-model-cover" :animation="coverAnimation" v-if="bargainModelShow">
@@ -142,7 +142,7 @@
               </div>
             </div>
             <div class="right">
-              <div class="right-button gold" v-if="kanDetail.exchange && kanDetail.exchange.stock && !hasGetExchange">领取</div>
+              <div class="right-button gold" v-if="kanDetail.exchange && kanDetail.exchange.stock && !hasGetExchange" @click="getExchange">领取</div>
               <div class="right-button white" v-if="hasGetExchange">领取成功</div>
               <div class="right-button ccc" v-if="kanDetail.exchange && !kanDetail.exchange.stock">已领完</div>
             </div>
@@ -220,7 +220,7 @@
       } else {
         type = 'bargain'
       }
-      let path = `/pages/activity-detail?type=${type}&fromType=3&fromId=${id}&shopId=${shopId}&activityId=${this.activityId}`
+      let path = `/pages/activity-detail?activityType=${type}&fromType=3&fromId=${id}&shopId=${shopId}&activityId=${this.activityId}`
       if (res.from === 'button') {
         // 来自页面内转发按钮
       }
@@ -297,12 +297,32 @@
       showShareModel() {
         this.$refs.share.show()
       },
+      kanShare() {
+        let msgData = {title: this.goodsDetail.goods_title, activity_id: this.reqGoodsId}
+        let msgCode = 30020
+        this.sendCustomMsg(msgCode, msgData)
+      },
       toIndex() {
         let url = `/pages/guide`
         wx.switchTab({url})
       },
+      getExchange() {
+        let data = {
+          coupon_id: this.kanDetail.exchange.coupon_id,
+          recommend_activity_id: this.kanDetail.exchange.recommend_activity_id
+        }
+        Goods.getExchangeCoupon(data).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            this.$showToast('领取成功')
+            this.hasGetExchange = true
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
       _toChatAction() {
-        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
+        let msgData = {title: this.goodsDetail.goods_title, activity_id: this.reqGoodsId}
         let msgCode = this.activityType === 'group' ? 60003 : 60002
         this.sendCustomMsg(msgCode, msgData)
         let url = `/pages/chat-msg`
@@ -350,6 +370,7 @@
         this.centerAnimation = centerAnimation.export()
         this.coverAnimation = coverAnimation.export()
         this.bargainModelShow = true
+        this.hasGetExchange = false
         setTimeout(() => {
           coverAnimation.opacity(1).step()
           centerAnimation.scale(1).step()
@@ -387,7 +408,11 @@
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
             this.kanDetail = res.data
+            let msgData = {title: this.goodsDetail.goods_title, activity_id: this.reqGoodsId, total: res.data.cut_money}
+            let msgCode = 30019
+            this.sendCustomMsg(msgCode, msgData)
             this.showBargain()
+            this._getGoodsDetail(this.activityId, this.activityType)
           } else {
             this.$showToast(res.message)
           }
@@ -420,6 +445,9 @@
             this.sendCustomMsg(30007, msgData)
             break
           case 'bargain':
+            paymentMsg.stock = 1
+            this.$refs.payment.showOrder(paymentMsg, this.activityType)
+            this.sendCustomMsg(30021, msgData)
             break
         }
       },
@@ -510,6 +538,7 @@
             this.bannerImgs = res.data.goods_banner_images
             this.goodsDetail = res.data
             this.endTime = res.data.end_at_timestamp
+            this.kanList = res.data.join_list
             this._kanTimePlay()
           } else {
             this.$showToast(res.message)

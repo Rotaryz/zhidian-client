@@ -78,5 +78,13 @@ export default {
   kanAction(id, loading) {
     let url = `/api/customer/bargain-cut/${id}`
     return request.post(url, {}, loading)
+  },
+  /**
+   * 用户领取兑换券
+   * @return {*}
+   */
+  getExchangeCoupon(data, loading) {
+    let url = `api/customer/exchange-coupon`
+    return request.post(url, data, loading)
   }
 }

@@ -6,6 +6,7 @@ page.$mount()
 
 export default {
   config: {
-    navigationBarTitleText: '我的砍价'
+    navigationBarTitleText: '我的砍价',
+    backgroundColor: '#f4f5f7'
   }
 }

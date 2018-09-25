@@ -8,7 +8,7 @@
       </div>
     </div>
     <panel-end v-if="upMore && browseShopList.length * 1 !== 0"></panel-end>
-    <div class="browse-shop" :class="{'album-list-active' : isNull && browseShopList.length * 1 === 0}">
+    <div class="browse-shop" :class="{'album-list-active' : isNull && browseShopList.length * 1 === 0}" v-if="isNull && browseShopList.length * 1 === 0">
       <blank v-if="isNull && browseShopList.length * 1 === 0"></blank>
     </div>
   </div>
