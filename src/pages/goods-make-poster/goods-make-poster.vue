@@ -38,7 +38,7 @@
 
 <script type="text/ecmascript-6">
   import { ActiveCode, Guide } from 'api'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import imMixin from 'common/mixins/im-mixin'
   import WePaint from 'components/we-paint/we-paint'
 
@@ -113,6 +113,7 @@
       }
     },
     methods: {
+      ...mapActions(['setShowType']),
       shareFriend () {
         let title = this.title
         let id = this.goodsDrawInfo.id
@@ -347,6 +348,9 @@
             break
         }
         this._action()
+      },
+      drawDone() {
+        this.setShowType(true)
       }
     },
     computed: {

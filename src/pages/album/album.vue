@@ -15,6 +15,7 @@
 
 <script type="text/ecmascript-6">
   import Blank from 'components/blank/blank'
+  import { mapActions } from 'vuex'
 
   import { Shop, Guide } from 'api'
   export default {
@@ -35,7 +36,9 @@
       this.getMoreImgList()
     },
     methods: {
+      ...mapActions(['setShowType']),
       previewImg(item) {
+        this.setShowType(true)
         this.$wx.previewImage({urls: [item.url]})
       },
       getImgList() {
