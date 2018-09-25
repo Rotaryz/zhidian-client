@@ -98,6 +98,7 @@ export default {
       this.$wechat.showLoading('跳转中')
       this.$wx.setStorageSync('shopId', id)
       await this.getEmployeeConect()
+      // console.warn(this.$wx.getStorageSync('shopId'))
       this.$wechat.hideLoading()
       if (checkIsTabPage(url)) {
         console.log(this.$wx)

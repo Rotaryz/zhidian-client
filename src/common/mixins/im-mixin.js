@@ -83,7 +83,6 @@ export default {
           from_id: this.fromMsg.fromId
         }
         let resData = await Im.getConect(reqData, false)
-        console.log(resData)
         if (resData.error === this.$ERR_OK) {
           let currentMsg = {
             shopId: resData.data.shop_id,
