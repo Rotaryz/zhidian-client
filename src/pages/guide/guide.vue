@@ -53,6 +53,7 @@
       this._sendRecord()
     },
     async onShow() {
+      if (!this.$wx.getStorageSync('token')) return
       this.showBackBtn = this.$hasShop() && !this.$isMyShop()
       this.isMyShop = !!this.$isMyShop()
       await this.getBaseInfo()
