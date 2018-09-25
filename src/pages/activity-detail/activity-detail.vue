@@ -78,7 +78,7 @@
       </div>
     </div>
     <div class="bargain-box" v-if="activityType === 'bargain'">
-      <div class="list-head border-bottom-1px">参与砍价（{{'21'}}人）</div>
+      <div class="list-head border-bottom-1px">参与砍价（{{goodsDetail.join_count}}人）</div>
       <div class="avatar-list" v-if="kanList.length">
         <img :src="item" class="avatar-item" v-for="(item, index) in kanList" :key="index">
       </div>
@@ -510,6 +510,7 @@
             this.bannerImgs = res.data.goods_banner_images
             this.goodsDetail = res.data
             this.endTime = res.data.end_at_timestamp
+            this.kanList = res.data.join_list
             this._kanTimePlay()
           } else {
             this.$showToast(res.message)
