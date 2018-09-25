@@ -4,7 +4,7 @@
       <img mode="aspectFill" :src="imageUrl + '/zd-image/mine/pic-coupon_code@2x.png'" class="content-image">
       <div class="shop-msg">
         <div class="shop-header-box">
-          <img v-if="couponMsg.goods_image" :src="couponMsg.goods_image" class="shop-header">
+          <img v-if="couponMsg.goods_image" :src="couponMsg.goods_image" class="shop-header" mode="aspectFill">
         </div>
         <div class="shop-content">
           <p class="shop-name">{{couponMsg.name}}</p>
@@ -159,11 +159,11 @@
         width: 5.5px
         height: 9px
     .code-box
-      height: 37.07vw
+      height: 42vw
       width: @height
-      margin: 9.87vw auto
+      margin: 7.8vw auto
       .code
-        height: 37.07vw
+        height: 42vw
         width: @height
         z-index: 2
         position: relative

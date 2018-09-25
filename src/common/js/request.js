@@ -18,6 +18,7 @@ fly.interceptors.request.use((request) => {
   request.headers['Authorization'] = wx.getStorageSync('token') || '0f60e1f448a1765e1236ffeb4b3c9967432da3d4'
   request.headers['Current-Shop'] = wx.getStorageSync('shopId') || wx.getStorageSync('defaultShop')
   request.headers['AppToken'] = wx.getStorageSync('appToken')
+  request.headers['Current-customer'] = 101004
   return request
 })
 

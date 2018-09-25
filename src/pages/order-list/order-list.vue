@@ -95,7 +95,7 @@
                 setTimeout(async () => {
                   this.$wechat.hideLoading()
                   this.page = 1
-                  await this._getOrderList(this.detail.id)
+                  await this._getOrderList()
                 }, 2000)
               },
               fail() {

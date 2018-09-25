@@ -156,7 +156,15 @@
             msgData.activity_id = this.paymentMsg.recommend_activity_id
             break
           case 'bargain':
+            data = {
+              goods,
+              pay_method_id: 1,
+              order_id: 0,
+              activity_type: 3,
+              recommend_activity_id: this.paymentMsg.recommend_activity_id
+            }
             msgCode = 30023
+            msgData.activity_id = this.paymentMsg.recommend_activity_id
             break
         }
         Goods.payOrder(data).then((res) => {
@@ -194,6 +202,9 @@
                   this.orderShow = false
                   this.$emit('paySuccess')
                   return
+                }
+                if (this.type === 'bargain') {
+                  this.$emit('bargainPay')
                 }
                 let resultData = {
                   avatar: this.paymentMsg.shopImg,
