@@ -60,7 +60,7 @@
         let id = wx.getStorageSync('userInfo').id
         let shopId = wx.getStorageSync('shopId')
         imageUrl = item.image_url
-        path = `/pages/activity-detail?type=bargain&fromType=3&fromId=${id}&shopId=${shopId}&activityId=${item.recommend_activity_id}`
+        path = `/pages/activity-detail?activityType=bargain&fromType=3&fromId=${id}&shopId=${shopId}&activityId=${item.recommend_activity_id}`
       }
       return {
         title,
@@ -73,7 +73,7 @@
     },
     methods: {
       toDetail(item) {
-        let url = `/pages/activity-detail?type=bargain&activityId=${item.recommend_activity_id}`
+        let url = `/pages/activity-detail?activityType=bargain&activityId=${item.recommend_activity_id}`
         this.$turnShop({ id: item.shop_data.id, url })
       },
       bargainPay() {

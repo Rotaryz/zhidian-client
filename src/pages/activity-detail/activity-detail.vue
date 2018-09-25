@@ -220,7 +220,7 @@
       } else {
         type = 'bargain'
       }
-      let path = `/pages/activity-detail?type=${type}&fromType=3&fromId=${id}&shopId=${shopId}&activityId=${this.activityId}`
+      let path = `/pages/activity-detail?activityType=${type}&fromType=3&fromId=${id}&shopId=${shopId}&activityId=${this.activityId}`
       if (res.from === 'button') {
         // 来自页面内转发按钮
       }

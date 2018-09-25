@@ -116,11 +116,19 @@
         await this.$turnShop({ id: this.detail.shop_id, url: '/pages/guide' })
       },
       async _goCommodity() {
-        if (this.groupDetail) {
-          await this.$turnShop({ id: this.detail.shop_id, url: `/pages/activity-detail?goodsId=${this.groupDetail.group_id}` })
-          return
+        let url
+        switch (this.detail.order_type * 1) {
+          case 1:
+            url = `/pages/goods-detail?goodsId=${this.detail.attach.recommend_goods_id}`
+            break
+          case 4:
+            url = `/pages/activity-detail?activityId=${this.detail.attach.recommend_activity_id}&activityType=group`
+            break
+          case 7:
+            url = `/pages/activity-detail?activityId=${this.detail.attach.recommend_activity_id}&activityType=bargain`
+            break
         }
-        await this.$turnShop({ id: this.detail.shop_id, url: `/pages/activity-detail?goodsId=${this.detail.order_details[0].goods_id}` })
+        await this.$turnShop({ id: this.detail.shop_id, url })
         //  跳转商品详情，切店
       },
       async _deal() {
