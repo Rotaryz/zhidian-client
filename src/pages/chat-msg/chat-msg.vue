@@ -190,7 +190,7 @@
     created() {
     },
     onShow() {
-      // this._setNowChatNum()
+      this._setNowChatNum()
       wx.setNavigationBarTitle({title: this.currentMsg.nickName || ''})
     },
     onLoad() {

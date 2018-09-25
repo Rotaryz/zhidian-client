@@ -48,20 +48,20 @@
                 <span class="more-item"></span>
                 <span class="more-item"></span>
               </div>
-              <span class="shop-num">{{item.join_count}}人已成功砍价</span>
+              <span class="shop-num" :style="item.join_count >0 && item.join_count <= 3 ? 'margin-left:15px' : ''">{{item.join_count}}人已成功砍价</span>
             </article>
             <article class="right-box">
               <div class="jh-wrapper" @click="toLike(item)">
                 <img class="icon" v-if="imageUrl && item.is_like" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
                 <img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
                 <div class="number-wrapper">
-                  <div class="number">{{item.like_count}}</div>
+                  <div class="number">{{item.like_count > 99 ? 99 : item.like_count}}</div>
                 </div>
               </div>
               <div class="jh-wrapper" @click="toShare(item)">
                 <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">
                 <div class="number-wrapper">
-                  <div class="number">{{item.like_count}}</div>
+                  <div class="number">{{item.share_count > 99 ? 99 : item.share_count}}</div>
                 </div>
               </div>
             </article>
@@ -106,20 +106,20 @@
                 <span class="more-item"></span>
                 <span class="more-item"></span>
               </div>
-              <span class="shop-num">{{item.join_count}}人已成功拼团</span>
+              <span class="shop-num" :style="item.join_count >0 && item.join_count <= 3 ? 'margin-left:15px' : ''">{{item.join_count}}人已成功拼团</span>
             </article>
             <article class="right-box">
               <div class="jh-wrapper" @click="toLike(item)">
                 <img class="icon" v-if="imageUrl && item.is_like" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
                 <img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
                 <div class="number-wrapper">
-                  <div class="number">{{item.like_count}}</div>
+                  <div class="number">{{item.like_count > 99 ? 99 : item.like_count}}</div>
                 </div>
               </div>
               <div class="jh-wrapper" @click="toShare(item)">
                 <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">
                 <div class="number-wrapper">
-                  <div class="number">{{item.share_count}}</div>
+                  <div class="number">{{item.share_count > 99 ? 99 : item.share_count}}</div>
                 </div>
               </div>
             </article>
@@ -390,6 +390,7 @@
                   border: 1.5px solid $color-FFFFFF
                   border-radius: 50%
                   position: relative
+                  background: #f8f8f8
                   .bargain-circle-box
                     position: absolute
                     all-center()
@@ -416,10 +417,11 @@
                   background: #e0e0e0
                   border-radius: 50%
               .shop-num
-                font-size: $font-size-14
+                font-size: $font-size-12
                 margin-left: 5px
                 color: $color-99A0AA
                 line-height: 1
+                no-wrap()
             .right-box
               layout(row, block, nowrap)
               align-items: center
@@ -437,7 +439,7 @@
                 .number-wrapper
                   position: absolute
                   top: -5px
-                  right: -3.5px
+                  right: 0.5px
                   .number
                     position: absolute
                     left: 0

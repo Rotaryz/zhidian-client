@@ -18,6 +18,7 @@ const state = {
   imIng: false, // 是否在聊天页面
   currentUnRead: 0, // 当前对象未读信息
   chatBtnType: '' // 设置聊天按钮是否需要手机授权
+  // isLoadGuide: true // 是否刷新
 }
 
 export default state

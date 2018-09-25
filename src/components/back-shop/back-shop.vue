@@ -25,6 +25,7 @@
       async _goBack() {
         let userInfoExtend = wx.getStorageSync('userInfoExtend')
         await this.$turnShop({ id: userInfoExtend.shop_id, url: '/pages/guide' })
+        this.$emit('goBack')
       },
       async _getShopMsg() {
         let res = await Guide.getShopInfo({}, false)
