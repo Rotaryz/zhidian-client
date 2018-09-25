@@ -115,10 +115,12 @@
     methods: {
       shareFriend () {
         let title = this.title
-        let activityId = this.goodsDrawInfo.id
-        let dataJson = {title, activity_id: activityId}
+        let id = this.goodsDrawInfo.id
+        let dataJson = {title, activity_id: id}
         switch (this.useType * 1) {
           case 0:
+            this.sendCustomMsg(40004, {title, goodsId: id})
+            break
           case 1:
             this.sendCustomMsg(30002, dataJson)
             break
@@ -331,12 +333,18 @@
       saveImage () {
         this.$wechat.showLoading()
         let title = this.title
-        let activityId = this.goodsDrawInfo.id
-        let dataJson = {title, activity_id: activityId}
-        if (this.useType === 1) {
-          this.sendCustomMsg(30003, dataJson)
-        } else {
-          this.sendCustomMsg(30017, dataJson)
+        let id = this.goodsDrawInfo.id
+        let dataJson = {title, activity_id: id}
+        switch (this.useType * 1) {
+          case 0:
+            this.sendCustomMsg(40005, { title, goodsId: id })
+            break
+          case 1:
+            this.sendCustomMsg(30003, dataJson)
+            break
+          case 3:
+            this.sendCustomMsg(30017, dataJson)
+            break
         }
         this._action()
       }
