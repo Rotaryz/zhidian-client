@@ -115,8 +115,8 @@
     methods: {
       shareFriend () {
         let title = this.title
-        let data = {title}
-        let dataJson = JSON.stringify(data)
+        let activityId = this.goodsDrawInfo.id
+        let dataJson = {title, activity_id: activityId}
         switch (this.useType * 1) {
           case 0:
           case 1:
@@ -189,7 +189,6 @@
           'source': 'c',
           ...qrData
         }
-        console.log(this.useType)
         ActiveCode.createMiniCode(data, false).then(res => {
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
@@ -332,12 +331,12 @@
       saveImage () {
         this.$wechat.showLoading()
         let title = this.title
-        let data = {title}
-        let dataJson = JSON.stringify(data)
+        let activityId = this.goodsDrawInfo.id
+        let dataJson = {title, activity_id: activityId}
         if (this.useType === 1) {
-          this.sendCustomMsg(30017, dataJson)
-        } else {
           this.sendCustomMsg(30003, dataJson)
+        } else {
+          this.sendCustomMsg(30017, dataJson)
         }
         this._action()
       }
