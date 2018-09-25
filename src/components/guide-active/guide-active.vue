@@ -135,9 +135,11 @@
   import { Guide } from 'api'
   import Blank from 'components/blank/blank'
   import { mapActions } from 'vuex'
+  import imMixin from 'common/mixins/im-mixin'
 
   const tabList = [{title: '砍价抢购'}, {title: '火爆拼团'}]
   export default {
+    mixins: [imMixin],
     components: {
       Blank
     },
@@ -185,7 +187,7 @@
         this.$wx.navigateTo({url: `/pages/activity-detail?activityId=${item.recommend_activity_id}&activityType=${activityType}`})
       },
       toLike(item) {
-        Guide.likeAction({recommend_activity_id: item.activity_id, recommend_goods_id: item.goods_id, like: !item.is_like ? '1' : '0'}).then(res => {
+        Guide.likeAction({recommend_activity_id: item.recommend_activity_id, recommend_goods_id: item.recommend_goods_id, like: !item.is_like ? '1' : '0'}).then(res => {
           this.$wechat.hideLoading()
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
@@ -193,15 +195,19 @@
           }
           item.is_like = !item.is_like
           item.is_like ? item.like_count++ : item.like_count--
+          let code = item.rule_id === 1 ? 30001 : 30018
+          item.is_like && this.sendCustomMsg(code, {activity_id: item.activity_id, title: item.name})
         })
       },
       toShare(item) {
-        Guide.shareAction({recommend_activity_id: item.activity_id, recommend_goods_id: item.goods_id}, false).then(res => {
+        Guide.shareAction({recommend_activity_id: item.recommend_activity_id, recommend_goods_id: item.recommend_goods_id}, false).then(res => {
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return
           }
           item.share_count++
+          // let code = item.rule_id === 1 ? 30002 : 30016
+          // item.is_like && this.sendCustomMsg(code, {activity_id: item.activity_id, title: item.name})
         })
         let type = +item.rule_id // 0普通 1团购 3砍价
         const obj = {

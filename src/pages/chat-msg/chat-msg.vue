@@ -3,12 +3,15 @@
     <scroll-view scroll-y class="chat-container" :scroll-into-view="scrollId" @scrolltoupper="loadMore">
       <div class="chat-list">
         <div class="line-view"></div>
-        <div class="chat-item" v-for="(item, index) in nowChat" :key="index" :id="'item' + index">
+        <!--<div class="chat-item" v-for="(item, index) in nowChat" :key="index" :id="'item' + index">-->
+        <div class="chat-item" v-for="(item, index) in '1'" :key="index" :id="'item' + index">
           <div class="item-time" v-if="item.is_showtime">
             <span class="time-box">{{item.time}}</span>
           </div>
-          <div class="chat-content" v-if="item.from_account_id !== imAccount">
-            <img :src="currentMsg.avatar" class="avatar" mode="aspectFill">
+          <!--<section class="chat-content" v-if="item.from_account_id !== imAccount">-->
+          <section class="chat-content">
+            <!--<img :src="currentMsg.avatar" class="avatar" mode="aspectFill">-->
+            <img class="avatar" mode="aspectFill">
             <div class="chat-msg-box other" v-if="item.type * 1 === 1">
               <div class="arrow-box">
                 <div class="gray-arrow">
@@ -19,24 +22,26 @@
                 <rich-text class="chat-msg-content other" :nodes="item.html"></rich-text>
               </div>
             </div>
-            <div class="welcome-msg" v-if="item.type * 1 === 10000">
-              <div class="welcome-txt">你好，欢迎来到{{shopName}}。添加我的个人微信，有更多精彩等你哦！</div>
-              <div class="welcome-activity" @click.stop="toActivity" v-if="false">
-                <div class="activity-title">参加拼团/砍价活动</div>
-                <img :src="imgUrl + '/ws-image/radar/icon-activity.png'" v-if="imgUrl" class="title-icon">
-              </div>
-              <button class="welcome-group" :open-type="welcomeMsg.have_personal_qrcode ? 'contact' : ''"	:session-from="'request_friend,' + employeeId" send-message-title="点击下方消息加微信" :send-message-img="imgUrl + '/ws-image/ws1.2/pic-additivepeople@2x.png'" :show-message-card="true" @click="weixinShow">
-                <div class="group-top">
-                  <div class="activity-title">添加我的微信号</div>
-                  <img :src="imgUrl + '/ws-image/radar/icon-weixin.png'" v-if="imgUrl" class="title-icon">
-                </div>
-                <image :src="imgUrl + '/ws-image/radar/pic-zd-group@2x.png'" v-if="imgUrl" class="group-icon" mode="widthFix"></image>
-              </button>
-              <div class="welcome-activity" @click.stop="weixinShow" v-if="false">
-                <div class="activity-title">添加我的微信号</div>
-                <img :src="imgUrl + '/ws-image/radar/icon-weixin.png'" v-if="imgUrl" class="title-icon">
-              </div>
-            </div>
+            <!--<div class="welcome-msg" v-if="item.type * 1 === 10000">-->
+            <chat-welcome :welcomeMsg="welcomeMsg"></chat-welcome>
+            <!--<div class="welcome-msg">-->
+            <!--<div class="welcome-txt">你好，欢迎来到{{shopName}}。添加我的个人微信，有更多精彩等你哦！</div>-->
+            <!--<div class="welcome-activity" @click.stop="toActivity" v-if="false">-->
+            <!--<div class="activity-title">参加拼团/砍价活动</div>-->
+            <!--<img :src="imgUrl + '/ws-image/radar/icon-activity.png'" v-if="imgUrl" class="title-icon">-->
+            <!--</div>-->
+            <!--<button class="welcome-group" :open-type="welcomeMsg.have_personal_qrcode ? 'contact' : ''" :session-from="'request_friend,' + employeeId" send-message-title="点击下方消息加微信" :send-message-img="imgUrl + '/ws-image/ws1.2/pic-additivepeople@2x.png'" :show-message-card="true" @click="weixinShow">-->
+            <!--<div class="group-top">-->
+            <!--<div class="activity-title">添加我的微信号</div>-->
+            <!--<img :src="imgUrl + '/ws-image/radar/icon-weixin.png'" v-if="imgUrl" class="title-icon">-->
+            <!--</div>-->
+            <!--<image :src="imgUrl + '/ws-image/radar/pic-zd-group@2x.png'" v-if="imgUrl" class="group-icon" mode="widthFix"></image>-->
+            <!--</button>-->
+            <!--<div class="welcome-activity" @click.stop="weixinShow" v-if="false">-->
+            <!--<div class="activity-title">添加我的微信号</div>-->
+            <!--<img :src="imgUrl + '/ws-image/radar/icon-weixin.png'" v-if="imgUrl" class="title-icon">-->
+            <!--</div>-->
+            <!--</div>-->
             <div class="chat-msg-new-goods other" v-if="item.type * 1 == 3 || item.type * 1 == 4 || item.type * 1 == 5" @click="toDetail(item)">
               <div class="new-goods-top">
                 <div class="shop-title">
@@ -56,7 +61,7 @@
               </div>
             </div>
             <div class="chat-msg-qrCode other" v-if="item.type * 1 === 6">
-              <button class="qrCode-content" open-type="contact"	:session-from="'request_friend,' + employeeId" send-message-title="点击下方消息加微信" :send-message-img="imgUrl + '/ws-image/ws1.2/pic-additivepeople@2x.png'" :show-message-card="true">
+              <button class="qrCode-content" open-type="contact" :session-from="'request_friend,' + employeeId" send-message-title="点击下方消息加微信" :send-message-img="imgUrl + '/ws-image/ws1.2/pic-additivepeople@2x.png'" :show-message-card="true">
                 <p class="qrCode-title">欢迎光临我的小店</p>
                 <div class="qrCode-text-content">
                   <div class="qrCode-txt">点击本条消息加微信，随时找我聊天</div>
@@ -65,7 +70,7 @@
               </button>
             </div>
             <div class="chat-msg-qrCode other" v-if="item.type * 1 === 7">
-              <button class="qrCode-content" open-type="contact"	:session-from="'wx_group,' + employeeId" send-message-title="点击下方消息进群" :send-message-img="imgUrl + '/ws-image/ws1.2/pic-additivegroup@2x.png'" :show-message-card="true">
+              <button class="qrCode-content" open-type="contact" :session-from="'wx_group,' + employeeId" send-message-title="点击下方消息进群" :send-message-img="imgUrl + '/ws-image/ws1.2/pic-additivegroup@2x.png'" :show-message-card="true">
                 <p class="qrCode-title">欢迎加入我的微信福利群</p>
                 <div class="qrCode-text-content">
                   <div class="qrCode-txt">点击本条消息加入微信群，不定时抢购福利</div>
@@ -74,8 +79,8 @@
               </button>
             </div>
             <image class="chat-msg-img other" :src="item.url" v-if="item.type * 1 == 20" mode="widthFix" @click="showPic(item, index)"></image>
-          </div>
-          <div class="chat-content mine" v-if="item.from_account_id === imAccount">
+          </section>
+          <section class="chat-content mine" v-if="item.from_account_id === imAccount">
             <div class="chat-msg-box mine" v-if="item.type * 1 === 1">
               <div class="chat-msg-content-max-box">
                 <rich-text class="chat-msg-content mine" :nodes="item.html"></rich-text>
@@ -102,13 +107,13 @@
                 <span>赞播微店</span>
               </div>
             </div>
-            <image class="chat-msg-img mine" :src="item.url" v-if="item.type * 1 == 20" mode="widthFix" @click="showPic(item, index)"></image>
+            <img class="chat-msg-img mine" :src="item.url" v-if="item.type * 1 == 20" mode="widthFix" @click="showPic(item, index)"/>
             <div class="chat-msg-goods" v-if="item.type * 1 === 2">
               <img :src="item.url" class="goods-img" mode="widthFix">
               <p class="goods-title">{{item.title}}</p>
             </div>
             <img :src="userInfo.avatar" class="avatar" mode="aspectFill">
-          </div>
+          </section>
         </div>
       </div>
     </scroll-view>
@@ -141,93 +146,82 @@
         </div>
       </div>
     </div>
-    <toast ref="toast"></toast>
   </div>
 </template>
 
 <script>
-  import {mapActions, mapGetters} from 'vuex'
-  import {Im, UpLoad} from 'api'
-  import { ERR_OK, TIMELAG, baseURL } from 'api/config'
-  import wx from 'common/js/wx'
-  import * as wechat from 'common/js/wechat'
-  import {emotionsFaceArr} from 'common/js/contants'
+  import { mapActions, mapGetters } from 'vuex'
+  import { Im } from 'api'
+  import { emotionsFaceArr, TIMELAG } from 'utils/im-plugins'
+  import ChatWelcome from 'components/chat-welcome/chat-welcome'
+  import Vue from 'vue'
 
-  let webimHandler
+  const vue = new Vue()
+  const webimHandler = vue.$webimHandler
+  const ERR_OK = vue.$ERR_OK
+  const wx = vue.$wx
+  const wechat = vue.$wechat
   const MORELIST = [
-    {txt: '图片', icon: baseURL.image + '/ws-image/radar/icon-picture@2x.png', type: 1}
+    {txt: '图片', icon: vue.$imageUrl + '/ws-image/radar/icon-picture@2x.png', type: 1}
   ]
   export default {
-    name: 'Chat',
+    components: {
+      ChatWelcome
+    },
+    data() {
+      return {
+        imgUrl: this.$imageUrl,
+        inputMsg: '',
+        id: '',
+        userInfo: {},
+        imAccount: '',
+        scrollId: 'item0',
+        moreLists: MORELIST,
+        emojiList: emotionsFaceArr,
+        emojiShow: false,
+        mortListShow: false,
+        shopName: '',
+        welcomeMsg: {},
+        from: '',
+        focus: false,
+        shopId: ''
+      }
+    },
     created() {
     },
     onShow() {
-      // if (this.imLogin) {
-      //   webimHandler.getC2CMsgList(this.currentMsg.account) // 消息已读处理
-      //   this.setNowCountNum(0)
-      // } else {
-      //   wx.showToast({title: '网络连接异常', icon: 'none', duration: 1000})
-      //   setTimeout(() => {
-      //     this.$router.back()
-      //   }, 1000)
-      // }
-      // wx.setNavigationBarTitle({
-      //   title: this.currentMsg.nickName
-      // })
+      // this._setNowChatNum()
+      wx.setNavigationBarTitle({title: this.currentMsg.nickName || ''})
     },
-    onLoad(option) {
-      // this.employeeId = wx.getStorageSync('employeeId')
-      // this.from = option.from ? option.from : ''
-      // this.setNowChat([])
-      // this.setImIng(true)
-      // let phoneInfo = wx.getSystemInfoSync()
-      // let system = phoneInfo.system
-      // if (system.indexOf('IOS') !== -1) {
-      //   this.system = 'iphone'
-      // } else {
-      //   this.system = 'android'
-      // }
-      // this.userInfo = wx.getStorageSync('userInfo')
-      // this.imAccount = this.userInfo.im_account
-      // let data = {
-      //   end_date: this.endDate,
-      //   limit: 40,
-      //   customer_im_account: this.userInfo.im_account,
-      //   employee_im_account: this.currentMsg.account
-      // }
-      // let msgData = {
-      //   employee_id: wx.getStorageSync('employeeId'),
-      //   customer_id: this.userInfo.id
-      // }
-      // Im.getWelcomeMsg(msgData).then((res) => {
-      //   if (res.error === ERR_OK) {
-      //     this.shopName = res.data.shop_name
-      //     this.welcomeMsg = res.data
-      //   }
-      // })
-      // Im.getMsgList(data).then((res) => {
-      //   if (res.error === ERR_OK) {
-      //     let list = res.data.reverse()
-      //     if (!list.length) {
-      //       this.setNowChat([{type: 10000}])
-      //     } else {
-      //       this.setNowChat(list)
-      //     }
-      //     this.scrollId = 'item' + (list.length - 1)
-      //   }
-      //   wechat.hideLoading()
-      // })
+    onLoad() {
+      this._getSystemInfo()
+      this._getChatParams()
+      this.setNowChat([])
+      this.setImIng(true)
+      this._getWelcomeInfo()
+      this._getMsgList()
     },
     onUnload() {
-      // this.setNowChat([])
-      // this.setImIng(false)
-      // this.scrollId = 'item0'
-      // this.inputMsg = ''
-      // this.id = ''
-      // this.imAccount = ''
-      // this.mortListShow = false
-      // this.emojiShow = false
-      // this.focus = false
+      this.setNowChat([])
+      this.setImIng(false)
+    },
+    computed: {
+      ...mapGetters([
+        'currentMsg',
+        'nowChat',
+        'imLogin'
+      ]),
+      endDate() {
+        if (this.nowChat.length) {
+          if (!this.nowChat[0].created_at && !this.nowChat[0].msgTimeStamp) {
+            return this.nowChat[1] ? this.nowChat[1].created_at ? this.nowChat[1].created_at : this.nowChat[1].msgTimeStamp : ''
+          } else {
+            return this.nowChat[0].created_at ? this.nowChat[0].created_at : this.nowChat[0].msgTimeStamp
+          }
+        } else {
+          return ''
+        }
+      }
     },
     methods: {
       ...mapActions([
@@ -237,6 +231,63 @@
         'setShowType',
         'setChatGoods'
       ]),
+      _getChatParams() {
+        this.shopId = wx.getStorageSync('shopId')
+        this.userInfo = wx.getStorageSync('userInfo')
+        this.imAccount = this.userInfo.im_account
+      },
+      _setNowChatNum() {
+        if (this.imLogin) {
+          webimHandler.getC2CMsgList(this.currentMsg.account) // 消息已读处理
+          this.setNowCountNum(0)
+        } else {
+          wx.showToast({title: '网络连接异常', icon: 'none', duration: 1000})
+          setTimeout(() => {
+            wx.navigateBack()
+          }, 1000)
+        }
+      },
+      _getSystemInfo() {
+        let phoneInfo = wx.getSystemInfoSync()
+        let system = phoneInfo.system
+        if (system.indexOf('IOS') !== -1) {
+          this.system = 'iphone'
+        } else {
+          this.system = 'android'
+        }
+      },
+      _getWelcomeInfo() {
+        let msgData = {
+          shop_id: this.shopId,
+          customer_id: this.userInfo.id
+        }
+        Im.getWelcomeMsg(msgData).then((res) => {
+          if (res.error === ERR_OK) {
+            this.shopName = res.data.shop_name
+            this.welcomeMsg = res.data || {}
+          }
+        })
+      },
+      _getMsgList() {
+        let data = {
+          end_date: this.endDate,
+          limit: 40,
+          customer_im_account: this.userInfo.im_account,
+          shop_im_account: this.currentMsg.account
+        }
+        Im.getMsgList(data).then((res) => {
+          if (res.error === ERR_OK) {
+            let list = res.data.reverse()
+            if (!list.length) {
+              this.setNowChat([{type: 10000}])
+            } else {
+              this.setNowChat(list)
+            }
+            this.scrollId = 'item' + (list.length - 1)
+          }
+          wechat.hideLoading()
+        })
+      },
       textFocus() {
         this.mortListShow = false
         this.emojiShow = false
@@ -248,10 +299,10 @@
       //   let url
       //   if (this.welcomeMsg.activity_id) {
       //     url = `/pages/goods-detail/goods-detail?ActivityId=${this.welcomeMsg.activity_id}&type=${this.welcomeMsg.activity_type}`
-      //     wx.redirectTo({ url })
+      //     wx.redirectTo({url})
       //   } else {
       //     url = `/pages/poster/poster`
-      //     wx.switchTab({ url })
+      //     wx.switchTab({url})
       //   }
       // },
       // groupShow() {
@@ -259,43 +310,36 @@
       //     this.setShowType(true)
       //     wx.previewImage({urls: [this.welcomeMsg.group_qrcode_url]})
       //   } else {
-      //     this.$refs.toast.show('商家暂时没有上传群二维码，给商家留言吧！')
+      //     this.$showToast('商家暂时没有上传群二维码，给商家留言吧！')
       //   }
       // },
       // weixinShow() {
       //   if (this.welcomeMsg.have_personal_qrcode) return
-      //   this.$refs.toast.show('商家暂时没有上传微信，给商家留言吧！')
+      //   this.$showToast('商家暂时没有上传微信，给商家留言吧！')
       // },
       showPic(item) {
-        // this.setShowType(true)
+        this.setShowType(true)
         this.scrollId = ''
         wx.previewImage({urls: [item.url]})
       },
-      // toDetail(item) {
-      //   if (this.from !== 'goodsDetail') {
-      //     let type = item.type * 1
-      //     let url
-      //     switch (type) {
-      //       case 3:
-      //         url = `/pages/goods-detail/goods-detail?goodId=${item.goods_id}&type=0`
-      //         break
-      //       case 4:
-      //         url = `/pages/goods-detail/goods-detail?ActivityId=${item.goods_id}&type=1`
-      //         break
-      //       case 5:
-      //         url = `/pages/goods-detail/goods-detail?ActivityId=${item.goods_id}&type=3`
-      //         break
-      //     }
-      //     wx.redirectTo({ url })
-      //   } else {
-      //     let goods = {
-      //       type: item.type * 1 === 5 ? 3 : item.type * 1 === 4 ? 1 : 0,
-      //       id: item.goods_id
-      //     }
-      //     this.setChatGoods(goods)
-      //     wx.navigateBack({delta: 1})
-      //   }
-      // },
+      toDetail(item) {
+        let type = item.type * 1
+        let url
+        switch (type) {
+          case 3:
+            url = `/pages/goods-detail/goods-detail?goodId=${item.goods_id}&type=0`
+            break
+          case 4:
+            url = `/pages/goods-detail/goods-detail?ActivityId=${item.goods_id}&type=1`
+            break
+          case 5:
+            url = `/pages/goods-detail/goods-detail?ActivityId=${item.goods_id}&type=3`
+            break
+          default:
+            break
+        }
+        wx.redirectTo({url})
+      },
       loadMore() {
         if (this.noMore) return
         let data = {
@@ -320,10 +364,10 @@
       sendMsg() {
         let value = this.inputMsg.trim()
         if (!value) {
-          this.$refs.toast.show('发送消息不能为空')
+          this.$showToast('发送消息不能为空')
           return
         }
-        let timeStamp = parseInt(Date.parse(new Date()) / 1000)
+        let timeStamp = parseInt(Date.now() / 1000)
         let msg = {
           from_account_id: this.userInfo.im_account,
           avatar: this.userInfo.avatar,
@@ -352,7 +396,7 @@
         this.scrollId = 'item' + (list.length - 1)
         webimHandler.onSendMsg(value, this.currentMsg.account).then(res => {
         }, () => {
-          this.$refs.toast.show('消息发送失败，尝试重新发送')
+          this.$showToast('消息发送失败，尝试重新发送')
         })
       },
       textInput(e) {
@@ -365,7 +409,8 @@
             this.setShowType(true)
             let res = await wechat.chooseImage()
             if (res.errMsg === 'chooseImage:ok') {
-              UpLoad.upLoadImage(res.tempFilePaths[0]).then((resData) => {
+              // this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, [res.tempFilePaths[0]])
+              this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, [res.tempFilePaths[0]]).then((resData) => {
                 let data = {
                   image_id: resData.id,
                   url: resData.url
@@ -379,7 +424,7 @@
                   desc,
                   ext
                 }
-                let timeStamp = parseInt(Date.parse(new Date()) / 1000)
+                let timeStamp = parseInt(Date.now() / 1000)
                 let msg = {
                   from_account_id: this.userInfo.im_account,
                   avatar: this.userInfo.avatar,
@@ -405,7 +450,7 @@
                 this.scrollId = 'item' + (list.length - 1)
                 webimHandler.onSendCustomMsg(opt, this.currentMsg.account).then(res => {
                 }, () => {
-                  this.$refs.toast.show('消息发送失败，尝试重新发送')
+                  this.$showToast('消息发送失败，尝试重新发送')
                 })
               })
             }
@@ -425,45 +470,6 @@
         this.mortListShow = !this.mortListShow
         this.emojiShow = false
       }
-    },
-    data() {
-      return {
-        imgUrl: baseURL.image,
-        inputMsg: '',
-        id: '',
-        userInfo: {},
-        imAccount: '',
-        scrollId: 'item0',
-        moreLists: MORELIST,
-        emojiList: emotionsFaceArr,
-        emojiShow: false,
-        mortListShow: false,
-        shopName: '',
-        welcomeMsg: {},
-        from: '',
-        focus: false,
-        employeeId: ''
-      }
-    },
-    components: {
-    },
-    computed: {
-      ...mapGetters([
-        'currentMsg',
-        'nowChat',
-        'imLogin'
-      ]),
-      endDate() {
-        if (this.nowChat.length) {
-          if (!this.nowChat[0].created_at && !this.nowChat[0].msgTimeStamp) {
-            return this.nowChat[1] ? this.nowChat[1].created_at ? this.nowChat[1].created_at : this.nowChat[1].msgTimeStamp : ''
-          } else {
-            return this.nowChat[0].created_at ? this.nowChat[0].created_at : this.nowChat[0].msgTimeStamp
-          }
-        } else {
-          return ''
-        }
-      }
     }
   }
 </script>
@@ -476,7 +482,7 @@
   .chat
     width: 100vw
     height: 100vh
-    background: $color-F1F1F2
+    background: #F1F1F2
     position: relative
     .chat-container
       width: 100%
@@ -501,7 +507,7 @@
             border-radius: 2px
             font-family: $font-family-regular
             font-size: $font-size-12
-            color: $color-white
+            color: #fff
             line-height: 14px
         .chat-content
           display: flex
@@ -527,10 +533,10 @@
               word-break: break-all
               vertical-align: middle
             .chat-msg-content.other
-              background: $color-white
+              background: #fff
               border: 0.5px solid #D6DCE0
             .chat-msg-content.mine
-              background: $color-green
+              background: #A1E563
           .other.chat-msg-box
             margin-right: 50px
             .arrow-box
@@ -538,20 +544,20 @@
               height: 45px
               position: relative
               .gray-arrow
-                width:0
-                height:0
+                width: 0
+                height: 0
                 border-width: 5px 6px 5px 0
                 border-style: solid
-                border-color: transparent #D6DCE0 transparent transparent/*透明 灰 透明 透明 */
+                border-color: transparent #D6DCE0 transparent transparent /*透明 灰 透明 透明 */
                 position: absolute
                 right: 0
                 top: 17.5px
                 .white-arrow
-                  width:0
-                  height:0
+                  width: 0
+                  height: 0
                   border-width: 5px 6px 5px 0
                   border-style: solid
-                  border-color: transparent #FFF transparent transparent/*透明 灰 透明 透明 */
+                  border-color: transparent #FFF transparent transparent /*透明 灰 透明 透明 */
                   position: absolute
                   left: 1px
                   top: -5px
@@ -564,11 +570,11 @@
               height: 45px
               position: relative
               .green-arrow
-                width:0
-                height:0
+                width: 0
+                height: 0
                 border-width: 5px 0 5px 6px
                 border-style: solid
-                border-color: transparent transparent transparent $color-green/*透明 灰 透明 透明 */
+                border-color: transparent transparent transparent #A1E563 /*透明 灰 透明 透明 */
                 position: absolute
                 left: 0
                 top: 17.5px
@@ -584,9 +590,9 @@
             .qrCode-content
               width: 230px
               padding: 10px 12px
-              border: 0.5px solid rgba(0,0,0,0.10)
+              border: 0.5px solid rgba(0, 0, 0, 0.10)
               border-radius: 4px
-              background: $color-white
+              background: #fff
               overflow: hidden
               text-align: left
               &:before, &:after
@@ -594,7 +600,7 @@
               .qrCode-title
                 font-family: $font-family-regular
                 font-size: $font-size-16
-                color: $color-20202E
+                color: #20202E
                 margin-bottom: 6px
               .qrCode-text-content
                 width: 100%
@@ -605,7 +611,7 @@
                   overflow: hidden
                   line-height: 18px
                   font-size: $font-size-12
-                  color: $color-888888
+                  color: #888
                   font-family: $font-family-regular
                 .qrCode-img
                   width: 45px
@@ -613,9 +619,9 @@
                   margin-left: 12px
           .chat-msg-new-goods
             width: 226px
-            border: 0.5px solid rgba(0,0,0,0.10)
+            border: 0.5px solid rgba(0, 0, 0, 0.10)
             border-radius: 4px
-            background: $color-white
+            background: #fff
             overflow: hidden
             font-size: 0
             .new-goods-top
@@ -629,7 +635,7 @@
                 .shop-icon
                   width: 18px
                   height: 18px
-                  border: 0.5px solid rgba(0,0,0,0.10)
+                  border: 0.5px solid rgba(0, 0, 0, 0.10)
                   border-radius: 50%
                   margin-right: 6px
                 .shop-name
@@ -674,59 +680,11 @@
             margin-left: 10px
           .mine.chat-msg-new-goods
             margin-right: 10px
-          .welcome-msg
-            width: 210px
-            padding: 15px
-            background: $color-white
-            margin-left: 10px
-            border: 0.5px solid rgba(0,0,0,0.10)
-            border-radius: 4px
-            .welcome-txt
-              font-family: $font-family-regular
-              font-size: $font-size-14
-              color: $color-text
-              line-height: 19px
-              margin-bottom: 15px
-            .welcome-activity
-              width: 100%
-              height: 40px
-              display: flex
-              border: 0.5px solid #E0E0E0
-              border-radius: 2px
-              align-items: center
-              justify-content: space-between
-            .activity-title
-              font-family: $font-family-regular
-              font-size: $font-size-14
-              margin-left: 10px
-            .title-icon
-              width: 27px
-              height: 27px
-              margin-right: 6px
-            .welcome-group
-              width: 100%
-              border: 0.5px solid #E0E0E0
-              border-radius: 4px
-              overflow: hidden
-              font-size: 0
-              margin-top: 15px
-              background: $color-white
-              padding: 0
-              &:before, &:after
-                border: 0 none
-              .group-top
-                height: 40px
-                width: 100%
-                display: flex
-                align-items: center
-                justify-content: space-between
-              .group-icon
-                width: 100%
           .chat-msg-goods
             width: 200px
-            border: 0.5px solid rgba(0,0,0,0.10)
+            border: 0.5px solid rgba(0, 0, 0, 0.10)
             border-radius: 8px
-            background: $color-white
+            background: #fff
             margin-right: 10px
             overflow: hidden
             font-size: 0
@@ -740,14 +698,14 @@
               overflow: hidden
               text-overflow: ellipsis
               white-space: nowrap
-              color: $color-text
+              color: #374B63
         .chat-content.mine
           justify-content: flex-end
     .chat-input
       width: 100%
       box-sizing: border-box
       min-height: 38px
-      background: $color-background-f9
+      background: #f9f9f9
       padding: 6px 0
       position: absolute
       left: 0
@@ -780,9 +738,9 @@
           width: 43px
           height: 36px
           margin: 0 5px
-          border: 1px solid rgba(0,0,0,0.10)
+          border: 1px solid rgba(0, 0, 0, 0.10)
           border-radius: 2px
-          background: $color-white
+          background: #fff
           text-align: center
           line-height: 36px
           font-size: $font-size-14
@@ -791,8 +749,8 @@
         .input-container
           flex: 1
           min-height: 36px
-          border: 1px solid rgba(0,0,0,0.10)
-          background: $color-white
+          border: 1px solid rgba(0, 0, 0, 0.10)
+          background: #fff
           overflow-y: auto
           padding: 0 10px
           display: flex

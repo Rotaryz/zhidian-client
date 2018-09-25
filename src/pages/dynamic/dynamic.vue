@@ -184,7 +184,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {Dynamic} from 'api'
+  import {Dynamic, ActiveCode} from 'api'
   import {baseURL} from 'api/config'
   import ConfirmMsg from 'components/confirm-msg/confirm-msg'
   import { resolveQrCode } from 'common/js/util'
@@ -231,15 +231,14 @@
         this._getList()
         this.shopId = this.$wx.getStorageSync('shopId') ? this.$wx.getStorageSync('shopId') * 1 : ''
         this.myShopId = this.$wx.getStorageSync('myShopId') ? this.$wx.getStorageSync('myShopId') * 1 : null
-        this._getDrawPosterInfo() // 获取画海报的信息
       }, 500)
     },
     onShow() {
       this.$wx.setNavigationBarTitle({ title: '动态' })
       this.isMine = this.$isMyShop()
       this._getDrawPosterInfo() // 获取画海报的信息
-      this.shopId = wx.getStorageSync('shopId') ? this.$wx.getStorageSync('shopId') * 1 : ''
-      this.myShopId = wx.getStorageSync('myShopId') ? this.$wx.getStorageSync('myShopId') * 1 : null
+      this.shopId = this.$wx.getStorageSync('shopId') ? this.$wx.getStorageSync('shopId') * 1 : ''
+      this.myShopId = this.$wx.getStorageSync('myShopId') ? this.$wx.getStorageSync('myShopId') * 1 : null
       this.sendCustomMsg(50001)
       if (this.isLoadDy) {
         this.loadMoreDy = true
@@ -294,20 +293,21 @@
         if (scene) {
           let sceneMsg = decodeURIComponent(scene)
           const params = resolveQrCode(sceneMsg)
-          if (params.e) {
-            this.$wx.setStorageSync('shopId', params.e)
+          if (params.s) {
+            this.$wx.setStorageSync('shopId', params.s)
           }
         }
       },
       _getDrawPosterInfo() {
         const data = {
-          'patch': 'pages/dynamic',
+          'type': 'dynamic',
+          'source': 'c',
           data: {
-            'from_id': this.$wx.getStorageSync('userInfo').id,
+            'from_id': 'c' + this.$wx.getStorageSync('userInfo').id,
             'shopId': this.$wx.getStorageSync('shopId')
           }
         }
-        Dynamic.createMiniCode(data, false).then(res => {
+        ActiveCode.createMiniCode(data, false).then(res => {
           if (res.error !== this.$ERR_OK) {
             this.$wechat.hideLoading()
             this.$showToast(res.message)

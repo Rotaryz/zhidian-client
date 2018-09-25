@@ -19,13 +19,17 @@
           <div class="company">{{shopInfo.name}}</div>
         </div>
       </article>
-      <div class="down">"{{shopInfo.intro}}"</div>
+      <div class="down" v-if="shopInfo.intro">"{{shopInfo.intro}}"</div>
+      <div class="down" v-else></div>
     </section>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import imMixin from 'common/mixins/im-mixin'
+
   export default {
+    mixins: [imMixin],
     props: {
       shopInfo: {
         type: Object,
@@ -44,7 +48,7 @@
       return {}
     },
     onShareAppMessage() {
-      // this.sendCustomMsg(60004) // 转发给好友
+      this.sendCustomMsg(10004) // 转发给好友
       let id = wx.getStorageSync('userInfo').id
       let shopId = wx.getStorageSync('shopId')
       return {

@@ -56,9 +56,11 @@
         const res = Json.data
         let token = res.access_token
         let userInfo = res.customer_info
+        let appToken = res.app_token
         return {
           token,
-          userInfo
+          userInfo,
+          appToken
         }
       },
       async onGotUserInfo(e) {
@@ -78,18 +80,21 @@
         }
         try {
           res = await Jwt.getToken(data)
-          let userInfo, token
+          let userInfo, token, appToken
           if (res.data.unauthorized) {
             let resMsgJson = await this._authorization()
             userInfo = resMsgJson.userInfo
             token = resMsgJson.token
+            appToken = resMsgJson.appToken
           } else {
             userInfo = res.data.customer_info
             token = res.data.access_token
+            appToken = res.data.app_token
           }
           this.$wechat.hideLoading()
           this.$wx.setStorageSync('userInfo', userInfo)
           this.$wx.setStorageSync('token', token)
+          this.$wx.setStorageSync('appToken', appToken)
           this._makeConnect()
         } catch (e) {
           e && this.$showToast(e.msg)

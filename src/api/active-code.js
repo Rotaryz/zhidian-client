@@ -6,7 +6,7 @@ export default {
    * @returns {*}
    */
   createMiniCode (data) {
-    let url = '/api/customer/create-mini-qrcode'
-    return request.get(url, data)
+    let url = '/api/customer/global-create-qrcode'
+    return request.post(url, data)
   }
 }

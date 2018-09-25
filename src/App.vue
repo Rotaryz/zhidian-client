@@ -45,7 +45,6 @@
         'setShowType',
         'setScene',
         'setFromMsg'
-        // 'setShowType',
         // 'setAction'
       ]),
       async _setDefaultShop() {

@@ -119,12 +119,14 @@
               el: '.h-avatar',
               drawType: 'img',
               source: this.avatarUrlTmp,
-              mode: 'aspectFill'
+              mode: 'aspectFill',
+              unLoad: false
             },
             {
               el: '.h-bg',
               drawType: 'img',
-              source: this.imageUrl + '/zd-image/dynamic/bg-card_trends@2x.png'
+              source: this.imageUrl + '/zd-image/dynamic/bg-card_trends@2x.png',
+              unLoad: false
             },
             {
               el: '.h-name',
@@ -147,7 +149,8 @@
             {
               el: '#icon',
               drawType: 'img',
-              source: this.imageUrl + '/zd-image/dynamic/icon-time@2x.png'
+              source: this.imageUrl + '/zd-image/dynamic/icon-time@2x.png',
+              unLoad: false
             },
             {
               el: '#time',
@@ -169,7 +172,8 @@
               drawType: 'img',
               isSelectAll: true,
               sourceArr: newImgArr,
-              mode: modeImgs
+              mode: modeImgs,
+              unLoad: false
             },
             {
               el: '.right > .txt',
@@ -187,7 +191,8 @@
             {
               el: '.qr-code-wrapper',
               drawType: 'img',
-              source: this.qrCodeUrlTmp
+              source: this.qrCodeUrlTmp,
+              unLoad: false
             }
           ]
         }

@@ -3,6 +3,7 @@
     <back-shop v-if="mineShop"></back-shop>
     <guide-header :shopInfo="shopInfo" :employee="employee" :isMyShop="isMyShop"></guide-header>
     <guide-active :groupList="groupData.list" :cutList="cutData.list" :selectTab="selectTab" @changeTab="changeTab"></guide-active>
+    <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
   </article>
 </template>
 
@@ -10,15 +11,18 @@
   import GuideHeader from 'components/guide-header/guide-header'
   import GuideActive from 'components/guide-active/guide-active'
   import BackShop from 'components/back-shop/back-shop'
+  import ImFixed from 'components/im-fixed/im-fixed'
   import { Guide } from 'api'
   import clearWatch from 'common/mixins/clear-watch'
+  import imMixin from 'common/mixins/im-mixin'
 
   export default {
-    mixins: [clearWatch],
+    mixins: [imMixin, clearWatch],
     components: {
       GuideHeader,
       GuideActive,
-      BackShop
+      BackShop,
+      ImFixed
     },
     data() {
       return {
@@ -39,7 +43,11 @@
         selectTab: 0
       }
     },
+    onTabItemTap() {
+      this.sendCustomMsg(10003)
+    },
     onLoad() {
+      this._sendRecord()
     },
     async onShow() {
       await this.getBaseInfo()
@@ -96,6 +104,11 @@
             break
         }
       },
+      _sendRecord() {
+        // 0为普通，1为转发，2为扫码
+        let code = this.scene === 1 ? 10002 : this.scene === 2 ? 10001 : 10003
+        this.sendCustomMsg(code)
+      },
       async getBaseInfo() {
         this.$wechat.showLoading()
         await Promise.all([
@@ -105,9 +118,9 @@
         ])
         this.$wechat.hideLoading()
       },
-      async _getShopInfo(loading) {
+      async _getShopInfo(location, loading) {
         try {
-          let res = await Guide.getShopInfo({}, loading)
+          let res = await Guide.getShopInfo(location, loading)
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return

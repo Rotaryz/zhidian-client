@@ -26,14 +26,6 @@ export default {
     return request.post(url, data)
   },
   /**
-   * 生成小程序二维码
-   * @returns {*}
-   */
-  createMiniCode (data) {
-    let url = '/api/customer/create-mini-qrcode'
-    return request.get(url, data)
-  },
-  /**
    * 发布动态
    * @returns {*}
    */
