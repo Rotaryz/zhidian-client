@@ -318,6 +318,7 @@
         })
       },
       drawDone() {
+        this.setShowType(true)
         this.pictureObj = null
       },
       makePoster() {
@@ -425,7 +426,7 @@
         })
       },
       _seeImage(index, image) {
-        this.setShowType(false)
+        this.setShowType(true)
         let imageArr = image.map(item => item.file_url)
         this.$wx.previewImage({
           current: imageArr[index], // 当前显示图片的http链接
