@@ -3,15 +3,15 @@
     <scroll-view scroll-y class="chat-container" :scroll-into-view="scrollId" @scrolltoupper="loadMore">
       <div class="chat-list">
         <div class="line-view"></div>
-        <!--<div class="chat-item" v-for="(item, index) in nowChat" :key="index" :id="'item' + index">-->
-        <div class="chat-item" v-for="(item, index) in '1'" :key="index" :id="'item' + index">
+        <div class="chat-item" v-for="(item, index) in nowChat" :key="index" :id="'item' + index">
+        <!--<div class="chat-item" v-for="(item, index) in '1'" :key="index" :id="'item' + index">、-->
           <div class="item-time" v-if="item.is_showtime">
             <span class="time-box">{{item.time}}</span>
           </div>
-          <!--<section class="chat-content" v-if="item.from_account_id !== imAccount">-->
-          <section class="chat-content">
-            <!--<img :src="currentMsg.avatar" class="avatar" mode="aspectFill">-->
-            <img class="avatar" mode="aspectFill">
+          <section class="chat-content" v-if="item.from_account_id !== imAccount">
+          <!--<section class="chat-content">-->
+            <img :src="currentMsg.avatar" class="avatar" mode="aspectFill">
+            <!--<img class="avatar" mode="aspectFill">、-->
             <div class="chat-msg-box other" v-if="item.type * 1 === 1">
               <div class="arrow-box">
                 <div class="gray-arrow">
@@ -23,7 +23,7 @@
               </div>
             </div>
             <!--<div class="welcome-msg" v-if="item.type * 1 === 10000">-->
-            <chat-welcome :welcomeMsg="welcomeMsg"></chat-welcome>
+            <chat-welcome :welcomeMsg="welcomeMsg" v-if="item.type * 1 === 10000"></chat-welcome>
             <!--<div class="welcome-msg">-->
             <!--<div class="welcome-txt">你好，欢迎来到{{shopName}}。添加我的个人微信，有更多精彩等你哦！</div>-->
             <!--<div class="welcome-activity" @click.stop="toActivity" v-if="false">-->
@@ -409,8 +409,8 @@
             this.setShowType(true)
             let res = await wechat.chooseImage()
             if (res.errMsg === 'chooseImage:ok') {
-              // this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, [res.tempFilePaths[0]])
-              this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, [res.tempFilePaths[0]]).then((resData) => {
+              this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, [res.tempFilePaths[0]]).then((res) => {
+                const resData = res[0]
                 let data = {
                   image_id: resData.id,
                   url: resData.url
@@ -454,6 +454,8 @@
                 })
               })
             }
+            break
+          default:
             break
         }
       },

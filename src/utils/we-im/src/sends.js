@@ -21,7 +21,6 @@ export default function() {
   }
   // 发送消息
   self._sendMsg = (msg) => {
-    console.log(msg, '-----')
     return new Promise((resolve, reject) => {
       webim.sendMsg(msg, resp => {
         if (self.selType === webim.SESSION_TYPE.C2C) {
