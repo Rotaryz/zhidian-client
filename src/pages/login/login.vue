@@ -1,6 +1,8 @@
 <template>
   <div class="login">
-    <img :src="imgUrl + '/zd-image/login/pic-wxsq@2x.png'" v-if="imgUrl" class="login-icon">
+    <div class="login-icon">
+      <img :src="imgUrl + '/zd-image/login/pic-wxsq@2x.png'" v-if="imgUrl" mode="widthFix" class="login-icon-img">
+    </div>
     <!--<img :src="imgUrl + '/zd-image/login/icon-wechat@2x.png'" v-if="imgUrl" class="login-icon">-->
     <div class="login-title" @click="test">点赞中国，传播国货</div>
     <form class="btn-box" report-submit @submit="$getFormId">
@@ -146,14 +148,16 @@
       padding: 15vw 0 15px
     .login-title
       font-family: FZJUNH_CUJW--GB1-0
-      font-size: 40rpx
+      font-size: 40 rpx
       color: #455A64
       letter-spacing: 11.11px
       margin-bottom: 99.5px
     .login-icon
       width: 204px
-      height: 171px
+      min-height: 171px
       padding: 18.13vw 0 28.5px
+      .login-icon-img
+        width: 100%
     .btn-box
       width: 100%
       box-sizing: border-box
