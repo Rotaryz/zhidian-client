@@ -1,6 +1,6 @@
 <template>
   <article class="welcome-msg">
-    <div class="welcome-txt">您好，欢迎来到{{welcomeMsg.shop_name}}。添加我的个人微信，有更多精彩等你哦！</div>
+    <div class="welcome-txt">您好，欢迎来到{{welcomeMsg.name}}。添加我的个人微信，有更多精彩等你哦！</div>
     <section class="btn-group">
       <div class="btn-item" @click.stop="toMobile">
         <div class="txt">拨打我的电话</div>

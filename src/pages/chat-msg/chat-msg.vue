@@ -4,14 +4,11 @@
       <div class="chat-list">
         <div class="line-view"></div>
         <div class="chat-item" v-for="(item, index) in nowChat" :key="index" :id="'item' + index">
-        <!--<div class="chat-item" v-for="(item, index) in '1'" :key="index" :id="'item' + index">、-->
           <div class="item-time" v-if="item.is_showtime">
             <span class="time-box">{{item.time}}</span>
           </div>
           <section class="chat-content" v-if="item.from_account_id !== imAccount">
-          <!--<section class="chat-content">-->
             <img :src="currentMsg.avatar" class="avatar" mode="aspectFill">
-            <!--<img class="avatar" mode="aspectFill">、-->
             <div class="chat-msg-box other" v-if="item.type * 1 === 1">
               <div class="arrow-box">
                 <div class="gray-arrow">
@@ -22,26 +19,7 @@
                 <rich-text class="chat-msg-content other" :nodes="item.html"></rich-text>
               </div>
             </div>
-            <!--<div class="welcome-msg" v-if="item.type * 1 === 10000">-->
             <chat-welcome :welcomeMsg="welcomeMsg" v-if="item.type * 1 === 10000"></chat-welcome>
-            <!--<div class="welcome-msg">-->
-            <!--<div class="welcome-txt">你好，欢迎来到{{shopName}}。添加我的个人微信，有更多精彩等你哦！</div>-->
-            <!--<div class="welcome-activity" @click.stop="toActivity" v-if="false">-->
-            <!--<div class="activity-title">参加拼团/砍价活动</div>-->
-            <!--<img :src="imgUrl + '/ws-image/radar/icon-activity.png'" v-if="imgUrl" class="title-icon">-->
-            <!--</div>-->
-            <!--<button class="welcome-group" :open-type="welcomeMsg.have_personal_qrcode ? 'contact' : ''" :session-from="'request_friend,' + employeeId" send-message-title="点击下方消息加微信" :send-message-img="imgUrl + '/ws-image/ws1.2/pic-additivepeople@2x.png'" :show-message-card="true" @click="weixinShow">-->
-            <!--<div class="group-top">-->
-            <!--<div class="activity-title">添加我的微信号</div>-->
-            <!--<img :src="imgUrl + '/ws-image/radar/icon-weixin.png'" v-if="imgUrl" class="title-icon">-->
-            <!--</div>-->
-            <!--<image :src="imgUrl + '/ws-image/radar/pic-zd-group@2x.png'" v-if="imgUrl" class="group-icon" mode="widthFix"></image>-->
-            <!--</button>-->
-            <!--<div class="welcome-activity" @click.stop="weixinShow" v-if="false">-->
-            <!--<div class="activity-title">添加我的微信号</div>-->
-            <!--<img :src="imgUrl + '/ws-image/radar/icon-weixin.png'" v-if="imgUrl" class="title-icon">-->
-            <!--</div>-->
-            <!--</div>-->
             <div class="chat-msg-new-goods other" v-if="item.type * 1 == 3 || item.type * 1 == 4 || item.type * 1 == 5" @click="toDetail(item)">
               <div class="new-goods-top">
                 <div class="shop-title">
@@ -263,7 +241,7 @@
         }
         Im.getWelcomeMsg(msgData).then((res) => {
           if (res.error === ERR_OK) {
-            this.shopName = res.data.shop_name
+            this.shopName = res.data.name
             this.welcomeMsg = res.data || {}
           }
         })
