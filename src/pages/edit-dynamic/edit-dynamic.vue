@@ -113,10 +113,10 @@
           return
         }
         if (!this.title) {
-          this.$showToast('发布内容不能为空')
+          this.$showToast('内容不能为空')
           return
         } else if (!this.image.length) {
-          this.$showToast('发布图片不能为空')
+          this.$showToast('图片不能为空')
           return
         }
         let imageArr = []

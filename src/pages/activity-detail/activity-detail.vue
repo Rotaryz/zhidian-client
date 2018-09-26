@@ -200,7 +200,8 @@
           latitude: ''
         },
         kanDetail: {},
-        hasGetExchange: false
+        hasGetExchange: false,
+        endTime: ''
       }
     },
     async onPullDownRefresh() {
@@ -500,50 +501,48 @@
         await this._joinGroup(paymentMsg, item.id)
         this.sendCustomMsg(30008, msgData)
       },
-      _getGoodsDetail(id, type) {
+      async _getGoodsDetail(id, type) {
         switch (type) {
           case 'group':
-            this._getGroupDetail(id)
+            await this._getGroupDetail(id)
             break
           case 'bargain':
-            this._getKanDetail(id)
+            await this._getKanDetail(id)
             break
         }
       },
-      _getGroupDetail(id) {
-        Goods.getGroupDetail(id, this.location).then((res) => {
-          this.$wechat.hideLoading()
-          if (res.error === this.$ERR_OK) {
-            this.bannerImgs = res.data.goods_banner_images
-            this.goodsDetail = res.data
-            let groupList = res.data.open_groupon_lists
-            let first = groupList.slice(0, 2)
-            let second = groupList.slice(2, 4)
-            let third = groupList.slice(4, 6)
-            let four = groupList.slice(6, 8)
-            this.groupOrList = [first, second, third, four].filter((item) => {
-              return item.length > 0
-            })
-            this.endTime = res.data.end_at_timestamp
-            this._groupTimePlay()
-          } else {
-            this.$showToast(res.message)
-          }
-        })
+      async _getGroupDetail(id) {
+        let res = await Goods.getGroupDetail(id, this.location)
+        this.$wechat.hideLoading()
+        if (res.error === this.$ERR_OK) {
+          this.bannerImgs = res.data.goods_banner_images
+          this.goodsDetail = res.data
+          let groupList = res.data.open_groupon_lists
+          let first = groupList.slice(0, 2)
+          let second = groupList.slice(2, 4)
+          let third = groupList.slice(4, 6)
+          let four = groupList.slice(6, 8)
+          this.groupOrList = [first, second, third, four].filter((item) => {
+            return item.length > 0
+          })
+          this.endTime = res.data.end_at_timestamp
+          this._groupTimePlay()
+        } else {
+          this.$showToast(res.message)
+        }
       },
-      _getKanDetail(id) {
-        Goods.getBargainDetail(id, this.location).then((res) => {
-          this.$wechat.hideLoading()
-          if (res.error === this.$ERR_OK) {
-            this.bannerImgs = res.data.goods_banner_images
-            this.goodsDetail = res.data
-            this.endTime = res.data.end_at_timestamp
-            this.kanList = res.data.join_list
-            this._kanTimePlay()
-          } else {
-            this.$showToast(res.message)
-          }
-        })
+      async _getKanDetail(id) {
+        let res = await Goods.getBargainDetail(id, this.location)
+        this.$wechat.hideLoading()
+        if (res.error === this.$ERR_OK) {
+          this.bannerImgs = res.data.goods_banner_images
+          this.goodsDetail = res.data
+          this.endTime = res.data.end_at_timestamp
+          this.kanList = res.data.join_list
+          this._kanTimePlay()
+        } else {
+          this.$showToast(res.message)
+        }
       },
       _groupTimePlay() {
         clearInterval(this.timer)

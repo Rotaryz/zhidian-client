@@ -101,7 +101,6 @@ export default {
       // console.warn(this.$wx.getStorageSync('shopId'))
       this.$wechat.hideLoading()
       if (checkIsTabPage(url)) {
-        console.log(this.$wx)
         this.$wx.switchTab({url})
       } else {
         this.$wx.navigateTo({url})
