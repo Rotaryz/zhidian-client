@@ -12,6 +12,8 @@ const app = new Vue({
 })
 app.$mount()
 
+console.log(app)
+
 export default {
   // 这个字段走 app.json
   config: {

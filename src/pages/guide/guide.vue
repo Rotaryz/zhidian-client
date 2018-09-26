@@ -56,9 +56,9 @@
     },
     async onShow() {
       if (!this.$wx.getStorageSync('token')) return
+      this._changeShopResetData()
       this.showBackBtn = this.$hasShop() && !this.$isMyShop()
       this.isMyShop = !!this.$isMyShop()
-      this._changeShopResetData()
       await this.getBaseInfo()
     },
     async onReachBottom() {
@@ -115,28 +115,10 @@
       },
       _changeShopResetData() {
         if (+this.oldShopId !== +this.$wx.getStorageSync('shopId')) {
-          // this.selectTab = 0
-          // this.showBackBtn = false
-          // this.isMyShop = false
-          // this.oldShopId = ''
-          // this.shopInfo = {}
-          // this.employee = {}
-          // this.groupData = {
-          //   list: [],
-          //   rule_id: 1, // 团购
-          //   page: 1,
-          //   more: true
-          // }
-          // this.cutData = {
-          //   list: [],
-          //   rule_id: 3, // 砍价
-          //   page: 1,
-          //   more: true
-          // }
           Object.assign(this.$data, this.$options.data())
           this.$wechat.pageScrollTo()
           console.warn(this.$wx.getStorageSync('shopId'))
-          this.$wx.setStorageSync('shopId', +this.oldShopId)
+          this.oldShopId = this.$wx.getStorageSync('shopId')
         }
       },
       async goBack() { // 返回自己的店铺

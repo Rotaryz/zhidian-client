@@ -36,7 +36,7 @@
         <img class="icon right" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-tel@2x.png'" alt="" @click="toMobile">
       </article>
     </section>
-    <video class="my-video" id="my-video" v-if="shopInfo.video" :src="shopInfo.video.url" @fullscreenchange="videoChange" @play="videoPlay" @pause="videoPause"></video>
+    <video class="my-video" id="my-video" v-if="shopInfo.video && shopInfo.video.url" :src="shopInfo.video.url" @fullscreenchange="videoChange" @play="videoPlay" @pause="videoPause"></video>
   </div>
 </template>
 <script type="text/ecmascript-6">
