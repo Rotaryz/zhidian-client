@@ -5,7 +5,7 @@
     </div>
     <!--<img :src="imgUrl + '/zd-image/login/icon-wechat@2x.png'" v-if="imgUrl" class="login-icon">-->
     <div class="login-title" @click="test">点赞中国，传播国货</div>
-    <form class="btn-box" report-submit @submit="$getFormId">
+    <form class="btn-box" report-submit @submit="_getFormId">
       <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo" class="login-btn" hover-class="none" formType="submit">
         <img :src="imgUrl + '/ws-image/icon-wechat@2x.png'" v-if="imgUrl" class="btn-icon">
         <span class="btn-txt">微信快捷登录</span>
@@ -28,7 +28,8 @@
     data() {
       return {
         imgUrl: this.$imageUrl,
-        authorizationCount: 0
+        authorizationCount: 0,
+        formId: ''
       }
     },
     onLoad() {
@@ -36,6 +37,7 @@
     },
     onUnload() {
       wx.setStorageSync('errPage', '')
+      this.formId && Jwt.updateFormId({form_ids: [this.formId]})
     },
     methods: {
       async _authorization() {
@@ -123,6 +125,10 @@
         } catch (e) {
           console.error(e)
         }
+      },
+      _getFormId(e) {
+        let id = e.mp.detail.formId
+        this.formId = id
       }
     },
     computed: {
