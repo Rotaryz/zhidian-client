@@ -151,37 +151,38 @@
     .login-logo
       width: 59px
       height: 63px
-      padding: 15vw 0 15px
+      padding: 15vw 0 3vw
     .login-title
       font-family: FZJUNH_CUJW--GB1-0
       font-size: 5.33vw
       color: #455A64
       letter-spacing: 1vw
-      margin-bottom: 99.5px
+      margin-bottom: 26.54vw
+      margin-left :2vw
     .login-icon
       width: 54.4vw
       height: 45.6vw
-      padding: 18.13vw 0 28.5px
+      padding: 18.13vw 0 7.6vw
       .login-icon-img
         width: 100%
         height :100%
     .btn-box
       width: 100%
       box-sizing: border-box
-      padding: 0 35px
+      padding: 0 9.3vw
       .login-btn
         width: 100%
-        height: 45px
-        border-radius: 100px
+        height: 12vw
+        border-radius: 26.6vw
         background-image: linear-gradient(90deg, #EB5C5C 0%, #D32F2F 100%)
         box-shadow: 0 4px 16px 0 rgba(211, 47, 47, 0.20)
         display: flex
         align-items: center
         justify-content: center
         .btn-icon
-          width: 27px
-          height: 22px
-          margin-right: 10px
+          width: 7.2vw
+          height: 5.86vw
+          margin-right: 2.66vw
         .btn-txt
           font-size: $font-size-16
           color: $color-white
@@ -190,9 +191,9 @@
         &:before, &:after
           border: 0 none
     .explain
-      margin-top: 20px
+      margin-top: 5.3vw
       font-family: PingFangSC-Regular
-      font-size: 14px
+      font-size: 3.73vw
       color: #99A0AA
       letter-spacing: 0.6px
 </style>
