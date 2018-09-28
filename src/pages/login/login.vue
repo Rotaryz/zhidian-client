@@ -154,11 +154,10 @@
       padding: 15vw 0 15px
     .login-title
       font-family: FZJUNH_CUJW--GB1-0
-      font-size: 20px
+      font-size: 5.33vw
       color: #455A64
-      letter-spacing: 11.11px
+      letter-spacing: 1vw
       margin-bottom: 99.5px
-      width :54.4vw
     .login-icon
       width: 54.4vw
       height: 45.6vw
