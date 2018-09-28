@@ -1,6 +1,5 @@
 <template>
   <div class="goods-detail">
-    <navigator url="/pages/goods-detail?goodsId=15">21211</navigator>
     <div class="banner-box">
       <swiper class="banner" @change="bannerChange">
         <block v-for="(item, index) in bannerImgs" :key="index">
@@ -102,7 +101,6 @@
       }
     },
     async onShow() {
-      console.log(this)
       if (!this.refreshPage) {
         this.refreshPage = true
         return
