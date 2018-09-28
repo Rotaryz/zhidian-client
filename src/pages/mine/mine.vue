@@ -52,25 +52,21 @@
         length: 1,
         shopList: [],
         userInfo: {},
-        shopId: ''
+        shopId: '',
+        mineShop: false,
+        openShop: false,
+        isHasShop: false
       }
     },
     onShow() {
+      this.$checkIsMyShop(() => {
+        this.isHasShop = !this.$hasShop()
+        this.mineShop = !this.isHasShop && this.$isMyShop()
+        this.openShop = this.$isMyShop() ? '' : 'contact'
+      })
       this.userInfo = wx.getStorageSync('userInfo')
       this.shopId = wx.getStorageSync('shopId')
       this._getBrowserList()
-    },
-    computed: {
-      mineShop() {
-        return !this.$isMyShop() && this.$hasShop()
-      },
-      openShop() {
-        let type = this.$isMyShop() ? '' : 'contact'
-        return type
-      },
-      isHasShop() {
-        return !this.$hasShop()
-      }
     },
     methods: {
       ...mapActions(['setBrowseList']),
