@@ -18,6 +18,7 @@ export default {
       'setImLogin',
       'setCurrentMsg',
       'setDescMsg',
+      'addNowChat',
       'clearBehaviorList',
       'setNowCountNum',
       'setNowCount',

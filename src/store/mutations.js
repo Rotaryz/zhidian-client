@@ -29,44 +29,44 @@ const mutations = {
   [types.SET_SCENE](state, scene) {
     state.scene = scene
   },
-  [types.SET_DYNAMIC] (state, boolean) {
+  [types.SET_DYNAMIC](state, boolean) {
     state.isLoadDy = boolean
   },
-  [types.GOODS_DRAW_INFO] (state, obj) {
+  [types.GOODS_DRAW_INFO](state, obj) {
     state.goodsDrawInfo = obj
   },
-  [types.SET_BEHAVIOR_LIST] (state, opt) {
+  [types.SET_BEHAVIOR_LIST](state, opt) {
     state.behaviorList.push(opt)
   },
-  [types.SET_BEHAVIOR_LIST_TO_SERVERS] (state, opt) {
+  [types.SET_BEHAVIOR_LIST_TO_SERVERS](state, opt) {
     state.behaviorListToServer.push(opt)
   },
-  [types.SET_CURRENT_MSG] (state, info) {
+  [types.SET_CURRENT_MSG](state, info) {
     state.currentMsg = info
   },
-  [types.SET_IMING] (state, boolean) {
+  [types.SET_IMING](state, boolean) {
     state.imIng = boolean
   },
-  [types.SET_IM_LOGIN] (state, boolean) {
+  [types.SET_IM_LOGIN](state, boolean) {
     state.imLogin = boolean
   },
-  [types.DESC_MSG] (state, descMsg) {
+  [types.DESC_MSG](state, descMsg) {
     state.descMsg = descMsg
   },
-  [types.CLEAR_BEHAVIOR_LIST] (state) {
+  [types.CLEAR_BEHAVIOR_LIST](state) {
     state.behaviorList = []
   },
-  [types.SET_NOW_COUNT_NUM] (state, num) {
+  [types.SET_NOW_COUNT_NUM](state, num) {
     state.currentUnRead = num * 1
   },
-  [types.SET_NOW_COUNT] (state, type) {
+  [types.SET_NOW_COUNT](state, type) {
     if (type === 'add') {
       state.currentUnRead++
     } else if (type === 'clear') {
       state.currentUnRead = 0
     }
   },
-  [types.ADD_NOW_CHAT] (state, msg) {
+  [types.ADD_NOW_CHAT](state, msg) {
     let newMsg
     if (msg.ext * 1 === 20005) {
       let data = JSON.parse(msg.data)
@@ -136,10 +136,10 @@ const mutations = {
       }
     }
   },
-  [types.SET_CHAT_BTNTYPE] (state, type) {
+  [types.SET_CHAT_BTNTYPE](state, type) {
     state.chatBtnType = type
   },
-  [types.SET_NOW_CHAT] (state, nowChat) {
+  [types.SET_NOW_CHAT](state, nowChat) {
     state.nowChat = nowChat.map((item) => {
       let time = item.created_at ? item.created_at : item.msgTimeStamp
       item.time = radarTimeFormat(time).time

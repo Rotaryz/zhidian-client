@@ -132,15 +132,15 @@
   import { Im } from 'api'
   import { emotionsFaceArr, TIMELAG } from 'utils/im-plugins'
   import ChatWelcome from 'components/chat-welcome/chat-welcome'
-  import Vue from 'vue'
+  import {app} from '@/main'
 
-  const vue = new Vue()
-  const webimHandler = vue.$webimHandler
-  const ERR_OK = vue.$ERR_OK
-  const wx = vue.$wx
-  const wechat = vue.$wechat
+  const _this = app
+  const webimHandler = _this.$webimHandler
+  const ERR_OK = _this.$ERR_OK
+  const wx = _this.$wx
+  const wechat = _this.$wechat
   const MORELIST = [
-    {txt: '图片', icon: vue.$imageUrl + '/ws-image/radar/icon-picture@2x.png', type: 1}
+    {txt: '图片', icon: _this.$imageUrl + '/ws-image/radar/icon-picture@2x.png', type: 1}
   ]
   export default {
     components: {

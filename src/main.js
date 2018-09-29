@@ -12,7 +12,9 @@ const app = new Vue({
 })
 app.$mount()
 
-console.log(app)
+export {
+  app
+}
 
 export default {
   // 这个字段走 app.json
