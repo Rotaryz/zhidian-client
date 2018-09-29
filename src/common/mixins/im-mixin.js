@@ -162,8 +162,7 @@ export default {
           data = JSON.stringify(obj.product)
           break
         default:
-          console.log(sendObj)
-          // this._sendRecord(Object.assign({}, this.descMsg, sendObj))
+          this._sendRecord(Object.assign({}, this.descMsg, sendObj))
           break
       }
       let option = {
