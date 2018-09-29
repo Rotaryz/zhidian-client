@@ -9,7 +9,8 @@ export default {
       'behaviorList',
       'imLogin',
       'descMsg',
-      'fromMsg'
+      'fromMsg',
+      'behaviorListToServer'
     ])
   },
   methods: {
@@ -19,7 +20,8 @@ export default {
       'setDescMsg',
       'clearBehaviorList',
       'setNowCountNum',
-      'setNowCount'
+      'setNowCount',
+      'setBehaviorListToServers'
     ]),
     async loginIm() {
       let userInfo = wx.getStorageSync('userInfo')
@@ -111,6 +113,12 @@ export default {
             })).then(() => {
               this.clearBehaviorList()
             })
+            // 行为消息清空--发送至服务器
+            Promise.all(this.behaviorListToServer.map((item) => {
+              return this._ImSendRecordToServer(item)
+            })).then(() => {
+              this.setBehaviorListToServers([])
+            })
           }
           // 读取当前员工的未读信息, 没有则设置成1(欢迎语)
           if (resData.data.ever_talked) {
@@ -162,7 +170,6 @@ export default {
           data = JSON.stringify(obj.product)
           break
         default:
-          this._sendRecord(Object.assign({}, this.descMsg, sendObj))
           break
       }
       let option = {
@@ -170,14 +177,18 @@ export default {
         data,
         ext
       }
+      let option4Servers = Object.assign({}, this.descMsg, sendObj)
+      // im登录再执行发送
       if (this.imLogin && this.descMsg.flow_id) {
         let account = this.currentMsg.account
         this.$webimHandler.onSendCustomMsg(option, account)
+        this._ImSendRecordToServer(option4Servers)
       } else {
         this.setBehaviorList(option)
+        this.setBehaviorListToServers(option4Servers)
       }
     },
-    _sendRecord(obj) {
+    _ImSendRecordToServer(obj) {
       Im.sendRecord(obj)
     }
   }

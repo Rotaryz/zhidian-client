@@ -38,6 +38,9 @@ const mutations = {
   [types.SET_BEHAVIOR_LIST] (state, opt) {
     state.behaviorList.push(opt)
   },
+  [types.SET_BEHAVIOR_LIST_TO_SERVERS] (state, opt) {
+    state.behaviorListToServer.push(opt)
+  },
   [types.SET_CURRENT_MSG] (state, info) {
     state.currentMsg = info
   },
