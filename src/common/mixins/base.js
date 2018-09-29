@@ -113,7 +113,7 @@ export default {
       return +this.$wx.getStorageSync('userInfoExtend').shop_id === +this.$wx.getStorageSync('shopId')
     },
     $hasShop() {
-      return this.$wx.getStorageSync('userInfoExtend').shop_id
+      return +this.$wx.getStorageSync('userInfoExtend').shop_id
     },
     $checkIsMyShop(callback) {
       Jwt.checkIsMyShop().then(res => {
