@@ -52,7 +52,7 @@
     },
     onLoad() {
       this.oldShopId = this.$wx.getStorageSync('shopId')
-      this._sendRecord()
+      this._sendRecords()
     },
     async onShow() {
       if (!this.$wx.getStorageSync('token')) return
@@ -127,7 +127,7 @@
         this._changeShopResetData()
         await this.getBaseInfo()
       },
-      _sendRecord() {
+      _sendRecords() {
         // 0为普通，1为转发，2为扫码
         let code = this.scene === 1 ? 10002 : this.scene === 2 ? 10001 : 10003
         this.sendCustomMsg(code)
