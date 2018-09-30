@@ -104,7 +104,7 @@ export default {
             employee_id: resData.data.employee_id
           }
           if (!resData.data.shop_avatar) {
-            let shopRes = await Guide.getShopInfo()
+            let shopRes = await Guide.getShopInfo({}, false)
             if (shopRes.error === this.$ERR_OK) {
               currentMsg.avatar = shopRes.data.employee.avatar
             }
