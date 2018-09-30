@@ -1,4 +1,4 @@
-import { Im } from 'api'
+import { Im, Guide } from 'api'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -102,6 +102,12 @@ export default {
             customer_id: userInfo.id,
             customer_name: userInfo.nickname,
             employee_id: resData.data.employee_id
+          }
+          if (!resData.data.shop_avatar) {
+            let shopRes = await Guide.getShopInfo()
+            if (shopRes.error === this.$ERR_OK) {
+              currentMsg.avatar = shopRes.data.employee.avatar
+            }
           }
           wx.setStorageSync('merchantId', resData.data.merchant_id)
           this.setCurrentMsg(currentMsg)
