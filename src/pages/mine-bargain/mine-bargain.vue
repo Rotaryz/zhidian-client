@@ -27,7 +27,7 @@
         </div>
         <div class="order-status">
           <div class="order-type">{{item.status * 1 === 1 ? '砍价中' : '砍价结束'}}</div>
-          <div class="border-btn">
+          <div class="border-btn" v-if="item.status * 1 === 1">
             <button open-type="share" hover-class="none" class="btn-one" :data-item="item">找人砍价</button>
             <div class="btn" @click="payOrder(item)">立即购买</div>
           </div>

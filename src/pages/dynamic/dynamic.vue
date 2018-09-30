@@ -13,8 +13,8 @@
           <div class="cainter">
             <div class="user">
               <!-- 头像-->
-              <img class="header" mode="aspectFill" v-if="imageUrl" :src="!item.is_default ? item.employee_image_url : imageUrl + '/zd-image/dynamic/pic-zanbo_logo@2x.png'">
-              <p class="nickname">{{!item.is_default ? item.employee_name : '赞播智店'}}</p>
+              <img class="header" mode="aspectFill" v-if="imageUrl" :src="!item.is_default ? item.shop_image_url : imageUrl + '/zd-image/dynamic/pic-zanbo_logo@2x.png'">
+              <p class="nickname">{{!item.is_default ? item.shop_name : '赞播智店'}}</p>
             </div>
             <!--{{comment?'':'special'}}-->
             <text class="words">{{item.content}}</text>
@@ -49,7 +49,7 @@
             <div class="peo-big-box">
               <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/zd-image/dynamic/icon-like@2x.png'" class="like-icon">
               <div class="like-name">
-                <span v-for="(items,idx) in item.live_log_like" :key="idx">{{idx > 0 ? '，' : ''}}{{items.employee_name || items.customer_name}}</span>
+                <span v-for="(items,idx) in item.live_log_like" :key="idx">{{idx > 0 ? '，' : ''}}{{items.shop_name || items.customer_name}}</span>
               </div>
             </div>
             <div class="comment-peo" v-for="(com, comIdx) in item.live_log_comment" :key="comIdx"><span class="ro-peo-name">{{com.customer_name}}：</span><span class="comment-name">{{com.content}}</span></div>
@@ -61,8 +61,8 @@
         <div class="find-box">
           <div class="cainter">
             <div class="user">
-              <img class="header" mode="aspectFill" v-if="imageUrl" :src="!item.is_default ? item.employee_image_url: imageUrl + '/zd-image/dynamic/pic-zanbo_logo@2x.png'">
-              <p class="nickname">{{!item.is_default ? item.employee_name : '赞播智店'}}</p>
+              <img class="header" mode="aspectFill" v-if="imageUrl" :src="!item.is_default ? item.shop_image_url: imageUrl + '/zd-image/dynamic/pic-zanbo_logo@2x.png'">
+              <p class="nickname">{{!item.is_default ? item.shop_name : '赞播智店'}}</p>
             </div>
             <text class="words">{{item.content}}</text>
             <div class="img-item-two">
@@ -96,7 +96,7 @@
             <div class="peo-big-box">
               <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/zd-image/dynamic/icon-like@2x.png'" class="like-icon">
               <div class="like-name">
-                <span v-for="(items,idx) in item.live_log_like" :key="idx">{{idx > 0 ? '，' : ''}}{{items.employee_name || items.customer_name}}</span>
+                <span v-for="(items,idx) in item.live_log_like" :key="idx">{{idx > 0 ? '，' : ''}}{{items.shop_name || items.customer_name}}</span>
               </div>
             </div>
             <div class="comment-peo" v-for="(com, comIdx) in item.live_log_comment" :key="comIdx"><span class="ro-peo-name">{{com.customer_name}}：</span><span class="comment-name">{{com.content}}</span></div>
@@ -108,8 +108,8 @@
         <div class="find-box">
           <div class="cainter">
             <div class="user">
-              <img class="header" v-if="imageUrl" mode="aspectFill" :src="!item.is_default ? item.employee_image_url: imageUrl + '/zd-image/dynamic/pic-zanbo_logo@2x.png'">
-              <p class="nickname">{{!item.is_default ? item.employee_name : '赞播智店'}}</p>
+              <img class="header" v-if="imageUrl" mode="aspectFill" :src="!item.is_default ? item.shop_image_url: imageUrl + '/zd-image/dynamic/pic-zanbo_logo@2x.png'">
+              <p class="nickname">{{!item.is_default ? item.shop_name : '赞播智店'}}</p>
             </div>
             <!--{{comment?'':'special'}}"-->
             <text class="words">{{item.content}}</text>
@@ -144,7 +144,7 @@
             <div class="peo-big-box">
               <img v-if="imageUrl && item.live_log_like.length" :src="imageUrl + '/zd-image/dynamic/icon-like@2x.png'" class="like-icon">
               <div class="like-name">
-                <span v-for="(items,idx) in item.live_log_like" :key="idx">{{idx > 0 ? '，' : ''}}{{items.employee_name || items.customer_name}}</span>
+                <span v-for="(items,idx) in item.live_log_like" :key="idx">{{idx > 0 ? '，' : ''}}{{items.shop_name || items.customer_name}}</span>
               </div>
             </div>
             <div class="comment-peo" v-for="(com, comIdx) in item.live_log_comment" :key="comIdx"><span class="ro-peo-name">{{com.customer_name}}：</span><span class="comment-name">{{com.content}}</span></div>
@@ -485,7 +485,7 @@
         let data = {
           live_log_id: this.comId,
           content: msgTxt,
-          comment_employee_id: 0,
+          comment_shop_id: 0,
           comment_customer_id: 0,
           comment_id: 0
         }
