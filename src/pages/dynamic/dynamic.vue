@@ -153,7 +153,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!loadMoreDy && dynamicList.length > 1" class="no-more"><div class="line"></div><div class="txt">再拉也没有了</div></div>
+    <div v-if="!loadMoreDy && dynamicList.length > 2" class="no-more"><div class="line"></div><div class="txt">再拉也没有了</div></div>
     <navigator hover-class="none" v-if="isMine" url="edit-dynamic" class="new-dynamic">
       <img mode="widthFix" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-write@2x.png'" class="new-dynamic-img">
     </navigator>
