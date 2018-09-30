@@ -188,6 +188,8 @@ export default {
       // im登录再执行发送
       if (this.imLogin && this.descMsg.flow_id) {
         let account = this.currentMsg.account
+        // todo 商品跳转发送？
+        console.log(option, ' // todo 商品跳转发送？')
         this.$webimHandler.onSendCustomMsg(option, account)
         this._ImSendRecordToServer(option4Servers)
       } else {

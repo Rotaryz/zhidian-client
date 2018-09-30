@@ -324,7 +324,7 @@
           end_date: this.endDate,
           limit: 40,
           customer_im_account: this.userInfo.im_account,
-          employee_im_account: this.currentMsg.account
+          shop_im_account: this.currentMsg.account
         }
         Im.getMsgList(data).then((res) => {
           if (res.error === ERR_OK) {
