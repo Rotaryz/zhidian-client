@@ -1,5 +1,19 @@
 import { Im, Guide } from 'api'
 import { mapGetters, mapActions } from 'vuex'
+const DEFAULTOBJ = {
+  event_no: 0,
+  log_type: 0,
+  goods_id: 0,
+  activity_id: 0,
+  flow_id: 0,
+  store_id: 0,
+  merchant_id: 0,
+  shop_id: 0,
+  customer_id: 0,
+  total: '',
+  title: '',
+  customer_name: ''
+}
 
 export default {
   computed: {
@@ -22,6 +36,7 @@ export default {
       'clearBehaviorList',
       'setNowCountNum',
       'setNowCount',
+      'setBehaviorList',
       'setBehaviorListToServers'
     ]),
     async loginIm() {
@@ -101,7 +116,7 @@ export default {
             shop_id: resData.data.shop_id,
             customer_id: userInfo.id,
             customer_name: userInfo.nickname,
-            employee_id: resData.data.employee_id
+            employee_id: resData.data.employee_id || 0
           }
           if (!resData.data.shop_avatar) {
             let shopRes = await Guide.getShopInfo({}, false)
@@ -113,6 +128,7 @@ export default {
           this.setCurrentMsg(currentMsg)
           this.setDescMsg(descMsg)
           // 执行待完成的行为动作数组
+          console.log(this.behaviorList, shopId)
           if (this.behaviorList.length && shopId) {
             Promise.all(this.behaviorList.map((item) => {
               let opt = Object.assign({}, item, {desc: JSON.stringify(descMsg)})
@@ -122,7 +138,8 @@ export default {
             })
             // 行为消息清空--发送至服务器
             Promise.all(this.behaviorListToServer.map((item) => {
-              return this._ImSendRecordToServer(item)
+              let obj = Object.assign({}, item, descMsg)
+              return this._ImSendRecordToServer(obj)
             })).then(() => {
               this.setBehaviorListToServers([])
             })
@@ -167,10 +184,10 @@ export default {
       let sendObj = {
         event_no: code,
         log_type: 1,
-        total: obj.total,
-        title: obj.title,
-        goods_id: obj.goods_id,
-        activity_id: obj.activity_id
+        total: obj.total || '',
+        title: obj.title || '',
+        goods_id: obj.goods_id || 0,
+        activity_id: obj.activity_id || 0
       }
       switch (code) {
         case 20005:
@@ -184,7 +201,7 @@ export default {
         data,
         ext
       }
-      let option4Servers = Object.assign({}, this.descMsg, sendObj)
+      let option4Servers = Object.assign(DEFAULTOBJ, this.descMsg, sendObj)
       // im登录再执行发送
       if (this.imLogin && this.descMsg.flow_id) {
         let account = this.currentMsg.account

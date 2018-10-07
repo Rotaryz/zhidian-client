@@ -1,6 +1,6 @@
 <template>
   <div class="big-mine">
-    <back-shop v-if="mineShop"></back-shop>
+    <back-shop v-if="!mineShop"></back-shop>
     <div class="mine">
       <div class="mine-msg">
         <img class="mine-header" mode="aspectFill" :src="userInfo.avatar">
@@ -18,7 +18,7 @@
           <p class="manager-image-title">{{item.title}}</p>
           <div class="mine-serve-avatar-box" v-if="index === 2">
             <div class="mine-serve-avatarBox-item" v-for="(items, idx) in shopList" :key="idx">
-              <img class="mine-serve-avatarBox-img" :src="items.image_url">
+              <img class="mine-serve-avatarBox-img" :src="items.image_url" mode="aspectFill">
             </div>
             <span class="shop-num">{{length}}家</span>
           </div>
