@@ -128,7 +128,6 @@ export default {
           this.setCurrentMsg(currentMsg)
           this.setDescMsg(descMsg)
           // 执行待完成的行为动作数组
-          console.log(this.behaviorList, shopId)
           if (this.behaviorList.length && shopId) {
             Promise.all(this.behaviorList.map((item) => {
               let opt = Object.assign({}, item, {desc: JSON.stringify(descMsg)})
@@ -159,22 +158,7 @@ export default {
       let descMsg
       if (code === 20005) {
         let type = +obj.type
-        switch (type) {
-          case 0:
-            descMsg = Object.assign({}, this.descMsg, {log_type: 3})
-            break
-          case 1:
-            descMsg = Object.assign({}, this.descMsg, {log_type: 4})
-            break
-          case 3:
-            descMsg = Object.assign({}, this.descMsg, {log_type: 5})
-            break
-          case 20:
-            descMsg = Object.assign({}, this.descMsg, {log_type: 20})
-            break
-          default:
-            break
-        }
+        descMsg = Object.assign({}, this.descMsg, {log_type: type})
       } else {
         descMsg = Object.assign({}, this.descMsg, {log_type: 1})
       }
@@ -201,7 +185,7 @@ export default {
         data,
         ext
       }
-      let option4Servers = Object.assign(DEFAULTOBJ, this.descMsg, sendObj)
+      let option4Servers = Object.assign({}, DEFAULTOBJ, this.descMsg, sendObj)
       // im登录再执行发送
       if (this.imLogin && this.descMsg.flow_id) {
         let account = this.currentMsg.account

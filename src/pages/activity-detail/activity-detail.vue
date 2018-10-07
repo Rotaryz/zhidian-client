@@ -164,7 +164,7 @@
   import ActivityRole from 'components/activity-role/activity-role'
   import { Goods, Customer } from 'api'
   import { getParams } from 'common/js/util'
-  import { mapActions } from 'vuex'
+  import { mapActions, mapGetters } from 'vuex'
   import ImMixin from 'common/mixins/im-mixin'
   export default {
     mixins: [ImMixin],
@@ -299,7 +299,7 @@
         this.$refs.share.show()
       },
       kanShare() {
-        let msgData = {title: this.goodsDetail.goods_title, activity_id: this.reqGoodsId}
+        let msgData = {title: this.goodsDetail.goods_title, activity_id: this.activityId}
         let msgCode = 30020
         this.sendCustomMsg(msgCode, msgData)
       },
@@ -323,7 +323,17 @@
         })
       },
       _toChatAction() {
-        let msgData = {title: this.goodsDetail.goods_title, activity_id: this.reqGoodsId}
+        let dataMsg = {
+          url: this.goodsDetail.image_url,
+          title: this.goodsDetail.goods_title,
+          goods_price: this.goodsDetail.platform_price,
+          original_price: this.goodsDetail.original_price,
+          avatar: this.currentMsg.avatar,
+          shop_name: this.goodsDetail.shop_data.name,
+          goods_id: this.activityId
+        }
+        this.sendCustomMsg(20005, {product: dataMsg, type: this.activityType === 'group' ? 4 : 5})
+        let msgData = {title: this.goodsDetail.goods_title, activity_id: this.activityId}
         let msgCode = this.activityType === 'group' ? 60003 : 60002
         this.sendCustomMsg(msgCode, msgData)
         let url = `/pages/chat-msg`
@@ -409,7 +419,7 @@
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
             this.kanDetail = res.data
-            let msgData = {title: this.goodsDetail.goods_title, activity_id: this.reqGoodsId, total: res.data.cut_money}
+            let msgData = {title: this.goodsDetail.goods_title, activity_id: this.activityId, total: res.data.cut_money}
             let msgCode = 30019
             this.sendCustomMsg(msgCode, msgData)
             this.showBargain()
@@ -691,6 +701,11 @@
       Payment,
       Share,
       ActivityRole
+    },
+    computed: {
+      ...mapGetters([
+        'currentMsg'
+      ])
     }
   }
 </script>
