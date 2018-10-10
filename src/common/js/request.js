@@ -65,6 +65,7 @@ function checkCode(res) {
       case 10000:
         if (wx.getStorageSync('errPage') !== LOGINPAGE) {
           wx.setStorageSync('errPage', LOGINPAGE)
+          wx.removeStorageSync('token')
           wx.reLaunch({ url: LOGINPAGE })
         }
         break

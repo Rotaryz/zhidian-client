@@ -56,10 +56,20 @@
       this._sendRecordToServer()
     },
     async onShow() {
-      if (!this.$wx.getStorageSync('token')) return
+      if (!this.$wx.getStorageSync('token')) {
+        this.showBackBtn = true
+        return
+      }
       this._changeShopResetData()
-      this.showBackBtn = this.$hasShop() && !this.$isMyShop()
-      this.isMyShop = !!this.$isMyShop()
+      if (!this.$wx.getStorageSync('userInfoExtend')) {
+        this.$checkIsMyShop(() => {
+          this.showBackBtn = this.$hasShop() && !this.$isMyShop()
+          this.isMyShop = this.$isMyShop()
+        })
+      } else {
+        this.showBackBtn = this.$hasShop() && !this.$isMyShop()
+        this.isMyShop = !!this.$isMyShop()
+      }
       await this.getBaseInfo()
     },
     async onReachBottom() {
@@ -118,7 +128,6 @@
         if (+this.oldShopId !== +this.$wx.getStorageSync('shopId')) {
           Object.assign(this.$data, this.$options.data())
           this.$wechat.pageScrollTo()
-          console.warn(this.$wx.getStorageSync('shopId'))
           this.oldShopId = this.$wx.getStorageSync('shopId')
         }
       },

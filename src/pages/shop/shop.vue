@@ -1,6 +1,6 @@
 <template>
   <article class="shop">
-    <shop-header :shopInfo="shopInfo" :employee="employee" :photoInfo="photoInfo"></shop-header>
+    <shop-header :shopInfo="shopInfo" :employee="employee" :photoInfo="photoInfo" v-if="showHeader"></shop-header>
     <shop-content :goodsList="goodsList" :selectTab="selectTab" :storyInfo="storyInfo" @changeTab="changeTab"></shop-content>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
   </article>
@@ -34,7 +34,9 @@
         },
         page: 1,
         more: true,
-        selectTab: 0
+        selectTab: 0,
+        oldShopId: '',
+        showHeader: true
       }
     },
     onLoad() {
@@ -42,6 +44,7 @@
     async onShow() {
       this.page = 1
       this.more = true
+      this._changeShopResetData()
       await this.getBaseInfo()
     },
     async onReachBottom() {
@@ -58,6 +61,16 @@
           this.more = true
           await this._getGoodsList()
           this.$wechat.hideLoading()
+        }
+      },
+      _changeShopResetData() {
+        if (+this.oldShopId !== +this.$wx.getStorageSync('shopId')) {
+          Object.assign(this.$data, this.$options.data())
+          this.$wechat.pageScrollTo()
+          this.selectTab = 0
+          this.showHeader = false
+          this.showHeader = true
+          this.oldShopId = this.$wx.getStorageSync('shopId')
         }
       },
       async getBaseInfo() {
