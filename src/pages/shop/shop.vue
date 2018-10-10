@@ -146,7 +146,7 @@
             this.$showToast(res.message)
             return
           }
-          if (this.page === 1) {
+          if (!res.meta || res.meta.current_page === 1) {
             this.goodsList = res.data
           } else {
             let arr = this.goodsList.concat(res.data)

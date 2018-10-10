@@ -172,7 +172,7 @@
             this.$showToast(res.message)
             return
           }
-          if (this.groupData.page === 1) {
+          if (!res.meta || res.meta.current_page === 1) {
             this.groupData.list = res.data
           } else {
             let arr = this.groupData.list.concat(res.data)
@@ -191,7 +191,7 @@
             this.$showToast(res.message)
             return
           }
-          if (this.cutData.page === 1) {
+          if (!res.meta || res.meta.current_page === 1) {
             this.cutData.list = res.data
           } else {
             let arr = this.cutData.list.concat(res.data)
