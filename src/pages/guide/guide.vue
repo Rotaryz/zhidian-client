@@ -160,6 +160,8 @@
           }
           this.shopInfo = res.data || {}
           this.employee = res.data.employee || {}
+          console.log(this.shopInfo, '---')
+          console.log(this.employee, '+++')
         } catch (e) {
           console.error(e)
         }
