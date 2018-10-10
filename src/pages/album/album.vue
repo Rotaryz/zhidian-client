@@ -4,7 +4,7 @@
         <div class="album-list" v-if="shopList">
           <div class="item-list" v-for="(item, index) in shopList" v-bind:key="index">
             <div class="item-box" @click="previewImg(item)">
-              <img :src="item.url" class="item-img" mode="aspectFill">
+              <img v-if="item.url" :src="item.url" class="item-img" mode="aspectFill">
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 <template>
   <article class="shop">
-    <shop-header :shopInfo="shopInfo" :employee="employee" :photoInfo="photoInfo"></shop-header>
+    <shop-header :shopInfo="shopInfo" :employee="employee" :photoInfo="photoInfo" v-if="showHeader"></shop-header>
     <shop-content :goodsList="goodsList" :selectTab="selectTab" :storyInfo="storyInfo" @changeTab="changeTab"></shop-content>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
   </article>
@@ -34,13 +34,17 @@
         },
         page: 1,
         more: true,
-        selectTab: 0
+        selectTab: 0,
+        oldShopId: '',
+        showHeader: true
       }
     },
     onLoad() {
-      // this._sendRecord()
     },
     async onShow() {
+      this.page = 1
+      this.more = true
+      this._changeShopResetData()
       await this.getBaseInfo()
     },
     async onReachBottom() {
@@ -57,6 +61,16 @@
           this.more = true
           await this._getGoodsList()
           this.$wechat.hideLoading()
+        }
+      },
+      _changeShopResetData() {
+        if (+this.oldShopId !== +this.$wx.getStorageSync('shopId')) {
+          Object.assign(this.$data, this.$options.data())
+          this.$wechat.pageScrollTo()
+          this.selectTab = 0
+          this.showHeader = false
+          this.showHeader = true
+          this.oldShopId = this.$wx.getStorageSync('shopId')
         }
       },
       async getBaseInfo() {
@@ -92,19 +106,19 @@
             this.$showToast(res.message)
             return
           }
-          this.storyInfo = res.data || {details: []}
+          this.storyInfo = res.data || { details: [] }
         } catch (e) {
           console.error(e)
         }
       },
       async _getMerchantsImg(loading) {
         try {
-          let res = await Shop.getMerchantsImg({limit: 1}, loading)
+          let res = await Shop.getMerchantsImg({ page: 1, limit: 6 }, loading)
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return
           }
-          this.photoInfo.pic = res.data[0] ? res.data[0].url : ''
+          this.photoInfo.list = res.data || []
           this.photoInfo.total = res.meta.total
         } catch (e) {
           console.error(e)
@@ -127,12 +141,12 @@
       async _getGoodsList() {
         if (!this.more) return
         try {
-          let res = await Shop.getGoodsList({page: this.page})
+          let res = await Shop.getGoodsList({ page: this.page })
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return
           }
-          if (this.page === 1) {
+          if (!res.meta || res.meta.current_page === 1) {
             this.goodsList = res.data
           } else {
             let arr = this.goodsList.concat(res.data)

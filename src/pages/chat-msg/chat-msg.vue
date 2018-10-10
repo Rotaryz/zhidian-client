@@ -82,7 +82,7 @@
               </div>
               <div class="new-goods-down border-top-1px">
                 <img :src="imgUrl + '/ws-image/radar/pic-logo_zb@2x.png'" v-if="imgUrl" class="down-icon">
-                <span>赞播微店</span>
+                <span>赞播智店</span>
               </div>
             </div>
             <img class="chat-msg-img mine" :src="item.url" v-if="item.type * 1 == 20" mode="widthFix" @click="showPic(item, index)"/>
@@ -324,7 +324,7 @@
           end_date: this.endDate,
           limit: 40,
           customer_im_account: this.userInfo.im_account,
-          employee_im_account: this.currentMsg.account
+          shop_im_account: this.currentMsg.account
         }
         Im.getMsgList(data).then((res) => {
           if (res.error === ERR_OK) {

@@ -2,7 +2,7 @@
   <div class="browse-shop">
     <div class="browse-shop-small" v-if="browseShopList">
       <div class="browse-shop-item" v-for="(item, index) in browseShopList" :key="index" @click="checkShop(item)">
-        <img :src="item.employee.image_url" class="browse-shop-logo">
+        <img :src="item.employee.image_url" class="browse-shop-logo" mode="aspectFill">
         <span class="browse-shop-name">{{item.name}}</span>
         <img :src="image_url + '/zd-image/mine/icon-pressed@2x.png'" class="list-way">
       </div>

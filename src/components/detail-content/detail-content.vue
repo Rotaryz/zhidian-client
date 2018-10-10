@@ -60,9 +60,9 @@
           <div class="know-title">有效期</div>
           <div class="know-down">{{goodsDetail.start_at}} 至 {{goodsDetail.end_at}}</div>
         </div>
-        <div class="know-item">
+        <div class="know-item" v-if="goodsDetail.note && goodsDetail.note.need_subscribe">
           <div class="know-title">预约信息</div>
-          <div class="know-down">请提前2小时预约</div>
+          <div class="know-down">{{goodsDetail.note ? goodsDetail.note.need_subscribe : ''}}</div>
         </div>
         <div class="know-item">
           <div class="know-title">温馨提示</div>
@@ -236,7 +236,7 @@
           .know-title
             font-family: $font-family-regular
             font-size: $font-size-14
-            coloe: $color-6E6E6E
+            color: $color-6E6E6E
             letter-spacing: 0.6px
             margin-bottom: 10px
           .know-down

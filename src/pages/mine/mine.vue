@@ -1,6 +1,6 @@
 <template>
   <div class="big-mine">
-    <back-shop v-if="mineShop"></back-shop>
+    <back-shop v-if="!mineShop && hasShop"></back-shop>
     <div class="mine">
       <div class="mine-msg">
         <img class="mine-header" mode="aspectFill" :src="userInfo.avatar">
@@ -18,13 +18,13 @@
           <p class="manager-image-title">{{item.title}}</p>
           <div class="mine-serve-avatar-box" v-if="index === 2">
             <div class="mine-serve-avatarBox-item" v-for="(items, idx) in shopList" :key="idx">
-              <img class="mine-serve-avatarBox-img" :src="items.image_url">
+              <img class="mine-serve-avatarBox-img" :src="items.image_url" mode="aspectFill">
             </div>
             <span class="shop-num">{{length}}家</span>
           </div>
           <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
         </navigator>
-        <button class="manager-item" v-if="isHasShop" open-type="contact" :session-from="'open_service,' + shopId" :send-message-img="imageUrl + '/zd-image/mine/pic-openshop@2x.png'" send-message-title="点击下方消息开店" show-message-card="true">
+        <button class="manager-item" v-if="!hasShop" open-type="contact" :session-from="'open_service,' + shopId" :send-message-img="imageUrl + '/zd-image/mine/pic-openshop@2x.png'" send-message-title="点击下方消息开店" show-message-card="true">
           <img :src="imageUrl + '/zd-image/mine/icon-openshop@2x.png'" class="manager-image">
           <p class="manager-image-title">我要开店</p>
           <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
@@ -53,16 +53,14 @@
         shopList: [],
         userInfo: {},
         shopId: '',
-        mineShop: false,
-        openShop: false,
-        isHasShop: false
+        mineShop: false, // 是我的店
+        hasShop: false // 有店铺
       }
     },
     onShow() {
       this.$checkIsMyShop(() => {
-        this.isHasShop = !this.$hasShop()
-        this.mineShop = !this.isHasShop && this.$isMyShop()
-        this.openShop = this.$isMyShop() ? '' : 'contact'
+        this.hasShop = this.$hasShop()
+        this.mineShop = this.$isMyShop()
       })
       this.userInfo = wx.getStorageSync('userInfo')
       this.shopId = wx.getStorageSync('shopId')

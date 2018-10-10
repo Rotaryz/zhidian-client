@@ -174,6 +174,16 @@
         this._toChatAction()
       },
       _toChatAction() {
+        let dataMsg = {
+          url: this.goodsDetail.image_url,
+          title: this.goodsDetail.goods_title,
+          goods_price: this.goodsDetail.platform_price,
+          original_price: this.goodsDetail.original_price,
+          avatar: this.currentMsg.avatar,
+          shop_name: this.goodsDetail.shop_data.name,
+          goods_id: this.activityId
+        }
+        this.sendCustomMsg(20005, {product: dataMsg, type: 3})
         let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
         this.sendCustomMsg(60004, msgData)
         let url = `/pages/chat-msg`
@@ -273,7 +283,8 @@
     computed: {
       ...mapGetters([
         'targetPage',
-        'scene'
+        'scene',
+        'currentMsg'
       ])
     }
   }
@@ -388,7 +399,8 @@
       display: flex
       align-items: center
       .left-box
-        width: 130px
+        width: 110px
+        padding: 0 10px
         display: flex
         align-items: center
         .left-item
