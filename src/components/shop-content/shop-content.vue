@@ -36,7 +36,7 @@
       </li>
     </ul>
     <blank v-if="selectTab===0 && goodsList.length===0" styles="padding:50px 0"></blank>
-    <section class="story-wrapper" v-if="selectTab === 1">
+    <section class="story-wrapper" v-if="selectTab === 1 && storyInfo.title && storyInfo.details.length!==0">
       <div class="video-wrapper" v-if="storyInfo.video_url">
         <video class="video" :src="storyInfo.video_url" objectFit="fill" :poster="storyInfo.video_url" :initial-time="1"></video>
       </div>
