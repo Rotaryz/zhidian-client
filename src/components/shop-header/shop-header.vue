@@ -127,6 +127,7 @@
   .shop-header
     padding: 0 15px
     position: relative
+    overflow: hidden
     .media-wrapper
       padding: 18px 15px 18px 0
       width: 100vw

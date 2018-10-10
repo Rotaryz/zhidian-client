@@ -236,7 +236,7 @@
           .know-title
             font-family: $font-family-regular
             font-size: $font-size-14
-            coloe: $color-6E6E6E
+            color: $color-6E6E6E
             letter-spacing: 0.6px
             margin-bottom: 10px
           .know-down

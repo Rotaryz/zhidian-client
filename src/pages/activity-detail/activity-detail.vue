@@ -988,7 +988,8 @@
       display: flex
       align-items: center
       .left-box
-        width: 130px
+        width: 110px
+        padding: 0 10px
         display: flex
         align-items: center
         .left-item
