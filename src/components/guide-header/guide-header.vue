@@ -13,13 +13,13 @@
         <div class="avatar-wrapper">
           <img class="avatar" mode="aspectFill" :src="employee.avatar" alt="">
         </div>
-        <div class="name">{{employee.nickname}}</div>
+        <div class="name">{{employee.name}}</div>
         <div class="detail">
-          <div class="position">{{shopInfo.position}}</div>
+          <div class="position">{{employee.position}}</div>
           <div class="company">{{shopInfo.name}}</div>
         </div>
       </article>
-      <div class="down" v-if="shopInfo.intro">"{{shopInfo.intro}}"</div>
+      <div class="down" v-if="employee.signature">"{{employee.signature}}"</div>
       <div class="down" v-else></div>
     </section>
   </div>
@@ -70,7 +70,7 @@
           let res = await this.$wechat.chooseImage()
           let file = res.tempFilePaths[0]
           getApp().globalData.imgUrl = file
-          this.$wx.navigateTo({url: '/pages/cut-picture?cutType=avatar'})
+          this.$wx.navigateTo({ url: '/pages/cut-picture?cutType=avatar' })
         } catch (e) {
           console.error(e)
         }
@@ -158,6 +158,7 @@
             text-align: justify
             word-break: break-all
       .down
+        font-family: $font-family-regular
         padding: 26.5px 0 35px
         font-size: $font-size-16
         color: #1F1F1F
