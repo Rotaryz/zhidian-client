@@ -200,7 +200,7 @@
         })
       },
       toShare(item) {
-        Guide.shareAction({recommend_activity_id: item.recommend_activity_id, recommend_goods_id: item.recommend_goods_id}, false).then(res => {
+        Guide.shareAction({recommend_activity_id: item.recommend_activity_id}, false).then(res => {
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return
