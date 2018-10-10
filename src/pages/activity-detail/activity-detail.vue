@@ -701,7 +701,7 @@
         })
       },
       _shareReq() {
-        Goods.goodsShare(this.activityId, false)
+        Goods.activityShare(this.activityId, false)
       }
     },
     components: {

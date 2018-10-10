@@ -50,7 +50,7 @@ export default {
     return request.post(url, data, loading)
   },
   /**
-   * 活动分享
+   * 商品分享
    * @return {*}
    */
   goodsShare(id, loading) {
