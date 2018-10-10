@@ -78,7 +78,7 @@
             <section class="top-wrapper">
               <div class="img-wrapper">
                 <div class="img-container">
-                  <img class="img" mode="aspectFill" :src="url" alt="">
+                  <img class="img" mode="aspectFill" :src="item.image_url" alt="">
                 </div>
                 <div class="tag group">仅剩{{item.stock}}份</div>
               </div>
