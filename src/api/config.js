@@ -5,21 +5,21 @@ const DEV = {
   api: 'https://zhidian-api.jerryf.cn',
   image: 'https://img.jerryf.cn/defaults',
   upload: 'https://zhidian-api.jerryf.cn',
-  imRecord: 'http://data-analysis-api.jkweixin.net'
+  imRecord: 'https://data-analysis-api.jkweixin.net'
 }
 
 const TEST = {
   api: 'https://zhidian-api.jkweixin.net' + version,
   image: 'https://img.jkweixin.net/defaults',
   upload: 'https://zhidian-api.jkweixin.net' + version,
-  imRecord: 'http://data-analysis-api.jkweixin.net'
+  imRecord: 'https://data-analysis-api.jkweixin.net'
 }
 
 const PROD = {
   api: 'https://zhidian-api.jkweixin.com' + version,
   image: 'https://img.jkweixin.com/defaults',
   upload: 'https://zhidian-api.jkweixin.com' + version,
-  imRecord: 'http://data-analysis-api.jkweixin.com'
+  imRecord: 'https://data-analysis-api.jkweixin.com'
 }
 
 export const baseURL = env === 'production' ? PROD : env === 'test' ? TEST : DEV
