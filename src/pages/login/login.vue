@@ -29,10 +29,13 @@
       return {
         imgUrl: this.$imageUrl,
         authorizationCount: 0,
-        formId: ''
+        formId: '',
+        code: ''
       }
     },
-    onLoad() {
+    async onLoad() {
+      let resCode = await this.$wechat.login()
+      this.code = resCode.code
       wx.setStorageSync('errPage', '/pages/login/login')
     },
     onUnload() {
@@ -77,12 +80,10 @@
         }
         let iv = res.iv
         let encryptedData = res.encryptedData
-        let resCode = await this.$wechat.login()
-        let code = resCode.code
         let data = {
           iv,
           encrypted_data: encryptedData,
-          code
+          code: this.code
         }
         try {
           res = await Jwt.getToken(data)
