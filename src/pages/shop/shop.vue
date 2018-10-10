@@ -61,9 +61,7 @@
         }
       },
       async getBaseInfo() {
-        console.log(12312)
         this.$wechat.showLoading()
-        console.log(211666)
         await Promise.all([
           this._getLocation(false),
           this._getGoodsList(false),
@@ -78,16 +76,13 @@
         this.sendCustomMsg(code)
       },
       async _getLocation(loading) {
-        console.log(1)
         let location
         try {
-          console.log(11)
           const res = await this.$wechat.getLocation('gcj02')
           location = res
         } catch (e) {
           console.error(e)
         } finally {
-          console.log(7712312)
           await this._getShopInfo(location, loading)
         }
       },
@@ -131,16 +126,13 @@
         }
       },
       async _getGoodsList() {
-        console.log(2112)
         if (!this.more) return
-        console.log(222222222222)
         try {
           let res = await Shop.getGoodsList({ page: this.page })
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return
           }
-          console.log(res)
           if (this.page === 1) {
             this.goodsList = res.data
           } else {
