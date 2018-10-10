@@ -525,7 +525,11 @@
         let res = await Goods.getGroupDetail(id, this.location)
         this.$wechat.hideLoading()
         if (res.error === this.$ERR_OK) {
-          this.bannerImgs = res.data.goods_banner_images
+          if (res.data.activity_image_url) {
+            this.bannerImgs = [{image: {url: res.data.activity_image_url}}, ...res.data.goods_banner_images]
+          } else {
+            this.bannerImgs = res.data.goods_banner_images
+          }
           this.goodsDetail = res.data
           let groupList = res.data.open_groupon_lists
           let first = groupList.slice(0, 2)
@@ -545,7 +549,11 @@
         let res = await Goods.getBargainDetail(id, this.location)
         this.$wechat.hideLoading()
         if (res.error === this.$ERR_OK) {
-          this.bannerImgs = res.data.goods_banner_images
+          if (res.data.activity_image_url) {
+            this.bannerImgs = [{image: {url: res.data.activity_image_url}}, ...res.data.goods_banner_images]
+          } else {
+            this.bannerImgs = res.data.goods_banner_images
+          }
           this.goodsDetail = res.data
           this.endTime = res.data.end_at_timestamp
           this.kanList = res.data.join_list
