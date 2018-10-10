@@ -191,7 +191,7 @@
                 layout(row, block, nowrap)
                 align-items: flex-end
                 font-family: $font-family-bold
-                color: #000028
+                color: $color-455A64
                 .numbers
                   font-size: 26px
                 .unit

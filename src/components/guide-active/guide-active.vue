@@ -351,17 +351,15 @@
                     layout(row, block, nowrap)
                     justify-content: space-between
                     align-items: center
+                    font-family: $font-family-bold
+                    color: $color-455A64
                     .money
-                      font-family: $font-family-medium
                       font-size: $font-size-24
-                      color: $color-455A64
                       padding-right: 5px
                       max-width: 37.9vw
                       no-wrap()
                       &:first-letter
-                        font-family: $font-family-medium
                         font-size: $font-size-12
-                        color: $color-455A64
                         margin: 0 3px 6px 0
                     .button
                       normal-button-style(normal, 85px, 32px)
