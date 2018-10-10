@@ -36,6 +36,7 @@
         more: true,
         selectTab: 0,
         oldShopId: '',
+        isMyShop: false,
         showHeader: true
       }
     },
@@ -45,6 +46,7 @@
       this.page = 1
       this.more = true
       this._changeShopResetData()
+      this._verdictRole()
       await this.getBaseInfo()
     },
     async onReachBottom() {
@@ -54,6 +56,15 @@
       this.$wechat.hideLoading()
     },
     methods: {
+      _verdictRole() {
+        if (!this.$wx.getStorageSync('userInfoExtend')) {
+          this.$checkIsMyShop(() => {
+            this.isMyShop = this.$isMyShop()
+          })
+        } else {
+          this.isMyShop = !!this.$isMyShop()
+        }
+      },
       async changeTab(index) {
         this.selectTab = index
         if (index === 0) {
@@ -71,6 +82,7 @@
           this.showHeader = false
           this.showHeader = true
           this.oldShopId = this.$wx.getStorageSync('shopId')
+          this._verdictRole()
         }
       },
       async getBaseInfo() {
@@ -171,11 +183,6 @@
           arr = new Array(5).fill(0)
         }
         return arr
-      }
-    },
-    computed: {
-      isMyShop() {
-        return !!this.$isMyShop()
       }
     }
   }

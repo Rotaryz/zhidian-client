@@ -61,15 +61,7 @@
         return
       }
       this._changeShopResetData()
-      if (!this.$wx.getStorageSync('userInfoExtend')) {
-        this.$checkIsMyShop(() => {
-          this.showBackBtn = this.$hasShop() && !this.$isMyShop()
-          this.isMyShop = this.$isMyShop()
-        })
-      } else {
-        this.showBackBtn = this.$hasShop() && !this.$isMyShop()
-        this.isMyShop = !!this.$isMyShop()
-      }
+      this._verdictRole()
       await this.getBaseInfo()
     },
     async onReachBottom() {
@@ -105,6 +97,17 @@
       }
     },
     methods: {
+      _verdictRole() {
+        if (!this.$wx.getStorageSync('userInfoExtend')) {
+          this.$checkIsMyShop(() => {
+            this.showBackBtn = this.$hasShop() && !this.$isMyShop()
+            this.isMyShop = this.$isMyShop()
+          })
+        } else {
+          this.showBackBtn = this.$hasShop() && !this.$isMyShop()
+          this.isMyShop = !!this.$isMyShop()
+        }
+      },
       changeTab(index) {
         this.selectTab = index
         switch (index) {
@@ -129,6 +132,7 @@
           Object.assign(this.$data, this.$options.data())
           this.$wechat.pageScrollTo()
           this.oldShopId = this.$wx.getStorageSync('shopId')
+          this._verdictRole()
         }
       },
       async goBack() { // 返回自己的店铺
@@ -160,8 +164,6 @@
           }
           this.shopInfo = res.data || {}
           this.employee = res.data.employee || {}
-          console.log(this.shopInfo, '---')
-          console.log(this.employee, '+++')
         } catch (e) {
           console.error(e)
         }
