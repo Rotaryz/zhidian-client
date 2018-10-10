@@ -368,7 +368,8 @@
       .line-box
         col-center()
         width: 100%
-        height: 0.5px
+        height: 1px
+        transform: scale(1, 0.5)
         display: flex
         .line
           background: $color-D2D2D2
