@@ -301,13 +301,13 @@
           display: flex
           justify-content: center
           .avatar-box
-            width: 45px
-            height: 45px
+            width: 12vw
+            height: 12vw
             box-sizing: border-box
             border: 0.5px solid $color-col-line
             border-radius: 50%
             overflow: hidden
-            margin-right: 45px
+            margin-right: 8vw
             position: relative
             font-size: 0
             &:last-child
