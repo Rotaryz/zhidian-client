@@ -1,20 +1,21 @@
 <template>
   <div class="shop-header">
-    <section class="media-wrapper">
-      <div class="item video" @click="playVideo">
-        <img mode="aspectFill" class="pic" v-if="shopInfo.video && shopInfo.video.image_url" :src="shopInfo.video.image_url" alt="">
+    <scroll-view :scroll-x="true" class="media-wrapper">
+      <div class="item video" @click="playVideo" v-if="shopInfo.video && shopInfo.video.image_url">
+        <img mode="aspectFill" class="pic" :src="shopInfo.video.image_url" alt="">
         <div class="video-mask">
           <img class="icon-btn" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-video@2x.png'" alt="">
         </div>
       </div>
-      <div class="item pics" @click="toPhotos">
-        <img mode="aspectFill" class="pic" v-if="photoInfo.pic" :src="photoInfo.pic" alt="">
-        <div class="button-pic">
+      <div class="item pics" @click="toPhotos" v-if="photoInfo.list && photoInfo.list.length" v-for="(item, index) in photoInfo.list" :key="index">
+        <img mode="aspectFill" class="pic" v-if="item.url" :src="item.url" alt="">
+        <div class="button-pic" v-if="index === 0">
           <img class="icon-pic" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-pic@2x.png'" alt="">
           <span class="txt">{{photoInfo.total}}</span>
         </div>
       </div>
-    </section>
+      <div class="item empty" v-if="photoInfo.list && photoInfo.list.length > 2"></div>
+    </scroll-view>
     <div class="shop-name">{{shopInfo.name}}</div>
     <div class="evaluate">
       <div class="star" v-for="(item, idx) in shopInfo.rate" :key="idx">
@@ -63,6 +64,8 @@
         isPlay: false
       }
     },
+    onLoad() {
+    },
     onUnload() {
       this.ctx = null
       this.isPlay = false
@@ -77,7 +80,7 @@
       playVideo() {
         const ctx = this.$wx.createVideoContext('my-video')
         ctx.play()
-        ctx.requestFullScreen({direction: 90})
+        ctx.requestFullScreen({ direction: 90 })
         this.ctx = ctx
         this.setShowType(true)
       },
@@ -85,7 +88,7 @@
         this.isPlay && this.ctx && this.ctx.pause()
       },
       toPhotos() {
-        this.$wx.navigateTo({url: '/pages/album'})
+        this.$wx.navigateTo({ url: '/pages/album' })
       },
       async toMap() {
         try {
@@ -98,7 +101,7 @@
             return
           }
           this.$wechat.showLoading()
-          await this.$wechat.openLocation({latitude, longitude, name, address})
+          await this.$wechat.openLocation({ latitude, longitude, name, address })
           this.$wechat.hideLoading()
           this.setShowType(true)
         } catch (e) {
@@ -106,7 +109,7 @@
         }
       },
       toMobile() {
-        this.$wx.makePhoneCall && this.$wx.makePhoneCall({phoneNumber: '' + this.shopInfo.telephone})
+        this.$wx.makePhoneCall && this.$wx.makePhoneCall({ phoneNumber: '' + this.shopInfo.telephone })
         this.setShowType(true)
       }
     }
@@ -125,15 +128,21 @@
     padding: 0 15px
     position: relative
     .media-wrapper
-      layout(row, block, nowrap)
-      justify-content: space-between
-      padding: 18px 0 15px
+      padding: 18px 15px 18px 0
+      width: 100vw
+      height: 33.33vw
+      white-space: nowrap
       .item
+        display: inline-block
         width: 44.66vw
         height: 33.33vw
         position: relative
         border-radius: 2px
         overflow: hidden
+        margin-right: 10px
+        &.empty
+          width: 15px
+          height: 10px
         .video-mask
           fill-box()
           background: transparent

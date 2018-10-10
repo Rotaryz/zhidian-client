@@ -92,20 +92,21 @@
             this.$showToast(res.message)
             return
           }
-          this.storyInfo = res.data || {details: []}
+          this.storyInfo = res.data || { details: [] }
         } catch (e) {
           console.error(e)
         }
       },
       async _getMerchantsImg(loading) {
         try {
-          let res = await Shop.getMerchantsImg({limit: 1}, loading)
+          let res = await Shop.getMerchantsImg({ page: 1, limit: 6 }, loading)
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return
           }
-          this.photoInfo.pic = res.data[0] ? res.data[0].url : ''
+          this.photoInfo.list = res.data || []
           this.photoInfo.total = res.meta.total
+          console.log(this.photoInfo.total)
         } catch (e) {
           console.error(e)
         }
@@ -127,7 +128,7 @@
       async _getGoodsList() {
         if (!this.more) return
         try {
-          let res = await Shop.getGoodsList({page: this.page})
+          let res = await Shop.getGoodsList({ page: this.page })
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return
