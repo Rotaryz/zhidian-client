@@ -121,7 +121,10 @@
         })
       },
       submitOrder() {
-        if (!this.paymentMsg.phoneNum) return
+        if (!this.paymentMsg.phoneNum) {
+          this.$showToast('请先授权手机号')
+          return
+        }
         let data, msgCode
         let goods = [{
           goods_id: this.paymentMsg.goods_id,
