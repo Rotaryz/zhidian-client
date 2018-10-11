@@ -165,9 +165,8 @@
           position: absolute
           right: 6px
           bottom: 6px
-          opacity: 0.4
           height: 20px
-          background: $color-455A64
+          background: rgba(69,90,100,0.4)
           border-radius: 20px
           padding: 0 8.5px
           layout(row, block, nowrap)
