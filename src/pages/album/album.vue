@@ -1,16 +1,16 @@
 <template>
-    <div class="album">
-      <div class="album-box" :class="{'album-list-active' : isNull && shopList.length * 1 === 0}">
-        <div class="album-list" v-if="shopList">
-          <div class="item-list" v-for="(item, index) in shopList" v-bind:key="index">
-            <div class="item-box" @click="previewImg(item)">
-              <img v-if="item.url" :src="item.url" class="item-img" mode="aspectFill">
-            </div>
+  <div class="album">
+    <div class="album-box" :class="{'album-list-active' : isNull && shopList.length * 1 === 0}">
+      <div class="album-list" v-if="shopList">
+        <div class="item-list" v-for="(item, index) in shopList" v-bind:key="index">
+          <div class="item-box" @click="previewImg(item)">
+            <img v-if="item.url" :src="item.url" class="item-img" mode="aspectFill">
           </div>
         </div>
-        <blank v-if="isNull && shopList.length * 1 === 0"></blank>
       </div>
+      <blank v-if="isNull && shopList.length * 1 === 0"></blank>
     </div>
+  </div>
 </template>
 
 <script type="text/ecmascript-6">
@@ -18,6 +18,7 @@
   import { mapActions } from 'vuex'
 
   import { Shop, Guide } from 'api'
+
   export default {
     name: 'album',
     data() {
@@ -32,20 +33,24 @@
       this.getMerchantsTitle()
       this.getImgList()
     },
-    onReachBottom () {
+    onReachBottom() {
       this.getMoreImgList()
     },
     methods: {
       ...mapActions(['setShowType']),
       previewImg(item) {
         this.setShowType(true)
-        this.$wx.previewImage({urls: [item.url]})
+        let urls = this.shopList.map(item => item.url)
+        let current = item.url
+        console.log(urls, current)
+        this.$wx.previewImage({ urls, current })
       },
       getImgList() {
         this.page = 1
         this.upMore = false
-        Shop.getMerchantsImg({page: this.page, limit: 10}).then((res) => {
+        Shop.getMerchantsImg({ page: this.page, limit: 10 }).then((res) => {
           this.$wechat.hideLoading()
+          console.log(res)
           if (res.error === this.$ERR_OK) {
             this.shopList = res.data
             this.isNull = true
@@ -55,7 +60,7 @@
           }
         })
       },
-      _isUpList (res) {
+      _isUpList(res) {
         this.page++
         if (this.shopList.length >= res.meta.total * 1) {
           this.upMore = true
@@ -63,7 +68,7 @@
       },
       getMoreImgList() {
         if (this.upMore) return
-        Shop.getMerchantsImg({page: this.page, limit: 10}).then((res) => {
+        Shop.getMerchantsImg({ page: this.page, limit: 10 }).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
             this.shopList.push(...res.data)
@@ -77,7 +82,7 @@
         Guide.getShopInfo().then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
-            this.$wx.setNavigationBarTitle({title: res.data.name})
+            this.$wx.setNavigationBarTitle({ title: res.data.name })
           } else {
             this.$showToast(res.message)
           }
@@ -96,6 +101,7 @@
     min-height: 100vh
     background: $color-background
     box-sizing: border-box
+
   .album-list
     padding: 10px 15px
     layout(row)
