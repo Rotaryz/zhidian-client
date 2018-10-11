@@ -281,9 +281,16 @@
           .payment-title
             font-family: $font-family-medium
             font-size: 16px
+            height: 32px
+            line-height: 16px
             color: $color-1F1F1F
             letter-spacing: 0.6px
             margin-bottom: 17px
+            overflow : hidden
+            text-overflow: ellipsis
+            display: -webkit-box
+            -webkit-line-clamp: 2
+            -webkit-box-orient: vertical
           .payment-money
             display: flex
             align-items: flex-end
