@@ -48,16 +48,16 @@
     methods: {
       toMobile() {
         this.sendCustomMsg(60001)
-        let telephone = this.welcomeMsg.telephone
-        if (!telephone) {
+        let mobile = this.welcomeMsg.employee.mobile
+        if (!mobile) {
           this.$showToast('商家暂未上传手机号码')
           return
         }
-        this.$wx.makePhoneCall && this.$wx.makePhoneCall({phoneNumber: telephone})
+        this.$wx.makePhoneCall && this.$wx.makePhoneCall({phoneNumber: mobile})
         this.setShowType(true)
       },
       copyWX() {
-        let wxCode = this.welcomeMsg.wx_code
+        let wxCode = this.welcomeMsg.employee.wx_code
         if (!wxCode) {
           this.$showToast('商家暂未上传微信号')
           return

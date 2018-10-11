@@ -109,7 +109,7 @@
         }
       },
       toMobile() {
-        this.$wx.makePhoneCall && this.$wx.makePhoneCall({ phoneNumber: '' + this.shopInfo.telephone })
+        this.$wx.makePhoneCall && this.$wx.makePhoneCall({ phoneNumber: '' + this.employee.mobile })
         this.setShowType(true)
       }
     }

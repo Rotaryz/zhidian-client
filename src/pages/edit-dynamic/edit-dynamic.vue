@@ -48,7 +48,8 @@
         textHeight: 56,
         showImage: [],
         sortArr: [],
-        isChecked: false
+        isChecked: false,
+        isBoss: false
       }
     },
     computed: {
@@ -57,13 +58,22 @@
       }
     },
     onShow () {
-      this.isBoss = this.$isBoss()
+      this._boss()
       this.send = true
     },
     methods: {
       ...mapActions(['setShowType', 'setIsLoadDy']),
       _synchronization (e) {
         this.isChecked = e.mp.detail.value
+      },
+      _boss() {
+        if (!this.$wx.getStorageSync('userInfoExtend')) {
+          this.$checkIsMyShop(() => {
+            this.isBoss = this.$isBoss()
+          })
+        } else {
+          this.isBoss = this.$isBoss()
+        }
       },
       getLine (e) {
         if (e.mp.detail.lineCount > 1 && e.mp.detail.lineCount <= 5) {
