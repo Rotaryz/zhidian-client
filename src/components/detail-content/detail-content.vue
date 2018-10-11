@@ -227,7 +227,6 @@
           padding: 10px 0
           font-size: 0
           .img-item
-            margin-bottom: 10px
             width: 100%
       .know-detail
         padding: 20px 15px 20px 0

@@ -33,6 +33,7 @@
           </div>
         </div>
       </div>
+      <Blank v-if="showNone"></Blank>
     </scroll-view>
     <payment ref="payment" @bargainPay="bargainPay"></payment>
   </div>
@@ -40,6 +41,7 @@
 
 <script>
   import Payment from 'components/payment/payment'
+  import Blank from 'components/blank/blank'
   import {Customer} from 'api'
   export default {
     name: 'order-list',
@@ -48,7 +50,8 @@
         list: [],
         timer: '',
         code: '',
-        hasPhone: false
+        hasPhone: false,
+        showNone: false
       }
     },
     onShareAppMessage(res) {
@@ -84,6 +87,9 @@
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
             this.list = res.data
+            if (!res.data.length) {
+              this.showNone = true
+            }
             this._endTimePlay()
           }
         })
@@ -165,7 +171,8 @@
       }
     },
     components: {
-      Payment
+      Payment,
+      Blank
     }
   }
 </script>
