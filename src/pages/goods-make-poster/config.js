@@ -6,6 +6,6 @@ page.$mount()
 
 export default {
   config: {
-    navigationBarTitleText: '活动海报'
+    navigationBarTitleText: '商品海报'
   }
 }
