@@ -19,7 +19,7 @@
           <div class="company">{{shopInfo.name}}</div>
         </div>
       </article>
-      <div class="down" v-if="employee.signature">"{{employee.signature}}"</div>
+      <div class="down" v-if="shopInfo.intro">"{{shopInfo.intro}}"</div>
       <div class="down" v-else></div>
     </section>
   </div>

@@ -164,6 +164,7 @@
           }
           this.shopInfo = res.data || {}
           this.employee = res.data.employee || {}
+          console.log(this.shopInfo.intro, '----')
         } catch (e) {
           console.error(e)
         }
