@@ -121,6 +121,7 @@
         })
       },
       submitOrder() {
+        if (!this.paymentMsg.phoneNum) return
         let data, msgCode
         let goods = [{
           goods_id: this.paymentMsg.goods_id,
