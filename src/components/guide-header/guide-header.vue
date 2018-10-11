@@ -13,7 +13,7 @@
         <div class="avatar-wrapper">
           <img class="avatar" mode="aspectFill" :src="employee.avatar" alt="">
         </div>
-        <div class="name">{{employee.name}}</div>
+        <div class="name">{{employee.name ? employee.name : employee.nickname}}</div>
         <div class="detail">
           <div class="position">{{employee.position}}</div>
           <div class="company">{{shopInfo.name}}</div>
