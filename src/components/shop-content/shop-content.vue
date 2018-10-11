@@ -193,15 +193,15 @@
                 font-family: $font-family-bold
                 color: $color-455A64
                 .numbers
-                  font-size: 26px
+                  font-size: 19px
                 .unit
                   font-size: $font-size-12
-                  padding: 0 3px 4.5px 0
+                  padding: 0 3px 3px 0
               .old-price
                 no-wrap()
                 max-width: 50%
                 margin: 0 7.5px
-                font-size: 15px
+                font-size: 12px
                 color: $color-99A0AA
                 text-decoration: line-through
                 vertical-align: bottom
