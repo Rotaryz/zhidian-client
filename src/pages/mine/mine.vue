@@ -25,9 +25,9 @@
           <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
         </navigator>
         <button class="manager-item" v-if="!hasShop" open-type="contact" :session-from="'open_service,' + shopId" :send-message-img="imageUrl + '/zd-image/mine/pic-openshop@2x.png'" send-message-title="点击下方消息开店" show-message-card="true">
-          <img :src="imageUrl + '/zd-image/mine/icon-openshop@2x.png'" class="manager-image">
+          <img :src="imageUrl + '/zd-image/mine/icon-openshop@2x.png'" class="manager-image" v-if="imageUrl">
           <p class="manager-image-title">我要开店</p>
-          <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
+          <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way" v-if="imageUrl">
         </button>
       </div>
     </div>
