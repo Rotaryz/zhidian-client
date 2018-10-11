@@ -86,8 +86,8 @@
       },
       action() {
         const dynamicList = this.item
-        this.name = dynamicList.employee_name
-        this.avatarUrlTmp = dynamicList.employee_image_url
+        this.name = dynamicList.shop_name
+        this.avatarUrlTmp = dynamicList.shop_image_url
         const content = dynamicList.content
         const createdAt = '' + dynamicList.created_at
         const newImgArr = dynamicList.live_log_detail.map(item => item.file_url)
