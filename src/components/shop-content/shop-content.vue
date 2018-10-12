@@ -45,7 +45,7 @@
       <ul class="content">
         <li class="item" v-if="storyInfo.details.length" v-for="(item, index) in storyInfo.details" :key="index">
           <img class="pic" mode="widthFix" v-if="item.type === 0 && item.image_url" :src="item.image_url"/>
-          <div class="text" v-if="item.type === 1">{{item.text}}</div>
+          <text class="text" v-if="item.type === 1">{{item.text}}</text>
           <div class="video-wrapper-item" v-if="item.type === 2 && item.video_url">
             <video class="video-item" :src="item.video_url" objectFit="fill" :poster="item.video_url" :initial-time="1"></video>
           </div>
