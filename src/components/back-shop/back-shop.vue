@@ -2,7 +2,7 @@
   <div class="shop">
     <div class="back-shop">
       <p class="back-name">您正在浏览</p>
-      <p class="back-title">{{name}}</p>
+      <p class="back-title">{{shopName?shopName:name}}</p>
       <div class="btn" @click="_goBack()">回自己店铺</div>
     </div>
   </div>
@@ -13,6 +13,12 @@
 
   export default {
     name: 'back-shop',
+    props: {
+      shopName: {
+        type: String,
+        default: ''
+      }
+    },
     data() {
       return {
         name: ''

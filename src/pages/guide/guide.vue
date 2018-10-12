@@ -1,6 +1,6 @@
 <template>
   <article class="guide">
-    <back-shop v-if="showBackBtn" @goBack="goBack"></back-shop>
+    <back-shop v-if="showBackBtn" @goBack="goBack" :shopName="shopName"></back-shop>
     <guide-header :shopInfo="shopInfo" :employee="employee" :isMyShop="isMyShop"></guide-header>
     <guide-active :groupList="groupData.list" :cutList="cutData.list" :selectTab="selectTab" @changeTab="changeTab"></guide-active>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
@@ -44,7 +44,8 @@
         selectTab: 0,
         showBackBtn: false,
         isMyShop: false,
-        oldShopId: ''
+        oldShopId: '',
+        shopName: ''
       }
     },
     onTabItemTap() {
@@ -129,6 +130,7 @@
       },
       _changeShopResetData() {
         if (+this.oldShopId !== +this.$wx.getStorageSync('shopId')) {
+          this.showBackBtn = false
           Object.assign(this.$data, this.$options.data())
           this.$wechat.pageScrollTo()
           this.oldShopId = this.$wx.getStorageSync('shopId')
@@ -164,6 +166,7 @@
           }
           this.shopInfo = res.data || {}
           this.employee = res.data.employee || {}
+          this.shopName = this.shopInfo.name
         } catch (e) {
           console.error(e)
         }

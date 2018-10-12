@@ -1,6 +1,6 @@
 <template>
   <div class="big-mine">
-    <back-shop v-if="!mineShop && hasShop"></back-shop>
+    <back-shop v-if="!mineShop && hasShop" :shopName="shopName"></back-shop>
     <div class="mine">
       <div class="mine-msg">
         <img class="mine-header" mode="aspectFill" :src="userInfo.avatar">
@@ -36,7 +36,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import { Order } from 'api'
+  import { Order, Guide } from 'api'
   import { mapActions } from 'vuex'
   import BackShop from 'components/back-shop/back-shop'
 
@@ -54,10 +54,11 @@
         userInfo: {},
         shopId: '',
         mineShop: false, // 是我的店
-        hasShop: false // 有店铺
+        hasShop: false, // 有店铺
+        shopName: ''
       }
     },
-    onShow() {
+    async onShow() {
       this.$checkIsMyShop(() => {
         this.hasShop = this.$hasShop()
         this.mineShop = this.$isMyShop()
@@ -65,6 +66,7 @@
       this.userInfo = wx.getStorageSync('userInfo')
       this.shopId = wx.getStorageSync('shopId')
       this._getBrowserList()
+      await this._getShopInfo({}, false)
     },
     methods: {
       ...mapActions(['setBrowseList']),
@@ -78,6 +80,19 @@
             this.$showToast(res.message)
           }
         })
+      },
+      async _getShopInfo(location, loading) {
+        try {
+          let res = await Guide.getShopInfo(location, loading)
+          if (res.error !== this.$ERR_OK) {
+            this.$showToast(res.message)
+            return
+          }
+          this.shopInfo = res.data || {}
+          this.shopName = this.shopInfo.name
+        } catch (e) {
+          console.error(e)
+        }
       }
     },
     components: {
