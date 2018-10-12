@@ -38,7 +38,7 @@
     <blank v-if="selectTab===0 && goodsList.length===0" styles="padding:50px 0"></blank>
     <section class="story-wrapper" v-if="selectTab === 1 && storyInfo.title && storyInfo.details.length!==0">
       <div class="video-wrapper" v-if="storyInfo.video_url">
-        <video class="video" :src="storyInfo.video_url" objectFit="fill" :poster="storyInfo.video_url" :initial-time="1"></video>
+        <video class="video" :src="storyInfo.video_url" objectFit="fill" :poster="storyInfo.cover_image" :initial-time="1"></video>
       </div>
       <div class="title">{{storyInfo.title}}</div>
       <div class="line"></div>
@@ -47,7 +47,7 @@
           <img class="pic" mode="widthFix" v-if="item.type === 0 && item.image_url" :src="item.image_url"/>
           <text class="text" v-if="item.type === 1">{{item.text}}</text>
           <div class="video-wrapper-item" v-if="item.type === 2 && item.video_url">
-            <video class="video-item" :src="item.video_url" objectFit="fill" :poster="item.video_url" :initial-time="1"></video>
+            <video class="video-item" :src="item.video_url" objectFit="fill" :poster="item.cover_image" :initial-time="1"></video>
           </div>
         </li>
       </ul>
