@@ -10,7 +10,7 @@
           <p class="shop-name">{{couponMsg.name}}</p>
           <p class="shop-time">有效期至 {{couponMsg.time}}</p>
         </div>
-        <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
+        <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way" v-if="false">
       </div>
       <div class="code-box">
         <img :src="couponMsg.qrcode_url" v-if="couponMsg.qrcode_url" class="code" mode="aspectFill">

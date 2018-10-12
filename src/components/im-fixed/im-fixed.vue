@@ -1,6 +1,6 @@
 <template>
-  <div class="im-fixed">
-    <form class="msg-fix-box" report-submit @submit="toChat">
+  <div class="im-fixed" @touchmove="move" @touchstart="start" :style="{transform: 'translate(' + x + 'px,' + y + 'px)'}">
+    <form class="msg-fix-box" report-submit @submit.stop="toChat">
       <button class="msg-icon-box" hover-class="none" formType="submit" :open-type="chatBtnType" @getphonenumber="getPhoneNumber">
         <img src="/static/im-img/icon-im@2x.png" class="msg-icon">
       </button>
@@ -20,6 +20,14 @@
       // 是否需要自定义事件
       custom: {
         default: 'no'
+      }
+    },
+    data() {
+      return {
+        startX: '',
+        startY: '',
+        x: 0,
+        y: 0
       }
     },
     onLoad() {
@@ -71,6 +79,16 @@
           let url = `/pages/chat-msg`
           this.$wx.navigateTo({url})
         })
+      },
+      move(e) {
+        let diffX = e.clientX - this.startX
+        let res = this.x + diffX
+        if (res >= 55 || res <= -150) return
+        this.x = res
+        this.startX = e.clientX
+      },
+      start(e) {
+        this.startX = e.clientX
       }
     },
     computed: {

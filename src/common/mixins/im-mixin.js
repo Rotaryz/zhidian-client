@@ -190,10 +190,14 @@ export default {
       if (this.imLogin && this.descMsg.flow_id) {
         let account = this.currentMsg.account
         this.$webimHandler.onSendCustomMsg(option, account)
-        this._ImSendRecordToServer(option4Servers)
+        if (code !== 20005) {
+          this._ImSendRecordToServer(option4Servers)
+        }
       } else {
         this.setBehaviorList(option)
-        this.setBehaviorListToServers(option4Servers)
+        if (code !== 20005) {
+          this.setBehaviorListToServers(option4Servers)
+        }
       }
     },
     _ImSendRecordToServer(obj) {
