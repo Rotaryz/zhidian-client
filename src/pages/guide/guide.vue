@@ -4,7 +4,6 @@
     <guide-header :shopInfo="shopInfo" :employee="employee" :isMyShop="isMyShop"></guide-header>
     <guide-active :groupList="groupData.list" :cutList="cutData.list" :selectTab="selectTab" @changeTab="changeTab"></guide-active>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
-    <!--<im-fixed ref="fixed"></im-fixed>-->
   </article>
 </template>
 
