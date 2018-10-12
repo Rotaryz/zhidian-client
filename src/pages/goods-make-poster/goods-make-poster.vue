@@ -193,6 +193,7 @@
           ...qrData
         }
         ActiveCode.createMiniCode(data, false).then(res => {
+          this.$wechat.hideLoading()
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
           }
