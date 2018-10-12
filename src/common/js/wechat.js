@@ -207,3 +207,16 @@ export function downloadFile (data = {url: ''}) {
     })
   })
 }
+
+/**
+ * 获取设备信息
+ * @returns {Promise<any>}
+ */
+export function getSystemInfo() {
+  return new Promise((resolve, reject) => {
+    wx.getSystemInfo({
+      success: resolve,
+      fail: reject
+    })
+  })
+}
