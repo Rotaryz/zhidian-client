@@ -1,6 +1,6 @@
 <template>
   <div class="shop-header">
-    <scroll-view :scroll-x="true" class="media-wrapper">
+    <scroll-view scroll-x class="media-wrapper">
       <div class="item video" @click="playVideo" v-if="shopInfo.video && shopInfo.video.image_url">
         <img mode="aspectFill" class="pic" :src="shopInfo.video.image_url" alt="">
         <div class="video-mask">
