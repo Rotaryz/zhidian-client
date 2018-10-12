@@ -20,7 +20,7 @@
       <div class="item" v-for="(item, index) in usedList" v-bind:key="index" v-if="usedList">
         <coupon-item :coupontype="1" :couponInfo="item"></coupon-item>
       </div>
-      <blank v-if="isNull && unusedList.length * 1 === 0"></blank>
+      <blank v-if="isNull && usedList.length * 1 === 0"></blank>
     </div>
     <coupon-code ref="couponCode" :couponMsg.sync="couponDetail" @cancel="cancel"></coupon-code>
   </div>
@@ -90,7 +90,9 @@
           if (res.error === this.$ERR_OK) {
             this.unusedList = res.data
             this._isUnusedList(res)
-            this.isUnNull = true
+            if (!res.data.length) {
+              this.isUnNull = true
+            }
           } else {
             this.$showToast(res.message)
           }
@@ -132,7 +134,9 @@
           if (res.error === this.$ERR_OK) {
             this.usedList = res.data
             this._isUsedList(res)
-            this.isNull = true
+            if (!res.data.length) {
+              this.isNull = true
+            }
           } else {
             this.$showToast(res.message)
           }
