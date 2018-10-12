@@ -18,7 +18,11 @@ const state = {
   imIng: false, // 是否在聊天页面
   currentUnRead: 0, // 当前对象未读信息
   chatBtnType: '', // 设置聊天按钮是否需要手机授权
-  behaviorListToServer: [] // 给服务器--行为消息待发送数组，IM不在登录态时把动作加进去，IM登录完成会跑一次并清空数组
+  behaviorListToServer: [], // 给服务器--行为消息待发送数组，IM不在登录态时把动作加进去，IM登录完成会跑一次并清空数组
+  imPosition: {
+    x: 0,
+    startX: 0
+  } // IM浮窗的相对位置
 }
 
 export default state

@@ -87,3 +87,7 @@ export const setChatBtnType = ({ commit, state }, type) => {
 export const setNowChat = ({ commit, state }, nowChat) => {
   commit(types.SET_NOW_CHAT, nowChat)
 }
+
+export const setImPosition = ({ commit, state }, position) => {
+  commit(types.SET_IM_POSITION, position)
+}

@@ -152,6 +152,9 @@ const mutations = {
         state.nowChat = [{type: 10000}, ...state.nowChat]
       }
     }
+  },
+  [types.SET_IM_POSITION](state, position) {
+    state.imPosition = Object.assign({}, position)
   }
 }
 
