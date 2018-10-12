@@ -196,7 +196,7 @@
           item.is_like = !item.is_like
           item.is_like ? item.like_count++ : item.like_count--
           let code = item.rule_id === 1 ? 30001 : 30018
-          item.is_like && this.sendCustomMsg(code, {activity_id: item.activity_id, title: item.name})
+          item.is_like && this.sendCustomMsg(code, {activity_id: item.activity_id, title: item.goods_title})
         })
       },
       toShare(item) {
