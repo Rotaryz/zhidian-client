@@ -60,6 +60,7 @@
     methods: {
       async _getRefundDetail(id) {
         let res = await Order.orderRefund(id)
+        this.$wechat.hideLoading()
         if (res.error !== this.$ERR_OK) {
           this.$showToast(res.message)
           return
