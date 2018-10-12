@@ -1,6 +1,6 @@
 <template>
   <div class="im-fixed" @touchmove="move" @touchstart="start" :style="{transform: 'translate(' + imPosition.x + 'px, 0)'}">
-    <form class="msg-fix-box" report-submit @submit.stop="toChat">
+    <form class="msg-fix-box" report-submit @submit="toChat">
       <button class="msg-icon-box" hover-class="none" formType="submit" :open-type="chatBtnType" @getphonenumber="getPhoneNumber">
         <img src="/static/im-img/icon-im@2x.png" class="msg-icon">
       </button>
@@ -28,7 +28,6 @@
       }
     },
     onLoad() {
-      console.log(this.$wechat)
       this.$wechat.getSystemInfo().then((res) => {
         if (res.errMsg === 'getSystemInfo:ok') {
           this.maxX = 80 - res.windowWidth
