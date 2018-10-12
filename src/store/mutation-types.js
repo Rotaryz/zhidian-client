@@ -41,3 +41,5 @@ export const ADD_NOW_CHAT = 'ADD_NOW_CHAT'
 export const SET_CHAT_BTNTYPE = 'SET_CHAT_BTNTYPE' // 设置聊天按钮是否需要手机号授权
 
 export const SET_NOW_CHAT = 'SET_NOW_CHAT'
+
+export const SET_IM_POSITION = 'SET_IM_POSITION'

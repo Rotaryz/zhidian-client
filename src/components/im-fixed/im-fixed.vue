@@ -1,6 +1,6 @@
 <template>
-  <div class="im-fixed" @touchmove="move" @touchstart="start" :style="{transform: 'translate(' + x + 'px,' + y + 'px)'}">
-    <form class="msg-fix-box" report-submit @submit.stop="toChat">
+  <div class="im-fixed" @touchmove="move" @touchstart="start" :style="{transform: 'translate(' + imPosition.x + 'px, 0)'}">
+    <form class="msg-fix-box" report-submit @submit="toChat">
       <button class="msg-icon-box" hover-class="none" formType="submit" :open-type="chatBtnType" @getphonenumber="getPhoneNumber">
         <img src="/static/im-img/icon-im@2x.png" class="msg-icon">
       </button>
@@ -24,17 +24,21 @@
     },
     data() {
       return {
-        startX: '',
-        startY: '',
-        x: 0,
-        y: 0
+        maxX: -200
       }
     },
     onLoad() {
+      this.$wechat.getSystemInfo().then((res) => {
+        if (res.errMsg === 'getSystemInfo:ok') {
+          this.maxX = 80 - res.windowWidth
+        } else {
+          this.maxX = -200
+        }
+      })
       this._isGetPhone()
     },
     methods: {
-      ...mapActions(['setChatBtnType']),
+      ...mapActions(['setChatBtnType', 'setImPosition']),
       toChat(e) {
         // this.sendCustomMsg(60001)
         this.$getFormId(e)
@@ -81,14 +85,19 @@
         })
       },
       move(e) {
-        let diffX = e.clientX - this.startX
-        let res = this.x + diffX
-        if (res >= 55 || res <= -150) return
-        this.x = res
-        this.startX = e.clientX
+        let diffX = e.clientX - this.imPosition.startX
+        let res = this.imPosition.x + diffX
+        if (res >= 55 || res <= this.maxX) return
+        this.setImPosition({
+          x: res,
+          startX: e.clientX
+        })
       },
       start(e) {
-        this.startX = e.clientX
+        this.setImPosition({
+          x: this.imPosition.x,
+          startX: e.clientX
+        })
       }
     },
     computed: {
@@ -97,7 +106,8 @@
         'descMsg',
         'currentUnRead',
         'chatBtnType',
-        'imLogin'
+        'imLogin',
+        'imPosition'
       ])
     }
   }
@@ -107,7 +117,7 @@
   @import "~common/stylus/variable"
   .im-fixed
     position: fixed
-    right: 8vw
+    right: 30px
     top: 80vh
     width: 50px
     height: 50px

@@ -33,3 +33,5 @@ export const imIng = state => state.imIng // 是否正在对话(聊天页面)
 export const currentUnRead = state => state.currentUnRead // 当前对象未读数
 
 export const chatBtnType = state => state.chatBtnType
+
+export const imPosition = state => state.imPosition
