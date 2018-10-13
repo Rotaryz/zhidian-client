@@ -151,7 +151,7 @@
         <img :src="imageUrl + '/zd-image/mine/icon-del@2x.png'" v-if="imageUrl" class="close-btn" @click.stop="hideBargain">
       </div>
     </div>
-    <payment ref="payment"></payment>
+    <payment ref="payment" @getPhone="phoneOk"></payment>
     <share ref="share" @friendShare="friendShare" @getPicture="getPicture"></share>
     <activity-role ref="role"></activity-role>
   </div>
@@ -289,6 +289,9 @@
       test() {
         this.$showToast('askjdhakdhashd')
       },
+      async phoneOk() {
+        await this._checkHasPhone()
+      },
       noRefresh() {
         this.refreshPage = false
       },
@@ -356,7 +359,7 @@
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
             let userInfo = res.data
-            this.paymentMsg.phoneNum = res.data.mobile
+            this.hasPhone = true
             wx.setStorageSync('userInfo', userInfo)
             this._toChatAction()
           } else {

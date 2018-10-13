@@ -1,31 +1,33 @@
 <template>
   <div class="edit-dynamic">
-    <div class="compile">
-      <textarea class="words-span" :style="{height: textHeight + 'px'}" maxlength="-1" placeholder="这一刻的想法…" v-model="title" @input="_setTop" @linechange="getLine"></textarea>
-      <!--:style="height: {{comHeight}}px"-->
-      <div class="com-box">
-        <div class="com-image" v-for="(item, index) in showImage" :key="index">
-          <img class="img-item" :src="item.image_url" mode="aspectFill">
-          <!--<input type="file" class="image-file" @change="_fileImage($event)" accept="image/*" multiple>-->
-          <div class="close-icon" @click.stop="_delImage(index)">
-            <img class="close-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-del@2x.png'" mode="widthFix">
+    <scroll-view class="edit-wrapper">
+      <div class="compile">
+        <textarea class="words-span" :style="{height: textHeight + 'px'}" maxlength="-1" placeholder="这一刻的想法…" v-model="title" @input="_setTop" @linechange="getLine"></textarea>
+        <!--:style="height: {{comHeight}}px"-->
+        <div class="com-box">
+          <div class="com-image" v-for="(item, index) in showImage" :key="index">
+            <img class="img-item" :src="item.image_url" mode="aspectFill">
+            <!--<input type="file" class="image-file" @change="_fileImage($event)" accept="image/*" multiple>-->
+            <div class="close-icon" @click.stop="_delImage(index)">
+              <img class="close-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-del@2x.png'" mode="widthFix">
+            </div>
+          </div>
+          <div class="com-image" v-if="image.length < 9">
+            <img class="img-item" :src="imageUrl + '/zd-image/dynamic/Group3@2x.png'" @click="_fileImage">
+            <!--<input type="file" class="image-file" @change="_fileImage($event)" accept="image/*" multiple>-->
           </div>
         </div>
-        <div class="com-image" v-if="image.length < 9">
-          <img class="img-item" :src="imageUrl + '/zd-image/dynamic/Group3@2x.png'" @click="_fileImage">
-          <!--<input type="file" class="image-file" @change="_fileImage($event)" accept="image/*" multiple>-->
+        <div class="synchronization" v-if="isBoss">
+          <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-member@2x.png'" class="synchronization-icon">
+          <span class="synchronization-text">将动态同步全部成员</span>
+          <switch :checked="isChecked" color="#56BA15" class="synchronization-switch" @change="_synchronization"></switch>
         </div>
+        <!--style="bottom: {{height}}px"-->
       </div>
-      <div class="synchronization" v-if="isBoss">
-        <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-member@2x.png'" class="synchronization-icon">
-        <span class="synchronization-text">将动态同步全部成员</span>
-        <switch :checked="isChecked" color="#56BA15" class="synchronization-switch" @change="_synchronization"></switch>
+      <div class="btn">
+        <div class="btn-item" :class="{'btn-disable': !isSend}" @click="_liveLogs">发布</div>
       </div>
-      <!--style="bottom: {{height}}px"-->
-    </div>
-    <div class="btn">
-      <div class="btn-item" :class="{'btn-disable': !isSend}" @click="_liveLogs">发布</div>
-    </div>
+    </scroll-view>
   </div>
 </template>
 
@@ -142,7 +144,6 @@
           this.send = false
           if (res.error === this.$ERR_OK) {
             this.$showToast('发布成功')
-            this.$emit('refresh')
             setTimeout(() => {
               this.image = []
               this.showImage = []
@@ -173,6 +174,9 @@
 <style lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
   .edit-dynamic
+    .edit-wrapper
+      height: 100vh
+      padding-bottom: 50px
     .words-span
       margin-top: 14px
       padding: 0 15px

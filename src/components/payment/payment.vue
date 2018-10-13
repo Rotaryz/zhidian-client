@@ -115,6 +115,7 @@
             let userInfo = res.data
             this.paymentMsg.phoneNum = res.data.mobile
             wx.setStorageSync('userInfo', userInfo)
+            this.$emit('getPhone')
           } else {
             this.$showToast(res.message)
           }

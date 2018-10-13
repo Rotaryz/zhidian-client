@@ -127,6 +127,11 @@ export default {
           wx.setStorageSync('merchantId', resData.data.merchant_id)
           this.setCurrentMsg(currentMsg)
           this.setDescMsg(descMsg)
+          if (this.imIng) {
+            wx.setNavigationBarTitle({
+              title: currentMsg.nickName
+            })
+          }
           // 执行待完成的行为动作数组
           if (this.behaviorList.length && shopId) {
             Promise.all(this.behaviorList.map((item) => {
