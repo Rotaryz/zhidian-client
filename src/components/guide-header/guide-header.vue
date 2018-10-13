@@ -110,7 +110,14 @@
         position: absolute
         right: 0
         top: 20px
-        normal-button-style(click, 70px, 32px)
+        font-family: $font-family-medium
+        font-size: $font-size-16
+        background-color: rgba(249, 76, 95, 0.8)
+        color: $color-CCCCCC
+        text-align: center
+        height: 32px
+        width: 70px
+        line-height: 32px
         border-radius: 100px 0 0 100px
         layout(row, block, nowrap)
         justify-content: center

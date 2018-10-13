@@ -1,7 +1,7 @@
 <template>
   <article class="shop">
     <shop-header :shopInfo="shopInfo" :employee="employee" :photoInfo="photoInfo" v-if="showHeader"></shop-header>
-    <shop-content :goodsList="goodsList" :selectTab="selectTab" :storyInfo="storyInfo" @changeTab="changeTab"></shop-content>
+    <shop-content :goodsList="goodsList" :selectTab="selectTab" :storyInfo="storyInfo" @changeTab="changeTab" @playItem="playItem"></shop-content>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
   </article>
 </template>
@@ -73,6 +73,10 @@
           await this._getGoodsList()
           this.$wechat.hideLoading()
         }
+      },
+      playItem(index, item) {
+        let it = Object.assign({}, item, { videoPlay: true })
+        this.$set(this.storyInfo.details, index, it)
       },
       _changeShopResetData() {
         if (+this.oldShopId !== +this.$wx.getStorageSync('shopId')) {

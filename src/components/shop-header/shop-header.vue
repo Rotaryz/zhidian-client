@@ -37,7 +37,7 @@
         <img class="icon right" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-tel@2x.png'" alt="" @click="toMobile">
       </article>
     </section>
-    <video class="my-video" id="my-video" v-if="shopInfo.video && shopInfo.video.url" :src="shopInfo.video.url" @fullscreenchange="videoChange" @play="videoPlay" @pause="videoPause"></video>
+    <video class="my-video" id="my-video" v-if="shopInfo.video && shopInfo.video.image_url" :src="shopInfo.video.url" @fullscreenchange="videoChange" @play="videoPlay" @pause="videoPause"></video>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -60,8 +60,7 @@
     },
     data() {
       return {
-        ctx: null,
-        isPlay: false
+        ctx: null
       }
     },
     onLoad() {
@@ -78,14 +77,14 @@
         this.isPlay = false
       },
       playVideo() {
+        this.isShowVideo = true
         const ctx = this.$wx.createVideoContext('my-video')
-        ctx.play()
         ctx.requestFullScreen({ direction: 90 })
         this.ctx = ctx
         this.setShowType(true)
       },
-      videoChange() {
-        this.isPlay && this.ctx && this.ctx.pause()
+      videoChange(e) {
+        e.mp.detail.fullScreen ? this.ctx.play() : this.ctx.pause()
       },
       toPhotos() {
         this.$wx.navigateTo({ url: '/pages/album' })
@@ -166,7 +165,7 @@
           right: 6px
           bottom: 6px
           height: 20px
-          background: rgba(69,90,100,0.4)
+          background: rgba(69, 90, 100, 0.4)
           border-radius: 20px
           padding: 0 8.5px
           layout(row, block, nowrap)

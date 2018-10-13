@@ -2,7 +2,7 @@ import wx from 'wx'
 
 export function envClear() {
   const env = process.env.NODE_ENV
-  const currentEnv = wx.getStorageSync('env', env)
+  const currentEnv = wx.getStorageSync('env')
   if (env !== currentEnv) {
     wx.clearStorageSync()
     wx.setStorageSync('env', env)

@@ -37,17 +37,25 @@
     </ul>
     <blank v-if="selectTab===0 && goodsList.length===0" styles="padding:50px 0"></blank>
     <section class="story-wrapper" v-if="selectTab === 1 && storyInfo.title && storyInfo.details.length!==0">
-      <div class="video-wrapper" v-if="storyInfo.video_url">
-        <video class="video" :src="storyInfo.video_url" objectFit="fill" :poster="storyInfo.cover_image" :initial-time="1"></video>
-      </div>
+      <article class="video-wrapper" v-if="storyInfo.video_url">
+        <div class="video-mask" v-if="!headerVideoPlay" @click="playVideo(-1)">
+          <img class="icon-btn" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-video@2x.png'" alt="">
+        </div>
+        <img class="video" mode="aspectFill" v-if="storyInfo.cover_image && !headerVideoPlay" :src="storyInfo.cover_image"/>
+        <video class="video" v-else-if="headerVideoPlay" :src="storyInfo.video_url" objectFit="fill" autoplay></video>
+      </article>
       <div class="title">{{storyInfo.title}}</div>
       <div class="line"></div>
       <ul class="content">
         <li class="item" v-if="storyInfo.details.length" v-for="(item, index) in storyInfo.details" :key="index">
           <img class="pic" mode="widthFix" v-if="item.type === 0 && item.image_url" :src="item.image_url"/>
           <text class="text" v-if="item.type === 1">{{item.text}}</text>
-          <div class="video-wrapper-item" v-if="item.type === 2 && item.video_url">
-            <video class="video-item" :src="item.video_url" objectFit="fill" :poster="item.cover_image" :initial-time="1"></video>
+          <div class="video-wrapper-item" v-if="item.type === 2 && item.video_url" @click="playVideo(index, item)">
+            <div class="video-mask" v-if="!item.videoPlay">
+              <img class="icon-btn" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-video@2x.png'" alt="">
+            </div>
+            <img class="video" mode="aspectFill" v-if="!item.videoPlay" :src="item.cover_image"/>
+            <video class="video-item" v-if="item.videoPlay" :src="item.video_url" objectFit="fill" autoplay></video>
           </div>
         </li>
       </ul>
@@ -61,7 +69,7 @@
   import Blank from 'components/blank/blank'
   import imMixin from 'common/mixins/im-mixin'
 
-  const tabList = [{title: '服务项目'}, {title: '品牌故事'}]
+  const tabList = [{ title: '服务项目' }, { title: '品牌故事' }]
   export default {
     mixins: [imMixin],
     components: {
@@ -87,7 +95,8 @@
       return {
         url: this.$parent.$imageUrl + `/zd-image/test-img/4@1x.png`,
         tabList,
-        selectTab: 0
+        selectTab: 0,
+        headerVideoPlay: false
       }
     },
     created() {
@@ -95,10 +104,18 @@
     methods: {
       changeTab(index) {
         index === 1 && this.sendCustomMsg(40007)
+        index === 1 && (this.headerVideoPlay = false)
         this.$emit('changeTab', index)
       },
       toGoodsDetail(item) {
-        this.$wx.navigateTo({url: `/pages/goods-detail?goodsId=${item.recommend_goods_id}`})
+        this.$wx.navigateTo({ url: `/pages/goods-detail?goodsId=${item.recommend_goods_id}` })
+      },
+      playVideo(index, item) {
+        if (index === -1) {
+          this.headerVideoPlay = true
+        } else {
+          this.$emit('playItem', index, item)
+        }
       }
     }
   }
@@ -229,6 +246,21 @@
         width: 100%
         height: 46vw
         margin-bottom: 28px
+        position: relative
+        .video-mask
+          fill-box()
+          background: transparent
+          z-index: 2
+          layout()
+          justify-content: center
+          align-items: center
+          .icon-btn
+            transform: scale(0.5)
+            width: 80px
+            height: 80px
+            border-radius: 50%
+            border: 1px solid $color-FFFFFF
+            box-sizing: border-box
         .video
           width: 100%
           height: 100%
@@ -270,6 +302,24 @@
             width: 100%
             height: 46vw
             padding: 5px 0
+            position: relative
+            .video
+              width: 100%
+              height: 100%
+            .video-mask
+              fill-box()
+              background: transparent
+              z-index: 2
+              layout()
+              justify-content: center
+              align-items: center
+            .icon-btn
+              transform: scale(0.5)
+              width: 80px
+              height: 80px
+              border-radius: 50%
+              border: 1px solid $color-FFFFFF
+              box-sizing: border-box
             .video-item
               width: 100%
               height: 100%
