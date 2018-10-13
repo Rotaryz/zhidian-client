@@ -265,6 +265,7 @@
       } catch (err) {
         console.log(err)
       }
+      if (!this.activityId) return
       await this._getGoodsDetail(this.activityId, this.activityType)
       await this._checkHasPhone()
       let msgData = {title: this.goodsDetail.goods_title, activity_id: this.activityId}

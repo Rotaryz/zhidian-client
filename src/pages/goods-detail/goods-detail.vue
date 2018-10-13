@@ -131,6 +131,7 @@
       } catch (err) {
         console.log(err)
       }
+      if (!this.reqGoodsId) return
       await this._getGoodsDetail(this.reqGoodsId)
       await this._checkHasPhone()
       let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
