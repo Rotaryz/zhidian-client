@@ -86,9 +86,10 @@
     },
     onShow () {
       this._getDrawPosterInfo()
+      this.groupPic = this.imageUrl + '/ws-image/poster-goods/pic-collage@2x.png'
+      this.cutPic = this.imageUrl + '/ws-image/poster-goods/pic-cut@2x.png'
     },
     onLoad (option) {
-      this._loadStatic()
       this._getParams(option)
     },
     onShareAppMessage (res) {
@@ -145,16 +146,6 @@
         this.money = price
         this.goodsUrl = goodsImg
       },
-      // 加载静态资源
-      _loadStatic () {
-        let groupPic = this.imageUrl + '/ws-image/poster-goods/pic-collage@2x.png'
-        let cutPic = this.imageUrl + '/ws-image/poster-goods/pic-cut@2x.png'
-        let arr = [groupPic, cutPic]
-        this._downloadPictures(arr, res => {
-          this.groupPic = res[0].tempFilePath
-          this.cutPic = res[1].tempFilePath
-        })
-      },
       _formateQrCodeData () {
         const f = 'c' + this.$wx.getStorageSync('userInfo').id
         const e = this.$wx.getStorageSync('shopId')
@@ -198,35 +189,9 @@
             this.$showToast(res.message)
           }
           qrCodeUrl = (res.data && res.data.image_url) || (this.imageUrl + '/ws-image/pic-headshot@2x.png')
-          let arr = [avatarUrl, qrCodeUrl]
-          this._downloadPictures(arr, res => {
-            this.avatarUrl = res[0].tempFilePath
-            this.qrCodeUrl = res[1].tempFilePath
-            this.name = name
-            this.$wechat.hideLoading()
-          })
-        })
-      },
-      _downloadPictures (arr, callback) {
-        // this.$wechat.showLoading()
-        let flag = arr.every(val => val)
-        if (!flag) {
-          // this.$wechat.hideLoading()
-          // return this.$refs.toast.show('请添加图片')
-        }
-        arr = arr.map(item => {
-          return new Promise((resolve, reject) => {
-            this.$wx.downloadFile({
-              url: item,
-              success: resolve,
-              fail: reject
-            })
-          })
-        })
-        Promise.all(arr).then(callback).catch((err) => {
-          console.warn(err)
-          // this.$wechat.hideLoading()
-          // this.$refs.toast.sho、w('下载图片失败，请重新尝试！')
+          this.avatarUrl = avatarUrl
+          this.qrCodeUrl = qrCodeUrl
+          this.name = name
         })
       },
       _action () {
@@ -263,7 +228,7 @@
               shape: 'circle',
               shapeBg: '#fff',
               source: this.avatarUrl,
-              unLoad: true,
+              unLoad: false,
               shadow: [0, 6, 10, 'rgba(74,144,226,0.15)', '#fff', 0]
             },
             {
@@ -326,7 +291,7 @@
               el: '.qr-code',
               drawType: 'img',
               source: this.qrCodeUrl,
-              unLoad: true
+              unLoad: false
             }
           ]
         }
