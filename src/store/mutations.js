@@ -11,9 +11,6 @@ const mutations = {
   [types.SET_SHOW_TYPE](state, boolean) {
     state.appShowType = boolean
   },
-  [types.SET_SHOW_TYPE](state, boolean) {
-    state.appShowType = boolean
-  },
   [types.SET_GOODS_REFRESH](state, goodsRefresh) {
     state.goodsRefresh = goodsRefresh
   },
