@@ -3,18 +3,15 @@
     <scroll-view class="edit-wrapper">
       <div class="compile">
         <textarea class="words-span" :style="{height: textHeight + 'px'}" maxlength="-1" placeholder="这一刻的想法…" v-model="title" @input="_setTop" @linechange="getLine"></textarea>
-        <!--:style="height: {{comHeight}}px"-->
         <div class="com-box">
           <div class="com-image" v-for="(item, index) in showImage" :key="index">
             <img class="img-item" :src="item.image_url" mode="aspectFill">
-            <!--<input type="file" class="image-file" @change="_fileImage($event)" accept="image/*" multiple>-->
             <div class="close-icon" @click.stop="_delImage(index)">
               <img class="close-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-del@2x.png'" mode="widthFix">
             </div>
           </div>
           <div class="com-image" v-if="image.length < 9">
             <img class="img-item" :src="imageUrl + '/zd-image/dynamic/Group3@2x.png'" @click="_fileImage">
-            <!--<input type="file" class="image-file" @change="_fileImage($event)" accept="image/*" multiple>-->
           </div>
         </div>
         <div class="synchronization" v-if="isBoss">
@@ -22,7 +19,6 @@
           <span class="synchronization-text">将动态同步全部成员</span>
           <switch :checked="isChecked" color="#56BA15" class="synchronization-switch" @change="_synchronization"></switch>
         </div>
-        <!--style="bottom: {{height}}px"-->
       </div>
       <div class="btn">
         <div class="btn-item" :class="{'btn-disable': !isSend}" @click="_liveLogs">发布</div>
@@ -80,21 +76,17 @@
       getLine (e) {
         if (e.mp.detail.lineCount > 1 && e.mp.detail.lineCount <= 5) {
           this.textHeight = e.mp.detail.height + 16
-          // console.log(this.textHeight)
         }
       },
       _setTop (e) {
         this.$wx.createSelectorQuery().select('.words-span').boundingClientRect(function(rect) {
           if (rect.height >= 112.5) {
             this.auto = false
-            // console.log(this.auto)
           }
-          // console.log(rect)
         }).exec()
       },
       async _fileImage () {
         this.setShowType(true)
-        // let param = this._infoImage(e.target.files[0])
         this.$wx.chooseImage({
           count: 9 - this.showImage.length,
           success: async (res) => {
@@ -107,7 +99,6 @@
           let image = await this.$cos.uploadFiles(this.$cosFileType.IMAGE_TYPE, [val])
           this.image.push(image[0].id)
         }))
-        // this.image.sort(this._sort)
         data.forEach((item) => {
           let obj = { image_url: item }
           this.showImage.push(obj)
@@ -142,26 +133,19 @@
         }
         Dynamic.liveLogs(data).then((res) => {
           this.send = false
-          if (res.error === this.$ERR_OK) {
-            this.$showToast('发布成功')
-            setTimeout(() => {
-              this.image = []
-              this.showImage = []
-              this.title = ''
-              this.setIsLoadDy(true)
-              this._back()
-            }, 2010)
-            this.$wechat.hideLoading()
+          this.$wechat.hideLoading()
+          if (this.$ERR_OK !== res.error) {
+            this.$showToast(res.message)
             return
           }
-          this.$wechat.hideLoading()
-          this.send = true
+          this.$showToast('发布成功')
+          setTimeout(() => {
+            this.setIsLoadDy(true)
+            this._back()
+          }, 2010)
         })
-        this.setIsLoadDy(true)
-        this._back()
       },
       _back () {
-        // this.$router.back()
         this.$wx.navigateBack({
           delta: 1
         })
