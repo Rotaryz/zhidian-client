@@ -13,7 +13,7 @@
         <div class="avatar-wrapper">
           <img class="avatar" mode="aspectFill" :src="employee.avatar" alt="">
         </div>
-        <div class="name">{{employee.name ? employee.name : employee.nickname}}</div>
+        <div class="name">{{employee.name || employee.nickname}}</div>
         <div class="detail">
           <div class="position">{{employee.position}}</div>
           <div class="company">{{shopInfo.name}}</div>
@@ -48,6 +48,7 @@
       return {}
     },
     onShareAppMessage() {
+      this.setShowType(true)
       this.sendCustomMsg(10004) // 转发给好友
       let id = wx.getStorageSync('userInfo').id
       let shopId = wx.getStorageSync('shopId')
@@ -67,6 +68,7 @@
     methods: {
       async editorAvatar() {
         try {
+          this.setShowType(true)
           let res = await this.$wechat.chooseImage()
           let file = res.tempFilePaths[0]
           getApp().globalData.imgUrl = file
@@ -76,6 +78,16 @@
         }
       }
     }
+    // computed: {
+    //   eName() {
+    //     let name = this.employee.name || this.employee.nickname || ''
+    //     return name ? name.substring(0, 5) : ''
+    //   },
+    //   shopName() {
+    //     let name = this.shopInfo.name || ''
+    //     return name ? name.substring(0, 11) : ''
+    //   }
+    // }
   }
 </script>
 
