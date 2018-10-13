@@ -47,7 +47,7 @@
       <div class="title">{{storyInfo.title}}</div>
       <div class="line"></div>
       <ul class="content">
-        <li class="item" v-if="storyInfo.details.length" v-for="(item, index) in storyInfo.details" :key="index">
+        <li class="item" v-if="storyInfo.details.length" v-for="(item, index) in storyVideos" :key="index">
           <img class="pic" mode="widthFix" v-if="item.type === 0 && item.image_url" :src="item.image_url"/>
           <text class="text" v-if="item.type === 1">{{item.text}}</text>
           <div class="video-wrapper-item" v-if="item.type === 2 && item.video_url" @click="playVideo(index, item)">
@@ -96,7 +96,8 @@
         url: this.$parent.$imageUrl + `/zd-image/test-img/4@1x.png`,
         tabList,
         selectTab: 0,
-        headerVideoPlay: false
+        headerVideoPlay: false,
+        storyVideos: []
       }
     },
     created() {
@@ -114,8 +115,14 @@
         if (index === -1) {
           this.headerVideoPlay = true
         } else {
-          this.$emit('playItem', index, item)
+          item.videoPlay = true
+          this.storyVideos.splice(index, 1, item)
         }
+      }
+    },
+    computed: {
+      updateStoryVideos() {
+        this.storyVideos = this.storyInfo.details
       }
     }
   }

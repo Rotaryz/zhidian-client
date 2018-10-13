@@ -67,21 +67,13 @@
     },
     onUnload() {
       this.ctx = null
-      this.isPlay = false
     },
     methods: {
-      videoPlay() {
-        this.isPlay = true
-      },
-      videoPause() {
-        this.isPlay = false
-      },
       playVideo() {
-        this.isShowVideo = true
+        this.setShowType(true)
         const ctx = this.$wx.createVideoContext('my-video')
         ctx.requestFullScreen({ direction: 90 })
         this.ctx = ctx
-        this.setShowType(true)
       },
       videoChange(e) {
         e.mp.detail.fullScreen ? this.ctx.play() : this.ctx.pause()
@@ -99,17 +91,17 @@
             this.$showToast('商家暂未上传门店地址')
             return
           }
+          this.setShowType(true)
           this.$wechat.showLoading()
           await this.$wechat.openLocation({ latitude, longitude, name, address })
           this.$wechat.hideLoading()
-          this.setShowType(true)
         } catch (e) {
           console.error(e)
         }
       },
       toMobile() {
-        this.$wx.makePhoneCall && this.$wx.makePhoneCall({ phoneNumber: '' + this.employee.mobile })
         this.setShowType(true)
+        this.$wx.makePhoneCall && this.$wx.makePhoneCall({ phoneNumber: '' + this.employee.mobile })
       }
     }
   }
