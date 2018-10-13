@@ -46,8 +46,7 @@
       </form>
       <div class="right-box un-click outSide" v-if="!goodsDetail.stock">已售罄</div>
     </div>
-    <div class=""></div>
-    <payment ref="payment"></payment>
+    <payment ref="payment" @getPhone="phoneOk"></payment>
     <share ref="share" @friendShare="friendShare" @getPicture="getPicture"></share>
   </div>
 </template>
@@ -189,6 +188,9 @@
         let url = `/pages/chat-msg`
         wx.navigateTo({url})
       },
+      async phoneOk() {
+        await this._checkHasPhone()
+      },
       getPhone(event) {
         const e = event.mp
         if (e.detail.errMsg !== 'getPhoneNumber:ok') {
@@ -202,7 +204,7 @@
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
             let userInfo = res.data
-            this.paymentMsg.phoneNum = res.data.mobile
+            this.hasPhone = true
             wx.setStorageSync('userInfo', userInfo)
             this._toChatAction()
           } else {
