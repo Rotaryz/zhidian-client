@@ -90,7 +90,11 @@
         this.$wx.chooseImage({
           count: 9 - this.showImage.length,
           success: async (res) => {
-            await this._upLoad(res.tempFilePaths)
+            this.$wx.showLoading()
+            this._upLoad(res.tempFilePaths)
+              .then(() => {
+                this.$wx.hideLoading()
+              })
           }
         })
       },
