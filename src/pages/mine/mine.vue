@@ -123,6 +123,8 @@
         color: $color-1F1F1F
         font-size: $font-size-18
         font-family: $font-family-medium
+        word-break: break-all
+        flex: 1
     .order-tab
       margin-top: 23.5px
       box-sizing: border-box
