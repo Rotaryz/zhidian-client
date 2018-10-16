@@ -216,7 +216,7 @@
       let id = wx.getStorageSync('userInfo').id
       let shopId = wx.getStorageSync('shopId')
       let type
-      if (this.goodsType * 1 === 1) {
+      if (this.activityType * 1 === 1) {
         type = 'group'
       } else {
         type = 'bargain'
