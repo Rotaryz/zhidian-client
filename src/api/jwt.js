@@ -8,7 +8,7 @@ export default {
   },
   // 获取默认店铺
   getDefaultShop(data, loading = false) {
-    const url = `/default_shop`
+    const url = `/api/default_shop`
     return request.get(url, data, loading)
   },
   // 获取默认店铺

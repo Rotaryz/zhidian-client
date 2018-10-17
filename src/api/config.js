@@ -1,5 +1,5 @@
 const env = process.env.NODE_ENV
-const version = ``
+const version = `/v1`
 
 const DEV = {
   api: 'https://zhidian-api.jerryf.cn',
