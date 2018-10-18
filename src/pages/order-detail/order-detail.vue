@@ -66,13 +66,14 @@
         <div class="btn" @click="_deal(item)">{{manager[detail.status]}}</div>
       </div>
     </div>
-    <coupon-code ref="couponCode" :couponMsg.sync="couponDetail" @cancel="cancel"></coupon-code>
+    <coupon-code ref="couponCode" @cancel="cancel"></coupon-code>
   </div>
 </template>
 
 <script>
   import { Order } from 'api'
   import CouponCode from 'components/coupon-code/coupon-code'
+  import QrCodeUtil from 'common/js/util-qr-code'
 
   const MANAGER = { payment: '去支付', waiting_groupon: '拼团详情', success_groupon: '拼团详情', fail_groupon: '拼团详情' }
   let timer = ''
@@ -108,8 +109,9 @@
         if (coupon.status !== 0) {
           return
         }
-        this.couponDetail = { name: this.detail.goods_title, goods_image: this.detail.goods_image_url, time: coupon.end_at, qrcode_url: coupon.qrcode_url, code: coupon.code }
-        this.$refs.couponCode.show()
+        let qrCodeUrl = QrCodeUtil.createQrCodeSvg(coupon.qrcode)
+        let obj = { name: this.detail.goods_title, goods_image: this.detail.goods_image_url, time: coupon.end_at, qrcode_url: qrCodeUrl, code: coupon.code }
+        this.$refs.couponCode.show(obj)
       },
       async _goShop() {
         //  跳转店铺首页，切店

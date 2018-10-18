@@ -22,7 +22,7 @@
       </div>
       <blank v-if="isNull && usedList.length * 1 === 0"></blank>
     </div>
-    <coupon-code ref="couponCode" :couponMsg.sync="couponDetail" @cancel="cancel"></coupon-code>
+    <coupon-code ref="couponCode" @cancel="cancel"></coupon-code>
   </div>
 </template>
 
@@ -32,6 +32,7 @@
   import CouponCode from 'components/coupon-code/coupon-code'
   import clearWatch from 'common/mixins/clear-watch'
   import Blank from 'components/blank/blank'
+  import QrCodeUtil from 'common/js/util-qr-code'
 
   const tabList = [{ title: '未使用' }, { title: '不可用' }]
   export default {
@@ -66,18 +67,19 @@
     methods: {
       async cancel() {
         this.couponDetail = {}
-        this.getUnusedList()
-        this.getUsedList()
+        this.getUnusedList(false)
+        this.getUsedList(false)
       },
       changeTab(index) {
         if (this.selectTab === index) return
         this.selectTab = index
       },
       clickUsedBtn(item) {
-        this.couponDetail = { name: item.goods_name, goods_image: item.image_url, time: item.end_at, qrcode_url: item.qrcode_url, code: item.code }
-        this.$refs.couponCode.show()
+        let qrCodeUrl = QrCodeUtil.createQrCodeSvg(item.qrcode)
+        let obj = { name: item.goods_name, goods_image: item.image_url, time: item.end_at, qrcode_url: qrCodeUrl, code: item.code }
+        this.$refs.couponCode.show(obj)
       },
-      getUnusedList() {
+      getUnusedList(loading) {
         this.unusedPage = 1
         this.unusedMore = false
         let data = {
@@ -85,7 +87,7 @@
           status: 0,
           limit: 10
         }
-        Shop.getCouponList(data).then((res) => {
+        Shop.getCouponList(data, loading).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
             this.unusedList = res.data
@@ -121,7 +123,7 @@
           }
         })
       },
-      getUsedList() {
+      getUsedList(loading) {
         this.usedPage = 1
         this.usedMore = false
         let data = {
@@ -129,7 +131,7 @@
           status: 1,
           limit: 10
         }
-        Shop.getCouponList(data).then((res) => {
+        Shop.getCouponList(data, loading).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
             this.usedList = res.data
@@ -224,6 +226,7 @@
           width: 65px
           background: $color-D32F2F
           border-radius: 3px
+
   .album-list-active
     min-height: 100vh
     box-sizing: border-box
@@ -231,6 +234,6 @@
     left: 0
     padding-top: 50px
     top: 0
-    width:100%
+    width: 100%
     z-index: 2
 </style>

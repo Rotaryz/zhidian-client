@@ -140,5 +140,5 @@ export function arrayBufferToBase64(raw) {
   // Set the 2 least significant bits to zero
   c = (chunk & 15) << 2 // 15 = 2^4 - 1;
   base64 += encodings[a] + encodings[b] + encodings[c] + '='
-  return 'data:image/jpeg;base64,' + base64
+  return 'data:image/png;base64,' + base64
 }

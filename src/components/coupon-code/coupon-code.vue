@@ -24,25 +24,21 @@
 <script>
   export default {
     name: 'coupon-code',
-    props: {
-      couponMsg: {
-        type: Object,
-        default: { image_url: '' }
-      }
-    },
     data() {
       return {
         isShow: false,
         maskAnimation: '',
         modalAnimation: '',
-        imageUrl: this.$imageUrl
+        imageUrl: this.$imageUrl,
+        couponMsg: { image_url: '' }
       }
     },
     onLoad() {
       this.isShow = false
     },
     methods: {
-      show() {
+      show(obj) {
+        this.couponMsg = obj
         let modalAnimation = this.$parent.$wx.createAnimation({
           duration: 500,
           timingFunction: 'cubic-bezier(1, -0.07, 0.51, 1.48)',
