@@ -253,8 +253,9 @@
             },
             {
               el: '.title',
-              drawType: 'text',
+              drawType: 'text-area',
               source: this.title,
+              textMargin: 1.2,
               fontSize: 16,
               color: '#374b63'
             },
@@ -418,7 +419,7 @@
             margin-right: 5px
             line-height: 1.2
           .explain
-            margin-top: 2.93vw
+            margin-top: 3.5vw
             font-size: 3.2vw
             color: $color-828AA2
             letter-spacing: 1.2px

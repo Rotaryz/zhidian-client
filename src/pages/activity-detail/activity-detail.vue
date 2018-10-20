@@ -127,8 +127,8 @@
     </div>
     <div class="bargain-model-cover" :animation="coverAnimation" v-if="bargainModelShow">
       <div class="bargain-model-container" :animation="centerAnimation">
-        <img :src="imageUrl + '/zd-image/mine/pic-bargaining_succeess@2x.png'" v-if="imageUrl" class="bg-img">
-        <img :src="imageUrl + '/zd-image/mine/pic-bargaining_out@2x.png'" v-if="imageUrl && false" class="bg-img">
+        <img :src="imageUrl + '/zd-image/mine/pic-bargaining_succeess@2x.png'" v-if="imageUrl && kanDetail.exchange && kanDetail.exchange.stock" class="bg-img">
+        <img :src="imageUrl + '/zd-image/mine/pic-bargaining_out@2x.png'" v-if="imageUrl && kanDetail.exchange && !kanDetail.exchange.stock" class="bg-img">
         <div class="bargain-msg-content">
           <p class="red-title">砍价成功</p>
           <p class="msg-txt">恭喜你成功帮自己砍掉<span class="red-money"><span class="big-money">{{kanDetail.cut_money}}</span>元</span></p>
