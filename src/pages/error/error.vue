@@ -14,7 +14,7 @@
     },
     methods: {
       _goGuide() {
-        console.log('dd')
+        getApp().globalData.pageType = 'error' // 首页切店刷新
         wx.switchTab({ url: '/pages/guide' })
       }
     }

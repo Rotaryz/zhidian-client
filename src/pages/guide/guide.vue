@@ -50,7 +50,7 @@
     onTabItemTap() {
       this.sendCustomMsg(10003)
     },
-    onLoad() {
+    onLoad(options) {
       if (!this.$wx.getStorageSync('token')) return
       this.oldShopId = this.$wx.getStorageSync('shopId')
       this._sendRecordToServer()
@@ -128,7 +128,8 @@
         }
       },
       _changeShopResetData() {
-        if (+this.oldShopId !== +this.$wx.getStorageSync('shopId')) {
+        if (+this.oldShopId !== +this.$wx.getStorageSync('shopId') || getApp().globalData.pageType === 'error') {
+          getApp().globalData.pageType = ''
           this.showBackBtn = false
           Object.assign(this.$data, this.$options.data())
           this.$wechat.pageScrollTo()
