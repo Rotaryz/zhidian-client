@@ -26,7 +26,7 @@
         <div class="refund-progress-item">
           <div class="refund-progress-title" :class="{'refund-progress-title-active': refundStatus >= 0}">退款申请已提交</div>
           <div class="refund-progress-reason">您的退款申请已经提交</div>
-          <div class="refund-progress-reason">2017-12-10 11:00</div>
+          <div class="refund-progress-reason">{{refundDetail.created_at}}</div>
         </div>
         <div class="refund-progress-item">
           <div class="refund-progress-title" :class="{'refund-progress-title-active': refundStatus >= 1}">系统处理中</div>
@@ -34,7 +34,7 @@
         </div>
         <div class="refund-progress-item">
           <div class="refund-progress-title" :class="{'refund-progress-title-active': refundStatus >= 2}">退款成功</div>
-          <div class="refund-progress-reason">微信支付处理完成后，退款会在3-5天内退回您的</div>
+          <div class="refund-progress-reason">微信支付处理完成后，退款会在3-5天内退回您的微信支付账户</div>
         </div>
       </div>
     </div>
