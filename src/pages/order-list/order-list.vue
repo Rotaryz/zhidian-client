@@ -124,6 +124,8 @@
         }
       },
       async _getOrderList() {
+        let r = await Order.fullOrder()
+        console.log(r)
         let res = await Order.customerOrder({ limit: 10, page: this.page, status: this.status })
         if (res.error !== this.$ERR_OK) {
           this.$showToast(res.message)
