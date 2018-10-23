@@ -48,6 +48,11 @@ module.exports = merge(baseWebpackConfig, {
       // filename: utils.assetsPath('css/[name].[contenthash].css')
       filename: utils.assetsPath('css/[name].wxss')
     }),
+    // 打包丢失app.wxss, 所以添加这一个配置
+    new ExtractTextPlugin({
+      // filename: utils.assetsPath('css/[name].[contenthash].css')
+      filename: utils.assetsPath('css/app.wxss')
+    }),
     // Compress extracted CSS. We are using this plugin so that possible
     // duplicated CSS from different components can be deduped.
     new OptimizeCSSPlugin({
