@@ -1,5 +1,11 @@
 <template>
   <div class="order-list" :class="{'order-none': showNone}">
+    <div class="order-box border-bottom-1px" v-if="!status">
+      <div class="order-tab" hover-class="none" v-for="(item, index) in order" :key="index">
+        <p class="order-tab-item" @click="_goOrderTab(item)">{{item.title}}</p>
+        <div class="active"></div>
+      </div>
+    </div>
     <div class="order-item" @click="_goDetail(item.id)" v-for="(item, index) in orderList" :key="index">
       <div class="order-shop" @click.stop="_goShop(item)">
         <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-shop_order@2x.png'" class="home">
@@ -33,6 +39,7 @@
   import Blank from 'components/blank/blank'
   import {mapActions} from 'vuex'
 
+  const ORDER = [ { title: '全部订单', status: '' }, { title: '待付款', status: 'payment' }, { title: '待成团', status: 'waiting_groupon' }, { title: '待使用', status: 'waiting_use' }, { title: '已退款', status: 'refund' } ]
   const MANAGER = { payment: '付款', waiting_received: '去使用', finish: '查看订单', close: '查看订单', refund: '退款进度', waiting_groupon: '拼团详情', success_groupon: '去使用', fail_groupon: '退款进度' }
   export default {
     name: 'order-list',
@@ -43,7 +50,8 @@
         status: '',
         length: 0,
         manager: MANAGER,
-        showNone: false
+        showNone: false,
+        order: ORDER
       }
     },
     computed: {
@@ -82,6 +90,7 @@
             let res = await Order.payOrder({ pay_method_id: 1, order_id: item.id })
             // 支付
             this.$wechat.hideLoading()
+            console.log(res)
             if (res.error !== this.$ERR_OK) {
               this.$showToast(res.message)
               return
@@ -123,9 +132,14 @@
             break
         }
       },
+      async _goOrderTab(item) {
+        // console.log(this.orderList)
+        let status = item.status
+        let res = await Order.customerOrder({ limit: 10, page: 1, status: status })
+        console.log(res)
+        this.orderList = res.data
+      },
       async _getOrderList() {
-        let r = await Order.fullOrder()
-        console.log(r)
         let res = await Order.customerOrder({ limit: 10, page: this.page, status: this.status })
         if (res.error !== this.$ERR_OK) {
           this.$showToast(res.message)
@@ -157,7 +171,25 @@
     background: $color-background
     box-sizing: border-box
     font-family: $font-family-regular
-    padding-top: 15px
+    .order-box
+      box-sizing: border-box
+      display: flex
+      background: $color-FFFFFF
+      height: 40px
+      justify-content: space-between
+      padding: 0 25px
+      .order-tab
+        display: flex
+        flex-direction: column
+        justify-content: center
+        align-items: center
+        .active
+          height:3px
+        .order-tab-item
+          font-family: $font-family-regular
+          font-size: $font-size-14
+          color: $color-1F1F1F
+          letter-spacing: 0.52px
     .block
       height: 15px
       background: $color-background
