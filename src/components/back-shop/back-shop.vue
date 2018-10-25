@@ -65,6 +65,7 @@
       font-family: $font-family-medium
     .btn
       normal-button-style(normal, 90px, 26px, 23px, $font-size-12)
+      background: $color-ED2C2B
       col-center()
       right: 15px
 </style>

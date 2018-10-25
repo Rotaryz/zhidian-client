@@ -200,8 +200,8 @@
             font-size: $font-size-14
             letter-spacing: 0.6px
           .black
-            border: 1px solid $color-D32F2F
-            color: $color-D32F2F
+            border: 1px solid $color-ED2C2B
+            color: $color-ED2C2B
             margin-right: 30px
             line-height: 30px
           .red
