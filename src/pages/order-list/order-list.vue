@@ -1,9 +1,13 @@
 <template>
   <div class="order-list" :class="{'order-none': showNone}">
     <div class="order-box border-bottom-1px" v-if="!status">
-      <div class="order-tab" hover-class="none" v-for="(item, index) in order" :key="index">
-        <p class="order-tab-item" @click="_goOrderTab(item)">{{item.title}}</p>
-        <div class="active"></div>
+      <div class="order-tab" hover-class="none" v-for="(item, index) in order" :key="index" @click="_goOrderTab(item,index)">
+        <div class="order-tab-item" :class="selectTab * 1 === index * 1 ? 'active-font' : ''">{{item.title}}</div>
+      </div>
+      <div class="order-active">
+        <div class="move" :style="'transform: translateX(' + selectTab * 100 + '%)'">
+          <div class="move-box"></div>
+        </div>
       </div>
     </div>
     <div class="order-item" @click="_goDetail(item.id)" v-for="(item, index) in orderList" :key="index">
@@ -39,7 +43,7 @@
   import Blank from 'components/blank/blank'
   import {mapActions} from 'vuex'
 
-  const ORDER = [ { title: '全部订单', status: '' }, { title: '待付款', status: 'payment' }, { title: '待成团', status: 'waiting_groupon' }, { title: '待使用', status: 'waiting_use' }, { title: '已退款', status: 'refund' } ]
+  const ORDER = [ { title: '全部', status: '' }, { title: '待付款', status: 'payment' }, { title: '待成团', status: 'waiting_groupon' }, { title: '待使用', status: 'waiting_received' }, { title: '已退款', status: 'refund' } ]
   const MANAGER = { payment: '付款', waiting_received: '去使用', finish: '查看订单', close: '查看订单', refund: '退款进度', waiting_groupon: '拼团详情', success_groupon: '去使用', fail_groupon: '退款进度' }
   export default {
     name: 'order-list',
@@ -51,7 +55,8 @@
         length: 0,
         manager: MANAGER,
         showNone: false,
-        order: ORDER
+        order: ORDER,
+        selectTab: '0'
       }
     },
     computed: {
@@ -59,7 +64,7 @@
         return this.orderList.length > 0 && (this.length === this.orderList.length || this.orderList.length < 15)
       }
     },
-    async onLoad(option) {
+    async onLoad(option, item, index) {
       this.status = option.status || ''
       await this._getOrderList()
     },
@@ -132,12 +137,23 @@
             break
         }
       },
-      async _goOrderTab(item) {
-        // console.log(this.orderList)
+      async _goOrderTab(item, index) {
         let status = item.status
+        this.selectTab = index
         let res = await Order.customerOrder({ limit: 10, page: 1, status: status })
-        console.log(res)
-        this.orderList = res.data
+        if (res.error !== this.$ERR_OK) {
+          this.$showToast(res.message)
+          this.$wechat.hideLoading()
+          return
+        }
+        this.length = res.meta.total
+        if (this.page === 1) {
+          this.orderList = res.data
+          this.showNone = !this.orderList.length
+        } else {
+          this.orderList = this.orderList.concat(res.data)
+        }
+        this.$wechat.hideLoading()
       },
       async _getOrderList() {
         let res = await Order.customerOrder({ limit: 10, page: this.page, status: this.status })
@@ -165,6 +181,7 @@
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
+
   .order-list
     word-break: break-all
     min-height: 100vh
@@ -177,19 +194,39 @@
       background: $color-FFFFFF
       height: 40px
       justify-content: space-between
-      padding: 0 25px
+      position: relative
       .order-tab
-        display: flex
-        flex-direction: column
-        justify-content: center
-        align-items: center
-        .active
-          height:3px
+        height: 40px
+        flex: 1
+        text-align: center
         .order-tab-item
+          width: 100%
+          height: 100%
           font-family: $font-family-regular
           font-size: $font-size-14
           color: $color-1F1F1F
           letter-spacing: 0.52px
+          line-height: 40px
+          text-align: center
+          transition: all 0.1s
+        .active-font
+          font-size: $font-size-16
+      .order-active
+        position: absolute
+        bottom: 0
+        left: 0
+        width: 100%
+        height: 3px
+        .move
+          width: 20vw
+          height: 100%
+          transition: all 0.2s
+          .move-box
+            width: 30px
+            height: 100%
+            background: $color-ED2C2B
+            margin: 0 auto
+            border-radius: 3px
     .block
       height: 15px
       background: $color-background
@@ -245,10 +282,11 @@
           display: flex
           flex-direction: column
           justify-content: space-between
+          padding: 3px 0
         .shop-name
           margin-top: -5px
           width: 60vw
-          font-size: $font-size-16
+          font-size: $font-size-14
           line-height: 21px
           font-family: $font-family-regular
           color: $color-1F1F1F
