@@ -1,5 +1,5 @@
 <template>
-  <div class="order-list" :class="{'order-none': showNone}">
+  <div class="order-list" :class="{'order-none': showNone,'add-padding': !status}">
     <div class="order-box border-bottom-1px" v-if="!status">
       <div class="order-tab" hover-class="none" v-for="(item, index) in order" :key="index" @click="_goOrderTab(item,index)">
         <div class="order-tab-item" :class="selectTab * 1 === index * 1 ? 'active-font' : ''">{{item.title}}</div>
@@ -188,13 +188,21 @@
     background: $color-background
     box-sizing: border-box
     font-family: $font-family-regular
+    padding-top: 15px
+    position: relative
+    &.add-padding
+      padding-top: 40px
     .order-box
       box-sizing: border-box
       display: flex
       background: $color-FFFFFF
+      width: 100%
       height: 40px
       justify-content: space-between
-      position: relative
+      position: fixed
+      left: 0
+      top: 0
+      z-index:10
       .order-tab
         height: 40px
         flex: 1
