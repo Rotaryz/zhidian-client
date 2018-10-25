@@ -224,7 +224,7 @@
           margin: 0 auto
           height: 3px
           width: 65px
-          background: $color-D32F2F
+          background: $color-ED2C2B
           border-radius: 3px
 
   .album-list-active

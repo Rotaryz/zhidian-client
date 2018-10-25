@@ -96,7 +96,7 @@
           font-size: $font-size-16
           font-family: $font-family-medium
         .refund-status
-          color: $color-D32F2F
+          color: $color-ED2C2B
       .refund-item
         font-size: $font-size-14
         font-family: $font-family-regular
@@ -127,7 +127,7 @@
           width: 7.5px
           height: 7.5px
         .refund-progress-circular-active
-          background: $color-D32F2F
+          background: $color-ED2C2B
         .line-box
           row-center()
           height: 100%
@@ -139,7 +139,7 @@
             width: 100%
             background: $color-D2D2D2
           .line-active
-            background: $color-D32F2F
+            background: $color-ED2C2B
 
       .refund-progress-text
         margin-left: 17.5px
@@ -153,7 +153,7 @@
           .refund-progress-title
             margin-bottom: 10px
           .refund-progress-title-active
-            color: $color-D32F2F
+            color: $color-ED2C2B
           .refund-progress-reason
             margin-bottom: 3.5px
             font-size: $font-size-12

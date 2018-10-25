@@ -248,7 +248,7 @@
         display: flex
         .order-type
           font-size: $font-size-14
-          color: $color-D32F2F
+          color: $color-ED2C2B
         .border-btn
           display: flex
           .btn

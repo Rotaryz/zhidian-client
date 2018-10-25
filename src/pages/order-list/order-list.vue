@@ -228,7 +228,7 @@
             width: 5.5px
             height: 10.5px
         .order-status
-          color: $color-D32F2F
+          color: $color-ED2C2B
           font-size: $font-size-14
           col-center()
           right: 0

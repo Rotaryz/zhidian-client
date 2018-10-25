@@ -361,13 +361,13 @@
             .red-money-icon
               font-family: $font-family-medium
               font-size: $font-size-14
-              color: $color-D32F2F
+              color: $color-ED2C2B
               margin-right: 2px
               margin-bottom: 2px
             .red-big-money
               font-family: DINAlternate-Bold
               font-size: 28px
-              color: $color-D32F2F
+              color: $color-ED2C2B
           .del-money
             text-decoration: line-through
             font-family: $font-family-regular

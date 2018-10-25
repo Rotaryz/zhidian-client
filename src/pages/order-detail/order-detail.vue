@@ -333,7 +333,7 @@
           margin-left: 8px
           font-size: $font-size-14
           font-family: $font-family-regular
-          color: $color-D32F2F
+          color: $color-ED2C2B
         .time-down
           color: $color-455A64
       .progress-success
@@ -352,7 +352,7 @@
           position: relative
           z-index: 2
         .progress-item-active
-          background: $color-D32F2F
+          background: $color-ED2C2B
         .progress-icon
           position: relative
           z-index: 2
@@ -376,7 +376,7 @@
         .line
           background: $color-D2D2D2
         .line-active
-          background: $color-D32F2F
+          background: $color-ED2C2B
 
     /*订单详情*/
     .order-msg-content

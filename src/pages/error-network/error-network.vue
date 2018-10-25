@@ -59,9 +59,9 @@
     font-size: $font-size-16
     margin-top: 33.5px
     font-family: $font-family-medium
-    color: $color-D32F2F
+    color: $color-ED2C2B
     border-radius: 20.5px
-    border-1px($color-D32F2F, 20.5px)
+    border-1px($color-ED2C2B, 20.5px)
     text-align: center
     line-height: 41px
     height: 41px

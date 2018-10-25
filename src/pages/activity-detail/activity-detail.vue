@@ -825,13 +825,13 @@
             .red-money-icon
               font-family: $font-family-medium
               font-size: $font-size-14
-              color: $color-D32F2F
+              color: $color-ED2C2B
               margin-right: 2px
               margin-bottom: 2px
             .red-big-money
               font-family: DINAlternate-Bold
               font-size: 28px
-              color: $color-D32F2F
+              color: $color-ED2C2B
           .del-money
             text-decoration: line-through
             font-family: $font-family-regular
@@ -914,7 +914,7 @@
                   margin-bottom: 4px
                   .red-num
                     margin: 0 2px
-                    color: $color-D32F2F
+                    color: $color-ED2C2B
                 .group-swiper-time-txt
                   font-size: $font-size-12
               .group-swiper-item-btn
@@ -1098,7 +1098,7 @@
             padding-top: 100px
             font-family: $font-family-medium
             font-size: $font-size-16
-            color: $color-D32F2F
+            color: $color-ED2C2B
             letter-spacing: 0.8px
             margin-bottom: 15px
           .msg-txt
@@ -1107,7 +1107,7 @@
             color: $color-455A64
             font-size: $font-size-14
             .red-money
-              color: $color-D32F2F
+              color: $color-ED2C2B
               margin-left: 3px
               .big-money
                 font-family: $font-family-medium
@@ -1172,7 +1172,7 @@
                 color: #935A1d
               .right-button.white
                 background: $color-white
-                color: $color-D32F2F
+                color: $color-ED2C2B
               .right-button.ccc
                 background: rgba(255, 255, 255, 0.6)
                 color: $color-D2D2D2

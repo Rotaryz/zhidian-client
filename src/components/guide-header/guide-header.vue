@@ -101,18 +101,17 @@
     position: relative
     .logo-wrapper
       position: relative
-      height: 75vw
+      height: 80vw
       .img
         height: 100%
         width: 100%
       .share-btn
-        opacity: 0.8
         position: absolute
         right: 0
         top: 20px
         font-family: $font-family-medium
         font-size: $font-size-16
-        background-color: rgba(249, 76, 95, 0.8)
+        background-image: linear-gradient(90deg, #FE7754 0%, #ED2B2B 100%)
         color: $color-CCCCCC
         text-align: center
         height: 32px
