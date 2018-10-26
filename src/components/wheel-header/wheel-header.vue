@@ -33,7 +33,7 @@
       }
     },
     onLoad() {
-      console.log(`${this.imageUrl}/zd-image/wheel/pic-share_qun@2x.png`)
+      // console.log(`${this.imageUrl}/zd-image/wheel/pic-share_qun@2x.png`)
     },
     methods: {
       showRule() {
