@@ -93,7 +93,6 @@
     },
     data() {
       return {
-        url: this.$parent.$imageUrl + `/zd-image/test-img/4@1x.png`,
         tabList,
         selectTab: 0,
         headerVideoPlay: false,
