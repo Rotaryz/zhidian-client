@@ -40,7 +40,7 @@
           page: 1,
           more: true
         },
-        selectTab: 0,
+        selectTab: 2,
         showBackBtn: false,
         isMyShop: false,
         oldShopId: '',
@@ -86,8 +86,9 @@
       let id = this.$wx.getStorageSync('userInfo').id
       let shopId = this.$wx.getStorageSync('shopId')
       return {
-        title: '',
+        title: this.shopInfo.name || this.shopInfo.employee.name,
         path: `pages/guide?fromType=3&fromId=${id}&shopId=${shopId}`,
+        imageUrl: this.shopInfo.image_url,
         success: (res) => {
           // 转发成功
         },

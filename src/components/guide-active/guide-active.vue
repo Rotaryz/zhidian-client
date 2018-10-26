@@ -1,133 +1,151 @@
 <template>
   <div class="guide-active">
-    <div class="tab-container">
-      <form report-submit @submit="$getFormId">
-        <ul class="tab-wrapper">
-          <li class="tab-item" v-for="(item, index) in tabList" :key="index" @click="changeTab(index)">
-            <button formType="submit">{{item.title}}</button>
-          </li>
-        </ul>
-      </form>
-      <div class="tab-line-wrapper" :style="'transform: translate3d(' + selectTab*100 + '%,0,0)'">
-        <div class="tab-line"></div>
+    <!--<div class="tab-container">-->
+      <!--<form report-submit @submit="$getFormId">-->
+        <!--<ul class="tab-wrapper">-->
+          <!--<li class="tab-item" v-for="(item, index) in tabList" :key="index" @click="changeTab(index)">-->
+            <!--<button formType="submit">{{item.title}}</button>-->
+          <!--</li>-->
+        <!--</ul>-->
+      <!--</form>-->
+      <!--<div class="tab-line-wrapper" :style="'transform: translate3d(' + selectTab*100 + '%,0,0)'">-->
+        <!--<div class="tab-line"></div>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--&lt;!&ndash;砍价&ndash;&gt;-->
+    <!--<ul class="active-wrapper" v-if="selectTab === 0">-->
+      <!--<li class="item-wrapper" v-if="cutList.length" v-for="(item,index) in cutList" :key="index">-->
+        <!--<div class="item-container">-->
+          <!--<article class="top" @click="goToDetail(item)">-->
+            <!--<section class="top-wrapper">-->
+              <!--<div class="img-wrapper">-->
+                <!--<div class="img-container">-->
+                  <!--<img class="img" mode="aspectFill" :src="item.image_url" alt="">-->
+                <!--</div>-->
+                <!--<div class="tag cut">仅剩{{item.stock}}份</div>-->
+              <!--</div>-->
+              <!--<div class="title-wrapper">-->
+                <!--<div class="title-container">-->
+                  <!--<div class="explain-wrapper">-->
+                    <!--<div class="title">{{item.goods_title}}</div>-->
+                    <!--<div class="explain">{{item.goods_subtitle}}</div>-->
+                  <!--</div>-->
+                  <!--<div class="money-wrapper">-->
+                    <!--<div class="money">¥{{item.platform_price}}</div>-->
+                    <!--<div class="button">开始砍价</div>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</section>-->
+          <!--</article>-->
+          <!--<div class="down">-->
+            <!--<article class="mine-serve-avatar-box">-->
+              <!--<div class="mine-serve-avatarBox-item" v-if="item.join_count && idx < 3" v-for="(it, idx) in item.join_list" :key="idx">-->
+                <!--<img class="mine-serve-avatarBox-img" :src="it">-->
+              <!--</div>-->
+              <!--<div class="more" v-if="item.join_count > 3">-->
+                <!--<span class="more-item"></span>-->
+                <!--<span class="more-item"></span>-->
+                <!--<span class="more-item"></span>-->
+              <!--</div>-->
+              <!--<span class="shop-num" :style="item.join_count >0 && item.join_count <= 3 ? 'margin-left:15px' : ''">{{item.join_count}}人已成功砍价</span>-->
+            <!--</article>-->
+            <!--<article class="right-box">-->
+              <!--<div class="jh-wrapper" @click="toLike(item)">-->
+                <!--<img class="icon" v-if="imageUrl && item.is_like" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">-->
+                <!--<img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">-->
+                <!--<div class="number-wrapper">-->
+                  <!--<div class="number">{{item.like_count > 99 ? 99 : item.like_count}}</div>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div class="jh-wrapper" @click="toShare(item)">-->
+                <!--<img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">-->
+                <!--<div class="number-wrapper">-->
+                  <!--<div class="number">{{item.share_count > 99 ? 99 : item.share_count}}</div>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</article>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</li>-->
+    <!--</ul>-->
+    <!--<blank v-if="selectTab===0 && cutList.length===0" styles="padding:50px 0"></blank>-->
+    <!--&lt;!&ndash;拼团&ndash;&gt;-->
+    <!--<ul class="active-wrapper" v-if="selectTab === 1">-->
+      <!--<li class="item-wrapper" v-if="groupList.length" v-for="(item,index) in groupList" :key="index">-->
+        <!--<div class="item-container">-->
+          <!--<article class="top" @click="goToDetail(item)">-->
+            <!--<section class="top-wrapper">-->
+              <!--<div class="img-wrapper">-->
+                <!--<div class="img-container">-->
+                  <!--<img class="img" mode="aspectFill" :src="item.image_url" alt="">-->
+                <!--</div>-->
+                <!--<div class="tag group">仅剩{{item.stock}}份</div>-->
+              <!--</div>-->
+              <!--<div class="title-wrapper">-->
+                <!--<div class="title-container">-->
+                  <!--<div class="explain-wrapper">-->
+                    <!--<div class="title">{{item.goods_title}}</div>-->
+                    <!--<div class="explain">{{item.goods_subtitle}}</div>-->
+                  <!--</div>-->
+                  <!--<div class="money-wrapper">-->
+                    <!--<div class="money">¥{{item.platform_price}}</div>-->
+                    <!--<div class="button">开始拼团</div>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</section>-->
+          <!--</article>-->
+          <!--<div class="down">-->
+            <!--<article class="mine-serve-avatar-box">-->
+              <!--<div class="mine-serve-avatarBox-item" v-if="item.join_count && idx < 3" v-for="(it, idx) in item.join_list" :key="idx">-->
+                <!--<img class="mine-serve-avatarBox-img" :src="it">-->
+              <!--</div>-->
+              <!--<div class="more" v-if="item.join_count > 3">-->
+                <!--<span class="more-item"></span>-->
+                <!--<span class="more-item"></span>-->
+                <!--<span class="more-item"></span>-->
+              <!--</div>-->
+              <!--<span class="shop-num" :style="item.join_count >0 && item.join_count <= 3 ? 'margin-left:15px' : ''">{{item.join_count}}人已成功拼团</span>-->
+            <!--</article>-->
+            <!--<article class="right-box">-->
+              <!--<div class="jh-wrapper" @click="toLike(item)">-->
+                <!--<img class="icon" v-if="imageUrl && item.is_like" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">-->
+                <!--<img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">-->
+                <!--<div class="number-wrapper">-->
+                  <!--<div class="number">{{item.like_count > 99 ? 99 : item.like_count}}</div>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div class="jh-wrapper" @click="toShare(item)">-->
+                <!--<img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">-->
+                <!--<div class="number-wrapper">-->
+                  <!--<div class="number">{{item.share_count > 99 ? 99 : item.share_count}}</div>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</article>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</li>-->
+    <!--</ul>-->
+    <!--<blank v-if="selectTab===1 && groupList.length===0" styles="padding:50px 0"></blank>-->
+    <div class="list-box">
+      <div class="list-title">
+        <img class="title-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-kjqg@2x.png'">
+        <span class="title-txt">砍价抢购</span>
+      </div>
+      <div class="list-item" v-for="(item, index) in cutList" :key="index">
+        <activity-item :item="item" :type="'cut'"></activity-item>
       </div>
     </div>
-    <!--砍价-->
-    <ul class="active-wrapper" v-if="selectTab === 0">
-      <li class="item-wrapper" v-if="cutList.length" v-for="(item,index) in cutList" :key="index">
-        <div class="item-container">
-          <article class="top" @click="goToDetail(item)">
-            <section class="top-wrapper">
-              <div class="img-wrapper">
-                <div class="img-container">
-                  <img class="img" mode="aspectFill" :src="item.image_url" alt="">
-                </div>
-                <div class="tag cut">仅剩{{item.stock}}份</div>
-              </div>
-              <div class="title-wrapper">
-                <div class="title-container">
-                  <div class="explain-wrapper">
-                    <div class="title">{{item.goods_title}}</div>
-                    <div class="explain">{{item.goods_subtitle}}</div>
-                  </div>
-                  <div class="money-wrapper">
-                    <div class="money">¥{{item.platform_price}}</div>
-                    <div class="button">开始砍价</div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </article>
-          <div class="down">
-            <article class="mine-serve-avatar-box">
-              <div class="mine-serve-avatarBox-item" v-if="item.join_count && idx < 3" v-for="(it, idx) in item.join_list" :key="idx">
-                <img class="mine-serve-avatarBox-img" :src="it">
-              </div>
-              <div class="more" v-if="item.join_count > 3">
-                <span class="more-item"></span>
-                <span class="more-item"></span>
-                <span class="more-item"></span>
-              </div>
-              <span class="shop-num" :style="item.join_count >0 && item.join_count <= 3 ? 'margin-left:15px' : ''">{{item.join_count}}人已成功砍价</span>
-            </article>
-            <article class="right-box">
-              <div class="jh-wrapper" @click="toLike(item)">
-                <img class="icon" v-if="imageUrl && item.is_like" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
-                <img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
-                <div class="number-wrapper">
-                  <div class="number">{{item.like_count > 99 ? 99 : item.like_count}}</div>
-                </div>
-              </div>
-              <div class="jh-wrapper" @click="toShare(item)">
-                <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">
-                <div class="number-wrapper">
-                  <div class="number">{{item.share_count > 99 ? 99 : item.share_count}}</div>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-      </li>
-    </ul>
-    <blank v-if="selectTab===0 && cutList.length===0" styles="padding:50px 0"></blank>
-    <!--拼团-->
-    <ul class="active-wrapper" v-if="selectTab === 1">
-      <li class="item-wrapper" v-if="groupList.length" v-for="(item,index) in groupList" :key="index">
-        <div class="item-container">
-          <article class="top" @click="goToDetail(item)">
-            <section class="top-wrapper">
-              <div class="img-wrapper">
-                <div class="img-container">
-                  <img class="img" mode="aspectFill" :src="item.image_url" alt="">
-                </div>
-                <div class="tag group">仅剩{{item.stock}}份</div>
-              </div>
-              <div class="title-wrapper">
-                <div class="title-container">
-                  <div class="explain-wrapper">
-                    <div class="title">{{item.goods_title}}</div>
-                    <div class="explain">{{item.goods_subtitle}}</div>
-                  </div>
-                  <div class="money-wrapper">
-                    <div class="money">¥{{item.platform_price}}</div>
-                    <div class="button">开始拼团</div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </article>
-          <div class="down">
-            <article class="mine-serve-avatar-box">
-              <div class="mine-serve-avatarBox-item" v-if="item.join_count && idx < 3" v-for="(it, idx) in item.join_list" :key="idx">
-                <img class="mine-serve-avatarBox-img" :src="it">
-              </div>
-              <div class="more" v-if="item.join_count > 3">
-                <span class="more-item"></span>
-                <span class="more-item"></span>
-                <span class="more-item"></span>
-              </div>
-              <span class="shop-num" :style="item.join_count >0 && item.join_count <= 3 ? 'margin-left:15px' : ''">{{item.join_count}}人已成功拼团</span>
-            </article>
-            <article class="right-box">
-              <div class="jh-wrapper" @click="toLike(item)">
-                <img class="icon" v-if="imageUrl && item.is_like" :src="imageUrl + '/zd-image/1.1/icon-like_dg@2x.png'" alt="">
-                <img class="icon" v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-zan@2x.png'" alt="">
-                <div class="number-wrapper">
-                  <div class="number">{{item.like_count > 99 ? 99 : item.like_count}}</div>
-                </div>
-              </div>
-              <div class="jh-wrapper" @click="toShare(item)">
-                <img class="icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share@2x.png'" alt="">
-                <div class="number-wrapper">
-                  <div class="number">{{item.share_count > 99 ? 99 : item.share_count}}</div>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-      </li>
-    </ul>
-    <blank v-if="selectTab===1 && groupList.length===0" styles="padding:50px 0"></blank>
+    <div class="list-box">
+      <div class="list-title">
+        <img class="title-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-hbpt@2x.png'">
+        <span class="title-txt">火爆拼团</span>
+      </div>
+      <div class="list-item" v-for="(item, index) in groupList" :key="index">
+        <activity-item :item="item" :type="'group'"></activity-item>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -136,12 +154,14 @@
   import Blank from 'components/blank/blank'
   import { mapActions } from 'vuex'
   import imMixin from 'common/mixins/im-mixin'
+  import ActivityItem from 'components/activity-item/activity-item'
 
   const tabList = [{title: '砍价抢购'}, {title: '火爆拼团'}]
   export default {
     mixins: [imMixin],
     components: {
-      Blank
+      Blank,
+      ActivityItem
     },
     props: {
       cutList: {
@@ -236,6 +256,23 @@
   .guide-active
     position: relative
     padding-bottom: 26px
+    .list-box
+      padding: 0 15px 13px
+      .list-title
+        display: flex
+        align-items: center
+        padding: 18px 0 11px
+        .title-icon
+          width: 20px
+          height: 20px
+          margin-right: 6px
+        .title-txt
+          font-family: $font-family-medium
+          font-size: $font-size-18
+          color: $color-2F2F2F
+          letter-spacing: 0.8px
+      .list-item
+        width: 100%
     .tab-container
       height: 26px
       margin: 0 15px
