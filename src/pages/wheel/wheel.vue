@@ -50,6 +50,7 @@
   import WheelHeader from 'components/wheel-header/wheel-header'
   import WheelCard from 'components/wheel-card/wheel-card'
   import WheelModal from 'components/wheel-modal/wheel-modal'
+  import {ActiveExtend} from 'api'
 
   const system = wx.getSystemInfoSync()
 
@@ -109,9 +110,21 @@
         ]
       }
     },
+    onLoad() {
+      this._getWheelInfo()
+    },
     methods: {
       showRule() {
         this.$refs.modal.show('prize')
+      },
+      _getWheelInfo() {
+        ActiveExtend.getWheelInfo().then(res => {
+          if (res.error !== this.$ERR_OK) {
+            this.$showToast(res.message)
+            return
+          }
+          console.log(res)
+        })
       },
       action(index) {
         if (this.running) return
