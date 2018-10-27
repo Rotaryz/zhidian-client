@@ -3,7 +3,7 @@
       <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/pic-coupon@2x.png'" class="coupon-bg">
       <div class="coupon-box">
         <div class="coupon-left">
-          <img  :src="couponInfo.image_url" class="coupon-img" :class="{'coupon-unused' : coupontype * 1 === 1}"  mode="aspectFill">
+          <img  :src="couponInfo.image_url_thumb" class="coupon-img" :class="{'coupon-unused' : coupontype * 1 === 1}"  mode="aspectFill">
           <div class="coupon-info">
             <div class="title" :class="{'color-unused' : coupontype * 1 === 1}">{{couponInfo.goods_name}}</div>
             <div class="end-tiem" :class="{'color-unused' : coupontype * 1 === 1}">有效期至{{couponInfo.end_at}}</div>
@@ -19,7 +19,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  const DEFAULTDATA = {goods_name: '国颐堂养发SPA馆瑶发堂洗发水', end_at: '2018-09-09', image_url: `https://img.jerryf.cn/defaults/zd-image/test-img/9@1x.png`, status: 0}
+  const DEFAULTDATA = {goods_name: '国颐堂养发SPA馆瑶发堂洗发水', end_at: '2018-09-09', image_url_thumb: `https://img.jerryf.cn/defaults/zd-image/test-img/9@1x.png`, status: 0}
   export default {
     name: 'coupon-item',
     props: {

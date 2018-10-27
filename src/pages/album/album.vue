@@ -5,7 +5,7 @@
       <div class="album-list" v-if="shopList">
         <div class="item-list" v-for="(item, index) in shopList" v-bind:key="index">
           <div class="item-box" @click="previewImg(item)">
-            <img v-if="item.url" :src="item.url" class="item-img" mode="aspectFill">
+            <img v-if="item.image_url_thumb" :src="item.image_url_thumb" class="item-img" mode="aspectFill">
           </div>
         </div>
       </div>
@@ -52,7 +52,6 @@
         this.upMore = false
         Shop.getMerchantsImg({ page: this.page, limit: 10 }).then((res) => {
           this.$wechat.hideLoading()
-          console.log(res)
           if (res.error === this.$ERR_OK) {
             this.shopList = res.data
             this.isNull = true

@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="item pics" @click="toPhotos" v-if="photoInfo.list && photoInfo.list.length" v-for="(item, index) in photoInfo.list" :key="index">
-        <img mode="aspectFill" class="pic" v-if="item.url" :src="item.url" alt="">
+        <img mode="aspectFill" class="pic" v-if="item.image_url_thumb" :src="item.image_url_thumb" alt="">
         <div class="button-pic" v-if="index === 0">
           <img class="icon-pic" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-pic@2x.png'" alt="">
           <span class="txt">{{photoInfo.total}}</span>

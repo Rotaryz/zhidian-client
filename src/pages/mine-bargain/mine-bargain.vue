@@ -8,7 +8,7 @@
           <p class="order-status">倒计时:{{item.endTime ? item.endTime.day ? item.endTime.day + '天' : '' : ''}}{{item.endTime ? item.endTime.hour ? item.endTime.hour : '' : ''}}时{{item.endTime ? item.endTime.minute ? item.endTime.minute : '' : ''}}分{{item.endTime ? item.endTime.second ? item.endTime.second : '' : ''}}</p>
         </div>
         <div class="order-msg" @click="toDetail(item)">
-          <img :src="item.image_url" mode="aspectFill" class="order-pic">
+          <img :src="item.image_url_thumb" mode="aspectFill" class="order-pic">
           <div class="shop-content">
             <p class="shop-name">{{item.activity_name}}</p>
             <p class="shop-price">￥{{item.current_price}}</p>
