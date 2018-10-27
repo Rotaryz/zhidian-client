@@ -2,16 +2,23 @@
   <div class="wheel-card">
     <div class="wrapper">
       <div class="avatar-wrapper">
-        <img class="icon-img" mode="aspectFill" v-if="imageUrl" :src="imageUrl + '/zd-image/test-img/1@1x.png'" alt="">
+        <img class="icon-img" mode="aspectFill" v-if="item.image_url" :src="item.image_url" alt="">
       </div>
-      <p class="info">方文商 中了iPhone X</p>
-      <p class="date">2017-01-10</p>
+      <p class="info">{{item.name}} {{item.prize_title}}</p>
+      <p class="date">{{item.date}}</p>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  export default {}
+  export default {
+    props: {
+      item: {
+        type: Object,
+        default: {}
+      }
+    }
+  }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">

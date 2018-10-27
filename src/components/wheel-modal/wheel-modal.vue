@@ -8,7 +8,7 @@
         <dd class="rule-wrapper" v-if="showType === 'rule'">
           <p class="title"><span>活动规则</span></p>
           <div class="list">
-            <dl class="list-item-wrapper" v-for="(item, index) in ruleList" :key="index">
+            <dl class="list-item-wrapper" v-if="ruleList.length" v-for="(item, index) in ruleList" :key="index">
               <dt class="item-title">{{item.title}}</dt>
               <dd class="item-content" v-for="(it, idx) in item.contentList" :key="idx">
                 <text>{{it}}</text>
@@ -16,31 +16,31 @@
             </dl>
           </div>
         </dd>
-        <dd class="prize-wrapper" v-if="showType === 'prize'">
+        <dd class="prize-wrapper" v-if="showType === 'prize' && index < 1">
           <img class="icon-img pos-a" v-if="imageUrl" :src="imageUrl + '/zd-image/wheel/pic-popup_other@2x.png'" alt="">
           <ul class="prize-container">
-            <li class="p-type">差店就中了</li>
-            <li class="p-content">谢谢参与</li>
-            <li class="p-title">你还有 <span class="number">3</span> 次机会</li>
+            <li class="p-type">{{constantText.title.noWin}}</li>
+            <li class="p-content">{{constantText.tips.noWin}}</li>
+            <li class="p-title">你还有 <span class="number">{{prizeInfo.usable_times}}</span> 次机会</li>
             <li class="p-btn-group">
-              <div class="btn">随便逛逛</div>
+              <div class="btn" @click="btnHandle(index, prizeInfo.usable_times)">{{constantText.btn.noWin[prizeInfo.usable_times?1:0]}}</div>
             </li>
           </ul>
         </dd>
-        <dd class="prize-wrapper" v-if="showType === 'prize' && false">
+        <dd class="prize-wrapper" v-else-if="showType === 'prize'">
           <img class="icon-img pos-a" v-if="imageUrl" :src="imageUrl + '/zd-image/wheel/pic-popup_thing@2x.png'" alt="">
           <ul class="prize-container">
-            <li class="p-type">恭喜中奖啦</li>
-            <li class="p-prize-title">iphone XS Max 一台</li>
+            <li class="p-type">{{constantText.title[winType]}}</li>
+            <li class="p-prize-title">{{prizeInfo.customer_receive.prize_title}}</li>
             <li class="p-prize-img">
-              <img class="icon-img" model="aspectFill" v-if="imageUrl" :src="imageUrl + '/zd-image/test-img/6@1x.png'" alt="">
+              <img class="icon-img" model="aspectFill" v-if="prizeInfo.customer_receive && prizeInfo.customer_receive.prize_image_url" :src="prizeInfo.customer_receive.prize_image_url" alt="">
             </li>
             <li class="p-prize-tips">
-              <text>{{constantText.tips.coin}}</text>
+              <text>{{constantText.tips[winType]}}</text>
             </li>
             <li class="p-btn-group">
-              <div class="btn use">查看使用</div>
-              <div class="btn">炫耀一下</div>
+              <div class="btn use" @click="useBtnHandle">{{constantText.btn[winType][0]}}</div>
+              <div class="btn" @click="shareBtnHandle">{{constantText.btn[winType][1]}}</div>
             </li>
           </ul>
         </dd>
@@ -51,14 +51,25 @@
 
 <script>
   import wx from 'wx'
-
+  // prize_type 1 兑换券 2 红包 3 固定
   export default {
+    props: {
+      prizeInfo: {
+        type: Object,
+        default: {}
+      },
+      ruleList: {
+        type: Array,
+        default: []
+      }
+    },
     data() {
       return {
         isShow: false,
         maskAnimation: '',
         modalAnimation: '',
         showType: '',
+        index: 0,
         constantText: {
           title: {
             noWin: '差点就中了',
@@ -81,26 +92,43 @@
             coin: ['查看使用', '炫耀一下'],
             goods: ['查看使用', '炫耀一下']
           }
-        },
-        ruleList: [
-          {
-            title: '活动说明',
-            contentList: ['1. 活动期间内，没人每天一次抽奖机会；\n' +
-            '2. 奖品数量有限，先到先得；\n' +
-            '3. 兑换券线下门店核销使用']
-          },
-          {
-            title: '活动奖品',
-            contentList: ['红包', '优惠券', 'iphoneX', '红包', '优惠券', 'iphoneX', '红包', '优惠券', 'iphoneX', '红包', '优惠券', 'iphoneX']
-          }
-        ]
+        }
+      }
+    },
+    onUnload() {
+      this.cancel()
+    },
+    computed: {
+      winType() {
+        let prizeType = this.prizeInfo.prize_type
+        let type = prizeType === 1 ? 'coin' : prizeType === 2 ? 'red' : 'goods'
+        return type
       }
     },
     methods: {
       _routerType(type) {
         this.showType = type
       },
-      show(type) {
+      useBtnHandle() {
+        // todo
+      },
+      shareBtnHandle() {
+        // todo
+      },
+      btnHandle(index, number) {
+        if (+index === 0) {
+          if (number) {
+            this.submit()
+          } else {
+            this.submit()
+            wx.switchTab({
+              url: '/pages/guide'
+            })
+          }
+        }
+      },
+      show(type, index) {
+        this.index = index // 0 未中奖
         if (this.isShow) return
         let modalAnimation = wx.createAnimation({
           duration: 500,
@@ -232,6 +260,8 @@
           width: 20vw
           height: @width
           margin: 0 auto
+          border-radius: 2px
+          overflow: hidden
         .p-prize-tips
           font-family: PingFangSC-Regular;
           font-size: 3.2vw
@@ -293,6 +323,7 @@
           .item-content
             font-family: PingFangSC-Regular;
             font-size: 14px;
+            line-height: 1.6
             color: #4A4A4A;
             text-align: justify
             word-break: break-all

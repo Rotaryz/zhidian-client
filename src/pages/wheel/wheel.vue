@@ -4,7 +4,7 @@
     <div class="page-wrapper">
       <img class="wheel-bg" style="width: 100%" mode="widthFix" v-if="imageUrl" :src="imageUrl + '/zd-image/wheel/pic-turntable_bg@2x.png'" alt="">
       <article class="container">
-        <wheel-header @showRule="showRule"></wheel-header>
+        <wheel-header :ruleInfo="ruleInfo" @showRule="showRule"></wheel-header>
         <section class="content-wrapper">
           <article class="wheel-wrapper">
             <img class="icon-img pos-a" v-if="imageUrl" :src="imageUrl + '/zd-image/wheel/pic-wheel-bg@2x.png'" alt="">
@@ -25,25 +25,22 @@
               </div>
             </figure>
             <figure class="wheel-pointer">
-              <div class="pointer" @click.stop="">
+              <div class="pointer" @click.stop="_drawWheel">
                 <img class="icon-img" v-if="imageUrl" :src="imageUrl + '/zd-image/wheel/pic-turntable_go@2x.png'" alt="">
               </div>
             </figure>
           </article>
           <dl class="footer">
             <dt class="title">你还有 <span class="number">{{usable_times}}</span> 次机会</dt>
-            <dd class="card-item-wrapper">
-              <wheel-card></wheel-card>
-            </dd>
-            <dd class="card-item-wrapper">
-              <wheel-card></wheel-card>
+            <dd class="card-item-wrapper" v-for="item in receive_customer" :key="item.name + item.image_url">
+              <wheel-card :item="item"></wheel-card>
             </dd>
           </dl>
         </section>
-        <ul style="position: fixed;top:0;left: 0;display: flex;color:#fff; ">
-          <li @click="choosePrize(index)" style="height: 50px;width: 50px" v-for="(item,index) in wheelList" :key="index">中将{{index}}</li>
-        </ul>
-        <wheel-modal ref="modal"></wheel-modal>
+        <!--<ul style="position: fixed;top:0;left: 0;display: flex;color:#fff; ">-->
+        <!--<li @click="choosePrize(index)" style="height: 50px;width: 50px" v-for="(item,index) in wheelList" :key="index">中将{{index}}</li>-->
+        <!--</ul>-->
+        <wheel-modal ref="modal" :prizeInfo="prizeInfo" :ruleList="ruleList"></wheel-modal>
       </article>
     </div>
   </div>
@@ -94,15 +91,23 @@
             image_url: `${this.$imageUrl}/zd-image/wheel/pic-face@2x.png`
           }
         ],
-        usable_times: 0
+        usable_times: 0,
+        receive_customer: [],
+        timer: null,
+        prizeInfo: {},
+        ruleInfo: {},
+        ruleList: []
       }
     },
     onLoad() {
       this._getWheelInfo()
     },
+    onUnload() {
+      this.timer && clearTimeout(this.timer)
+    },
     methods: {
       showRule() {
-        this.$refs.modal.show('prize')
+        this.$refs.modal.show('rule')
       },
       _getWheelInfo() {
         ActiveExtend.getWheelInfo().then(res => {
@@ -111,17 +116,66 @@
             this.$showToast(res.message)
             return
           }
-          let arr = []
-          arr.concat(res.data.activity_prizes)
-          this.wheelList = arr
+          this.wheelList = this.wheelList.concat(res.data.activity_prizes)
           this.usable_times = res.data.usable_times
+          this.receive_customer = res.data.receive_customer
+          this._formatRuleInfo(res)
         })
       },
-      action(index) {
+      _formatRuleInfo(res) {
+        // ruleList: [
+        //   {
+        //     title: '活动说明',
+        //     contentList: ['1. 活动期间内，没人每天一次抽奖机会；\n' +
+        //     '2. 奖品数量有限，先到先得；\n' +
+        //     '3. 兑换券线下门店核销使用']
+        //   },
+        //   {
+        //     title: '活动奖品',
+        //     contentList: ['红包', '优惠券', 'iphoneX', '红包', '优惠券', 'iphoneX', '红包', '优惠券', 'iphoneX', '红包', '优惠券', 'iphoneX']
+        //   }
+        // ]
+        let ruleList = [
+          {
+            title: '活动说明',
+            contentList: [res.data.note]
+          },
+          {
+            title: '活动奖品',
+            contentList: res.data.activity_prizes.map(item => item.title)
+          }
+        ]
+        this.ruleList = ruleList
+      },
+      _drawWheel() {
+        // 判断是否有中奖的次数
+        if (this.usable_times < 1) {
+          this.$showToast('您的抽奖次数已用完！')
+          return
+        }
+        // 判断是否正在转
         if (this.running) return
-        setTimeout(() => {
+        ActiveExtend.drawWheel({}, false).then(res => {
+          this.$wechat.hideLoading()
+          if (res.error !== this.$ERR_OK) {
+            this.$showToast(res.message)
+            return
+          }
+          this.prizeInfo = {...res.data}
+          this.usable_times = res.data.usable_times
+          res.data.customer_receive && this.receive_customer.push(res.data.customer_receive)
+          let index = this.wheelList.findIndex(item => item.activity_prize_id === res.data.activity_prize_id)
+          this._action(index === -1 ? 0 : index, () => {
+            this._showTips(index)
+          })
+        })
+      },
+      _action(index, callback) {
+        if (this.running) return
+        this.timer = setTimeout(() => {
           this.running = false
-        }, 3050)
+          callback && callback()
+        }, this.wheelSeconds + 50)
         this.running = true
         // 随机数
         let range = 20
@@ -130,8 +184,9 @@
         this.activeStep += (this.lastStep + ~~Math.random() * 3 + 6 - (index * 60 - this.randomDeg) / 360)
         this.lastStep = (index * 60 - this.randomDeg) / 360
       },
-      choosePrize(index) {
-        this.action(index)
+      _showTips(index) {
+        // this.prizeInfo = {usable_times: 0} // todo
+        this.$refs.modal.show('prize', index)
       }
     }
   }
