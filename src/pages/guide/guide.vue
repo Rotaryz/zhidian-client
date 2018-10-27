@@ -198,7 +198,6 @@
         if (!this.groupData.more) return
         try {
           let res = await Guide.getActiveList(data, loading)
-          console.log(res)
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return

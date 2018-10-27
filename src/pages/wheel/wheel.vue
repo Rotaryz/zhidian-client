@@ -31,7 +31,7 @@
             </figure>
           </article>
           <dl class="footer">
-            <dt class="title">你还有 <span class="number">3</span> 次机会</dt>
+            <dt class="title">你还有 <span class="number">{{usable_times}}</span> 次机会</dt>
             <dd class="card-item-wrapper">
               <wheel-card></wheel-card>
             </dd>
@@ -93,7 +93,8 @@
             title: '谢谢参与',
             image_url: `${this.$imageUrl}/zd-image/wheel/pic-face@2x.png`
           }
-        ]
+        ],
+        usable_times: 0
       }
     },
     onLoad() {
@@ -110,8 +111,10 @@
             this.$showToast(res.message)
             return
           }
-          console.log(res)
-          this.wheelList = this.wheelList.concat(res.data.activity_prizes)
+          let arr = []
+          arr.concat(res.data.activity_prizes)
+          this.wheelList = arr
+          this.usable_times = res.data.usable_times
         })
       },
       action(index) {
