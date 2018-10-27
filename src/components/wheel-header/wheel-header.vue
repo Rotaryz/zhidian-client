@@ -37,7 +37,7 @@
     },
     methods: {
       showRule() {
-        console.log(222)
+        this.$emit('showRule')
       }
     }
   }
