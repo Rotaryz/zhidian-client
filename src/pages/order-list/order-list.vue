@@ -1,5 +1,6 @@
 <template>
   <div class="order-list" :class="{'order-none': showNone,'add-padding': !status}">
+    <head-item :title="title" :showArrow="true"></head-item>
     <div class="order-box border-bottom-1px" v-if="!status">
       <div class="order-tab" hover-class="none" v-for="(item, index) in order" :key="index" @click="_goOrderTab(item,index)">
         <div class="order-tab-item" :class="selectTab * 1 === index * 1 ? 'active-font' : ''">{{item.title}}</div>
@@ -40,6 +41,7 @@
 <script>
   import { Order } from 'api'
   import PanelEnd from 'components/panel-end/panel-end'
+  import HeadItem from 'components/head-item/head-item'
   import Blank from 'components/blank/blank'
   import {mapActions} from 'vuex'
 
@@ -56,7 +58,8 @@
         manager: MANAGER,
         showNone: false,
         order: ORDER,
-        selectTab: '0'
+        selectTab: '0',
+        title: '订单列表'
       }
     },
     computed: {
@@ -174,7 +177,8 @@
     },
     components: {
       PanelEnd,
-      Blank
+      Blank,
+      HeadItem
     }
   }
 </script>
@@ -188,10 +192,10 @@
     background: $color-background
     box-sizing: border-box
     font-family: $font-family-regular
-    padding-top: 15px
+    padding-top: 64px
     position: relative
     &.add-padding
-      padding-top: 40px
+      padding-top: 104px
     .order-box
       box-sizing: border-box
       display: flex
@@ -201,7 +205,7 @@
       justify-content: space-between
       position: fixed
       left: 0
-      top: 0
+      top: 64px
       z-index:10
       .order-tab
         height: 40px

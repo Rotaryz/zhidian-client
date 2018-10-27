@@ -1,5 +1,6 @@
 <template>
   <div class="goods-make-poster">
+    <head-item :title="pageTitle" :showArrow="true"></head-item>
     <canvas class="canvas" canvas-id="dynamic-share" :style="canvasStyle" v-if="showCanvas"></canvas>
     <article class="share-container">
       <div class="goods-wrapper">
@@ -41,6 +42,7 @@
   import { mapGetters, mapActions } from 'vuex'
   import imMixin from 'common/mixins/im-mixin'
   import WePaint from 'components/we-paint/we-paint'
+  import HeadItem from 'components/head-item/head-item'
 
   // const width = wx.getSystemInfoSync().width
   // const vw = width / 100
@@ -48,7 +50,8 @@
     mixins: [imMixin],
     name: 'goods-make-poster',
     components: {
-      WePaint
+      WePaint,
+      HeadItem
     },
     data () {
       return {
@@ -65,7 +68,8 @@
         explain: '',
         mark: '',
         money: '',
-        price: ''
+        price: '',
+        pageTitle: '商品海报'
       }
     },
     onUnload () {
@@ -134,9 +138,7 @@
       _getParams (option) {
         this.useType = +this.goodsDrawInfo.type
         if (this.useType !== 0) {
-          this.$wx.setNavigationBarTitle({
-            title: '活动海报'
-          })
+          this.pageTitle = '活动海报'
         }
         this.id = this.goodsDrawInfo.id
         const {explain, goodsImg, mark, price, title} = this.goodsDrawInfo
@@ -366,6 +368,8 @@
 
   .goods-make-poster
     min-height: 100vh
+    padding-top: 64px
+    box-sizing: border-box
     .share-container
       margin: 4vw 9.3vw 6.1vw
       min-height: 132.8vw

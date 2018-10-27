@@ -2,10 +2,10 @@
   <div class="guide-header">
     <section class="logo-wrapper">
       <img class="img" mode="aspectFill" :src="shopInfo.image_url" alt="">
-      <button class="share-btn" open-type="share">
-        <img class="share-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-share_dg@2x.png'" alt="">
-        <div class="share-txt">分享</div>
-      </button>
+      <div class="back-box" @click="backShop" v-if="showBackBtn">
+        <img class="back-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-shop_my@2x.png'">
+        <div class="back-txt">返回店铺</div>
+      </div>
       <div class="cover-down"></div>
     </section>
     <section class="content">
@@ -20,7 +20,10 @@
           </div>
         </div>
         <div class="msg-right">
-          <img class="btn-editor" v-if="isMyShop && imageUrl" :src="imageUrl + '/zd-image/1.1/icon-exchange@2x.png'" alt="" @click="editorAvatar">
+          <img class="btn-editor" v-if="isMyShop && imageUrl" :src="imageUrl + '/zd-image/1.2/icon-exchange@2x.png'" alt="" @click="editorAvatar">
+          <button class="share-btn" open-type="share">
+            <img class="share-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-share_dg@2x.png'" alt="">
+          </button>
         </div>
       </div>
       <div class="height-10px-box" v-if="!shopInfo.lucky_draw_status"></div>
@@ -46,6 +49,10 @@
         default: {}
       },
       isMyShop: {
+        type: Boolean,
+        default: false
+      },
+      showBackBtn: {
         type: Boolean,
         default: false
       }
@@ -83,6 +90,9 @@
         } catch (e) {
           console.error(e)
         }
+      },
+      backShop() {
+        this.$emit('goBack')
       }
     }
     // computed: {
@@ -120,32 +130,30 @@
         display: block
         width: 100%
         height: 28.66vw
-        opacity: 0.4
-        background-image: linear-gradient(-180deg, rgba(7,7,7,0.00) 10%, rgba(0,0,0,0.10) 23%, rgba(0,0,0,0.80) 89%)
+        opacity: 0.5
+        background-image: linear-gradient(180deg, rgba(7,7,7,0.00) 10%, rgba(0,0,0,0.10) 23%, rgba(0,0,0,0.80) 89%)
         margin-top: -28.66vw
-      .share-btn
+      .back-box
         position: absolute
         right: 0
-        top: 20px
-        font-family: $font-family-medium
-        font-size: $font-size-16
+        top: 18.6vw
+        font-family: $font-family-regular
         background-image: linear-gradient(90deg, #FE7754 0%, #ED2B2B 100%)
-        color: $color-CCCCCC
-        text-align: center
-        height: 32px
-        width: 70px
-        line-height: 32px
         border-radius: 100px 0 0 100px
         layout(row, block, nowrap)
-        justify-content: center
         align-items: center
-        .share-icon
-          width: 16px
-          height: 16px
-        .share-txt
-          margin-left: 5px
+        font-size: 0
+        width: 97px
+        height: 32px
+        .back-icon
+          width: 17px
+          height: 15px
+          margin-left: 11px
+        .back-txt
           font-size: $font-size-14
-          color: $color-FFFFFF
+          color: $color-white
+          margin-left: 6px
+          line-height: 14px
     .content
       display: block
       padding: 0 15px
@@ -224,10 +232,25 @@
               margin-top: 5px
         .msg-right
           font-size: 0
+          width: 42px
+          height: 32px
+          position: relative
           .btn-editor
-            margin-left: 10px
+            position: absolute
+            right: 0
+            top: -45px
             width: 32px
             height: 32px
+          .share-btn
+            margin-left: 10px
+            height: 32px
+            width: 32px
+            border-radius: 50%
+            background: rgba(0, 0, 0, 0.15)
+            opacity: 1
+            .share-icon
+              width: 32px
+              height: 32px
       .prize-box
         padding-bottom: 27.82%
         position: relative

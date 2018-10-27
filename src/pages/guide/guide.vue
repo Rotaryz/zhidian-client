@@ -1,7 +1,8 @@
 <template>
   <article class="guide">
-    <back-shop v-if="showBackBtn" @goBack="goBack" :shopName="shopName"></back-shop>
-    <guide-header :shopInfo="shopInfo" :employee="employee" :isMyShop="isMyShop"></guide-header>
+    <head-item :title="title" :headStyle="headStyle" :showArrow="false" :titleColor="titleColor"></head-item>
+    <!--<back-shop v-if="showBackBtn" @goBack="goBack" :shopName="shopName"></back-shop>-->
+    <guide-header :shopInfo="shopInfo" :employee="employee" :isMyShop="isMyShop" :showBackBtn="showBackBtn" @goBack="goBack"></guide-header>
     <guide-active :groupList="groupData.list" :cutList="cutData.list" :selectTab="selectTab" @changeTab="changeTab" :nothing="nothing"></guide-active>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
   </article>
@@ -10,6 +11,7 @@
 <script type="text/ecmascript-6">
   import GuideHeader from 'components/guide-header/guide-header'
   import GuideActive from 'components/guide-active/guide-active'
+  import HeadItem from 'components/head-item/head-item'
   import BackShop from 'components/back-shop/back-shop'
   import ImFixed from 'components/im-fixed/im-fixed'
   import { Guide } from 'api'
@@ -22,7 +24,8 @@
       GuideHeader,
       GuideActive,
       BackShop,
-      ImFixed
+      ImFixed,
+      HeadItem
     },
     data() {
       return {
@@ -46,11 +49,25 @@
         oldShopId: '',
         shopName: '',
         nothing: false,
-        timer: ''
+        timer: '',
+        title: '',
+        headStyle: 'background: rgba(255, 255, 255, 0)',
+        titleColor: 'white'
       }
     },
     onTabItemTap() {
       this.sendCustomMsg(10003)
+    },
+    onPageScroll(e) {
+      if (e.scrollTop >= 100) {
+        this.headStyle = 'background: rgba(255, 255, 255, 1)'
+        this.titleColor = '#313131'
+        this.title = '导购'
+      } else {
+        this.headStyle = 'background: rgba(255, 255, 255, 0)'
+        this.titleColor = 'white'
+        this.title = ''
+      }
     },
     onLoad(options) {
       if (!this.$wx.getStorageSync('token')) return
@@ -141,6 +158,8 @@
         }
       },
       async goBack() { // 返回自己的店铺
+        let userInfoExtend = wx.getStorageSync('userInfoExtend')
+        await this.$turnShop({ id: userInfoExtend.shop_id, url: '/pages/guide' })
         this.showBackBtn = this.$hasShop() && !this.$isMyShop()
         this.isMyShop = !!this.$isMyShop()
         this._changeShopResetData()

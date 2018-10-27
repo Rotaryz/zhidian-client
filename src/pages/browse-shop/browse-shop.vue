@@ -1,5 +1,6 @@
 <template>
   <div class="browse-shop">
+    <head-item :title="title" :showArrow="true"></head-item>
     <div class="browse-shop-small" v-if="browseShopList">
       <div class="browse-shop-item" v-for="(item, index) in browseShopList" :key="index" @click="checkShop(item)">
         <img :src="item.employee.image_url" class="browse-shop-logo" mode="aspectFill">
@@ -16,6 +17,7 @@
 
 <script type="text/ecmascript-6">
   import PanelEnd from 'components/panel-end/panel-end'
+  import HeadItem from 'components/head-item/head-item'
   import Blank from 'components/blank/blank'
   import { Shop } from 'api'
 
@@ -27,7 +29,8 @@
         upMore: false,
         image_url: this.$imageUrl,
         browseShopList: [],
-        isNull: false
+        isNull: false,
+        title: ''
       }
     },
     onShow() {
@@ -76,7 +79,8 @@
     },
     components: {
       PanelEnd,
-      Blank
+      Blank,
+      HeadItem
     }
   }
 </script>
@@ -85,6 +89,8 @@
   @import "~common/stylus/private"
   .browse-shop
     min-height: 100vh
+    box-sizing: border-box
+    padding-top: 64px
     background: $color-background
 
   .browse-shop-small

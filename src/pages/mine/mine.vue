@@ -1,5 +1,6 @@
 <template>
   <div class="big-mine">
+    <head-item :title="title" :showArrow="false"></head-item>
     <back-shop v-if="!mineShop && hasShop" :shopName="shopName"></back-shop>
     <div class="mine">
       <div class="mine-msg">
@@ -39,6 +40,7 @@
   import { Order, Guide } from 'api'
   import { mapActions } from 'vuex'
   import BackShop from 'components/back-shop/back-shop'
+  import HeadItem from 'components/head-item/head-item'
 
   const ORDER = [{ title: '待付款', status: 'payment', image: 'icon-obligation@2x.png' }, { title: '待成团', status: 'waiting_groupon', image: 'icon-staygroup@2x.png' }, { title: '已退款', status: 'refund', image: 'icon-refund@2x.png' }, { title: '全部订单', status: '', image: 'icon-alloeder@2x.png' }]
   const MANAGER = [{ title: '我的兑换券', url: '/pages/exchange-coupon', image: 'icon-coupon_my@2x.png' }, { title: '我的砍价', url: '/pages/mine-bargain', image: 'icon-sale@2x.png' }, { title: '浏览过的店', url: '/pages/browse-shop', image: 'icon-shop_my@2x.png' }]
@@ -55,7 +57,8 @@
         shopId: '',
         mineShop: false, // 是我的店
         hasShop: false, // 有店铺
-        shopName: ''
+        shopName: '',
+        title: '我的'
       }
     },
     async onShow() {
@@ -96,13 +99,16 @@
       }
     },
     components: {
-      BackShop
+      BackShop,
+      HeadItem
     }
   }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
+  .big-mine
+    padding-top: 64px
 
   .mine
     font-family: $font-family-regular

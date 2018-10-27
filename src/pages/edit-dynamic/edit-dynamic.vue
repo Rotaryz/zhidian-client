@@ -1,5 +1,6 @@
 <template>
   <div class="edit-dynamic">
+    <head-item :title="topTitle" :showArrow="true"></head-item>
     <scroll-view class="edit-wrapper">
       <div class="compile">
         <textarea class="words-span" :style="{height: textHeight + 'px'}" maxlength="-1" placeholder="这一刻的想法…" v-model="title" @input="_setTop" @linechange="getLine"></textarea>
@@ -30,6 +31,7 @@
 <script>
   import { Dynamic } from 'api'
   import { mapActions } from 'vuex'
+  import HeadItem from 'components/head-item/head-item'
 
   export default {
     name: 'edit-dynamic',
@@ -47,7 +49,8 @@
         showImage: [],
         sortArr: [],
         isChecked: false,
-        isBoss: false
+        isBoss: false,
+        topTitle: '发布动态'
       }
     },
     computed: {
@@ -156,6 +159,7 @@
       }
     },
     components: {
+      HeadItem
     }
   }
 </script>
@@ -164,6 +168,8 @@
   .edit-dynamic
     .edit-wrapper
       height: 100vh
+      padding-top: 64px
+      box-sizing: border-box
       padding-bottom: 50px
     .words-span
       margin-top: 14px

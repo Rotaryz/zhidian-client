@@ -35,3 +35,5 @@ export const currentUnRead = state => state.currentUnRead // 当前对象未读�
 export const chatBtnType = state => state.chatBtnType
 
 export const imPosition = state => state.imPosition
+
+export const chatMsgTitle = state => state.chatMsgTitle

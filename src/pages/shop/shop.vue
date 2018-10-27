@@ -1,5 +1,6 @@
 <template>
   <article class="shop">
+    <head-item :title="title" :showArrow="true"></head-item>
     <shop-header :shopInfo="shopInfo" :employee="employee" :photoInfo="photoInfo" v-if="showHeader"></shop-header>
     <shop-content :goodsList="goodsList" :selectTab="selectTab" :storyInfo="storyInfo" @changeTab="changeTab"></shop-content>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
@@ -13,13 +14,15 @@
   import { Guide, Shop } from 'api'
   import clearWatch from 'common/mixins/clear-watch'
   import imMixin from 'common/mixins/im-mixin'
+  import HeadItem from 'components/head-item/head-item'
 
   export default {
     mixins: [clearWatch, imMixin],
     components: {
       ShopHeader,
       ShopContent,
-      ImFixed
+      ImFixed,
+      HeadItem
     },
     data() {
       return {
@@ -37,7 +40,8 @@
         selectTab: 0,
         oldShopId: '',
         isMyShop: false,
-        showHeader: true
+        showHeader: true,
+        title: '门店'
       }
     },
     onLoad() {
@@ -192,4 +196,6 @@
   @import "~common/stylus/private"
   .shop
     min-height: 100vh
+    padding-top: 64px
+    box-sizing: border-box
 </style>

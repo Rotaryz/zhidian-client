@@ -1,5 +1,6 @@
 <template>
   <div class="order-refund">
+    <head-item :title="title" :showArrow="true"></head-item>
     <div class="refund-msg">
       <div class="refund-text">
         <p class="refund-title">退款状态</p>
@@ -43,14 +44,19 @@
 
 <script>
   import { Order } from 'api'
+  import HeadItem from 'components/head-item/head-item'
 
   export default {
     name: 'order-refund',
+    components: {
+      HeadItem
+    },
     data() {
       return {
         refundStatus: 1,
         refundDetail: {},
-        endString: '退款成功'
+        endString: '退款成功',
+        title: '退款详情'
       }
     },
     async onLoad(option) {
@@ -78,6 +84,7 @@
 
   /*退款样式*/
   .order-refund
+    padding-top: 64px
     .refund-msg
       height: 129px
       box-sizing: border-box

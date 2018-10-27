@@ -1,5 +1,6 @@
 <template>
   <div class="group-detail">
+    <head-item :title="title" :showArrow="true"></head-item>
     <div class="group-goods">
       <div class="shop-msg">
         <div class="left" @click="toShop">
@@ -44,6 +45,7 @@
   import { Goods } from 'api'
   import Payment from 'components/payment/payment'
   import ImMixin from 'common/mixins/im-mixin'
+  import HeadItem from 'components/head-item/head-item'
   const STATUSOBJ = {
     1: {icon: 'icon-group_ing@2x.png', txt: '拼团中'},
     2: {icon: 'icon-group_success@2x.png', txt: '拼团成功'},
@@ -61,7 +63,8 @@
         id: '',
         groupDetail: {},
         hasPhone: '',
-        code: ''
+        code: '',
+        title: '拼团详情'
       }
     },
     onShareAppMessage (res) {
@@ -193,7 +196,8 @@
       }
     },
     components: {
-      Payment
+      Payment,
+      HeadItem
     }
   }
 </script>
@@ -203,6 +207,7 @@
 
   .group-detail
     width: 100vw
+    padding-top: 64px
     .f4-line
       width: 100%
       height: 10px

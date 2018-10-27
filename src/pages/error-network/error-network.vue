@@ -36,7 +36,7 @@
   @import "~common/stylus/private"
 
   .error-none
-    padding-top: 121.5px
+    padding-top: 185.5px
     display: flex
     align-items: center
     justify-content: center
