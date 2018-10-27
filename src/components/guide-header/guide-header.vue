@@ -23,7 +23,8 @@
           <img class="btn-editor" v-if="isMyShop && imageUrl" :src="imageUrl + '/zd-image/1.1/icon-exchange@2x.png'" alt="" @click="editorAvatar">
         </div>
       </div>
-      <div class="prize-box">
+      <div class="height-10px-box" v-if="!shopInfo.lucky_draw_status"></div>
+      <div class="prize-box" v-if="shopInfo.lucky_draw_status">
         <img class="prize-img" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/pic-gift_banner@2x.png'">
       </div>
     </section>
@@ -102,6 +103,9 @@
 
   button
     reset-button()
+  .height-10px-box
+    height: 6px
+    background: $color-white
 
   .guide-header
     position: relative
@@ -219,6 +223,7 @@
               line-height: 12px
               margin-top: 5px
         .msg-right
+          font-size: 0
           .btn-editor
             margin-left: 10px
             width: 32px

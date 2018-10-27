@@ -39,7 +39,13 @@
           </div>
           <div class="msg-txt">已有{{item.join_count}}人砍价</div>
         </div>
-        <div class="time-box" v-if="!item.status"><text>距开始</text><text class="day-time">02</text><text class="flag-medium">:</text><text class="time-block">00</text><text class="flag-medium">:</text><text class="time-block">00</text><text class="flag-medium">:</text><text class="time-block">00</text></div>
+        <div class="time-box" v-if="!item.status">
+          <text>距开始</text>
+          <text class="day-time" v-if="item.endTime && item.endTime.day != '00'">{{item.endTime.day}}</text>
+          <text class="flag-medium" v-if="item.endTime && item.endTime.day != '00'">:</text>
+          <text class="time-block">{{item.endTime ? item.endTime.hour : '00'}}</text><text class="flag-medium">:</text>
+          <text class="time-block">{{item.endTime ? item.endTime.minute : '00'}}</text><text class="flag-medium">:</text>
+          <text class="time-block">{{item.endTime ? item.endTime.second : '00'}}</text></div>
       </div>
     </div>
   </div>
@@ -118,17 +124,17 @@
             display: flex
             aling-items: flex-end
             .title-flag
-              width: 15px
-              height: 15px
+              width: 30rpx
+              height: 30rpx
               background: $color-FF6D88
-              border-radius: 2px
+              border-radius: 4rpx
               display: flex
               justify-content: center
               align-items: center
               font-family: $font-family-regular
               color: $color-white
-              font-size: $font-size-10
-              margin-right: 3px
+              font-size: 20rpx
+              margin-right: 6rpx
               &.group-flag
                 background: $color-FFA807
             .title-txt
@@ -137,26 +143,30 @@
               white-space: nowrap
               text-overflow: ellipsis
               font-family: $font-family-regular
-              font-size: $font-size-16
+              font-size: 32rpx
               color: $color-1F1F1F
-              letter-spacing: 0.6px
-              line-height: 16px
+              letter-spacing: 1.2rpx
+              line-height: 32rpx
           .down-top
             display: flex
             align-items: center
-            margin-top: 9px
+            margin-top: 18rpx
+            overflow: hidden
             .down-txt
               font-family: $font-family-regular
-              font-size: $font-size-14
+              font-size: 28rpx
               color: $color-99A0AA
-              line-height: 14px
+              line-height: 28rpx
+              white-space: nowrap
             .stock-box
-              padding: 3px 5px
-              margin-right: 5px
+              padding: 6rpx 10rpx
+              margin-right: 10rpx
               border-1px($color-ED2C2B, 2px)
               font-family: $font-family-regular
-              font-size: $font-size-12
+              font-size: 24rpx
               color: $color-ED2C2B
+              white-space: nowrap
+              margin-bottom: 1px
           .down-box
             flex: 1
             display: flex
@@ -171,38 +181,38 @@
                 align-items: flex-end
                 .red-money-icon
                   font-family: $font-family-medium
-                  font-size: $font-size-12
+                  font-size: 24rpx
                   color: $color-ED2C2B
-                  line-height: 12px
-                  margin-right: 3px
-                  margin-bottom: 1px
+                  line-height: 24rpx
+                  margin-right: 6rpx
+                  margin-bottom: 4rpx
                 .red-big-money
                   font-family: $font-family-bold
-                  font-size: $font-size-24
+                  font-size: 48rpx
                   color: $color-ED2C2B
-                  line-height: 24px
+                  line-height: 48rpx
                 .del-money
                   font-family: $font-family-regular
-                  font-size: $font-size-14
+                  font-size: 28rpx
                   color: $color-99A0AA
-                  margin-left: 7px
+                  margin-left: 14rpx
                   text-decoration: line-through
-                  line-height: 14px
-                  margin-bottom: 2px
+                  line-height: 28rpx
+                  margin-bottom: 4rpx
             .down-right
               display: flex
               align-items: flex-end
-              padding-bottom: 3px
+              padding-bottom: 6rpx
               .right-btn
-                width: 85px
-                height: 32px
+                width: 170rpx
+                height: 64rpx
                 text-align: center
-                line-height: 32px
+                line-height: 64rpx
                 color: $color-white
-                font-size: $font-size-16
+                font-size: 32rpx
                 font-family: $font-family-medium
-                letter-spacing: 0.6px
-                border-radius: 16px
+                letter-spacing: 1.2rpx
+                border-radius: 32rpx
                 &.used
                   background-image: linear-gradient(90deg, #FE7754 0%, #ED2B2B 100%)
                 &.un-used

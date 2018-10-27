@@ -2,7 +2,7 @@
   <article class="guide">
     <back-shop v-if="showBackBtn" @goBack="goBack" :shopName="shopName"></back-shop>
     <guide-header :shopInfo="shopInfo" :employee="employee" :isMyShop="isMyShop"></guide-header>
-    <guide-active :groupList="groupData.list" :cutList="cutData.list" :selectTab="selectTab" @changeTab="changeTab"></guide-active>
+    <guide-active :groupList="groupData.list" :cutList="cutData.list" :selectTab="selectTab" @changeTab="changeTab" :nothing="nothing"></guide-active>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
   </article>
 </template>
@@ -44,7 +44,9 @@
         showBackBtn: false,
         isMyShop: false,
         oldShopId: '',
-        shopName: ''
+        shopName: '',
+        nothing: false,
+        timer: ''
       }
     },
     onTabItemTap() {
@@ -157,6 +159,7 @@
           this._getCutList({rule_id: this.cutData.rule_id, page: this.cutData.page}, false)
         ])
         this.$wechat.hideLoading()
+        this._timeRun()
       },
       async _getShopInfo(location, loading) {
         try {
@@ -186,6 +189,11 @@
             let arr = this.groupData.list.concat(res.data)
             this.groupData.list = arr
           }
+          if (!this.groupData.list.length && !this.cutData.list.length) {
+            this.nothing = true
+          } else {
+            this.nothing = false
+          }
           this.groupData.more = this.groupData.list.length < res.meta.total
         } catch (e) {
           console.error(e)
@@ -205,10 +213,72 @@
             let arr = this.cutData.list.concat(res.data)
             this.cutData.list = arr
           }
+          if (!this.groupData.list.length && !this.cutData.list.length) {
+            this.nothing = true
+          } else {
+            this.nothing = false
+          }
           this.cutData.more = this.cutData.list.length < res.meta.total
         } catch (e) {
           console.error(e)
         }
+      },
+      _timeRun() {
+        clearInterval(this.timer)
+        let res1 = this.groupData.list.map((item) => {
+          item.current_timestamp++
+          item.endTime = this._checkTime(item.current_timestamp, item.start_at_timestamp)
+          return Object.assign({}, item)
+        })
+        this.$set(this.groupData, 'list', res1)
+        let res2 = this.cutData.list.map((item) => {
+          item.current_timestamp++
+          item.endTime = this._checkTime(item.current_timestamp, item.start_at_timestamp)
+          return Object.assign({}, item)
+        })
+        this.$set(this.cutData, 'list', res2)
+        this.timer = setInterval(() => {
+          let res1 = this.groupData.list.map((item) => {
+            item.current_timestamp++
+            item.endTime = this._checkTime(item.current_timestamp, item.start_at_timestamp)
+            return Object.assign({}, item)
+          })
+          this.$set(this.groupData, 'list', res1)
+          let res2 = this.cutData.list.map((item) => {
+            item.current_timestamp++
+            item.endTime = this._checkTime(item.current_timestamp, item.start_at_timestamp)
+            return Object.assign({}, item)
+          })
+          this.$set(this.cutData, 'list', res2)
+        }, 1000)
+      },
+      _checkTime(start, end) {
+        let differ = end * 1 - start * 1
+        let day = Math.floor(differ / (60 * 60 * 24))
+        day = day >= 10 ? day : '0' + day
+        let hour = Math.floor(differ / (60 * 60)) - (day * 24)
+        hour = hour >= 10 ? hour : '0' + hour
+        let minute = Math.floor(differ / 60) - (day * 24 * 60) - (hour * 60)
+        minute = minute >= 10 ? minute : '0' + minute
+        let second = Math.floor(differ) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60)
+        second = second >= 10 ? second : '0' + second
+        let times
+        if (differ > 0) {
+          times = {
+            day,
+            hour,
+            minute,
+            second
+          }
+        } else {
+          times = {
+            day: '00',
+            hour: '00',
+            minute: '00',
+            second: '00'
+          }
+        }
+        return times
       }
     }
   }
