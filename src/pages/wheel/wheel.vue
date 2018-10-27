@@ -18,7 +18,7 @@
             <figure class="wheel-inner" :style="innerWheelAction">
               <img class="icon-img" v-if="imageUrl" :src="imageUrl + '/zd-image/wheel/pic-thrntable@2x.png'" alt="">
               <div class="prize-item" v-for="(item, index) in wheelList" :key="index" :class="'prize-'+index">
-                <p class="name">{{item.name}}</p>
+                <p class="name">{{item.title}}</p>
                 <div class="img-wrapper">
                   <img class="pic" mode="aspectFit" v-if="item.image_url" :src="item.image_url" alt="">
                 </div>
@@ -90,34 +90,14 @@
         wheelCvs: `cubic-bezier(.71,0,.58,1)`,
         wheelList: [
           {
-            name: '谢谢参与',
+            title: '谢谢参与',
             image_url: `${this.$imageUrl}/zd-image/wheel/pic-face@2x.png`
-          },
-          {
-            name: '1啊速度啊是大大撒大大大大撒大撒大大',
-            image_url: `${this.$imageUrl}/zd-image/test-img/1@1x.png`
-          },
-          {
-            name: '2',
-            image_url: `${this.$imageUrl}/zd-image/test-img/15@1x.png`
-          },
-          {
-            name: '3',
-            image_url: `${this.$imageUrl}/zd-image/test-img/13@1x.png`
-          },
-          {
-            name: '4',
-            image_url: `${this.$imageUrl}/zd-image/test-img/16@1x.png`
-          },
-          {
-            name: '5',
-            image_url: `${this.$imageUrl}/zd-image/test-img/6@1x.png`
           }
         ]
       }
     },
     onLoad() {
-      // this._getWheelInfo()
+      this._getWheelInfo()
     },
     methods: {
       showRule() {
@@ -125,11 +105,13 @@
       },
       _getWheelInfo() {
         ActiveExtend.getWheelInfo().then(res => {
+          this.$wechat.hideLoading()
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return
           }
           console.log(res)
+          this.wheelList = this.wheelList.concat(res.data.activity_prizes)
         })
       },
       action(index) {
