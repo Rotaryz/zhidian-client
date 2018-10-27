@@ -1,5 +1,7 @@
 <template>
   <div class="wheel-poster">
+    <head-item :title="title" :showArrow="true"></head-item>
+    <div style="height: 64px"></div>
     <div class="top-box"></div>
     <div class="content">
       <img class="icon-img pos-a" v-if="imageUrl" :src="imageUrl + '/zd-image/wheel/pic-share_img.png'" alt="">
@@ -26,13 +28,20 @@
 
 <script type="text/ecmascript-6">
   import WePaint from 'components/we-paint/we-paint'
+  import HeadItem from 'components/head-item/head-item'
   import wx from 'wx'
 
   const system = wx.getSystemInfoSync()
   const vw = system.screenWidth / 100
   export default {
     components: {
-      WePaint
+      WePaint,
+      HeadItem
+    },
+    data() {
+      return {
+        title: '幸运大转盘'
+      }
     },
     methods: {
       drawDone(filePath) {

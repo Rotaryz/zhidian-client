@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="height-10px-box" v-if="!shopInfo.lucky_draw_status"></div>
-      <div class="prize-box" v-if="shopInfo.lucky_draw_status">
+      <div class="prize-box" v-if="shopInfo.lucky_draw_status" @click="navToWheel">
         <img class="prize-img" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/pic-gift_banner@2x.png'">
       </div>
     </section>
@@ -80,6 +80,9 @@
     created() {
     },
     methods: {
+      navToWheel() {
+        this.$wx.navigateTo({url: `/pages/wheel`})
+      },
       async editorAvatar() {
         try {
           this.setShowType(true)
