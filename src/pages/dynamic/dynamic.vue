@@ -1,5 +1,6 @@
 <template>
   <article class="dynamic-list" @click="_closeLong">
+    <head-item :title="title" :showArrow="false"></head-item>
     <div class="test-img-box" v-if="testShow">
       <image :src="testImg" mode="widthFix" class="test-img"></image>
     </div>
@@ -191,6 +192,7 @@
   import DynamicShare from 'components/dynamic-share/dynamic-share'
   import Share from 'components/share/share'
   import imMixin from 'common/mixins/im-mixin'
+  import HeadItem from 'components/head-item/head-item'
   import {mapGetters, mapActions} from 'vuex'
 
   export default {
@@ -219,7 +221,8 @@
         testShow: 0, // 重要，勿删
         isShowBox: true,
         qrCode: '',
-        isMine: false
+        isMine: false,
+        title: '动态'
       }
     },
     async onLoad(option) {
@@ -234,7 +237,6 @@
       }, 500)
     },
     onShow() {
-      this.$wx.setNavigationBarTitle({ title: '动态' })
       this.isMine = this.$isMyShop()
       this._getDrawPosterInfo() // 获取画海报的信息
       this.shopId = this.$wx.getStorageSync('shopId') ? this.$wx.getStorageSync('shopId') * 1 : ''
@@ -533,13 +535,16 @@
     components: {
       ConfirmMsg,
       DynamicShare,
-      Share
+      Share,
+      HeadItem
     }
   }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
+  .dynamic-list
+    padding-top: 64px
 
   .dynamic-item
     position: relative

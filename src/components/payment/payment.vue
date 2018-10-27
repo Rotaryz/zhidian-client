@@ -344,7 +344,7 @@
           .payment-money
             font-size: $font-size-20
             font-family: PingFang-SC-Bold
-            color: $color-D32F2F
+            color: $color-ED2C2B
             letter-spacing: 0.6px
             .money-icon
               margin-right: 3px

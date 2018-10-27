@@ -2,6 +2,7 @@
 @import "./variable.styl"
 
 $color-D32F2F = #D32F2F
+$color-ED2C2B = #ED2C2B
 $color-EB5C5C = #EB5C5C
 $color-D32F2F = #D32F2F
 $color-455A64 = #455A64
@@ -26,30 +27,34 @@ $color-F8F8F8 = #F8F8F8
 $color-F0F2F5 = #F0F2F5
 $color-466889 = #466889
 $color-FFEEC3 = #FFEEC3
+$color-CB5F43 = #CB5F43
+$color-BD2222 = #BD2222
+$color-2F2F2F = #2F2F2F
+$color-FF6D88 = #FF6D88
 
 // 常规按钮 + 一般按钮
 normal-button-style($type = normal, $width = 200px, $height = 41px, $radius = 6px, $fontSize = $font-size-16)
   font-family: $font-family-medium
   font-size: $fontSize
   color: $color-FFFFFF
-  background-image: linear-gradient(90deg, $color-EB5C5C 0%, $color-D32F2F 100%)
+  background-image: linear-gradient(90deg, #FE7754 0%, #ED2B2B 100%)
   border-radius: $radius
   text-align: center
   line-height: $height
   height: $height
   width: $width
   if ($type == click)
-    background-image: linear-gradient(90deg, $color-BC4949 0%, $color-A82525 100%)
+    background-image: linear-gradient(90deg, $color-CB5F43 0%, $color-BD2222 100%)
     color: $color-CCCCCC
   else if ($type == un-click )
     opacity: 0.6
 
 button-style($type = normal, $radius = 6px)
-  background-image: linear-gradient(90deg, $color-EB5C5C 0%, $color-D32F2F 100%)
+  background-image: linear-gradient(90deg, #FE7754 0%, #ED2B2B 100%)
   border-radius: $radius
   text-align: center
   if ($type == click)
-    background-image: linear-gradient(90deg, $color-BC4949 0%, $color-A82525 100%)
+    background-image: linear-gradient(90deg, $color-CB5F43 0%, $color-BD2222 100%)
   else if ($type == un-click )
     opacity: 0.6
 

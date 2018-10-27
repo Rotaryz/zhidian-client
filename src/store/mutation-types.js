@@ -43,3 +43,5 @@ export const SET_CHAT_BTNTYPE = 'SET_CHAT_BTNTYPE' // 设置聊天按钮是否�
 export const SET_NOW_CHAT = 'SET_NOW_CHAT'
 
 export const SET_IM_POSITION = 'SET_IM_POSITION'
+
+export const SET_IM_TITLE = 'SET_IM_TITLE'

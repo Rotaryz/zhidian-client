@@ -146,6 +146,8 @@
   .login
     width: 100vw
     height: 100vh
+    padding-top: 64px
+    box-sizing: border-box
     display: flex
     flex-direction: column
     align-items: center

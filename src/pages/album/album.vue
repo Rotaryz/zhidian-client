@@ -1,5 +1,6 @@
 <template>
   <div class="album">
+    <head-item :title="title" :showArrow="true"></head-item>
     <div class="album-box" :class="{'album-list-active' : isNull && shopList.length * 1 === 0}">
       <div class="album-list" v-if="shopList">
         <div class="item-list" v-for="(item, index) in shopList" v-bind:key="index">
@@ -15,6 +16,7 @@
 
 <script type="text/ecmascript-6">
   import Blank from 'components/blank/blank'
+  import HeadItem from 'components/head-item/head-item'
   import { mapActions } from 'vuex'
 
   import { Shop, Guide } from 'api'
@@ -26,7 +28,8 @@
         shopList: [],
         upMore: false,
         isNull: false,
-        page: 1
+        page: 1,
+        title: ''
       }
     },
     onLoad() {
@@ -42,7 +45,6 @@
         this.setShowType(true)
         let urls = this.shopList.map(item => item.url)
         let current = item.url
-        console.log(urls, current)
         this.$wx.previewImage({ urls, current })
       },
       getImgList() {
@@ -82,7 +84,7 @@
         Guide.getShopInfo().then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
-            this.$wx.setNavigationBarTitle({ title: res.data.name })
+            this.title = res.data.name
           } else {
             this.$showToast(res.message)
           }
@@ -90,7 +92,8 @@
       }
     },
     components: {
-      Blank
+      Blank,
+      HeadItem
     }
   }
 </script>
@@ -98,6 +101,7 @@
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
   .album
+    padding-top: 64px
     min-height: 100vh
     background: $color-background
     box-sizing: border-box

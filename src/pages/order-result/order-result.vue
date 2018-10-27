@@ -1,5 +1,6 @@
 <template>
   <div class="order-result">
+    <head-item :title="title" :showArrow="true"></head-item>
     <img :src="imageUrl + '/zd-image/mine/pic-bg_pay@2x.png'" v-if="imageUrl" mode="widthFix" class="result-top-bc">
     <div class="result-content">
       <div class="result-box">
@@ -32,15 +33,20 @@
 
 <script>
   import { mapGetters } from 'vuex'
+  import HeadItem from 'components/head-item/head-item'
   export default {
     name: 'OrderResult',
+    components: {
+      HeadItem
+    },
     data () {
       return {
         imageUrl: this.$imageUrl,
         type: 0,
         orderId: '',
         allReady: false,
-        timer: ''
+        timer: '',
+        title: '支付详情'
       }
     },
     methods: {
@@ -78,6 +84,8 @@
   .order-result
     width: 100vw
     height: 100vh
+    box-sizing: border-box
+    padding-top: 64px
     background: $color-F8F8F8
     position: relative
     .result-top-bc
@@ -86,6 +94,8 @@
     .result-content
       width: 80vw
       height: 100vh
+      box-sizing: border-box
+      padding-top: 64px
       position: absolute
       left: 10vw
       top: 0
@@ -94,7 +104,7 @@
       justify-content: center
       .result-box
         width: 100%
-        height: 73vh
+        height: 73%
         background: $color-white
         border: 0.5px solid rgba(236,237,241,0.58)
         box-shadow: 0 4px 16px 0 rgba(55,75,99,0.10)
@@ -200,8 +210,8 @@
             font-size: $font-size-14
             letter-spacing: 0.6px
           .black
-            border: 1px solid $color-D32F2F
-            color: $color-D32F2F
+            border: 1px solid $color-ED2C2B
+            color: $color-ED2C2B
             margin-right: 30px
             line-height: 30px
           .red

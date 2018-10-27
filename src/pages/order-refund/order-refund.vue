@@ -1,5 +1,6 @@
 <template>
   <div class="order-refund">
+    <head-item :title="title" :showArrow="true"></head-item>
     <div class="refund-msg">
       <div class="refund-text">
         <p class="refund-title">退款状态</p>
@@ -43,14 +44,19 @@
 
 <script>
   import { Order } from 'api'
+  import HeadItem from 'components/head-item/head-item'
 
   export default {
     name: 'order-refund',
+    components: {
+      HeadItem
+    },
     data() {
       return {
         refundStatus: 1,
         refundDetail: {},
-        endString: '退款成功'
+        endString: '退款成功',
+        title: '退款详情'
       }
     },
     async onLoad(option) {
@@ -78,6 +84,7 @@
 
   /*退款样式*/
   .order-refund
+    padding-top: 64px
     .refund-msg
       height: 129px
       box-sizing: border-box
@@ -96,7 +103,7 @@
           font-size: $font-size-16
           font-family: $font-family-medium
         .refund-status
-          color: $color-D32F2F
+          color: $color-ED2C2B
       .refund-item
         font-size: $font-size-14
         font-family: $font-family-regular
@@ -127,7 +134,7 @@
           width: 7.5px
           height: 7.5px
         .refund-progress-circular-active
-          background: $color-D32F2F
+          background: $color-ED2C2B
         .line-box
           row-center()
           height: 100%
@@ -139,7 +146,7 @@
             width: 100%
             background: $color-D2D2D2
           .line-active
-            background: $color-D32F2F
+            background: $color-ED2C2B
 
       .refund-progress-text
         margin-left: 17.5px
@@ -153,7 +160,7 @@
           .refund-progress-title
             margin-bottom: 10px
           .refund-progress-title-active
-            color: $color-D32F2F
+            color: $color-ED2C2B
           .refund-progress-reason
             margin-bottom: 3.5px
             font-size: $font-size-12

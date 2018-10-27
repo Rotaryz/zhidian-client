@@ -1,5 +1,6 @@
 <template>
   <div class="order-detail">
+    <head-item :title="title" :showArrow="true"></head-item>
     <div class="order-normal" v-if="detail">
       <!-- 商品信息-->
       <div class="order-box">
@@ -73,6 +74,7 @@
 <script>
   import { Order } from 'api'
   import CouponCode from 'components/coupon-code/coupon-code'
+  import HeadItem from 'components/head-item/head-item'
   import QrCodeUtil from 'common/js/util-qr-code'
 
   const MANAGER = { payment: '去支付', waiting_groupon: '拼团详情', success_groupon: '拼团详情', fail_groupon: '拼团详情' }
@@ -90,7 +92,8 @@
         couponDetail: {},
         timeEnd: false,
         groupEndTime: '00:00:00',
-        groupDetail: null
+        groupDetail: null,
+        title: '订单详情'
       }
     },
     async onShow() {
@@ -168,9 +171,9 @@
       },
       async _orderDetail(id, loading) {
         let res = await Order.orderDetail(id, loading)
+        this.$wechat.hideLoading()
         if (res.error !== this.$ERR_OK) {
           this.$showToast(res.message)
-          this.$wechat.hideLoading()
           return
         }
         this.detail = res.data
@@ -192,7 +195,6 @@
           }
           this._groupTimePlay()
         }
-        this.$wechat.hideLoading()
       },
       _groupTimePlay() {
         clearInterval(timer)
@@ -235,7 +237,8 @@
       }
     },
     components: {
-      CouponCode
+      CouponCode,
+      HeadItem
     }
   }
 </script>
@@ -245,6 +248,7 @@
   .order-detail
     min-height: 100vh
     padding-bottom: 60px
+    padding-top: 64px
     box-sizing: border-box
     background: $color-background
 
@@ -333,7 +337,7 @@
           margin-left: 8px
           font-size: $font-size-14
           font-family: $font-family-regular
-          color: $color-D32F2F
+          color: $color-ED2C2B
         .time-down
           color: $color-455A64
       .progress-success
@@ -352,7 +356,7 @@
           position: relative
           z-index: 2
         .progress-item-active
-          background: $color-D32F2F
+          background: $color-ED2C2B
         .progress-icon
           position: relative
           z-index: 2
@@ -376,7 +380,7 @@
         .line
           background: $color-D2D2D2
         .line-active
-          background: $color-D32F2F
+          background: $color-ED2C2B
 
     /*订单详情*/
     .order-msg-content

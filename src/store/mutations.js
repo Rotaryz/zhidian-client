@@ -152,6 +152,9 @@ const mutations = {
   },
   [types.SET_IM_POSITION](state, position) {
     state.imPosition = Object.assign({}, position)
+  },
+  [types.SET_IM_TITLE](state, title) {
+    state.chatMsgTitle = title
   }
 }
 

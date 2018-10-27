@@ -1,5 +1,6 @@
 <template>
   <div class="chat">
+    <head-item :title="chatMsgTitle" :showArrow="true"></head-item>
     <scroll-view scroll-y class="chat-container" :scroll-into-view="scrollId" @scrolltoupper="loadMore">
       <div class="chat-list">
         <div class="line-view"></div>
@@ -132,6 +133,7 @@
   import { Im } from 'api'
   import { emotionsFaceArr, TIMELAG } from 'utils/im-plugins'
   import ChatWelcome from 'components/chat-welcome/chat-welcome'
+  import HeadItem from 'components/head-item/head-item'
   import {app} from '@/main'
 
   const _this = app
@@ -144,7 +146,8 @@
   ]
   export default {
     components: {
-      ChatWelcome
+      ChatWelcome,
+      HeadItem
     },
     data() {
       return {
@@ -169,7 +172,8 @@
     },
     onShow() {
       this._setNowChatNum()
-      wx.setNavigationBarTitle({title: this.currentMsg.nickName || ''})
+      let title = this.currentMsg.nickName || ''
+      this.setImTitle(title)
     },
     onLoad() {
       this._getSystemInfo()
@@ -187,7 +191,8 @@
       ...mapGetters([
         'currentMsg',
         'nowChat',
-        'imLogin'
+        'imLogin',
+        'chatMsgTitle'
       ]),
       endDate() {
         if (this.nowChat.length) {
@@ -467,6 +472,7 @@
     .chat-container
       width: 100%
       height: 100vh
+      padding-top: 64px
       padding-bottom: 50px
       box-sizing: border-box
       .chat-list

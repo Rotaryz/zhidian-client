@@ -1,5 +1,6 @@
 <template>
   <div class="goods-detail">
+    <head-item :title="title" :showArrow="true"></head-item>
     <div class="banner-box">
       <swiper class="banner" @change="bannerChange">
         <block v-for="(item, index) in bannerImgs" :key="index">
@@ -59,6 +60,7 @@
   import { getParams } from 'common/js/util'
   import {mapGetters, mapActions} from 'vuex'
   import ImMixin from 'common/mixins/im-mixin'
+  import HeadItem from 'components/head-item/head-item'
   export default {
     mixins: [ImMixin],
     data() {
@@ -76,7 +78,8 @@
         location: {
           longitude: '',
           latitude: ''
-        }
+        },
+        title: '商品详情'
       }
     },
     async onPullDownRefresh() {
@@ -281,7 +284,8 @@
     components: {
       DetailContent,
       Payment,
-      Share
+      Share,
+      HeadItem
     },
     computed: {
       ...mapGetters([
@@ -299,6 +303,7 @@
   .goods-detail
     background: $color-white
     padding-bottom: 70px
+    padding-top: 64px
     .banner-box
       width: 100vw
       height: 75vw
@@ -361,13 +366,13 @@
             .red-money-icon
               font-family: $font-family-medium
               font-size: $font-size-14
-              color: $color-D32F2F
+              color: $color-ED2C2B
               margin-right: 2px
               margin-bottom: 2px
             .red-big-money
               font-family: DINAlternate-Bold
               font-size: 28px
-              color: $color-D32F2F
+              color: $color-ED2C2B
           .del-money
             text-decoration: line-through
             font-family: $font-family-regular
