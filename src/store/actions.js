@@ -91,3 +91,7 @@ export const setNowChat = ({ commit, state }, nowChat) => {
 export const setImPosition = ({ commit, state }, position) => {
   commit(types.SET_IM_POSITION, position)
 }
+
+export const setImTitle = ({ commit, state }, title) => {
+  commit(types.SET_IM_TITLE, title)
+}

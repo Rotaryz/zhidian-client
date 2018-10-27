@@ -1,5 +1,6 @@
 <template>
   <div class="activity-detail">
+    <head-item :title="title" :showArrow="true"></head-item>
     <div class="banner-box">
       <swiper class="banner" @change="bannerChange">
         <block v-for="(item, index) in bannerImgs" :key="index">
@@ -166,10 +167,12 @@
   import { getParams } from 'common/js/util'
   import { mapActions, mapGetters } from 'vuex'
   import ImMixin from 'common/mixins/im-mixin'
+  import HeadItem from 'components/head-item/head-item'
   export default {
     mixins: [ImMixin],
     data() {
       return {
+        title: '活动详情',
         imageUrl: this.$imageUrl,
         bannerImgs: [],
         currentNum: 1,
@@ -712,7 +715,8 @@
       DetailContent,
       Payment,
       Share,
-      ActivityRole
+      ActivityRole,
+      HeadItem
     },
     computed: {
       ...mapGetters([
@@ -728,6 +732,7 @@
   .activity-detail
     background: $color-white
     padding-bottom: 70px
+    padding-top: 64px
     .f4-line
       width: 100%
       height: 10px

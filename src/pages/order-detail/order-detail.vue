@@ -1,5 +1,6 @@
 <template>
   <div class="order-detail">
+    <head-item :title="title" :showArrow="true"></head-item>
     <div class="order-normal" v-if="detail">
       <!-- 商品信息-->
       <div class="order-box">
@@ -73,6 +74,7 @@
 <script>
   import { Order } from 'api'
   import CouponCode from 'components/coupon-code/coupon-code'
+  import HeadItem from 'components/head-item/head-item'
   import QrCodeUtil from 'common/js/util-qr-code'
 
   const MANAGER = { payment: '去支付', waiting_groupon: '拼团详情', success_groupon: '拼团详情', fail_groupon: '拼团详情' }
@@ -90,7 +92,8 @@
         couponDetail: {},
         timeEnd: false,
         groupEndTime: '00:00:00',
-        groupDetail: null
+        groupDetail: null,
+        title: '订单详情'
       }
     },
     async onShow() {
@@ -234,7 +237,8 @@
       }
     },
     components: {
-      CouponCode
+      CouponCode,
+      HeadItem
     }
   }
 </script>
@@ -244,6 +248,7 @@
   .order-detail
     min-height: 100vh
     padding-bottom: 60px
+    padding-top: 64px
     box-sizing: border-box
     background: $color-background
 

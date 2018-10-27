@@ -22,7 +22,8 @@ const state = {
   imPosition: {
     x: 0,
     startX: 0
-  } // IM浮窗的相对位置
+  }, // IM浮窗的相对位置
+  chatMsgTitle: '' // IM聊天页面title
 }
 
 export default state

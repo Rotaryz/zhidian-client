@@ -37,7 +37,8 @@ export default {
       'setNowCountNum',
       'setNowCount',
       'setBehaviorList',
-      'setBehaviorListToServers'
+      'setBehaviorListToServers',
+      'setImTitle'
     ]),
     async loginIm() {
       let userInfo = wx.getStorageSync('userInfo')
@@ -128,9 +129,7 @@ export default {
           this.setCurrentMsg(currentMsg)
           this.setDescMsg(descMsg)
           if (this.imIng) {
-            wx.setNavigationBarTitle({
-              title: currentMsg.nickName
-            })
+            this.setImTitle(currentMsg.nickName)
           }
           // 执行待完成的行为动作数组
           if (this.behaviorList.length && shopId) {

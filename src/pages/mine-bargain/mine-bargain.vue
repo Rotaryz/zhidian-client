@@ -1,5 +1,6 @@
 <template>
   <div>
+    <head-item :title="title" :showArrow="true"></head-item>
     <scroll-view scroll-y class="order-list">
       <div class="order-item" v-for="(item, index) in list" :key="index">
         <div class="order-shop">
@@ -42,6 +43,7 @@
 <script>
   import Payment from 'components/payment/payment'
   import Blank from 'components/blank/blank'
+  import HeadItem from 'components/head-item/head-item'
   import {Customer} from 'api'
   export default {
     name: 'order-list',
@@ -51,7 +53,8 @@
         timer: '',
         code: '',
         hasPhone: false,
-        showNone: false
+        showNone: false,
+        title: '我的砍价'
       }
     },
     onShareAppMessage(res) {
@@ -172,7 +175,8 @@
     },
     components: {
       Payment,
-      Blank
+      Blank,
+      HeadItem
     }
   }
 </script>
@@ -184,6 +188,7 @@
     height: 100vh
     background: $color-background
     box-sizing: border-box
+    padding-top: 64px
     font-family: $font-family-regular
     .order-item
       width: 92vw

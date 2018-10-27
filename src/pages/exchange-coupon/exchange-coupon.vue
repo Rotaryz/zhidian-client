@@ -1,5 +1,6 @@
 <template>
   <div class="exchange">
+    <head-item :title="title" :showArrow="true"></head-item>
     <section class="tab-container">
       <div class="tab-box">
         <ul class="tab-wrapper">
@@ -30,6 +31,7 @@
   import CouponItem from 'components/coupon-item/coupon-item'
   import { Shop } from 'api'
   import CouponCode from 'components/coupon-code/coupon-code'
+  import HeadItem from 'components/head-item/head-item'
   import clearWatch from 'common/mixins/clear-watch'
   import Blank from 'components/blank/blank'
   import QrCodeUtil from 'common/js/util-qr-code'
@@ -50,7 +52,8 @@
         usedMore: false,
         couponDetail: {},
         isUnNull: false,
-        isNull: false
+        isNull: false,
+        title: '兑换券'
       }
     },
     onShow() {
@@ -171,7 +174,8 @@
     components: {
       CouponItem,
       CouponCode,
-      Blank
+      Blank,
+      HeadItem
     }
   }
 </script>
@@ -181,7 +185,7 @@
   .exchange
     min-height: 100vh
     background: $color-background
-    padding: 65px 13px 15px
+    padding: 64px 13px 15px
     box-sizing: border-box
 
   .tab-container
@@ -189,7 +193,7 @@
     padding: 0 15px
     position: fixed
     line-height: 50px
-    top: 0
+    top: 64
     left: 0
     width: 100%
     z-index: 10
@@ -227,13 +231,6 @@
           background: $color-ED2C2B
           border-radius: 3px
 
-  .album-list-active
-    min-height: 100vh
-    box-sizing: border-box
-    position: fixed
-    left: 0
-    padding-top: 50px
-    top: 0
-    width: 100%
-    z-index: 2
+  .used-box
+    padding-top: 60px
 </style>
