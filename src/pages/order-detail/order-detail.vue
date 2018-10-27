@@ -168,9 +168,9 @@
       },
       async _orderDetail(id, loading) {
         let res = await Order.orderDetail(id, loading)
+        this.$wechat.hideLoading()
         if (res.error !== this.$ERR_OK) {
           this.$showToast(res.message)
-          this.$wechat.hideLoading()
           return
         }
         this.detail = res.data
@@ -192,7 +192,6 @@
           }
           this._groupTimePlay()
         }
-        this.$wechat.hideLoading()
       },
       _groupTimePlay() {
         clearInterval(timer)
