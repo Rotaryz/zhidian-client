@@ -19,7 +19,7 @@
             <!--{{comment?'':'special'}}-->
             <text class="words">{{item.content}}</text>
             <div class="img-item-two">
-              <img class="img-one-item" mode="widthFix" v-for="(items, idx) in item.live_log_detail" :key="idx" :src="items.file_url" @click="_seeImage(idx, item.live_log_detail)">
+              <img class="img-one-item" mode="widthFix" v-for="(items, idx) in item.live_log_detail" :key="idx" :src="items.image_url_thumb" @click="_seeImage(idx, item.live_log_detail)">
             </div>
           </div>
           <!--<div class="address">-->
@@ -66,7 +66,7 @@
             </div>
             <text class="words">{{item.content}}</text>
             <div class="img-item-two">
-              <img class="two-item" mode="aspectFill" v-for="(items, idx) in item.live_log_detail" :key="idx" :src="items.file_url" @click="_seeImage(idx, item.live_log_detail)">
+              <img class="two-item" mode="aspectFill" v-for="(items, idx) in item.live_log_detail" :key="idx" :src="items.image_url_thumb" @click="_seeImage(idx, item.live_log_detail)">
             </div>
           </div>
           <!--<div class="address">-->
@@ -114,7 +114,7 @@
             <!--{{comment?'':'special'}}"-->
             <text class="words">{{item.content}}</text>
             <div class="img-item-two">
-              <img class="two-item" mode="aspectFill" v-for="(items, idx) in item.live_log_detail" :key="idx" :src="items.file_url" @click="_seeImage(idx, item.live_log_detail)">
+              <img class="two-item" mode="aspectFill" v-for="(items, idx) in item.live_log_detail" :key="idx" :src="items.image_url_thumb" @click="_seeImage(idx, item.live_log_detail)">
             </div>
           </div>
           <!--<div class="address" >-->

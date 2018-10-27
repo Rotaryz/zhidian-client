@@ -3,7 +3,7 @@
     <div class="item-content">
       <div class="item-top">
         <div class="top-left">
-          <img :src="item.image_url" class="item-img" mode="aspectFill">
+          <img :src="item.image_url_thumb" class="item-img" mode="aspectFill">
         </div>
         <div class="top-right">
           <div class="top-title">

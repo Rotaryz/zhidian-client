@@ -20,7 +20,7 @@
         <p class="order-status">{{item.status_str}}</p>
       </div>
       <div class="order-msg" v-for="(items, idx) in item.order_details" :key="idx">
-        <img :src="items.goods_image_url" mode="aspectFill" class="order-pic">
+        <img :src="items.image_url_thumb" mode="aspectFill" class="order-pic">
         <div class="shop-content">
           <p class="shop-name">{{items.goods_title}}</p>
           <p class="money">总计：<span class="price">¥{{item.total}}</span></p>
