@@ -98,16 +98,6 @@
         this.$emit('goBack')
       }
     }
-    // computed: {
-    //   eName() {
-    //     let name = this.employee.name || this.employee.nickname || ''
-    //     return name ? name.substring(0, 5) : ''
-    //   },
-    //   shopName() {
-    //     let name = this.shopInfo.name || ''
-    //     return name ? name.substring(0, 11) : ''
-    //   }
-    // }
   }
 </script>
 

@@ -7,15 +7,15 @@
       <img class="icon-img pos-a" v-if="imageUrl" :src="imageUrl + '/zd-image/wheel/pic-share_img.png'" alt="">
       <section class="info-wrapper">
         <div class="left">
-          <img class="icon-img" mode="aspectFill" v-if="imageUrl" :src="imageUrl + '/zd-image/test-img/1@1x.png'" alt="">
+          <img class="icon-img" mode="aspectFill" v-if="employeeInfo.avatar" :src="employeeInfo.avatar" alt="">
         </div>
         <div class="middle">
-          <div class="name">peter白</div>
+          <div class="name">{{employeeInfo.name}}</div>
           <div class="note">邀请你参加活动!</div>
         </div>
         <div class="right">
           <div class="qr-code">
-            <img class="icon-img" v-if="imageUrl" :src="imageUrl + '/zd-image/test-img/23@1x.png'" alt="">
+            <img class="icon-img" v-if="qrCodeUrl" :src="qrCodeUrl" alt="">
           </div>
           <p class="txt">长按或扫码一起参与!</p>
         </div>
@@ -30,6 +30,7 @@
   import WePaint from 'components/we-paint/we-paint'
   import HeadItem from 'components/head-item/head-item'
   import wx from 'wx'
+  import { ActiveCode } from 'api'
 
   const system = wx.getSystemInfoSync()
   const vw = system.screenWidth / 100
@@ -40,10 +41,35 @@
     },
     data() {
       return {
-        title: '幸运大转盘'
+        title: '幸运大转盘',
+        qrCodeUrl: '',
+        employeeInfo: {}
       }
     },
+    onLoad(options) {
+      // todo
+      this._getActiveCode()
+      this.employeeInfo = options
+      console.log(this.employeeInfo)
+    },
     methods: {
+      _getActiveCode() {
+        const f = 'c' + this.$wx.getStorageSync('userInfo').id
+        const e = this.$wx.getStorageSync('shopId')
+        const data = {
+          type: 'wheel',
+          source: 'c',
+          from_id: f,
+          shopId: e
+        }
+        ActiveCode.createMiniCode(data, false).then(res => {
+          this.$wechat.hideLoading()
+          if (res.error !== this.$ERR_OK) {
+            this.$showToast(res.message)
+          }
+          this.qrCodeUrl = (res.data && res.data.image_url) || ''
+        })
+      },
       drawDone(filePath) {
         // todo
         this.setShowType(true)
@@ -53,11 +79,15 @@
         // todo
       },
       _action() {
+        if (!this.qrCodeUrl) {
+          this.$showToast('未能获取小程序二维码')
+          return
+        }
         let backgroundImg = this.imageUrl + '/zd-image/wheel/pic-share_img.png'
-        let avatarImg = this.imageUrl + '/zd-image/test-img/1@1x.png'
-        let name = `peter白`
+        let avatarImg = this.employeeInfo.avatar
+        let name = this.employeeInfo.name
         let note = `邀请你参加活动!`
-        let qrCodeImg = this.imageUrl + '/zd-image/test-img/23@1x.png'
+        let qrCodeImg = this.qrCodeUrl
         let qrCodeTxt = `长按或扫码一起参与!`
         let options = {
           canvasId: 'we-paint',

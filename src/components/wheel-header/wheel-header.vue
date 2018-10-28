@@ -16,25 +16,6 @@
 
 <script type="text/ecmascript-6">
   export default {
-    onShareAppMessage() {
-      // this.setShowType(true)
-      // this.sendCustomMsg(10004) // 转发给好友
-      // let id = wx.getStorageSync('userInfo').id
-      // let shopId = wx.getStorageSync('shopId')
-      return {
-        // title: self.shopInfo.name,
-        // imageUrl: `${self.imageUrl}/zd-image/wheel/pic-share_qun@2x.png`,
-        success: (res) => {
-          // 转发成功
-        },
-        fail: (res) => {
-          // 转发失败
-        }
-      }
-    },
-    onLoad() {
-      // console.log(`${this.imageUrl}/zd-image/wheel/pic-share_qun@2x.png`)
-    },
     methods: {
       showRule() {
         this.$emit('showRule')

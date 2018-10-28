@@ -30,17 +30,24 @@
               </div>
             </figure>
           </article>
-          <dl class="footer">
-            <dt class="title">你还有 <span class="number">{{usable_times}}</span> 次机会</dt>
-            <dd class="card-item-wrapper" v-for="item in receive_customer" :key="item.name + item.image_url">
-              <wheel-card :item="item"></wheel-card>
-            </dd>
-          </dl>
+          <section class="footer">
+            <div class="title">你还有 <span class="number">{{usable_times}}</span> 次机会</div>
+            <div
+              class="cards-wrapper"
+              :style="cardsWrapperStyle"
+              :scroll-y="true"
+            >
+              <!--<div class="master-style" style="top:0"></div>-->
+              <ul class="cards-box" :style="cardsStyle">
+                <li class="card-item-wrapper" v-for="item in receive_customer" :key="item.name + item.image_url">
+                  <wheel-card :item="item"></wheel-card>
+                </li>
+              </ul>
+              <!--<div class="master-style" style="bottom: 0"></div>-->
+            </div>
+          </section>
         </section>
-        <!--<ul style="position: fixed;top:0;left: 0;display: flex;color:#fff; ">-->
-        <!--<li @click="choosePrize(index)" style="height: 50px;width: 50px" v-for="(item,index) in wheelList" :key="index">中将{{index}}</li>-->
-        <!--</ul>-->
-        <wheel-modal ref="modal" :prizeInfo="prizeInfo" :ruleList="ruleList"></wheel-modal>
+        <wheel-modal ref="modal" :prizeInfo="prizeInfo" :ruleList="ruleList" :employeeInfo="employeeInfo"></wheel-modal>
       </article>
     </div>
   </div>
@@ -51,7 +58,7 @@
   import WheelHeader from 'components/wheel-header/wheel-header'
   import WheelCard from 'components/wheel-card/wheel-card'
   import WheelModal from 'components/wheel-modal/wheel-modal'
-  import { ActiveExtend } from 'api'
+  import { ActiveExtend, Guide } from 'api'
 
   const system = wx.getSystemInfoSync()
 
@@ -61,20 +68,6 @@
       WheelCard,
       WheelModal,
       HeadItem
-    },
-    computed: {
-      pageStyle() {
-        return system.screenWidth < 375 ? 'height: 105vh' : ''
-      },
-      wheelActionStyle() {
-        return this.active ? 'active' : ''
-      },
-      innerWheelAction() {
-        return `transform :rotate(${360 * this.activeStep}deg); transition : transform ${this.wheelSeconds}ms ${this.wheelCvs}`
-      },
-      outerWheelAction() {
-        return `transform :rotate(${-360 * this.activeStep}deg); transition : transform ${this.wheelSeconds}ms ${this.wheelCvs}`
-      }
     },
     data() {
       return {
@@ -96,18 +89,106 @@
         timer: null,
         prizeInfo: {},
         ruleInfo: {},
-        ruleList: []
+        ruleList: [],
+        shopInfo: {},
+        runCardStep: 0,
+        runCardSeconds: 2000,
+        timerCards: null
+      }
+    },
+    computed: {
+      pageStyle() {
+        return system.screenWidth < 375 ? 'height: 105vh' : ''
+      },
+      wheelActionStyle() {
+        return this.active ? 'active' : ''
+      },
+      innerWheelAction() {
+        return `transform :rotate(${360 * this.activeStep}deg); transition : transform ${this.wheelSeconds}ms ${this.wheelCvs}`
+      },
+      outerWheelAction() {
+        return `transform :rotate(${-360 * this.activeStep}deg); transition : transform ${this.wheelSeconds}ms ${this.wheelCvs}`
+      },
+      employeeInfo() {
+        let name = ''
+        let avatar = ''
+        if (this.shopInfo.employee) {
+          name = this.shopInfo.employee.name || this.shopInfo.employee.nickname
+          avatar = this.shopInfo.employee.avatar
+        }
+        return {name, avatar}
+      },
+      cardsWrapperStyle() {
+        let height = system.screenHeight
+        let arr = [2, 5]
+        return `height:${9.866666666666667 * arr[height > 736 ? 1 : 0]}vw;`
+      },
+      cardsStyle() {
+        return `transition :transform ${this.runCardSeconds}ms ease-in-out;transform :translate3d(0, ${-this.runCardStep * 9.866666666666667}vw, 0)`
       }
     },
     onLoad() {
       this._getWheelInfo()
+      this._getShopInfo({}, false)
     },
     onUnload() {
       this.timer && clearTimeout(this.timer)
+      this.timerCards && clearInterval(this.timerCards)
+      this.timer = null
+      this.timerCards = null
+    },
+    onHide() {
+      this.timerCards && clearInterval(this.timerCards)
+      this.timerCards = null
+    },
+    onShow() {
+      this.receive_customer.length && this._runCardList()
+    },
+    onShareAppMessage() {
+      this.setShowType(true)
+      let id = wx.getStorageSync('userInfo').id
+      let shopId = this.shopInfo.id
+      return {
+        title: `${this.employeeInfo.name}邀请你大转盘抽奖`,
+        path: `/pages/wheel?fromType=3&fromId=${id}&shopId=${shopId}`,
+        imageUrl: `${this.imageUrl}/zd-image/wheel/pic-share_qun@2x.png`,
+        success: (res) => {
+          // 转发成功
+        },
+        fail: (res) => {
+          // 转发失败
+        }
+      }
     },
     methods: {
+      _runCardList() {
+        if (this.timerCards) return
+        let len = this.receive_customer.length
+        let height = system.screenHeight
+        let arr = [2, 5]
+        this.timerCards = setInterval(() => {
+          if (this.runCardStep > len - 1 - arr[height > 736 ? 1 : 0]) {
+            this.timerCards && clearInterval(this.timerCards)
+            this.timerCards = null
+            return
+          }
+          this.runCardStep++
+        }, this.runCardSeconds)
+      },
       showRule() {
         this.$refs.modal.show('rule')
+      },
+      async _getShopInfo(location, loading) {
+        try {
+          let res = await Guide.getShopInfo(location, loading)
+          if (res.error !== this.$ERR_OK) {
+            this.$showToast(res.message)
+            return
+          }
+          this.shopInfo = res.data || {}
+        } catch (e) {
+          console.error(e)
+        }
       },
       _getWheelInfo() {
         ActiveExtend.getWheelInfo().then(res => {
@@ -120,21 +201,10 @@
           this.usable_times = res.data.usable_times
           this.receive_customer = res.data.receive_customer
           this._formatRuleInfo(res)
+          this._runCardList()
         })
       },
       _formatRuleInfo(res) {
-        // ruleList: [
-        //   {
-        //     title: '活动说明',
-        //     contentList: ['1. 活动期间内，没人每天一次抽奖机会；\n' +
-        //     '2. 奖品数量有限，先到先得；\n' +
-        //     '3. 兑换券线下门店核销使用']
-        //   },
-        //   {
-        //     title: '活动奖品',
-        //     contentList: ['红包', '优惠券', 'iphoneX', '红包', '优惠券', 'iphoneX', '红包', '优惠券', 'iphoneX', '红包', '优惠券', 'iphoneX']
-        //   }
-        // ]
         let ruleList = [
           {
             title: '活动说明',
@@ -155,9 +225,11 @@
         }
         // 判断是否正在转
         if (this.running) return
+        this.running = true
         ActiveExtend.drawWheel({}, false).then(res => {
           this.$wechat.hideLoading()
           if (res.error !== this.$ERR_OK) {
+            this.running = false
             this.$showToast(res.message)
             return
           }
@@ -167,16 +239,15 @@
           let index = this.wheelList.findIndex(item => item.activity_prize_id === res.data.activity_prize_id)
           this._action(index === -1 ? 0 : index, () => {
             this._showTips(index)
+            this.running = false
+            index && !this.timerCards && this.runCardStep++ // 卡片滚动
           })
         })
       },
       _action(index, callback) {
-        if (this.running) return
         this.timer = setTimeout(() => {
-          this.running = false
           callback && callback()
         }, this.wheelSeconds + 50)
-        this.running = true
         // 随机数
         let range = 20
         this.randomDeg = Math.random() * range * 2 - range
@@ -185,7 +256,6 @@
         this.lastStep = (index * 60 - this.randomDeg) / 360
       },
       _showTips(index) {
-        // this.prizeInfo = {usable_times: 0} // todo
         this.$refs.modal.show('prize', index)
       }
     }
@@ -203,6 +273,13 @@
     position: absolute
     top: 0
     left: 0
+
+  .master-style
+    position: absolute;
+    left: 6.666666666666667vw
+    right: 6.666666666666667vw
+    height: 3.5vw;
+    background:hsla(0,0%,100%,.9);
 
   .wheel
     position: relative
@@ -222,6 +299,7 @@
           left: 0
           top: 34.8vw
           .footer
+            position :relative
             .title
               font-family: PingFangSC-Regular;
               font-size: 3.733333333333334vw
@@ -231,10 +309,15 @@
               .number
                 font-family: PingFang-SC-Bold;
                 font-size: 6.4vw
-                color: #F8E71C;
-            .card-item-wrapper
-              margin 0 6.666666666666667vw 1.3333333333333335vw
+                color: #F8E71C
+            .cards-wrapper
+              position :relative
+              overflow :hidden
+              .cards-box
+                .card-item-wrapper
+                  margin 0 6.666666666666667vw 1.3333333333333335vw
           .wheel-wrapper
+            z-index :3
             margin: 0 auto
             width: 89.86666666666666vw
             height: 91.2vw
@@ -247,8 +330,6 @@
               width: @height
               padding: 7.418397626112759%
               box-sizing: border-box
-              transform: rotate(0deg)
-              transition: transform 3s cubic-bezier(n, n, n, n)
               .light-dot
                 position: absolute
                 top: 0
@@ -279,8 +360,6 @@
               width: @height
               padding: 10.385756676557865%
               box-sizing: border-box
-              transform: rotate(0deg)
-              transition: transform 3s ease-in-out
               .prize-item
                 position: absolute
                 top: 0

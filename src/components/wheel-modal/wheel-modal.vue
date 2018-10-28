@@ -31,7 +31,7 @@
           <img class="icon-img pos-a" v-if="imageUrl" :src="imageUrl + '/zd-image/wheel/pic-popup_thing@2x.png'" alt="">
           <ul class="prize-container">
             <li class="p-type">{{constantText.title[winType]}}</li>
-            <li class="p-prize-title">{{prizeInfo.customer_receive.prize_title}}</li>
+            <li class="p-prize-title">{{prizeInfo.customer_receive && prizeInfo.customer_receive.prize_title}}</li>
             <li class="p-prize-img">
               <img class="icon-img" model="aspectFill" v-if="prizeInfo.customer_receive && prizeInfo.customer_receive.prize_image_url" :src="prizeInfo.customer_receive.prize_image_url" alt="">
             </li>
@@ -51,7 +51,13 @@
 
 <script>
   import wx from 'wx'
-  // prize_type 1 兑换券 2 红包 3 固定
+  // prize_type 1 兑换券 2 随机红包 3 固定红包
+  const pageRouter = [
+    '',
+    '/pages/exchange-coupon',
+    '',
+    ''
+  ]
   export default {
     props: {
       prizeInfo: {
@@ -61,6 +67,10 @@
       ruleList: {
         type: Array,
         default: []
+      },
+      employeeInfo: {
+        type: Object,
+        default: {}
       }
     },
     data() {
@@ -110,21 +120,17 @@
         this.showType = type
       },
       useBtnHandle() {
-        // todo
+        wx.navigateTo({url: pageRouter[this.prizeInfo.prize_type]})
       },
       shareBtnHandle() {
-        // todo
+        wx.navigateTo({url: `/pages/wheel-poster?name=${this.employeeInfo.name}&avatar=${this.employeeInfo.avatar}`})
       },
       btnHandle(index, number) {
-        if (+index === 0) {
-          if (number) {
-            this.submit()
-          } else {
-            this.submit()
-            wx.switchTab({
-              url: '/pages/guide'
-            })
-          }
+        if (number) {
+          this.submit()
+        } else {
+          this.submit()
+          wx.navigateBack()
         }
       },
       show(type, index) {
