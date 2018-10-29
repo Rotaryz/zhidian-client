@@ -196,7 +196,6 @@
         }
       },
       async _getGroupList(data, loading) {
-        if (!this.groupData.more) return
         try {
           let res = await Guide.getActiveList(data, loading)
           if (res.error !== this.$ERR_OK) {
@@ -220,7 +219,6 @@
         }
       },
       async _getCutList(data, loading) {
-        if (!this.cutData.more) return
         try {
           let res = await Guide.getActiveList(data, loading)
           if (res.error !== this.$ERR_OK) {
