@@ -143,10 +143,10 @@
               white-space: nowrap
               text-overflow: ellipsis
               font-family: $font-family-regular
-              font-size: 32rpx
+              font-size: 30rpx
               color: $color-1F1F1F
               letter-spacing: 1.2rpx
-              line-height: 32rpx
+              line-height: 30rpx
           .down-top
             display: flex
             align-items: center
