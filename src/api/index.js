@@ -9,7 +9,10 @@ import guide from './guide'
 import customer from './customer'
 import shop from './shop'
 import activeCode from './active-code'
+import activeExtend from './active-extend'
 
+// 大转盘等活动
+export const ActiveExtend = activeExtend
 // 雷达消息im
 export const Im = im
 

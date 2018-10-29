@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Page from './wheel'
+import Page from './wheel-poster'
 
 const page = new Vue(Page)
 page.$mount()

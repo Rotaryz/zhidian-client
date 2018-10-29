@@ -15,7 +15,7 @@
     <ul class="server-wrapper" v-if="selectTab === 0">
       <li class="coupon-item" v-if="goodsList.length" v-for="(item,index) in goodsList" :key="index" @click="toGoodsDetail(item)">
         <div class="logo">
-          <img class="logo-pic" mode="aspectFill" :src="item.image_url" alt="">
+          <img class="logo-pic" mode="aspectFill" :src="item.image_url_thumb" alt="">
         </div>
         <section class="right">
           <article class="detail">
@@ -93,7 +93,6 @@
     },
     data() {
       return {
-        url: this.$parent.$imageUrl + `/zd-image/test-img/4@1x.png`,
         tabList,
         selectTab: 0,
         headerVideoPlay: false,

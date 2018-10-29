@@ -38,7 +38,7 @@ function checkStatus(response) {
   if (response && (response.status === 200 || response.status === 304 || response.status === 422)) {
     return response
     // 如果不需要除了data之外的数据，可以直接 return response.data
-  } else if (response.status >= 500) {
+  } else if (response && response.status >= 500) {
     wx.reLaunch({ url: NETPAGE })
   }
   // 异常状态下，把错误信息返回去

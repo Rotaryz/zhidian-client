@@ -209,6 +209,22 @@ export function downloadFile (data = {url: ''}) {
 }
 
 /**
+ * 获取图片信息，倘若为网络图片，需先配置download域名才能生效。
+ * @returns {Promise<any>}
+ */
+export function getImageInfo (data = {src: ''}) {
+  return new Promise((resolve, reject) => {
+    wx.getImageInfo({
+      ...data,
+      success: resolve,
+      fail: (err) => {
+        reject(err)
+      }
+    })
+  })
+}
+
+/**
  * 获取设备信息
  * @returns {Promise<any>}
  */
