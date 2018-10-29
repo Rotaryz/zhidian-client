@@ -279,6 +279,9 @@
           letter-spacing: 0.8px
       .list-item
         width: 100%
+        margin-bottom: 15px
+        &:last-child
+          margin-bottom: 0
     .tab-container
       height: 26px
       margin: 0 15px
