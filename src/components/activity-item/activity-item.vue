@@ -37,7 +37,7 @@
           <div class="dot-box" v-if="item.join_count > 3">
             <div class="dot" v-for="item in [1, 2, 3]" :key="item"></div>
           </div>
-          <div class="msg-txt">已有{{item.join_count}}人砍价</div>
+          <div class="msg-txt">已有{{item.join_count}}人{{type === 'group' ? '拼团' : '砍价'}}</div>
         </div>
         <div class="time-box" v-if="!item.status">
           <text>距开始</text>
