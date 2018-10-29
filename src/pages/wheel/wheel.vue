@@ -133,11 +133,11 @@
       this.runCardStep = 0
     },
     onUnload() {
-      this.timer && clearTimeout(this.timer)
-      this.timerCards && clearTimeout(this.timerCards)
+      clearTimeout(this.timer)
+      clearTimeout(this.timerCards)
     },
     onHide() {
-      this.timerCards && clearTimeout(this.timerCards)
+      clearTimeout(this.timerCards)
     },
     onShow() {
       this.receive_customer.length && this._runCardList()
@@ -166,7 +166,7 @@
         this.runCardStep++
         this.timerCards = setTimeout(() => {
           if (this.runCardStep > len - 1 - arr[height > 736 ? 1 : 0]) {
-            this.timerCards && clearTimeout(this.timerCards)
+            clearTimeout(this.timerCards)
             return
           }
           this._runCardList()
@@ -200,7 +200,7 @@
           this._formatRuleInfo(res)
           setTimeout(() => {
             this._runCardList()
-          }, this.runCardSeconds + 500)
+          }, this.runCardSeconds + 200)
         })
       },
       _formatRuleInfo(res) {
@@ -220,6 +220,7 @@
         // 判断是否有中奖的次数
         if (this.usable_times < 1) {
           this.$showToast('您的抽奖次数已用完！')
+          this.running = false
           return
         }
         // 判断是否正在转
@@ -230,6 +231,12 @@
           if (res.error !== this.$ERR_OK) {
             this.running = false
             this.$showToast(res.message)
+            return
+          }
+          // 双开二次判断是否有中奖的次数
+          if (this.usable_times < 1) {
+            this.$showToast('您的抽奖次数已用完！')
+            this.running = false
             return
           }
           this.prizeInfo = { ...res.data }
