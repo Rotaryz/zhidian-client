@@ -1,6 +1,6 @@
 <template>
   <article class="shop">
-    <head-item :title="title" :showArrow="true"></head-item>
+    <head-item :title="title" :showArrow="false"></head-item>
     <shop-header :shopInfo="shopInfo" :employee="employee" :photoInfo="photoInfo" v-if="showHeader"></shop-header>
     <shop-content :goodsList="goodsList" :selectTab="selectTab" :storyInfo="storyInfo" @changeTab="changeTab"></shop-content>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
