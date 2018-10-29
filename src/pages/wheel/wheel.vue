@@ -98,7 +98,8 @@
     },
     computed: {
       pageStyle() {
-        return system.screenWidth < 375 ? 'height: 105vh' : ''
+        // return system.screenWidth < 375 ? 'height: 105vh' : ''
+        return ''
       },
       wheelActionStyle() {
         return this.active ? 'active' : ''
