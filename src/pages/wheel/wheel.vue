@@ -92,7 +92,7 @@
         ruleList: [],
         shopInfo: {},
         runCardStep: 0,
-        runCardSeconds: 2000,
+        runCardSeconds: 3000,
         timerCards: null
       }
     },
@@ -116,7 +116,7 @@
           name = this.shopInfo.employee.name || this.shopInfo.employee.nickname
           avatar = this.shopInfo.employee.avatar
         }
-        return {name, avatar}
+        return { name, avatar }
       },
       cardsWrapperStyle() {
         let height = system.screenHeight
@@ -130,16 +130,14 @@
     onLoad() {
       this._getWheelInfo()
       this._getShopInfo({}, false)
+      this.runCardStep = 0
     },
     onUnload() {
       this.timer && clearTimeout(this.timer)
-      this.timerCards && clearInterval(this.timerCards)
-      this.timer = null
-      this.timerCards = null
+      this.timerCards && clearTimeout(this.timerCards)
     },
     onHide() {
-      this.timerCards && clearInterval(this.timerCards)
-      this.timerCards = null
+      this.timerCards && clearTimeout(this.timerCards)
     },
     onShow() {
       this.receive_customer.length && this._runCardList()
@@ -162,17 +160,16 @@
     },
     methods: {
       _runCardList() {
-        if (this.timerCards) return
         let len = this.receive_customer.length
         let height = system.screenHeight
         let arr = [2, 5]
-        this.timerCards = setInterval(() => {
+        this.runCardStep++
+        this.timerCards = setTimeout(() => {
           if (this.runCardStep > len - 1 - arr[height > 736 ? 1 : 0]) {
-            this.timerCards && clearInterval(this.timerCards)
-            this.timerCards = null
+            this.timerCards && clearTimeout(this.timerCards)
             return
           }
-          this.runCardStep++
+          this._runCardList()
         }, this.runCardSeconds)
       },
       showRule() {
@@ -201,7 +198,9 @@
           this.usable_times = res.data.usable_times
           this.receive_customer = res.data.receive_customer
           this._formatRuleInfo(res)
-          this._runCardList()
+          setTimeout(() => {
+            this._runCardList()
+          }, this.runCardSeconds + 500)
         })
       },
       _formatRuleInfo(res) {
@@ -233,7 +232,7 @@
             this.$showToast(res.message)
             return
           }
-          this.prizeInfo = {...res.data}
+          this.prizeInfo = { ...res.data }
           this.usable_times = res.data.usable_times
           res.data.customer_receive && this.receive_customer.push(res.data.customer_receive)
           let index = this.wheelList.findIndex(item => item.activity_prize_id === res.data.activity_prize_id)
@@ -279,7 +278,7 @@
     left: 6.666666666666667vw
     right: 6.666666666666667vw
     height: 3.5vw;
-    background:hsla(0,0%,100%,.9);
+    background: hsla(0, 0%, 100%, .9);
 
   .wheel
     position: relative
@@ -299,7 +298,7 @@
           left: 0
           top: 34.8vw
           .footer
-            position :relative
+            position: relative
             .title
               font-family: PingFangSC-Regular;
               font-size: 3.733333333333334vw
@@ -311,13 +310,13 @@
                 font-size: 6.4vw
                 color: #F8E71C
             .cards-wrapper
-              position :relative
-              overflow :hidden
+              position: relative
+              overflow: hidden
               .cards-box
                 .card-item-wrapper
                   margin 0 6.666666666666667vw 1.3333333333333335vw
           .wheel-wrapper
-            z-index :3
+            z-index: 3
             margin: 0 auto
             width: 89.86666666666666vw
             height: 91.2vw

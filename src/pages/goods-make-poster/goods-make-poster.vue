@@ -148,15 +148,15 @@
         this.money = price
         this.goodsUrl = goodsImg
       },
-      _formateQrCodeData () {
-        const f = 'c' + this.$wx.getStorageSync('userInfo').id
-        const e = this.$wx.getStorageSync('shopId')
+      _formatQrCodeData () {
+        // const f = 'c' + this.$wx.getStorageSync('userInfo').id
+        // const e = this.$wx.getStorageSync('shopId')
         const t = this.useType
         let a = this.id
         let g = this.id
         let data = {
-          from_id: f,
-          shopId: e,
+          // from_id: f,
+          // shopId: e,
           rule_id: t
         }
         switch (this.useType) {
@@ -179,7 +179,7 @@
         let avatarUrl = houseInfo.data.employee.avatar || `${this.imageUrl}/ws-image/pic-headshot@2x.png`
         let name = houseInfo.data.name || ''
         let qrCodeUrl = ''
-        const qrData = this._formateQrCodeData()
+        const qrData = this._formatQrCodeData()
         const data = {
           'type': this.useType ? 'activity_detail' : 'goods_detail',
           'source': 'c',
@@ -318,8 +318,9 @@
         }
         this._action()
       },
-      drawDone() {
+      drawDone(filePath) {
         this.setShowType(true)
+        this.$wechat.saveImageToPhotosAlbum({filePath})
       }
     },
     computed: {

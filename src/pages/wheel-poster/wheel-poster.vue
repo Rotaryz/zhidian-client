@@ -47,20 +47,14 @@
       }
     },
     onLoad(options) {
-      // todo
       this._getActiveCode()
       this.employeeInfo = options
-      console.log(this.employeeInfo)
     },
     methods: {
       _getActiveCode() {
-        const f = 'c' + this.$wx.getStorageSync('userInfo').id
-        const e = this.$wx.getStorageSync('shopId')
         const data = {
           type: 'wheel',
-          source: 'c',
-          from_id: f,
-          shopId: e
+          source: 'c'
         }
         ActiveCode.createMiniCode(data, false).then(res => {
           this.$wechat.hideLoading()
@@ -71,15 +65,20 @@
         })
       },
       drawDone(filePath) {
-        // todo
         this.setShowType(true)
-        this.$wechat.saveImageToPhotosAlbum({filePath})
+        this.$wechat.saveImageToPhotosAlbum({ filePath })
       },
       downloadFile() {
-        // todo
       },
-      _action() {
-        if (!this.qrCodeUrl) {
+      async _action() {
+        let img = ''
+        try {
+          img = await this.$wechat.getImageInfo({src: this.qrCodeUrl})
+        } catch (e) {
+          img = ''
+        }
+        if (!img) {
+          this.$wechat.hideLoading()
           this.$showToast('未能获取小程序二维码')
           return
         }
@@ -200,11 +199,13 @@
             font-family: PingFangSC-Medium;
             font-size: 4.266666666666667vw;
             color: #464646;
+            line-height: 1
           .note
-            margin-top :1.2vw
+            margin-top: 1.2vw
             font-family: PingFangSC-Light;
             font-size: 3.2vw
             color: #464646;
+            line-height: 1
         .right
           margin-top: 1.866666666666667vw
           .qr-code
