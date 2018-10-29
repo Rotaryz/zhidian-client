@@ -4,7 +4,7 @@
       <div class="avatar-wrapper">
         <img class="icon-img" mode="aspectFill" v-if="item.image_url" :src="item.image_url" alt="">
       </div>
-      <p class="info">{{item.name}} {{item.prize_title}}</p>
+      <p class="info">{{item.name}} 中了{{item.prize_title}}</p>
       <p class="date">{{item.date}}</p>
     </div>
   </div>
