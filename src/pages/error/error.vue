@@ -1,5 +1,5 @@
 <template>
-  <div class="error-none">
+  <div class="error-none" :style="{paddingTop: (pageHeadH * 1 + 125.5) + 'px'}">
     <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/pic-nopage@2x.png'" class="blank-img">
     <p class="blank-title">抱歉！ 您访问的页面失联啦-</p>
     <p class="btn" @click="_goGuide">返回首页</p>
@@ -25,7 +25,6 @@
   @import "~common/stylus/private"
 
   .error-none
-    padding-top: 185.5px
     display: flex
     align-items: center
     justify-content: center

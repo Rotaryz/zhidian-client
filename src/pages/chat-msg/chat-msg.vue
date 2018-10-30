@@ -1,7 +1,7 @@
 <template>
   <div class="chat">
     <head-item :title="chatMsgTitle" :showArrow="true"></head-item>
-    <scroll-view scroll-y class="chat-container" :scroll-into-view="scrollId" @scrolltoupper="loadMore">
+    <scroll-view scroll-y class="chat-container" :scroll-into-view="scrollId" @scrolltoupper="loadMore" :style="{paddingTop: pageHeadH + 'px'}">
       <div class="chat-list">
         <div class="line-view"></div>
         <div class="chat-item" v-for="(item, index) in nowChat" :key="index" :id="'item' + index">
@@ -473,7 +473,6 @@
     .chat-container
       width: 100%
       height: 100vh
-      padding-top: 64px
       padding-bottom: 50px
       box-sizing: border-box
       .chat-list

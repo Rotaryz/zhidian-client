@@ -1,5 +1,6 @@
 <template>
   <div class="head-item" :style="headStyle">
+    <div class="status-bar" :style="{height: statusBarHeight + 'px'}"></div>
     <div class="head-content" :style="{color: titleColor}">{{Ltitle}}</div>
     <div class="head-arrow" v-if="showArrow" @click="goBackUrl">
       <img v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-title_back@2x.png'" class="head-arrow-img">
@@ -34,8 +35,13 @@
     },
     data () {
       return {
-        imageUrl: this.$imageUrl
+        imageUrl: this.$imageUrl,
+        statusBarHeight: 20
       }
+    },
+    created() {
+      let res = this.$wx.getSystemInfoSync()
+      this.statusBarHeight = res.statusBarHeight || 20
     },
     methods: {
       goBackUrl() {
@@ -69,8 +75,6 @@
 
   .head-item
     width: 100vw
-    padding-top: 20px
-    height: 44px
     transition: all 0.3s
     position: fixed
     left: 0

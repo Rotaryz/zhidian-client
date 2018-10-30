@@ -45,3 +45,5 @@ export const SET_NOW_CHAT = 'SET_NOW_CHAT'
 export const SET_IM_POSITION = 'SET_IM_POSITION'
 
 export const SET_IM_TITLE = 'SET_IM_TITLE'
+
+export const SET_PAGE_HEAD = 'SET_PAGE_HEAD'

@@ -51,7 +51,7 @@ export default {
     this._resetData()
   },
   computed: {
-    ...mapGetters(['scene'])
+    ...mapGetters(['scene', 'pageHeadH'])
   },
   methods: {
     ...mapActions([

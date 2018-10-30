@@ -1,5 +1,5 @@
 <template>
-  <div class="order-refund">
+  <div class="order-refund" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="true"></head-item>
     <div class="refund-msg">
       <div class="refund-text">
@@ -84,7 +84,6 @@
 
   /*退款样式*/
   .order-refund
-    padding-top: 64px
     .refund-msg
       height: 129px
       box-sizing: border-box

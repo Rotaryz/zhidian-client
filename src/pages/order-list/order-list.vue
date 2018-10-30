@@ -1,5 +1,5 @@
 <template>
-  <div class="order-list" :class="{'order-none': showNone,'add-padding': !status}">
+  <div class="order-list" :class="{'order-none': showNone,'add-padding': !status}" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="true"></head-item>
     <div class="order-box border-bottom-1px" v-if="!status">
       <div class="order-tab" hover-class="none" v-for="(item, index) in order" :key="index" @click="_goOrderTab(item,index)">
@@ -192,7 +192,6 @@
     background: $color-background
     box-sizing: border-box
     font-family: $font-family-regular
-    padding-top: 64px
     position: relative
     &.add-padding
       padding-top: 104px

@@ -25,6 +25,7 @@
         this.setShowType(false)
         return
       }
+      this._getSystemInfo()
       this._saveTargetPage(options)
       this._resolveQrCode(options)
       this._decideEntryType(options)
@@ -44,9 +45,20 @@
         'setTargetPage',
         'setShowType',
         'setScene',
-        'setFromMsg'
+        'setFromMsg',
+        'setPageHeadH'
         // 'setAction'
       ]),
+      _getSystemInfo() {
+        try {
+          let res = this.$wx.getSystemInfoSync()
+          let statusBarHeight = res.statusBarHeight || 20
+          let height = +statusBarHeight + 40
+          this.setPageHeadH(height)
+        } catch (e) {
+          console.log(e)
+        }
+      },
       async _setDefaultShop() {
         try {
           let res = await Jwt.getDefaultShop()

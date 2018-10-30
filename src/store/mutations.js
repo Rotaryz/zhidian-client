@@ -155,6 +155,9 @@ const mutations = {
   },
   [types.SET_IM_TITLE](state, title) {
     state.chatMsgTitle = title
+  },
+  [types.SET_PAGE_HEAD](state, px) {
+    state.pageHeadH = px
   }
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="edit-dynamic">
     <head-item :title="topTitle" :showArrow="true"></head-item>
-    <scroll-view class="edit-wrapper">
+    <scroll-view class="edit-wrapper" :style="{paddingTop: pageHeadH + 'px'}">
       <div class="compile">
         <textarea class="words-span" :style="{height: textHeight + 'px'}" maxlength="-1" placeholder="这一刻的想法…" v-model="title" @input="_setTop" @linechange="getLine"></textarea>
         <div class="com-box">
@@ -168,7 +168,6 @@
   .edit-dynamic
     .edit-wrapper
       height: 100vh
-      padding-top: 64px
       box-sizing: border-box
       padding-bottom: 50px
     .words-span

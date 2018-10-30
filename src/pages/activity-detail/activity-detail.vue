@@ -1,5 +1,5 @@
 <template>
-  <div class="activity-detail">
+  <div class="activity-detail" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="true"></head-item>
     <div class="banner-box">
       <swiper class="banner" @change="bannerChange">
@@ -732,7 +732,6 @@
   .activity-detail
     background: $color-white
     padding-bottom: 70px
-    padding-top: 64px
     .f4-line
       width: 100%
       height: 10px

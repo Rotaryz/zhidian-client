@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="login" :style="{paddingTop: pageHeadH + 'px'}">
     <div class="login-icon">
       <img :src="imgUrl + '/zd-image/login/pic-wxsq@2x.png'" v-if="imgUrl" mode="widthFix" class="login-icon-img">
     </div>
@@ -146,7 +146,6 @@
   .login
     width: 100vw
     height: 100vh
-    padding-top: 64px
     box-sizing: border-box
     display: flex
     flex-direction: column

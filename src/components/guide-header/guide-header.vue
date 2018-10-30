@@ -129,7 +129,7 @@
       .back-box
         position: absolute
         right: 0
-        top: 18.6vw
+        top: 11.5vh
         font-family: $font-family-regular
         background-image: linear-gradient(90deg, #FE7754 0%, #ED2B2B 100%)
         border-radius: 100px 0 0 100px

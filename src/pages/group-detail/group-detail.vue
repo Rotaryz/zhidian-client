@@ -1,5 +1,5 @@
 <template>
-  <div class="group-detail">
+  <div class="group-detail" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="true"></head-item>
     <div class="group-goods">
       <div class="shop-msg">
@@ -207,7 +207,6 @@
 
   .group-detail
     width: 100vw
-    padding-top: 64px
     .f4-line
       width: 100%
       height: 10px
