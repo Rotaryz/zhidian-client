@@ -1,7 +1,7 @@
 <template>
   <div>
     <head-item :title="title" :showArrow="true"></head-item>
-    <scroll-view scroll-y class="order-list">
+    <scroll-view scroll-y class="order-list" :style="{paddingTop: pageHeadH + 'px'}">
       <div class="order-item" v-for="(item, index) in list" :key="index">
         <div class="order-shop">
           <p class="order-name">{{item.cut_time}}</p>
@@ -188,7 +188,6 @@
     height: 100vh
     background: $color-background
     box-sizing: border-box
-    padding-top: 64px
     font-family: $font-family-regular
     .order-item
       width: 92vw

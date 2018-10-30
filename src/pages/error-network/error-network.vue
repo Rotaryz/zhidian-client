@@ -1,5 +1,5 @@
 <template>
-  <div class="error-none">
+  <div class="error-none" :style="{paddingTop: (pageHeadH * 1 + 125.5) + 'px'}">
     <div class="img-box">
       <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/pic-nointernet@2x.png'" class="blank-img">
     </div>
@@ -36,7 +36,6 @@
   @import "~common/stylus/private"
 
   .error-none
-    padding-top: 185.5px
     display: flex
     align-items: center
     justify-content: center

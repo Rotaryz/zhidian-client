@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-detail">
+  <div class="goods-detail" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="true"></head-item>
     <div class="banner-box">
       <swiper class="banner" @change="bannerChange">
@@ -303,7 +303,6 @@
   .goods-detail
     background: $color-white
     padding-bottom: 70px
-    padding-top: 64px
     .banner-box
       width: 100vw
       height: 75vw

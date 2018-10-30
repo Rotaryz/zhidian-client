@@ -1,5 +1,5 @@
 <template>
-  <div class="order-detail">
+  <div class="order-detail" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="true"></head-item>
     <div class="order-normal" v-if="detail">
       <!-- 商品信息-->
@@ -248,7 +248,6 @@
   .order-detail
     min-height: 100vh
     padding-bottom: 60px
-    padding-top: 64px
     box-sizing: border-box
     background: $color-background
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-make-poster">
+  <div class="goods-make-poster" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="pageTitle" :showArrow="true"></head-item>
     <canvas class="canvas" canvas-id="dynamic-share" :style="canvasStyle" v-if="showCanvas"></canvas>
     <article class="share-container">
@@ -369,7 +369,6 @@
 
   .goods-make-poster
     min-height: 100vh
-    padding-top: 64px
     box-sizing: border-box
     .share-container
       margin: 4vw 9.3vw 6.1vw

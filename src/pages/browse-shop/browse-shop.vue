@@ -1,5 +1,5 @@
 <template>
-  <div class="browse-shop">
+  <div class="browse-shop" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="true"></head-item>
     <div class="browse-shop-small" v-if="browseShopList">
       <div class="browse-shop-item" v-for="(item, index) in browseShopList" :key="index" @click="checkShop(item)">
@@ -90,7 +90,6 @@
   .browse-shop
     min-height: 100vh
     box-sizing: border-box
-    padding-top: 64px
     background: $color-background
 
   .browse-shop-small

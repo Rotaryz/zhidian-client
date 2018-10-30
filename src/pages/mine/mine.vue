@@ -1,5 +1,5 @@
 <template>
-  <div class="big-mine">
+  <div class="big-mine" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="false"></head-item>
     <back-shop v-if="!mineShop && hasShop" :shopName="shopName"></back-shop>
     <div class="mine">
@@ -107,8 +107,6 @@
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
-  .big-mine
-    padding-top: 64px
 
   .mine
     font-family: $font-family-regular

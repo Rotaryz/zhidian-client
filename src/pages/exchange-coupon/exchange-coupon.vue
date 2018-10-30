@@ -1,5 +1,5 @@
 <template>
-  <div class="exchange">
+  <div class="exchange" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="true"></head-item>
     <section class="tab-container">
       <div class="tab-box">
@@ -185,7 +185,7 @@
   .exchange
     min-height: 100vh
     background: $color-background
-    padding: 64px 13px 15px
+    padding: 0 13px 15px
     box-sizing: border-box
 
   .tab-container

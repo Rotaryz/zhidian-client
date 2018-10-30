@@ -1,5 +1,5 @@
 <template>
-  <div class="order-result">
+  <div class="order-result" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="true"></head-item>
     <img :src="imageUrl + '/zd-image/mine/pic-bg_pay@2x.png'" v-if="imageUrl" mode="widthFix" class="result-top-bc">
     <div class="result-content">
@@ -85,7 +85,6 @@
     width: 100vw
     height: 100vh
     box-sizing: border-box
-    padding-top: 64px
     background: $color-F8F8F8
     position: relative
     .result-top-bc

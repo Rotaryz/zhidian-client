@@ -1,7 +1,7 @@
 <template>
   <div class="wheel-poster">
     <head-item :title="title" :showArrow="true"></head-item>
-    <div style="height: 64px"></div>
+    <div :style="{paddingTop: pageHeadH + 'px'}"></div>
     <div class="top-box"></div>
     <div class="content">
       <img class="icon-img pos-a" v-if="imageUrl" :src="imageUrl + '/zd-image/wheel/pic-share_img.png'" alt="">

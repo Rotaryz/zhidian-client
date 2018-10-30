@@ -1,7 +1,7 @@
 <template>
   <div class="wheel" :style="pageStyle">
     <head-item :title="title" :showArrow="true"></head-item>
-    <div class="page-wrapper">
+    <div class="page-wrapper" :style="{top: pageHeadH + 'px'}">
       <img class="wheel-bg" style="width: 100%" mode="widthFix" v-if="imageUrl" :src="imageUrl + '/zd-image/wheel/pic-turntable_bg@2x.png'" alt="">
       <article class="container">
         <wheel-header :ruleInfo="ruleInfo" @showRule="showRule"></wheel-header>
@@ -293,7 +293,6 @@
     transform: translate3d(0, 0, 0)
     .page-wrapper
       position: fixed
-      top: 64px
       left: 0
       right: 0
       bottom: 0

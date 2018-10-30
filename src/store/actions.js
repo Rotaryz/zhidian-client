@@ -95,3 +95,7 @@ export const setImPosition = ({ commit, state }, position) => {
 export const setImTitle = ({ commit, state }, title) => {
   commit(types.SET_IM_TITLE, title)
 }
+
+export const setPageHeadH = ({ commit, state }, px) => {
+  commit(types.SET_PAGE_HEAD, px)
+}

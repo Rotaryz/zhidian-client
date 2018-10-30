@@ -8,7 +8,7 @@ export default {
   },
   // 获取活动列表
   getActiveList(data, loading) {
-    const url = `/api/customer/activity`
+    const url = `/api/customer/activity-lists`
     return request.get(url, data, loading)
   },
   // 点赞

@@ -1,5 +1,5 @@
 <template>
-  <article class="shop">
+  <article class="shop" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="false"></head-item>
     <shop-header :shopInfo="shopInfo" :employee="employee" :photoInfo="photoInfo" v-if="showHeader"></shop-header>
     <shop-content :goodsList="goodsList" :selectTab="selectTab" :storyInfo="storyInfo" @changeTab="changeTab"></shop-content>
@@ -196,6 +196,5 @@
   @import "~common/stylus/private"
   .shop
     min-height: 100vh
-    padding-top: 64px
     box-sizing: border-box
 </style>

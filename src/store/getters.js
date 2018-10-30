@@ -37,3 +37,5 @@ export const chatBtnType = state => state.chatBtnType
 export const imPosition = state => state.imPosition
 
 export const chatMsgTitle = state => state.chatMsgTitle
+
+export const pageHeadH = state => state.pageHeadH

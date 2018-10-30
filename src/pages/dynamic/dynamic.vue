@@ -1,5 +1,5 @@
 <template>
-  <article class="dynamic-list" @click="_closeLong">
+  <article class="dynamic-list" @click="_closeLong" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="false"></head-item>
     <div class="test-img-box" v-if="testShow">
       <image :src="testImg" mode="widthFix" class="test-img"></image>
@@ -543,8 +543,6 @@
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
-  .dynamic-list
-    padding-top: 64px
 
   .dynamic-item
     position: relative

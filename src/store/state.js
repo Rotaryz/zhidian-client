@@ -23,7 +23,8 @@ const state = {
     x: 0,
     startX: 0
   }, // IM浮窗的相对位置
-  chatMsgTitle: '' // IM聊天页面title
+  chatMsgTitle: '', // IM聊天页面title
+  pageHeadH: 64 // 自定义头部高度，用于页面设置padding-top, 默认64
 }
 
 export default state

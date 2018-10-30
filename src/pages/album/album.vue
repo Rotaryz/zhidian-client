@@ -1,5 +1,5 @@
 <template>
-  <div class="album">
+  <div class="album" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="true"></head-item>
     <div class="album-box" :class="{'album-list-active' : isNull && shopList.length * 1 === 0}">
       <div class="album-list" v-if="shopList">
@@ -100,7 +100,6 @@
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
   .album
-    padding-top: 64px
     min-height: 100vh
     background: $color-background
     box-sizing: border-box
