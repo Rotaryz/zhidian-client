@@ -1,6 +1,6 @@
 <template>
   <div class="browse-shop" :style="{paddingTop: pageHeadH + 'px'}">
-    <head-item :title="title" :showArrow="true"></head-item>
+    <head-item :title="title"></head-item>
     <div class="browse-shop-small" v-if="browseShopList">
       <div class="browse-shop-item" v-for="(item, index) in browseShopList" :key="index" @click="checkShop(item)">
         <img :src="item.employee.image_url" class="browse-shop-logo" mode="aspectFill">
@@ -30,7 +30,7 @@
         image_url: this.$imageUrl,
         browseShopList: [],
         isNull: false,
-        title: ''
+        title: '浏览过的店'
       }
     },
     onShow() {

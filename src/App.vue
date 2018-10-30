@@ -53,7 +53,7 @@
         try {
           let res = this.$wx.getSystemInfoSync()
           let statusBarHeight = res.statusBarHeight || 20
-          let height = +statusBarHeight + 40
+          let height = +statusBarHeight + 44
           this.setPageHeadH(height)
         } catch (e) {
           console.log(e)

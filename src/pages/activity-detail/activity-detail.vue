@@ -218,13 +218,7 @@
       let title = this.goodsDetail.goods_title ? this.goodsDetail.goods_title : ''
       let id = wx.getStorageSync('userInfo').id
       let shopId = wx.getStorageSync('shopId')
-      let type
-      if (this.activityType * 1 === 1) {
-        type = 'group'
-      } else {
-        type = 'bargain'
-      }
-      let path = `/pages/activity-detail?activityType=${type}&fromType=3&fromId=${id}&shopId=${shopId}&activityId=${this.activityId}`
+      let path = `/pages/activity-detail?activityType=${this.activityType}&fromType=3&fromId=${id}&shopId=${shopId}&activityId=${this.activityId}`
       if (res.from === 'button') {
         // 来自页面内转发按钮
       }

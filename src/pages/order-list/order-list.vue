@@ -1,7 +1,7 @@
 <template>
-  <div class="order-list" :class="{'order-none': showNone,'add-padding': !status}" :style="{paddingTop: pageHeadH + 'px'}">
+  <div class="order-list" :class="{'order-none': showNone,'add-padding': !status}" :style="{paddingTop: !status ? (pageHeadH * 1 + 40) + 'px' : pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="true"></head-item>
-    <div class="order-box border-bottom-1px" v-if="!status">
+    <div class="order-box border-bottom-1px" v-if="!status" :style="{top: pageHeadH + 'px'}">
       <div class="order-tab" hover-class="none" v-for="(item, index) in order" :key="index" @click="_goOrderTab(item,index)">
         <div class="order-tab-item" :class="selectTab * 1 === index * 1 ? 'active-font' : ''">{{item.title}}</div>
       </div>
@@ -204,7 +204,6 @@
       justify-content: space-between
       position: fixed
       left: 0
-      top: 64px
       z-index:10
       .order-tab
         height: 40px

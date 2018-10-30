@@ -95,6 +95,7 @@
     .head-content
       text-align: center
       line-height: 44px
+      height: 44px
       font-size: $font-size-18
       font-family: $font-family-medium
       color: $color-black

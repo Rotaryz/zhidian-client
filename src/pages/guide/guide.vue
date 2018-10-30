@@ -61,7 +61,7 @@
     onPageScroll(e) {
       if (e.scrollTop >= 100) {
         this.headStyle = 'background: rgba(255, 255, 255, 1)'
-        this.titleColor = '#313131'
+        this.titleColor = '#000000'
         this.title = '导购'
       } else {
         this.headStyle = 'background: rgba(255, 255, 255, 0)'
