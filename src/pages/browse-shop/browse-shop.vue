@@ -30,7 +30,7 @@
         image_url: this.$imageUrl,
         browseShopList: [],
         isNull: false,
-        title: ''
+        title: '浏览过的店'
       }
     },
     onShow() {
