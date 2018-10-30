@@ -1073,7 +1073,7 @@
       display: flex
       justify-content: center
       .bargain-model-container
-        margin-top: 28vw
+        margin-top: 40vw
         width: 300px
         height: 320px
         overflow: hidden
