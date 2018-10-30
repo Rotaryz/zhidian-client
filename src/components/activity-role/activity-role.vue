@@ -51,12 +51,12 @@
           delay: 0
         })
         coverAnimation.opacity(0).step()
-        roleAnimation.scale(0.2).rotate(0).step()
+        roleAnimation.scale(0.3).step()
         this.roleAnimation = roleAnimation.export()
         this.coverAnimation = coverAnimation.export()
         setTimeout(() => {
           coverAnimation.opacity(1).step()
-          roleAnimation.scale(1).rotate(0).step()
+          roleAnimation.scale(1).step()
           this.roleAnimation = roleAnimation.export()
           this.coverAnimation = coverAnimation.export()
           this.showCover = false
@@ -75,13 +75,13 @@
           delay: 0
         })
         coverAnimation.opacity(0).step()
-        roleAnimation.scale(0.3).rotate(0).step()
+        roleAnimation.scale(0.3).step()
         this.roleAnimation = roleAnimation.export()
         this.coverAnimation = coverAnimation.export()
         this.showCover = true
         setTimeout(() => {
           coverAnimation.opacity(1).step()
-          roleAnimation.scale(1).rotate(0).step()
+          roleAnimation.scale(1).step()
           this.roleAnimation = roleAnimation.export()
           this.coverAnimation = coverAnimation.export()
         }, 300)

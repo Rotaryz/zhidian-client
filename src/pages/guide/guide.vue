@@ -149,6 +149,7 @@
       },
       _changeShopResetData() {
         if (+this.oldShopId !== +this.$wx.getStorageSync('shopId') || getApp().globalData.pageType === 'error') {
+          clearInterval(this.timer)
           getApp().globalData.pageType = ''
           this.showBackBtn = false
           Object.assign(this.$data, this.$options.data())
@@ -195,7 +196,6 @@
         }
       },
       async _getGroupList(data, loading) {
-        if (!this.groupData.more) return
         try {
           let res = await Guide.getActiveList(data, loading)
           if (res.error !== this.$ERR_OK) {
@@ -219,7 +219,6 @@
         }
       },
       async _getCutList(data, loading) {
-        if (!this.cutData.more) return
         try {
           let res = await Guide.getActiveList(data, loading)
           if (res.error !== this.$ERR_OK) {

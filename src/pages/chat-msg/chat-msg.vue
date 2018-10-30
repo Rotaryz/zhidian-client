@@ -165,7 +165,8 @@
         welcomeMsg: {},
         from: '',
         focus: false,
-        shopId: ''
+        shopId: '',
+        noMore: false
       }
     },
     created() {
