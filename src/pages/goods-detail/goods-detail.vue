@@ -58,9 +58,10 @@
   import Share from 'components/share/share'
   import { Goods, Customer } from 'api'
   import { getParams } from 'common/js/util'
-  import {mapGetters, mapActions} from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import ImMixin from 'common/mixins/im-mixin'
   import HeadItem from 'components/head-item/head-item'
+
   export default {
     mixins: [ImMixin],
     data() {
@@ -137,7 +138,7 @@
       if (!this.reqGoodsId) return
       await this._getGoodsDetail(this.reqGoodsId)
       await this._checkHasPhone()
-      let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
+      let msgData = { title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId }
       let msgCode
       switch (this.scene * 1) {
         case 0:
@@ -170,7 +171,7 @@
       },
       toIndex() {
         let url = `/pages/guide`
-        wx.switchTab({url})
+        wx.switchTab({ url })
       },
       toChat() {
         if (!this.hasPhone) return
@@ -184,13 +185,13 @@
           original_price: this.goodsDetail.original_price,
           avatar: this.currentMsg.avatar,
           shop_name: this.goodsDetail.shop_data.name,
-          goods_id: this.activityId
+          goods_id: this.reqGoodsId
         }
-        this.sendCustomMsg(20005, {product: dataMsg, type: 3})
-        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
+        this.sendCustomMsg(20005, { product: dataMsg, type: 3 })
+        let msgData = { title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId }
         this.sendCustomMsg(60004, msgData)
         let url = `/pages/chat-msg`
-        wx.navigateTo({url})
+        wx.navigateTo({ url })
       },
       async phoneOk() {
         await this._checkHasPhone()
@@ -218,11 +219,11 @@
         })
       },
       friendShare() {
-        let msgData = {title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId}
+        let msgData = { title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId }
         this.sendCustomMsg(40004, msgData)
         this._shareReq()
       },
-      getPicture () {
+      getPicture() {
         this._shareReq()
         let type = 0
         let id = this.reqGoodsId
@@ -236,7 +237,7 @@
           id
         }
         this.setGoodsDrawInfo(picMsg)
-        this.$wx.navigateTo({url: `goods-make-poster`})
+        this.$wx.navigateTo({ url: `goods-make-poster` })
       },
       async payOrderMsg() {
         await this._checkHasPhone()
@@ -322,7 +323,7 @@
         bottom: 10px
         padding: 2px 7px
         border-radius: 10px
-        background: rgba(69,90,100,0.4)
+        background: rgba(69, 90, 100, 0.4)
         font-family: DINAlternate-Bold
         font-size: $font-size-12
         color: $color-white

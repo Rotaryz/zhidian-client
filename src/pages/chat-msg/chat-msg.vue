@@ -308,21 +308,36 @@
       },
       toDetail(item) {
         let type = item.type * 1
+        console.log(item)
         let url
         switch (type) {
           case 3:
-            url = `/pages/goods-detail/goods-detail?goodId=${item.goods_id}&type=0`
+            // this.$wx.navigateTo({ url: `/pages/goods-detail?goodsId=${item.recommend_goods_id}` })
+            // url = `/pages/goods-detail?goodsId=${item.recommend_goods_id}`
+            url = `/pages/goods-detail?goodsId=${item.goods_id}`
             break
           case 4:
-            url = `/pages/goods-detail/goods-detail?ActivityId=${item.goods_id}&type=1`
+            url = `/pages/activity-detail?activityId=${item.goods_id}&activityType=group`
             break
           case 5:
-            url = `/pages/goods-detail/goods-detail?ActivityId=${item.goods_id}&type=3`
+            url = `/pages/activity-detail?activityId=${item.goods_id}&activityType=bargain`
             break
           default:
             break
         }
         wx.redirectTo({url})
+        // let activityType
+        // switch (item.rule_id) {
+        //   case 1:
+        //     activityType = 'group'
+        //     break
+        //   case 3:
+        //     activityType = 'bargain'
+        //     break
+        //   default:
+        //     break
+        // }
+        // this.$wx.navigateTo({url: `/pages/activity-detail?activityId=${item.recommend_activity_id}&activityType=${activityType}`})
       },
       loadMore() {
         if (this.noMore) return

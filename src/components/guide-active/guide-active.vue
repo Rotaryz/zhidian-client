@@ -198,7 +198,6 @@
         this.$emit('changeTab', index)
       },
       goToDetail(item) {
-        console.log(item)
         let activityType
         switch (item.rule_id) {
           case 1:
