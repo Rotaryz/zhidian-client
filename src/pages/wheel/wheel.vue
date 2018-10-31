@@ -181,12 +181,19 @@
             this.$showToast(res.message)
             return
           }
+          if (+res.status === 0) {
+            this.$wx.redirectTo({url: `/pages/error`})
+            return
+          }
           this.wheelList = this.wheelList.concat(res.data.activity_prizes)
           this.usable_times = res.data.usable_times
           this.receive_customer = res.data.receive_customer
           this._formatRuleInfo(res)
           setTimeout(() => {
           }, this.runCardSeconds + 200)
+        }).catch(e => {
+          console.error(e)
+          this.$wx.redirectTo({url: `/pages/error`})
         })
       },
       _formatRuleInfo(res) {
