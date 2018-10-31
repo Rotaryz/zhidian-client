@@ -164,12 +164,12 @@
         let len = this.receive_customer.length
         let height = system.screenHeight
         let arr = [2, 5]
+        if (this.runCardStep > len - 1 - arr[height > 736 ? 1 : 0]) {
+          clearTimeout(this.timerCards)
+          return
+        }
         this.runCardStep++
         this.timerCards = setTimeout(() => {
-          if (this.runCardStep > len - 1 - arr[height > 736 ? 1 : 0]) {
-            clearTimeout(this.timerCards)
-            return
-          }
           this._runCardList()
         }, this.runCardSeconds)
       },
@@ -243,9 +243,9 @@
           }
           this.prizeInfo = { ...res.data }
           this.usable_times = res.data.usable_times
-          res.data.customer_receive && this.receive_customer.push(res.data.customer_receive)
           let index = this.wheelList.findIndex(item => item.activity_prize_id === res.data.activity_prize_id)
           this._action(index === -1 ? 0 : index, () => {
+            res.data.customer_receive && this.receive_customer.push(res.data.customer_receive)
             this._showTips(index)
             this.running = false
             index && !this.timerCards && this.runCardStep++ // 卡片滚动
