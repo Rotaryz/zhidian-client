@@ -130,7 +130,7 @@
           this.submit()
         } else {
           this.submit()
-          wx.navigateBack()
+          wx.switchTab({url: '/pages/guide'})
         }
       },
       show(type, index) {

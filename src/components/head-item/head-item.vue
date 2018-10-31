@@ -89,9 +89,15 @@
       display: flex
       justify-content: center
       align-items: center
+      &:after
+        content: ''
+        position :absolute
+        width :100%
+        height :100%
+        padding :12px 20px
       .head-arrow-img
         width: 18px
-        height: 18px
+        height: @width
     .head-content
       text-align: center
       line-height: 44px

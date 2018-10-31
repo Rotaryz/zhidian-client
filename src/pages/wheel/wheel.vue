@@ -31,20 +31,26 @@
             </figure>
           </article>
           <section class="footer">
+            <div class="footer-mask"></div>
             <div class="title">你还有 <span class="number">{{usable_times}}</span> 次机会</div>
-            <div
+            <swiper
               class="cards-wrapper"
               :style="cardsWrapperStyle"
-              :scroll-y="true"
+              :duration="runCardSeconds"
+              :interval="runCardSeconds"
+              :display-multiple-items="cardsNumber"
+              circular
+              autoplay
+              vertical
             >
-              <!--<div class="master-style" style="top:0"></div>-->
-              <ul class="cards-box" :style="cardsStyle">
-                <li class="card-item-wrapper" v-for="item in receive_customer" :key="item.name + item.image_url">
-                  <wheel-card :item="item"></wheel-card>
-                </li>
-              </ul>
-              <!--<div class="master-style" style="bottom: 0"></div>-->
-            </div>
+              <block v-for="item in receive_customer" :key="item.name + item.image_url">
+                <swiper-item>
+                  <div class="card-item-wrapper">
+                    <wheel-card :item="item"></wheel-card>
+                  </div>
+                </swiper-item>
+              </block>
+            </swiper>
           </section>
         </section>
         <wheel-modal ref="modal" :prizeInfo="prizeInfo" :ruleList="ruleList" :employeeInfo="employeeInfo"></wheel-modal>
@@ -91,9 +97,7 @@
         ruleInfo: {},
         ruleList: [],
         shopInfo: {},
-        runCardStep: 0,
-        runCardSeconds: 3000,
-        timerCards: null
+        runCardSeconds: 5000
       }
     },
     computed: {
@@ -120,9 +124,12 @@
         return { name, avatar }
       },
       cardsWrapperStyle() {
+        return `height:${9.866666666666667 * this.cardsNumber}vw;`
+      },
+      cardsNumber() {
         let height = system.screenHeight
         let arr = [2, 5]
-        return `height:${9.866666666666667 * arr[height > 736 ? 1 : 0]}vw;`
+        return arr[height > 736 ? 1 : 0]
       },
       cardsStyle() {
         return `transition :transform ${this.runCardSeconds}ms ease-in-out;transform :translate3d(0, ${-this.runCardStep * 9.866666666666667}vw, 0)`
@@ -131,17 +138,9 @@
     onLoad() {
       this._getWheelInfo()
       this._getShopInfo({}, false)
-      this.runCardStep = 0
     },
     onUnload() {
       clearTimeout(this.timer)
-      clearTimeout(this.timerCards)
-    },
-    onHide() {
-      clearTimeout(this.timerCards)
-    },
-    onShow() {
-      this.receive_customer.length && this._runCardList()
     },
     onShareAppMessage() {
       this.setShowType(true)
@@ -160,19 +159,6 @@
       }
     },
     methods: {
-      _runCardList() {
-        let len = this.receive_customer.length
-        let height = system.screenHeight
-        let arr = [2, 5]
-        if (this.runCardStep > len - 1 - arr[height > 736 ? 1 : 0]) {
-          clearTimeout(this.timerCards)
-          return
-        }
-        this.runCardStep++
-        this.timerCards = setTimeout(() => {
-          this._runCardList()
-        }, this.runCardSeconds)
-      },
       showRule() {
         this.$refs.modal.show('rule')
       },
@@ -195,13 +181,19 @@
             this.$showToast(res.message)
             return
           }
+          if (+res.status === 0) {
+            this.$wx.redirectTo({url: `/pages/error`})
+            return
+          }
           this.wheelList = this.wheelList.concat(res.data.activity_prizes)
           this.usable_times = res.data.usable_times
           this.receive_customer = res.data.receive_customer
           this._formatRuleInfo(res)
           setTimeout(() => {
-            this._runCardList()
           }, this.runCardSeconds + 200)
+        }).catch(e => {
+          console.error(e)
+          this.$wx.redirectTo({url: `/pages/error`})
         })
       },
       _formatRuleInfo(res) {
@@ -248,7 +240,6 @@
             res.data.customer_receive && this.receive_customer.push(res.data.customer_receive)
             this._showTips(index)
             this.running = false
-            index && !this.timerCards && this.runCardStep++ // 卡片滚动
           })
         })
       },
@@ -308,6 +299,9 @@
           top: 34.8vw
           .footer
             position: relative
+            .footer-mask
+              fill-box(absolute)
+              z-index :20
             .title
               font-family: PingFangSC-Regular;
               font-size: 3.733333333333334vw
@@ -321,9 +315,8 @@
             .cards-wrapper
               position: relative
               overflow: hidden
-              .cards-box
-                .card-item-wrapper
-                  margin 0 6.666666666666667vw 1.3333333333333335vw
+              .card-item-wrapper
+                margin 0 6.666666666666667vw 1.3333333333333335vw
           .wheel-wrapper
             z-index: 3
             margin: 0 auto
