@@ -227,6 +227,7 @@
         // 判断是否正在转
         if (this.running) return
         this.running = true
+        this.$wx.vibrateShort() // 震动
         ActiveExtend.drawWheel({}, false).then(res => {
           this.$wechat.hideLoading()
           if (res.error !== this.$ERR_OK) {
@@ -263,6 +264,7 @@
         this.lastStep = (index * 60 - this.randomDeg) / 360
       },
       _showTips(index) {
+        index && this.$wx.vibrateShort() // 震动
         this.$refs.modal.show('prize', index)
       }
     }
