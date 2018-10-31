@@ -62,7 +62,7 @@
     },
     methods: {
       toDetail(item) {
-        if (+item.status === 0 || +item.status === 4) return
+        if (+item.status === 0) return
         let activityType
         switch (item.rule_id) {
           case 1:
