@@ -66,7 +66,7 @@
         </div>
         <div class="know-item">
           <div class="know-title">温馨提示</div>
-          <div class="know-down">如需团购发票，请您在消费时向商家咨询</div>
+          <div class="know-down">{{goodsDetail.note ? goodsDetail.note.remarks : '如需团购发票，请您在消费时向商家咨询'}}</div>
         </div>
       </div>
     </div>
