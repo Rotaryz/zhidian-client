@@ -228,7 +228,7 @@
       return {
         title: title,
         path,
-        imageUrl: this.goodsDetail.image_url
+        imageUrl: this.goodsDetail.activity_image_url || this.goodsDetail.image_url
       }
     },
     async onShow() {
