@@ -26,10 +26,7 @@
       </div>
       <span class="txt">大众点评</span>
     </div>
-    <div class="explain open-time">营业时间：{{shopInfo.opening_hours}}
-      <div class="line-box">
-        <div class="line border-top-1px border-bottom-1px"></div>
-      </div>
+    <div class="explain open-time border-top-1px border-bottom-1px">营业时间：{{shopInfo.opening_hours}}
     </div>
     <section class="distance-wrapper">
       <article class="left">
@@ -188,7 +185,7 @@
       color: $color-1F1F1F
     .evaluate
       layout(row, block, nowrap)
-      margin: 8px 0 25px
+      margin: 8px 0 15px
       position: relative
       left: 1px
       .star
@@ -211,30 +208,25 @@
       color: $color-1F1F1F
       letter-spacing: 0.6px
       position: relative
-      .line-box
-        position: absolute
-        top: -95%
-        bottom :-95%
-        left: 0
-        right :0
-        .line
-          height :100%
+      &.open-time
+        height: 50px
+        line-height: @height
     .distance-wrapper
       layout(row, block, nowrap)
       align-items: center
+      padding: 18px 0
       .left
         width: 67%
         .address
           width: 100%
           min-height: 1px
-          margin: 25px 0 6px
           text-align: justify
           word-break: break-all
+          padding-bottom: 5px
         .distance
           width: 95%
           font-size: $font-size-12
           color: $color-99A0AA
-          padding-bottom: 40px
           text-align: justify
           word-break: break-all
       .btn-group
