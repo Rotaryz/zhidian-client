@@ -149,7 +149,9 @@
           this.$wechat.hideLoading()
           return
         }
+        this.$wechat.pageScrollTo()
         this.length = res.meta.total
+        this.page = res.meta.current_page
         if (this.page === 1) {
           this.orderList = res.data
           this.showNone = !this.orderList.length
@@ -166,6 +168,7 @@
           return
         }
         this.length = res.meta.total
+        this.page = res.meta.current_page
         if (this.page === 1) {
           this.orderList = res.data
           this.showNone = !this.orderList.length
