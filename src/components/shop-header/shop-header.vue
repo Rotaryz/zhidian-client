@@ -1,6 +1,6 @@
 <template>
   <div class="shop-header">
-    <scroll-view scroll-x class="media-wrapper">
+    <scroll-view scroll-x class="media-wrapper" v-if="isShowMedia">
       <div class="item video" @click="playVideo" v-if="shopInfo.video && shopInfo.video.image_url">
         <img mode="aspectFill" class="pic" :src="shopInfo.video.image_url" alt="">
         <div class="video-mask">
@@ -16,6 +16,7 @@
       </div>
       <div class="item empty" v-if="photoInfo.list && photoInfo.list.length > 2"></div>
     </scroll-view>
+    <div v-else style="height: 15px"></div>
     <div class="shop-name">{{shopInfo.name}}</div>
     <div class="evaluate">
       <div class="star" v-for="(item, idx) in shopInfo.rate" :key="idx">
@@ -25,7 +26,11 @@
       </div>
       <span class="txt">大众点评</span>
     </div>
-    <div class="explain open-time">营业时间：{{shopInfo.opening_hours}}</div>
+    <div class="explain open-time">营业时间：{{shopInfo.opening_hours}}
+      <div class="line-box">
+        <div class="line border-top-1px border-bottom-1px"></div>
+      </div>
+    </div>
     <section class="distance-wrapper">
       <article class="left">
         <div class="explain address">{{shopInfo.address}}</div>
@@ -103,12 +108,18 @@
         this.setShowType(true)
         this.$wx.makePhoneCall && this.$wx.makePhoneCall({ phoneNumber: '' + this.employee.mobile })
       }
+    },
+    computed: {
+      isShowMedia() {
+        return (this.shopInfo.video && this.shopInfo.video.image_url) || (this.photoInfo.list && this.photoInfo.list.length)
+      }
     }
   }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
+  @import "~common/stylus/base"
 
   .my-video
     position: absolute
@@ -199,10 +210,18 @@
       font-size: $font-size-14
       color: $color-1F1F1F
       letter-spacing: 0.6px
+      position: relative
+      .line-box
+        position: absolute
+        top: -95%
+        bottom :-95%
+        left: 0
+        right :0
+        .line
+          height :100%
     .distance-wrapper
       layout(row, block, nowrap)
       align-items: center
-      padding-bottom: 20px
       .left
         width: 67%
         .address

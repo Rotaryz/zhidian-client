@@ -2,6 +2,8 @@
   <article class="shop" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="false"></head-item>
     <shop-header :shopInfo="shopInfo" :employee="employee" :photoInfo="photoInfo" v-if="showHeader"></shop-header>
+    <div style="height: 10px; background: #F4F5F7 "></div>
+    <div style="height: 20px; background: #fff "></div>
     <shop-content :goodsList="goodsList" :selectTab="selectTab" :storyInfo="storyInfo" @changeTab="changeTab"></shop-content>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
   </article>
