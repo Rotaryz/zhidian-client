@@ -1026,6 +1026,7 @@
       .outSide.right-box
         margin-right: 10px
       .un-click.right-box
+        margin-right: 10px
         button-style(un-click, 22.5px)
       .two-right-box
         flex: 1
