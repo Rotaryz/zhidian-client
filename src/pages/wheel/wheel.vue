@@ -181,7 +181,7 @@
             this.$showToast(res.message)
             return
           }
-          if (+res.status === 0) {
+          if (+res.status === 0 || res.data.length === 0) {
             this.$wx.redirectTo({url: `/pages/error`})
             return
           }
@@ -197,6 +197,8 @@
         })
       },
       _formatRuleInfo(res) {
+        if (!(res && res.data && res.data.activity_prizes)) return
+        console.log(123)
         let ruleList = [
           {
             title: '活动说明',
