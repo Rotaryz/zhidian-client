@@ -244,6 +244,8 @@
             color: $color-black
             display: flex
             align-items: center
+            word-break: break-all
+            line-height: 18px
             &:before
               content: ''
               display: block
