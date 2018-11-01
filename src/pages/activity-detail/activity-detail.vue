@@ -15,7 +15,7 @@
           <div class="group-box" v-if="activityType === 'group'">{{goodsDetail.group_number}}人团</div>
         </div>
         <div class="right">
-          <span>距离活动结束还剩: </span>
+          <span>距离活动{{startTime ? '开始' : '结束'}}还剩: </span>
           <text class="time-txt">{{activityTime.day}}</text>
           <span>天</span>
           <text class="time-txt">{{activityTime.hour}}</text>
@@ -107,18 +107,19 @@
           </button>
         </form>
       </div>
-      <form class="right-box outSide" report-submit @submit="$getFormId" v-if="activityType === 'group' && goodsDetail.stock">
-       <button hover-class="none" formType="submit" class="right-box" @click="payOrderMsg" v-if="activityType === 'group' && goodsDetail.stock">¥ {{goodsDetail.platform_price}} {{groupType === 'join' ? '参团' : '开团'}}</button>
+      <div class="right-box un-click" v-if="startTime">活动未开始</div>
+      <form class="right-box outSide" report-submit @submit="$getFormId" v-if="!startTime && activityType === 'group' && goodsDetail.stock">
+       <button hover-class="none" formType="submit" class="right-box" @click="payOrderMsg" v-if="!startTime && activityType === 'group' && goodsDetail.stock">¥ {{goodsDetail.platform_price}} {{groupType === 'join' ? '参团' : '开团'}}</button>
       </form>
-      <div class="right-box un-click" v-if="activityType === 'group' && goodsDetail.stock == 0">已抢光</div>
-      <form class="right-box outSide" report-submit @submit="$getFormId" v-if="!timeEnd && activityType === 'bargain' && goodsDetail.stock && !goodsDetail.is_cuted && goodsDetail.left_cut_num">
-        <button hover-class="none" formType="submit" class="right-box" @click="toKanAction" v-if="!timeEnd && activityType === 'bargain' && goodsDetail.stock && !goodsDetail.is_cuted && goodsDetail.left_cut_num">去砍价</button>
+      <div class="right-box un-click" v-if="!startTime && activityType === 'group' && goodsDetail.stock == 0">已抢光</div>
+      <form class="right-box outSide" report-submit @submit="$getFormId" v-if="!startTime && !timeEnd && activityType === 'bargain' && goodsDetail.stock && !goodsDetail.is_cuted && goodsDetail.left_cut_num">
+        <button hover-class="none" formType="submit" class="right-box" @click="toKanAction" v-if="!startTime && !timeEnd && activityType === 'bargain' && goodsDetail.stock && !goodsDetail.is_cuted && goodsDetail.left_cut_num">去砍价</button>
       </form>
-      <form class="right-box outSide" report-submit @submit="$getFormId" v-if="!timeEnd && activityType === 'bargain' && goodsDetail.stock && !goodsDetail.left_cut_num && (goodsDetail.bottom_price * 1 === goodsDetail.platform_price * 1)">
-        <button hover-class="none" formType="submit" class="right-box" @click="payOrderMsg" v-if="!timeEnd && activityType === 'bargain' && goodsDetail.stock && !goodsDetail.left_cut_num && (goodsDetail.bottom_price * 1 === goodsDetail.platform_price * 1)">底价 ¥ {{goodsDetail.bottom_price}}立即购买</button>
+      <form class="right-box outSide" report-submit @submit="$getFormId" v-if="!startTime && !timeEnd && activityType === 'bargain' && goodsDetail.stock && !goodsDetail.left_cut_num && (goodsDetail.bottom_price * 1 === goodsDetail.platform_price * 1)">
+        <button hover-class="none" formType="submit" class="right-box" @click="payOrderMsg" v-if="!startTime && !timeEnd && activityType === 'bargain' && goodsDetail.stock && !goodsDetail.left_cut_num && (goodsDetail.bottom_price * 1 === goodsDetail.platform_price * 1)">底价 ¥ {{goodsDetail.bottom_price}}立即购买</button>
       </form>
-      <div class="right-box un-click" v-if="activityType === 'bargain' && goodsDetail.stock == 0">已抢光</div>
-      <div class="two-right-box" v-if="activityType === 'bargain' && !timeEnd && goodsDetail.stock && goodsDetail.is_cuted && goodsDetail.left_cut_num && (goodsDetail.bottom_price * 1 !== goodsDetail.platform_price * 1)">
+      <div class="right-box un-click" v-if="!startTime && activityType === 'bargain' && goodsDetail.stock == 0">已抢光</div>
+      <div class="two-right-box" v-if="!startTime && activityType === 'bargain' && !timeEnd && goodsDetail.stock && goodsDetail.is_cuted && goodsDetail.left_cut_num && (goodsDetail.bottom_price * 1 !== goodsDetail.platform_price * 1)">
         <div class="right-btn black" @click="payOrderMsg">
           <span class="btn-top">¥ {{goodsDetail.platform_price}}</span>
           <span class="btn-down">立即购买</span>
@@ -204,7 +205,9 @@
         },
         kanDetail: {},
         hasGetExchange: false,
-        endTime: ''
+        endTime: '',
+        startTime: '',
+        currentTime: ''
       }
     },
     async onPullDownRefresh() {
@@ -540,8 +543,14 @@
           this.groupOrList = [first, second, third, four].filter((item) => {
             return item.length > 0
           })
+          this.startTime = res.data.start_at_timestamp || ''
           this.endTime = res.data.end_at_timestamp
-          this._groupTimePlay()
+          this.currentTime = res.data.current_timestamp
+          if (this.startTime) {
+            this._beforeActivityStart()
+          } else {
+            this._groupTimePlay()
+          }
         } else {
           this.$showToast(res.message)
         }
@@ -556,12 +565,29 @@
             this.bannerImgs = res.data.goods_banner_images
           }
           this.goodsDetail = res.data
+          this.startTime = res.data.start_at_timestamp || ''
           this.endTime = res.data.end_at_timestamp
+          this.currentTime = res.data.current_timestamp
           this.kanList = res.data.join_list
-          this._kanTimePlay()
+          if (this.startTime) {
+            this._beforeActivityStart()
+          } else {
+            this._kanTimePlay()
+          }
         } else {
           this.$showToast(res.message)
         }
+      },
+      _beforeActivityStart() {
+        clearInterval(this.timer)
+        this.activityTime = this._checkTime(this.currentTime, this.startTime)
+        this.timer = setInterval(() => {
+          this.currentTime++
+          this.activityTime = this._checkTime(this.currentTime, this.startTime)
+          if (this.timeEnd) {
+            clearInterval(this.timer)
+          }
+        }, 1000)
       },
       _groupTimePlay() {
         clearInterval(this.timer)
@@ -595,6 +621,37 @@
             clearInterval(this.timer)
           }
         }, 1000)
+      },
+      _checkTime(start, end) {
+        let differ = end * 1 - start * 1
+        let day = Math.floor(differ / (60 * 60 * 24))
+        day = day >= 10 ? day : '0' + day
+        let hour = Math.floor(differ / (60 * 60)) - (day * 24)
+        hour = hour >= 10 ? hour : '0' + hour
+        let minute = Math.floor(differ / 60) - (day * 24 * 60) - (hour * 60)
+        minute = minute >= 10 ? minute : '0' + minute
+        let second = Math.floor(differ) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60)
+        second = second >= 10 ? second : '0' + second
+        let times
+        if (differ > 0) {
+          times = {
+            day,
+            hour,
+            minute,
+            second
+          }
+        } else {
+          times = {
+            day: '00',
+            hour: '00',
+            minute: '00',
+            second: '00'
+          }
+          this.timeEnd = true
+          this.startTime = 0
+          this.currentTime = 0
+        }
+        return times
       },
       _groupTimeCheckout(time) {
         let nowSecond = parseInt(Date.now() / 1000)
