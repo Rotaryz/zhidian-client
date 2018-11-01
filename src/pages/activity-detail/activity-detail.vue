@@ -484,7 +484,7 @@
           explain: '',
           mark: this.activityType === 'group' ? this.goodsDetail.group_number + '人团' : `仅剩${this.goodsDetail.stock}件`,
           price: this.goodsDetail.platform_price,
-          goodsImg: this.goodsDetail.image_url,
+          goodsImg: this.goodsDetail.activity_image_url || this.goodsDetail.image_url,
           type,
           id
         }
