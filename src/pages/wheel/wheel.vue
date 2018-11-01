@@ -10,7 +10,7 @@
             <img class="icon-img pos-a" v-if="imageUrl" :src="imageUrl + '/zd-image/wheel/pic-wheel-bg@2x.png'" alt="">
             <figure class="wheel-outer" :style="outerWheelAction">
               <img class="icon-img" v-if="imageUrl" :src="imageUrl + '/zd-image/wheel/pic-rose@2x.png'" alt="">
-              <ul class="light-dot" v-for="(item, index) in '1234567'" :key="index" :class="'light-'+index">
+              <ul class="light-dot" :style="lightStyle" v-for="(item, index) in '1234567'" :key="index" :class="'light-'+index">
                 <li class="dot" v-if="imageUrl" v-for="(it, idx) in '12'" :key="idx">
                 </li>
               </ul>
@@ -67,7 +67,7 @@
   import { ActiveExtend, Guide } from 'api'
 
   const system = wx.getSystemInfoSync()
-
+  const ios = /ios/i.test(system.system)
   export default {
     components: {
       WheelHeader,
@@ -104,6 +104,9 @@
       pageStyle() {
         // return system.screenWidth < 375 ? 'height: 105vh' : ''
         return ''
+      },
+      lightStyle() {
+        return ios ? 'padding: 7% 0' : 'padding:6% 0'
       },
       wheelActionStyle() {
         return this.active ? 'active' : ''
@@ -182,7 +185,7 @@
             return
           }
           if (+res.status === 0 || res.data.length === 0) {
-            this.$wx.redirectTo({url: `/pages/error`})
+            this.$wx.redirectTo({ url: `/pages/error` })
             return
           }
           this.wheelList = this.wheelList.concat(res.data.activity_prizes)
@@ -193,7 +196,7 @@
           }, this.runCardSeconds + 200)
         }).catch(e => {
           console.error(e)
-          this.$wx.redirectTo({url: `/pages/error`})
+          this.$wx.redirectTo({ url: `/pages/error` })
         })
       },
       _formatRuleInfo(res) {
@@ -303,7 +306,7 @@
             position: relative
             .footer-mask
               fill-box(absolute)
-              z-index :20
+              z-index: 20
             .title
               font-family: PingFangSC-Regular;
               font-size: 3.733333333333334vw
@@ -343,7 +346,6 @@
                 layout()
                 justify-content: space-between
                 align-items: center
-                padding: 6% 0
                 for $i in 0 1 2 3 4 5 6
                   &.light-{$i}
                     z-index: (-($i) + 8)
