@@ -50,7 +50,7 @@
         sortArr: [],
         isChecked: false,
         isBoss: false,
-        topTitle: '发布动态'
+        topTitle: '发布'
       }
     },
     computed: {
