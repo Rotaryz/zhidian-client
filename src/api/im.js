@@ -1,5 +1,4 @@
 import request from 'common/js/request'
-import {baseURL} from 'api/config'
 
 export default {
   // im获取签名，应用信息
@@ -30,7 +29,7 @@ export default {
    * @return {*}
    */
   sendRecord(data, loading = false) {
-    let url = baseURL.imRecord + '/api/analysis/send-record'
-    return request.get(url, data, loading)
+    let url = '/api/analysis/send-record'
+    return request.get(url, data, loading, 'imRecord')
   }
 }

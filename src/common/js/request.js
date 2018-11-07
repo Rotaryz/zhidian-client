@@ -12,6 +12,7 @@ const LOGINPAGE = '/pages/login'
 const ERRORPAGE = `/pages/error`
 const NETPAGE = `/pages/error-network`
 const SHOP_END = 12001
+const DEFAULTURL = 'api'
 
 // 请求拦截器
 fly.interceptors.request.use((request) => {
@@ -29,7 +30,10 @@ fly.interceptors.response.use((response) => {
 })
 
 // 配置请求基地址
-fly.config.baseURL = baseURL.api
+// fly.config.baseURL = baseURL.api
+function configBaseURL(type = DEFAULTURL) {
+  fly.config.baseURL = baseURL[type]
+}
 
 // 检查http状态码
 function checkStatus(response) {
@@ -114,10 +118,11 @@ function requestException(res) {
 }
 
 export default {
-  post(url, data, loading = true) {
+  post(url, data, loading = true, type = DEFAULTURL) {
     if (loading) {
       showLoading()
     }
+    configBaseURL(type)
     return fly.post(url, data, {
       timeout: TIME_OUT,
       headers: COMMON_HEADER
@@ -127,10 +132,11 @@ export default {
       return checkCode(res)
     })
   },
-  get(url, params, loading = true) {
+  get(url, params, loading = true, type = DEFAULTURL) {
     if (loading) {
       showLoading()
     }
+    configBaseURL(type)
     return fly.get(url, params, {
       timeout: TIME_OUT,
       headers: COMMON_HEADER
@@ -140,10 +146,11 @@ export default {
       return checkCode(res)
     })
   },
-  put(url, data, loading = true) {
+  put(url, data, loading = true, type = DEFAULTURL) {
     if (loading) {
       showLoading()
     }
+    configBaseURL(type)
     return fly.put(url, data, {
       timeout: TIME_OUT,
       headers: COMMON_HEADER
@@ -153,10 +160,11 @@ export default {
       return checkCode(res)
     })
   },
-  delete(url, data, loading = true) {
+  delete(url, data, loading = true, type = DEFAULTURL) {
     if (loading) {
       showLoading()
     }
+    configBaseURL(type)
     return fly.delete(url, data, {
       timeout: TIME_OUT,
       headers: COMMON_HEADER
