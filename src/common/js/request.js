@@ -31,7 +31,7 @@ fly.interceptors.response.use((response) => {
 
 // 配置请求基地址
 // fly.config.baseURL = baseURL.api
-function configBaseURL(type = DEFAULTURL) {
+function configBaseURL(type) {
   fly.config.baseURL = baseURL[type]
 }
 
