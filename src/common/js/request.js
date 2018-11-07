@@ -8,11 +8,11 @@ const fly = new Fly()
 // 公共请求头
 const COMMON_HEADER = {}
 
-const LOGINPAGE = '/pages/login'
-const ERRORPAGE = `/pages/error`
-const NETPAGE = `/pages/error-network`
+const LOGINPAGE = '/pages/login' // 登录授权页面
+const ERRORPAGE = `/pages/error` // 页面丢失异常页面
+const NETPAGE = `/pages/error-network` // 网络错误页面
 const SHOP_END = 12001
-const DEFAULTURL = 'api'
+const DEFAULTURL = 'api' // 默认API域名， 值为config中的键名
 
 // 请求拦截器
 fly.interceptors.request.use((request) => {
