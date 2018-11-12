@@ -1,6 +1,7 @@
 <template>
   <div class="shop-header">
     <scroll-view scroll-x class="media-wrapper" v-if="isShowMedia">
+      <div class="item empty" style="width:5px"></div>
       <div class="item video" @click="playVideo" v-if="shopInfo.video && shopInfo.video.image_url">
         <img mode="aspectFill" class="pic" :src="shopInfo.video.image_url" alt="">
         <div class="video-mask">
@@ -14,7 +15,7 @@
           <span class="txt">{{photoInfo.total}}</span>
         </div>
       </div>
-      <div class="item empty" v-if="photoInfo.list && photoInfo.list.length > 2"></div>
+      <!--<div class="item empty" v-if="photoInfo.list && photoInfo.list.length > 2"></div>-->
     </scroll-view>
     <div v-else style="height: 15px"></div>
     <div class="shop-name">{{shopInfo.name}}</div>
@@ -128,10 +129,16 @@
     position: relative
     overflow: hidden
     .media-wrapper
-      padding: 18px 15px 18px 0
+      position: relative
+      left: -15px
+      padding: 18px 0
       width: 100vw
       height: 33.33vw
       white-space: nowrap
+      ::-webkit-scrollbar
+        width: 0
+        height: 0
+        background: transparent
       .item
         display: inline-block
         width: 44.66vw
@@ -141,7 +148,7 @@
         overflow: hidden
         margin-right: 10px
         &.empty
-          width: 15px
+          width: 5px
           height: 10px
         .video-mask
           fill-box()

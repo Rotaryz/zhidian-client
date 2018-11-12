@@ -117,13 +117,11 @@
       }
     },
     async onPullDownRefresh() {
-      this.$wechat.showLoading()
       await Promise.all([
         this._getGroupList({rule_id: this.groupData.rule_id, page: 1}, false),
         this._getCutList({rule_id: this.cutData.rule_id, page: 1}, false)
       ])
       this.$wx.stopPullDownRefresh()
-      this.$wechat.hideLoading()
     },
     methods: {
       _verdictRole() {
