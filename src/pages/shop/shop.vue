@@ -61,6 +61,14 @@
       await this._getGoodsList()
       this.$wechat.hideLoading()
     },
+    async onPullDownRefresh() {
+      if (this.selectTab === 0) {
+        this.page = 1
+        this.more = true
+        await this._getGoodsList(false)
+        this.$wx.stopPullDownRefresh()
+      }
+    },
     methods: {
       _verdictRole() {
         if (!this.$wx.getStorageSync('userInfoExtend')) {
@@ -156,10 +164,10 @@
           console.error(e)
         }
       },
-      async _getGoodsList() {
+      async _getGoodsList(loading) {
         if (!this.more) return
         try {
-          let res = await Shop.getGoodsList({ page: this.page })
+          let res = await Shop.getGoodsList({ page: this.page }, loading)
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return

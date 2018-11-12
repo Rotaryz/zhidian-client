@@ -6,6 +6,8 @@ page.$mount()
 
 export default {
   config: {
-    navigationBarTitleText: '门店'
+    navigationBarTitleText: '门店',
+    enablePullDownRefresh: true,
+    backgroundTextStyle: 'dark'
   }
 }
