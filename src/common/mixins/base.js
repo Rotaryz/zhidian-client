@@ -26,21 +26,7 @@ export default {
     }
   },
   onLoad() {
-    // 记录页面栈
-    let url = this.$root.$mp.page.route
-    let status = checkIsTabPage(url)
-    let query = this.$root.$mp.query
-    if (!status) {
-      let string = ''
-      for (let value in query) {
-        string = `&${value}=${query[value]}`
-      }
-      url = string ? `${url}?${string.slice(1)}` : url
-    }
-    if (url.includes('pages/error') || url.includes('pages/error-network')) {
-      return
-    }
-    wx.setStorageSync('errorUrl', url)
+    this._saveCurrentPage()
   },
   onHide() {
   },
@@ -65,6 +51,24 @@ export default {
     //   formIds.length && console.log(arr)
     //   this.formId = []
     // },
+    _saveCurrentPage() {
+      // 记录页面栈
+      if (!this.$mp || !this.$root.$mp.page) return // 只有页面才进行加载
+      let url = this.$root.$mp.page.route
+      let status = checkIsTabPage(url)
+      let query = this.$root.$mp.query
+      if (!status) {
+        let string = ''
+        for (let value in query) {
+          string = `&${value}=${query[value]}`
+        }
+        url = string ? `${url}?${string.slice(1)}` : url
+      }
+      if (url.includes('pages/error') || url.includes('pages/error-network')) {
+        return
+      }
+      wx.setStorageSync('errorUrl', url)
+    },
     _resetData() {
       // 重置页面组件的data数据
       if (!this.$mp) return
