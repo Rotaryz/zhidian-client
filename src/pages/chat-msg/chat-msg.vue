@@ -25,7 +25,7 @@
               <div class="new-goods-top">
                 <div class="shop-title">
                   <image :src="item.avatar" class="shop-icon" mode="aspectFill"></image>
-                  <div class="shop-name">{{item.shop_name}}</div>
+                  <div class="shop-name">{{item.nickName}}</div>
                 </div>
                 <div class="goods-title">
                   <img :src="imgUrl + '/ws-image/radar/pic-spell@2x.png'" class="title-icon" v-if="item.type * 1 == 4 && imgUrl">
@@ -72,7 +72,7 @@
               <div class="new-goods-top">
                 <div class="shop-title">
                   <image :src="item.avatar" class="shop-icon" mode="aspectFill"></image>
-                  <div class="shop-name">{{item.shop_name}}</div>
+                  <div class="shop-name">{{item.nickName}}</div>
                 </div>
                 <div class="goods-title">
                   <img :src="imgUrl + '/ws-image/radar/pic-spell@2x.png'" class="title-icon" v-if="item.type * 1 == 4 && imgUrl">
@@ -308,7 +308,6 @@
       },
       toDetail(item) {
         let type = item.type * 1
-        console.log(item)
         let url
         switch (type) {
           case 3:

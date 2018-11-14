@@ -55,9 +55,10 @@
   import { Customer, Goods } from 'api'
   import { mapActions } from 'vuex'
   import ImMixin from 'common/mixins/im-mixin'
+
   export default {
     mixins: [ImMixin],
-    data () {
+    data() {
       return {
         imageUrl: this.$imageUrl,
         orderShow: false,
@@ -244,7 +245,7 @@
       bottom: 0
       right: 0
       z-index: 100
-      background: rgba(31,31,31,0.8)
+      background: rgba(31, 31, 31, 0.8)
     .payment-content
       position: fixed
       z-index: 150
@@ -263,8 +264,8 @@
         .payment-img-box
           width: 100px
           height: 100px
-          border: 1px solid rgba(153,160,170,0.10)
-          box-shadow: 0 4px 16px 0 rgba(55,75,99,0.10)
+          border: 1px solid rgba(153, 160, 170, 0.10)
+          box-shadow: 0 4px 16px 0 rgba(55, 75, 99, 0.10)
           border-radius: 12px
           position: absolute
           left: 15px
@@ -287,7 +288,7 @@
             color: $color-1F1F1F
             letter-spacing: 0.6px
             margin-bottom: 17px
-            overflow : hidden
+            overflow: hidden
             text-overflow: ellipsis
             display: -webkit-box
             -webkit-line-clamp: 2
@@ -307,6 +308,8 @@
                 font-size: 26px
                 color: $color-000028
             .del-money
+              position: relative
+              bottom: 3px
               text-decoration: line-through
               font-family: $font-family-regular
               color: $color-99A0AA
