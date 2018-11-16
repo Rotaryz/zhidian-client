@@ -116,6 +116,15 @@
         }
       }
     },
+    async onPullDownRefresh() {
+      await Promise.all([
+        this._getShopInfo({}, false),
+        this._getGroupList({rule_id: this.groupData.rule_id, page: 1}, false),
+        this._getCutList({rule_id: this.cutData.rule_id, page: 1}, false)
+      ])
+      this._timeRun()
+      this.$wx.stopPullDownRefresh()
+    },
     methods: {
       _verdictRole() {
         if (!this.$wx.getStorageSync('userInfoExtend')) {
@@ -174,7 +183,7 @@
       async getBaseInfo() {
         this.$wechat.showLoading()
         await Promise.all([
-          this._getShopInfo(false),
+          this._getShopInfo({}, false),
           this._getGroupList({rule_id: this.groupData.rule_id, page: this.groupData.page}, false),
           this._getCutList({rule_id: this.cutData.rule_id, page: this.cutData.page}, false)
         ])

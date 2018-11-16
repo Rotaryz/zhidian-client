@@ -137,11 +137,13 @@ const mutations = {
     state.chatBtnType = type
   },
   [types.SET_NOW_CHAT](state, nowChat) {
-    state.nowChat = nowChat.map((item) => {
+    state.nowChat = nowChat.map((item, index) => {
       let time = item.created_at ? item.created_at : item.msgTimeStamp
       item.time = radarTimeFormat(time).time
       item.content = labelEscape(item.content)
       item.html = msgFaceToHtml(item.content)
+      item.nickName = item.shop_name // 名称映射
+      // console.log(index, item.shop_name)
       return item
     })
     if (state.nowChat.length) {
