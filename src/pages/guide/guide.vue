@@ -5,6 +5,7 @@
     <guide-header :shopInfo="shopInfo" :employee="employee" :isMyShop="isMyShop" :showBackBtn="showBackBtn" @goBack="goBack"></guide-header>
     <guide-active :groupList="groupData.list" :cutList="cutData.list" :selectTab="selectTab" @changeTab="changeTab" :nothing="nothing"></guide-active>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
+    <frozen ref="frozen"></frozen>
   </article>
 </template>
 
@@ -17,6 +18,7 @@
   import { Guide } from 'api'
   import clearWatch from 'common/mixins/clear-watch'
   import imMixin from 'common/mixins/im-mixin'
+  import Frozen from 'components/frozen/frozen'
 
   export default {
     mixins: [imMixin, clearWatch],
@@ -25,7 +27,8 @@
       GuideActive,
       BackShop,
       ImFixed,
-      HeadItem
+      HeadItem,
+      Frozen
     },
     data() {
       return {
@@ -52,7 +55,8 @@
         timer: '',
         title: '',
         headStyle: 'background: rgba(255, 255, 255, 0)',
-        titleColor: 'white'
+        titleColor: 'white',
+        forzenTimer: ''
       }
     },
     onTabItemTap() {
@@ -73,6 +77,7 @@
       if (!this.$wx.getStorageSync('token')) return
       this.oldShopId = this.$wx.getStorageSync('shopId')
       this._sendRecordToServer()
+      this.$showForzen()
     },
     async onShow() {
       if (!this.$wx.getStorageSync('token')) {
@@ -158,6 +163,7 @@
       },
       _changeShopResetData() {
         if (+this.oldShopId !== +this.$wx.getStorageSync('shopId') || getApp().globalData.pageType === 'error') {
+          this.$showForzen()
           clearInterval(this.timer)
           getApp().globalData.pageType = ''
           this.showBackBtn = false

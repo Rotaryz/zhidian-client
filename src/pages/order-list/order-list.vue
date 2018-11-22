@@ -29,7 +29,7 @@
       </div>
       <div class="order-status">
         <div class="order-type">{{item.order_type}}</div>
-        <div class="btn" @click.stop="_goUse(item)">{{manager[item.status]}}</div>
+        <div class="btn" @click.stop="_goUse(item)" :class="{'btn-disable' : item.status === 'success_groupon' && item.coupon_status}">{{item.status === 'success_groupon' ? item.coupon_status ? '已使用' : '未使用' : manager[item.status]}}</div>
       </div>
     </div>
     <div class="block" v-if="!showNone"></div>
@@ -322,6 +322,8 @@
           color: $color-1F1F1F
         .btn
           manager-button-style()
+          &.btn-disable
+            manager-button-style(un-click)
 
   .order-none
     background: $color-white

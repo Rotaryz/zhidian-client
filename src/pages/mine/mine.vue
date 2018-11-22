@@ -31,6 +31,7 @@
           <!--<img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way" v-if="imageUrl">-->
         <!--</button>-->
       </div>
+      <frozen ref="frozen"></frozen>
     </div>
   </div>
 
@@ -41,6 +42,7 @@
   import { mapActions } from 'vuex'
   import BackShop from 'components/back-shop/back-shop'
   import HeadItem from 'components/head-item/head-item'
+  import Frozen from 'components/frozen/frozen'
 
   const ORDER = [{ title: '待付款', status: 'payment', image: 'icon-obligation@2x.png' }, { title: '待成团', status: 'waiting_groupon', image: 'icon-staygroup@2x.png' }, { title: '已退款', status: 'refund', image: 'icon-refund@2x.png' }, { title: '全部订单', status: '', image: 'icon-alloeder@2x.png' }]
   const MANAGER = [{ title: '我的兑换券', url: '/pages/exchange-coupon', image: 'icon-coupon_my@2x.png' }, { title: '我的砍价', url: '/pages/mine-bargain', image: 'icon-sale@2x.png' }, { title: '浏览过的店', url: '/pages/browse-shop', image: 'icon-shop_my@2x.png' }]
@@ -62,6 +64,7 @@
       }
     },
     async onShow() {
+      this.$showForzen()
       this.$checkIsMyShop(() => {
         this.hasShop = this.$hasShop()
         this.mineShop = this.$isMyShop()
@@ -100,7 +103,8 @@
     },
     components: {
       BackShop,
-      HeadItem
+      HeadItem,
+      Frozen
     }
   }
 </script>

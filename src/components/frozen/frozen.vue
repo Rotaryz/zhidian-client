@@ -1,9 +1,9 @@
 <template>
   <div class="frozen" v-if="isShow" :animation="maskAnimation">
     <div class="frozen-content" :animation="modalAnimation">
-      <img v-if="imageUrl" :src="imageUrl + '/ws-image/pic-frozen@2x.png'" class="frozen-img">
+      <img v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/pic-shopsuspend@2x.png'" class="frozen-img">
       <div class="frozen-text">{{openText}}</div>
-      <div class="frozen-btn" @click="_submit">{{openType}}</div>
+      <div class="frozen-btn border-top-1px" @click="_submit">{{openType}}</div>
     </div>
   </div>
 </template>
@@ -23,8 +23,8 @@
         isShow: false,
         maskAnimation: '',
         modalAnimation: '',
-        openType: '立即开通',
-        openText: '您的店铺已冻结',
+        openType: '我知道了',
+        openText: '店铺暂停使用',
         status: false
       }
     },
@@ -84,32 +84,19 @@
         }, 300)
       },
       getType(status) {
-        this.openType = status ? '立即开通' : '赞播小店'
-        this.openText = status ? '您的店铺已冻结' : '您浏览的店铺已冻结'
+        this.openType = status ? '我知道了' : '我知道了'
+        this.openText = status ? '店铺暂停使用' : '店铺暂停使用'
         this.status = status
       },
       async _submit() {
-        if (this.status) {
-          this.$router.push('/pages/dredge-serve/dredge-serve')
-          //  在我的店铺时
-          return
-        }
-        this.$wx.setStorageSync('employeeId', 100001)
-        this.setIsLoadDy(true)
-        this.setGoodsRefresh(true)
-        await this.getEmployeeConect()
-        this.$wechat.hideLoading()
-        // 当客户进入时跳转赞播小店
-        wx.setStorageSync('frozen', false)
-        this.cancel()
-        this.$router.push({ path: '/pages/poster/poster', isTab: true })
-        this.$emit('backAgent')
+        wx.navigateTo({url: '/pages/browse-shop'})
       }
     }
   }
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
+  @import "~common/stylus/base"
   .frozen
     position: fixed
     top: 0
@@ -127,26 +114,28 @@
       border: 1px solid rgba(32, 32, 46, 0.10)
       border-radius: 6px
       width: 300px
-      height: 360px
+      height: 300px
       background $color-FFFFFF
       box-sizing: border-box
       font-family: $font-family-regular
-      padding-top: 52.5px
+      padding-top: 37px
     .frozen-img
-      width: 152px
-      height: 139.5px
+      width: 160px
+      height: 142px
     .frozen-text
-      font-size: $font-size-20
-      color: $color-374B63
-      margin-top: 18px
+      font-size: $font-size-16
+      color: $color-1F1F1F
+      margin-top: 24px
     .frozen-btn
-      background: $color-F94C5F
-      box-shadow: 0 4px 16px 0 rgba(249, 76, 95, 0.30)
-      color: $color-FFFFFF
-      font-size: $font-size-14
-      height: 40px
-      line-height: 40px
-      width: 190px
-      margin: 50px auto
-      border-radius: 50px
+      width: 100%
+      height: 50px
+      position: absolute
+      left: 0
+      bottom: 0
+      text-align: center
+      line-height: 50px
+      font-family: $font-family-regular
+      color: $color-ED2C2B
+      letter-spacing: 0.8px
+      font-size: $font-size-16
 </style>

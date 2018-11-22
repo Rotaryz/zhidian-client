@@ -22,7 +22,8 @@ export default {
   data() {
     return {
       formId: [],
-      imageUrl: this.$imageUrl
+      imageUrl: this.$imageUrl,
+      forzenTimer: ''
     }
   },
   onLoad() {
@@ -125,6 +126,20 @@ export default {
         res.data && this.$wx.setStorageSync('userInfoExtend', res.data)
         callback && callback()
       }).catch(e => console.error(e))
+    },
+    $showForzen() {
+      clearTimeout(this.forzenTimer)
+      this.forzenTimer = setTimeout(() => {
+        clearTimeout(this.forzenTimer)
+        let isMyShop = this.$isMyShop()
+        this.$refs.frozen.getType(isMyShop)
+        let frozen = wx.getStorageSync('frozen')
+        if (!frozen) {
+          this.$refs.frozen.cancel()
+          return
+        }
+        this.$refs.frozen.show()
+      }, 500)
     }
   }
 }

@@ -181,6 +181,7 @@
       <!--</div>-->
     <!--</div>-->
     <share ref="share" @getPicture="makePoster" @friendShare="friendShare"/>
+    <frozen ref="frozen"></frozen>
   </article>
 </template>
 
@@ -194,6 +195,7 @@
   import imMixin from 'common/mixins/im-mixin'
   import HeadItem from 'components/head-item/head-item'
   import {mapGetters, mapActions} from 'vuex'
+  import Frozen from 'components/frozen/frozen'
 
   export default {
     mixins: [imMixin],
@@ -237,6 +239,7 @@
       }, 500)
     },
     onShow() {
+      this.$showForzen()
       this.isMine = this.$isMyShop()
       this._getDrawPosterInfo() // 获取画海报的信息
       this.shopId = this.$wx.getStorageSync('shopId') ? this.$wx.getStorageSync('shopId') * 1 : ''
@@ -536,7 +539,8 @@
       ConfirmMsg,
       DynamicShare,
       Share,
-      HeadItem
+      HeadItem,
+      Frozen
     }
   }
 </script>

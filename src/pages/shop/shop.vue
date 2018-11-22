@@ -6,6 +6,7 @@
     <div style="height: 20px; background: #fff "></div>
     <shop-content :goodsList="goodsList" :selectTab="selectTab" :storyInfo="storyInfo" @changeTab="changeTab"></shop-content>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
+    <frozen ref="frozen"></frozen>
   </article>
 </template>
 
@@ -17,6 +18,7 @@
   import clearWatch from 'common/mixins/clear-watch'
   import imMixin from 'common/mixins/im-mixin'
   import HeadItem from 'components/head-item/head-item'
+  import Frozen from 'components/frozen/frozen'
 
   export default {
     mixins: [clearWatch, imMixin],
@@ -24,7 +26,8 @@
       ShopHeader,
       ShopContent,
       ImFixed,
-      HeadItem
+      HeadItem,
+      Frozen
     },
     data() {
       return {
@@ -47,6 +50,7 @@
       }
     },
     onLoad() {
+      this.$showForzen()
     },
     async onShow() {
       this.page = 1
@@ -90,6 +94,7 @@
       },
       _changeShopResetData() {
         if (+this.oldShopId !== +this.$wx.getStorageSync('shopId')) {
+          this.$showForzen()
           Object.assign(this.$data, this.$options.data())
           this.$wechat.pageScrollTo()
           this.selectTab = 0

@@ -128,15 +128,6 @@
       <!--</li>-->
     <!--</ul>-->
     <!--<blank v-if="selectTab===1 && groupList.length===0" styles="padding:50px 0"></blank>-->
-    <div class="list-box" v-if="cutList.length">
-      <div class="list-title">
-        <img class="title-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-kjqg@2x.png'">
-        <span class="title-txt">砍价抢购</span>
-      </div>
-      <div class="list-item" v-for="(item, index) in cutList" :key="index">
-        <activity-item :item="item" :type="'cut'"></activity-item>
-      </div>
-    </div>
     <div class="list-box" v-if="groupList.length">
       <div class="list-title">
         <img class="title-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-hbpt@2x.png'">
@@ -144,6 +135,15 @@
       </div>
       <div class="list-item" v-for="(item, index) in groupList" :key="index">
         <activity-item :item="item" :type="'group'"></activity-item>
+      </div>
+    </div>
+    <div class="list-box" v-if="cutList.length">
+      <div class="list-title">
+        <img class="title-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-kjqg@2x.png'">
+        <span class="title-txt">砍价抢购</span>
+      </div>
+      <div class="list-item" v-for="(item, index) in cutList" :key="index">
+        <activity-item :item="item" :type="'cut'"></activity-item>
       </div>
     </div>
     <blank v-if="!cutList.length && !groupList.length && nothing" styles="padding:50px 0"></blank>
