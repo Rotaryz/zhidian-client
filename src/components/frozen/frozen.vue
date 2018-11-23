@@ -83,6 +83,31 @@
           this.isShow = false
         }, 300)
       },
+      close() {
+        // this.isShow = false
+        // this.$emit('close')
+        let modalAnimation = wx.createAnimation({
+          duration: 20,
+          timingFunction: 'linear',
+          delay: 0
+        })
+        let maskAnimation = wx.createAnimation({
+          duration: 20,
+          timingFunction: 'linear',
+          delay: 0
+        })
+        maskAnimation.opacity(0).step()
+        modalAnimation.scale(0.3).step()
+        this.maskAnimation = maskAnimation.export()
+        this.modalAnimation = modalAnimation.export()
+        setTimeout(() => {
+          maskAnimation.opacity(1).step()
+          modalAnimation.scale(1).step()
+          this.maskAnimation = maskAnimation.export()
+          this.modalAnimation = modalAnimation.export()
+          this.isShow = false
+        }, 20)
+      },
       getType(status) {
         this.openType = status ? '我知道了' : '我知道了'
         this.openText = status ? '店铺暂停使用' : '店铺暂停使用'

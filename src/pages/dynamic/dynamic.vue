@@ -264,6 +264,9 @@
         }
       })
     },
+    onHide() {
+      this.$refs.frozen.close()
+    },
     onReachBottom() {
       this.page++
       this._getList()

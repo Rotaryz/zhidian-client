@@ -50,9 +50,12 @@
       }
     },
     onLoad() {
-      this.$showForzen()
+    },
+    onHide() {
+      this.$refs.frozen.close()
     },
     async onShow() {
+      this.$showForzen()
       this.page = 1
       this.more = true
       this._changeShopResetData()

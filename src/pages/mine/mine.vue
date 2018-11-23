@@ -63,6 +63,9 @@
         title: '我的'
       }
     },
+    onHide() {
+      this.$refs.frozen.close()
+    },
     async onShow() {
       this.$showForzen()
       this.$checkIsMyShop(() => {

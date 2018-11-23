@@ -62,6 +62,9 @@
     onTabItemTap() {
       this.sendCustomMsg(10003)
     },
+    onHide() {
+      this.$refs.frozen.close()
+    },
     onPageScroll(e) {
       if (e.scrollTop >= 100) {
         this.headStyle = 'background: rgba(255, 255, 255, 1)'
@@ -77,9 +80,9 @@
       if (!this.$wx.getStorageSync('token')) return
       this.oldShopId = this.$wx.getStorageSync('shopId')
       this._sendRecordToServer()
-      this.$showForzen()
     },
     async onShow() {
+      this.$showForzen()
       if (!this.$wx.getStorageSync('token')) {
         this.showBackBtn = true
         return
@@ -132,15 +135,10 @@
     },
     methods: {
       _verdictRole() {
-        if (!this.$wx.getStorageSync('userInfoExtend')) {
-          this.$checkIsMyShop(() => {
-            this.showBackBtn = this.$hasShop() && !this.$isMyShop()
-            this.isMyShop = this.$isMyShop()
-          })
-        } else {
+        this.$checkIsMyShop(() => {
           this.showBackBtn = this.$hasShop() && !this.$isMyShop()
-          this.isMyShop = !!this.$isMyShop()
-        }
+          this.isMyShop = this.$isMyShop()
+        })
       },
       changeTab(index) {
         this.selectTab = index

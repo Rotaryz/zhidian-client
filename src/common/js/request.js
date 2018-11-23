@@ -95,6 +95,7 @@ function checkCode(res) {
     }
     throw requestException(res)
   }
+  wx.setStorageSync('frozen', false)
   return res.data
 }
 
