@@ -84,30 +84,20 @@
   @import "~common/stylus/base"
 
   .activity-item
-    height: 0
     border-radius: 6px
-    padding-bottom: 48.98%
     background: $color-white
     border-1px(rgba(153,160,170,0.10), 6px)
     box-shadow: 0 5px 13px 0 rgba(0,0,0,0.10)
     .item-content
-      position: absolute
-      left: 0
-      top: 0
-      width: 100%
-      height: 100%
-      display: flex
-      flex-direction: column
       padding: 0 10px
-      box-sizing: border-box
       .item-top
-        flex: 71
+        padding: 15px 0
         overflow: hidden
         display: flex
         align-items: center
         .top-left
-          width: 24vw
-          height: 24vw
+          width: 90px
+          height: 90px
           margin-right: 10px
           .item-img
             width: 100%
@@ -115,7 +105,7 @@
         .top-right
           flex: 1
           overflow: hidden
-          height: 22.4vw
+          height: 86px
           display: flex
           flex-direction: column
           .top-title
@@ -123,17 +113,17 @@
             display: flex
             aling-items: flex-end
             .title-flag
-              width: 30rpx
-              height: 30rpx
+              width: 15px
+              height: 15px
               background: $color-FF6D88
-              border-radius: 4rpx
+              border-radius: 2px
               display: flex
               justify-content: center
               align-items: center
               font-family: $font-family-regular
               color: $color-white
-              font-size: 20rpx
-              margin-right: 6rpx
+              font-size: $font-size-10
+              margin-right: 3px
               &.group-flag
                 background: $color-FFA807
             .title-txt
@@ -142,27 +132,27 @@
               white-space: nowrap
               text-overflow: ellipsis
               font-family: $font-family-regular
-              font-size: 30rpx
+              font-size: 15px
               color: $color-1F1F1F
-              letter-spacing: 1.2rpx
-              line-height: 30rpx
+              letter-spacing: 0.6px
+              line-height: 15px
           .down-top
             display: flex
             align-items: center
-            margin-top: 18rpx
+            margin-top: 9px
             overflow: hidden
             .down-txt
               font-family: $font-family-regular
-              font-size: 28rpx
+              font-size: $font-size-14
               color: $color-99A0AA
-              line-height: 28rpx
+              line-height: 14px
               white-space: nowrap
             .stock-box
-              padding: 6rpx 10rpx
-              margin-right: 10rpx
+              padding: 3px 5px
+              margin-right: 5px
               border-1px($color-ED2C2B, 2px)
               font-family: $font-family-regular
-              font-size: 24rpx
+              font-size: $font-size-12
               color: $color-ED2C2B
               white-space: nowrap
               margin-bottom: 1px
@@ -180,38 +170,38 @@
                 align-items: flex-end
                 .red-money-icon
                   font-family: $font-family-medium
-                  font-size: 24rpx
+                  font-size: $font-size-12
                   color: $color-ED2C2B
-                  line-height: 24rpx
-                  margin-right: 6rpx
-                  margin-bottom: 4rpx
+                  line-height: 12px
+                  margin-right: 3px
+                  margin-bottom: 2px
                 .red-big-money
                   font-family: $font-family-bold
-                  font-size: 48rpx
+                  font-size: 24px
                   color: $color-ED2C2B
-                  line-height: 48rpx
+                  line-height: 24px
                 .del-money
                   font-family: $font-family-regular
-                  font-size: 28rpx
+                  font-size: $font-size-14
                   color: $color-99A0AA
-                  margin-left: 14rpx
+                  margin-left: 7px
                   text-decoration: line-through
-                  line-height: 28rpx
-                  margin-bottom: 4rpx
+                  line-height: 14px
+                  margin-bottom: 2px
             .down-right
               display: flex
               align-items: flex-end
-              padding-bottom: 6rpx
+              padding-bottom: 3px
               .right-btn
-                width: 170rpx
-                height: 64rpx
+                width: 85px
+                height: 32px
                 text-align: center
-                line-height: 64rpx
+                line-height: 32px
                 color: $color-white
-                font-size: 32rpx
+                font-size: $font-size-16
                 font-family: $font-family-medium
-                letter-spacing: 1.2rpx
-                border-radius: 32rpx
+                letter-spacing: 0.6px
+                border-radius: 16px
                 &.used
                   background-image: linear-gradient(90deg, #FE7754 0%, #ED2B2B 100%)
                 &.un-used
@@ -221,7 +211,7 @@
                   background: #C2C2C2
       .item-down
         position: relative
-        flex: 29
+        height: 48px
         display: flex
         flex-direction: column
         &:after
