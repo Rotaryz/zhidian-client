@@ -228,6 +228,7 @@
       }
     },
     async onLoad(option) {
+      this.setShowType(true)
       await this._getQuery(option)
       this.loadMoreDy = true
       this.dynamicList = []
@@ -239,6 +240,7 @@
       }, 500)
     },
     onShow() {
+      if (!this.appShowType) return
       this.$showForzen()
       this.isMine = this.$isMyShop()
       this._getDrawPosterInfo() // 获取画海报的信息
@@ -434,7 +436,7 @@
         })
       },
       _seeImage(index, image) {
-        this.setShowType(true)
+        this.setShowType(false)
         let imageArr = image.map(item => item.file_url)
         this.$wx.previewImage({
           current: imageArr[index], // 当前显示图片的http链接
@@ -532,7 +534,7 @@
       }
     },
     computed: {
-      ...mapGetters(['isLoadDy'])
+      ...mapGetters(['isLoadDy', 'appShowType'])
       // isMine() {
       //   let status = this.myShopId && this.shopId && this.myShopId === this.shopId
       //   return status
