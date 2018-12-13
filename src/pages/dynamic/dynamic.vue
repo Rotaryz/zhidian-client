@@ -224,11 +224,11 @@
         isShowBox: true,
         qrCode: '',
         isMine: false,
-        title: '动态'
+        title: '动态',
+        runShow: true
       }
     },
     async onLoad(option) {
-      this.setShowType(true)
       await this._getQuery(option)
       this.loadMoreDy = true
       this.dynamicList = []
@@ -240,7 +240,10 @@
       }, 500)
     },
     onShow() {
-      if (!this.appShowType) return
+      if (!this.runShow) {
+        this.runShow = true
+        return
+      }
       this.$showForzen()
       this.isMine = this.$isMyShop()
       this._getDrawPosterInfo() // 获取画海报的信息
@@ -436,7 +439,8 @@
         })
       },
       _seeImage(index, image) {
-        this.setShowType(false)
+        this.setShowType(true)
+        this.runShow = false
         let imageArr = image.map(item => item.file_url)
         this.$wx.previewImage({
           current: imageArr[index], // 当前显示图片的http链接
