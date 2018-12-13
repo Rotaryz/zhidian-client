@@ -1,8 +1,12 @@
 <template>
   <div class="big-mine" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="false"></head-item>
-    <back-shop v-if="!mineShop && hasShop" :shopName="shopName"></back-shop>
+    <!--<back-shop v-if="!mineShop && hasShop" :shopName="shopName"></back-shop>-->
     <div class="mine">
+      <div class="back-box" @click="backShop" v-if="!mineShop && hasShop">
+        <img class="back-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-shop_my@2x.png'">
+        <div class="back-txt">返回店铺</div>
+      </div>
       <div class="mine-msg">
         <img class="mine-header" mode="aspectFill" :src="userInfo.avatar">
         <p class="mine-name">{{userInfo.nickname}}</p>
@@ -79,6 +83,10 @@
     },
     methods: {
       ...mapActions(['setBrowseList']),
+      backShop() {
+        let userInfoExtend = wx.getStorageSync('userInfoExtend')
+        this.$turnShop({ id: userInfoExtend.shop_id, url: '/pages/guide' })
+      },
       _getBrowserList() {
         Order.summary().then((res) => {
           this.$wechat.hideLoading()
@@ -119,6 +127,28 @@
     font-family: $font-family-regular
     padding: 0px 14px 0
     box-sizing: border-box
+    position: relative
+    .back-box
+      position: absolute
+      right: 0
+      top: 36px
+      font-family: $font-family-regular
+      background-image: linear-gradient(90deg, #FE7754 0%, #ED2B2B 100%)
+      border-radius: 100px 0 0 100px
+      layout(row, block, nowrap)
+      align-items: center
+      font-size: 0
+      width: 97px
+      height: 32px
+      .back-icon
+        width: 17px
+        height: 15px
+        margin-left: 11px
+      .back-txt
+        font-size: $font-size-14
+        color: $color-white
+        margin-left: 6px
+        line-height: 14px
     .mine-msg
       padding-top: 15.5px
       display: flex
@@ -136,6 +166,7 @@
         font-family: $font-family-medium
         word-break: break-all
         flex: 1
+        margin-right: 85px
     .order-tab
       margin-top: 23.5px
       box-sizing: border-box

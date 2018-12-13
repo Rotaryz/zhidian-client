@@ -2,10 +2,10 @@
   <div class="guide-header">
     <section class="logo-wrapper">
       <img class="img" mode="aspectFill" :src="shopInfo.image_url" alt="">
-      <div class="back-box" @click="backShop" v-if="showBackBtn">
-        <img class="back-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-shop_my@2x.png'">
-        <div class="back-txt">返回店铺</div>
-      </div>
+      <!--<div class="back-box" @click="backShop" v-if="showBackBtn">-->
+        <!--<img class="back-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-shop_my@2x.png'">-->
+        <!--<div class="back-txt">返回店铺</div>-->
+      <!--</div>-->
       <div class="cover-down"></div>
     </section>
     <section class="content">
@@ -15,7 +15,7 @@
             <img :src="shopInfo.avatar" class="avatar-img" mode="aspectFill">
           </div>
           <div class="msg-detail">
-            <div class="detail-top"><span class="top-name">{{employee.name || employee.nickname}}</span><span class="top-position">{{employee.position}}</span></div>
+            <div class="detail-top"><span class="top-name">{{employee.name || employee.nickname}}</span></div>
             <div class="detail-down">我的小店开张了，欢迎大家光临！</div>
           </div>
         </div>
@@ -122,10 +122,10 @@
       .cover-down
         display: block
         width: 100%
-        height: 28.66vw
+        height: 40vw
         opacity: 0.5
-        background-image: linear-gradient(180deg, rgba(7,7,7,0.00) 10%, rgba(0,0,0,0.10) 23%, rgba(0,0,0,0.80) 89%)
-        margin-top: -28.66vw
+        background-image: linear-gradient(180deg, rgba(7,7,7,0.00) 20%, rgba(5,5,5,0.15) 35%, rgba(0,0,0,0.80) 75%)
+        margin-top: -40vw
       .back-box
         position: absolute
         right: 0
@@ -198,9 +198,9 @@
                 color: $color-white
                 font-size: 25px
                 letter-spacing: 2px
-                max-width: 70%
                 white-space: nowrap
                 overflow: hidden
+                text-overflow: ellipsis
                 line-height: 25px
               .top-position
                 font-family: $font-family-regular
@@ -215,14 +215,14 @@
             .detail-down
               font-family: $font-family-regular
               color: $color-white
-              font-size: $font-size-12
+              font-size: 13px
               letter-spacing: 0.6px
               width: 100%
               overflow: hidden
               white-space: nowrap
               text-overflow: ellipsis
-              line-height: 12px
-              margin-top: 5px
+              line-height: 13px
+              margin-top: 6px
         .msg-right
           font-size: 0
           width: 42px
@@ -239,7 +239,6 @@
             height: 32px
             width: 32px
             border-radius: 50%
-            background: rgba(0, 0, 0, 0.15)
             opacity: 1
             .share-icon
               width: 32px
