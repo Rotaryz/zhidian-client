@@ -49,7 +49,7 @@
   import Frozen from 'components/frozen/frozen'
 
   const ORDER = [{ title: '待付款', status: 'payment', image: 'icon-obligation@2x.png' }, { title: '待成团', status: 'waiting_groupon', image: 'icon-staygroup@2x.png' }, { title: '已退款', status: 'refund', image: 'icon-refund@2x.png' }, { title: '全部订单', status: '', image: 'icon-alloeder@2x.png' }]
-  const MANAGER = [{ title: '我的兑换券', url: '/pages/exchange-coupon', image: 'icon-coupon_my@2x.png' }, { title: '我的砍价', url: '/pages/mine-bargain', image: 'icon-sale@2x.png' }, { title: '浏览过的店', url: '/pages/browse-shop', image: 'icon-shop_my@2x.png' }]
+  const MANAGER = [{ title: '我的奖品券', url: '/pages/exchange-coupon', image: 'icon-coupon_my@2x.png' }, { title: '我的砍价', url: '/pages/mine-bargain', image: 'icon-sale@2x.png' }, { title: '浏览过的店', url: '/pages/browse-shop', image: 'icon-shop_my@2x.png' }]
 
   export default {
     data() {
@@ -64,7 +64,8 @@
         mineShop: false, // 是我的店
         hasShop: false, // 有店铺
         shopName: '',
-        title: '我的'
+        title: '我的',
+        isFirstLoad: true // 是否是第一次加载，第一次则loading
       }
     },
     onHide() {
@@ -78,7 +79,10 @@
       })
       this.userInfo = wx.getStorageSync('userInfo')
       this.shopId = wx.getStorageSync('shopId')
-      this._getBrowserList()
+      this._getBrowserList(this.isFirstLoad)
+      if (this.isFirstLoad) {
+        this.isFirstLoad = false
+      }
       await this._getShopInfo({}, false)
     },
     methods: {
@@ -87,8 +91,8 @@
         let userInfoExtend = wx.getStorageSync('userInfoExtend')
         this.$turnShop({ id: userInfoExtend.shop_id, url: '/pages/guide' })
       },
-      _getBrowserList() {
-        Order.summary().then((res) => {
+      _getBrowserList(loading = true) {
+        Order.summary(loading).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
             this.length = res.data.total

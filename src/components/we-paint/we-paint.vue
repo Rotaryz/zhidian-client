@@ -179,7 +179,6 @@
         if (!flag) {
           wechat.hideLoading()
           this.$emit('downloadFile', '图片数组为空', arr)
-          console.log(arr)
           return
           // return this.$refs.toast.show('下载图片失败，请重新尝试')
         }
@@ -195,7 +194,7 @@
         })
       },
       /**
-       * 获取动态评论的图片信息
+       * 获取动态的图片信息
        * @param arr
        * @param callback
        * @private

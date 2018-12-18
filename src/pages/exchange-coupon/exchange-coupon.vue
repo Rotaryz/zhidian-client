@@ -53,7 +53,7 @@
         couponDetail: {},
         isUnNull: false,
         isNull: false,
-        title: '兑换券'
+        title: '奖品券'
       }
     },
     onShow() {

@@ -98,7 +98,6 @@
             let res = await Order.payOrder({ pay_method_id: 1, order_id: item.id })
             // 支付
             this.$wechat.hideLoading()
-            console.log(res)
             if (res.error !== this.$ERR_OK) {
               this.$showToast(res.message)
               return

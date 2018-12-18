@@ -16,7 +16,7 @@ export default {
     const url = `/api/customer/browsings`
     return request.get(url, data, loading)
   },
-  // 我的兑换券
+  // 我的奖品券
   getCouponList(data, loading) {
     const url = `/api/customer/customer-promotion`
     return request.get(url, data, loading)

@@ -15,11 +15,11 @@
             <img class="img-item" :src="imageUrl + '/zd-image/dynamic/Group3@2x.png'" @click="_fileImage">
           </div>
         </div>
-        <div class="synchronization" v-if="isBoss">
-          <img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-member@2x.png'" class="synchronization-icon">
-          <span class="synchronization-text">将动态同步全部成员</span>
-          <switch :checked="isChecked" color="#56BA15" class="synchronization-switch" @change="_synchronization"></switch>
-        </div>
+        <!--<div class="synchronization" v-if="isBoss">-->
+          <!--<img v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-member@2x.png'" class="synchronization-icon">-->
+          <!--<span class="synchronization-text">将动态同步全部成员</span>-->
+          <!--<switch :checked="isChecked" color="#56BA15" class="synchronization-switch" @change="_synchronization"></switch>-->
+        <!--</div>-->
       </div>
       <div class="btn">
         <div class="btn-item" :class="{'btn-disable': !isSend}" @click="_liveLogs">发布</div>

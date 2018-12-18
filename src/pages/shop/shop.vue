@@ -46,7 +46,8 @@
         oldShopId: '',
         isMyShop: false,
         showHeader: true,
-        title: '门店'
+        title: '门店',
+        shopChange: true // 优化， 切店才显示loading
       }
     },
     onLoad() {
@@ -97,6 +98,7 @@
       },
       _changeShopResetData() {
         if (+this.oldShopId !== +this.$wx.getStorageSync('shopId')) {
+          this.shopChange = true
           this.$showForzen()
           Object.assign(this.$data, this.$options.data())
           this.$wechat.pageScrollTo()
@@ -105,10 +107,12 @@
           this.showHeader = true
           this.oldShopId = this.$wx.getStorageSync('shopId')
           this._verdictRole()
+        } else {
+          this.shopChange = false
         }
       },
       async getBaseInfo() {
-        this.$wechat.showLoading()
+        this.shopChange && this.$wechat.showLoading()
         await Promise.all([
           this._getLocation(false),
           this._getGoodsList(false),

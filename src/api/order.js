@@ -22,8 +22,8 @@ export default {
     return request.get(url, {}, loading)
   },
   // 客户浏览店铺记录-概况
-  summary() {
+  summary(loading = true) {
     const url = `/api/customer/browsings/summary`
-    return request.get(url)
+    return request.get(url, {}, loading)
   }
 }

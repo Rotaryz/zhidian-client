@@ -6,6 +6,6 @@ page.$mount()
 
 export default {
   config: {
-    navigationBarTitleText: '发布动态'
+    navigationBarTitleText: '动态'
   }
 }

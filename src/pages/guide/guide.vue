@@ -56,7 +56,8 @@
         title: '',
         headStyle: 'background: rgba(255, 255, 255, 0)',
         titleColor: 'white',
-        forzenTimer: ''
+        forzenTimer: '',
+        shopChange: true // 优化， 切店才显示loading
       }
     },
     onTabItemTap() {
@@ -69,7 +70,7 @@
       if (e.scrollTop >= 100) {
         this.headStyle = 'background: rgba(255, 255, 255, 1)'
         this.titleColor = '#000000'
-        this.title = '导购'
+        this.title = '首页'
       } else {
         this.headStyle = 'background: rgba(255, 255, 255, 0)'
         this.titleColor = 'white'
@@ -161,6 +162,7 @@
       },
       _changeShopResetData() {
         if (+this.oldShopId !== +this.$wx.getStorageSync('shopId') || getApp().globalData.pageType === 'error') {
+          this.shopChange = true
           this.$showForzen()
           clearInterval(this.timer)
           getApp().globalData.pageType = ''
@@ -169,6 +171,8 @@
           this.$wechat.pageScrollTo()
           this.oldShopId = this.$wx.getStorageSync('shopId')
           this._verdictRole()
+        } else {
+          this.shopChange = false
         }
       },
       async goBack() { // 返回自己的店铺
@@ -185,7 +189,7 @@
         this.sendCustomMsg(code)
       },
       async getBaseInfo() {
-        this.$wechat.showLoading()
+        this.shopChange && this.$wechat.showLoading()
         await Promise.all([
           this._getShopInfo({}, false),
           this._getGroupList({rule_id: this.groupData.rule_id, page: this.groupData.page}, false),

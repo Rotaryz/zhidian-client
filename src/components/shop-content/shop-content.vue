@@ -42,7 +42,7 @@
           <img class="icon-btn" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-video@2x.png'" alt="">
         </div>
         <img class="video" mode="aspectFill" v-if="storyInfo.cover_image && !headerVideoPlay" :src="storyInfo.cover_image"/>
-        <video class="video" v-else-if="headerVideoPlay" :src="storyInfo.video_url" objectFit="fill" autoplay></video>
+        <video class="video" v-else-if="headerVideoPlay" :src="storyInfo.video_url" objectFit="contain" autoplay></video>
       </article>
       <div class="title">{{storyInfo.title}}</div>
       <div class="line"></div>
@@ -55,7 +55,7 @@
               <img class="icon-btn" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-video@2x.png'" alt="">
             </div>
             <img class="video" mode="aspectFill" v-if="!item.videoPlay" :src="item.cover_image"/>
-            <video class="video-item" v-if="item.videoPlay" :src="item.video_url" objectFit="fill" autoplay></video>
+            <video class="video-item" v-if="item.videoPlay" :src="item.video_url" objectFit="contain" autoplay></video>
           </div>
         </li>
       </ul>

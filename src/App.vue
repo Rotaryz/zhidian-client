@@ -14,11 +14,9 @@
       }
     },
     created() {
-      console.log('created')
       this._setDefaultShop()
     },
     onLaunch() {
-      console.log('onlaunch')
     },
     async onShow(options) {
       if (this.appShowType) {
@@ -33,7 +31,6 @@
       await this._checkIsConnect(options)
     },
     onHide() {
-      console.log('onHide')
     },
     computed: {
       ...mapGetters([

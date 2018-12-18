@@ -42,7 +42,7 @@
           <div class="service-item" v-for="(item, index) in goodsDetail.detail_config" :key="index">
             <span class="item-left">{{item.servie}}</span>
             <span class="item-right">
-              <span>{{item.number}}次</span>
+              <span>{{item.number}}</span>
               <span>¥ {{item.price}}</span>
             </span>
           </div>

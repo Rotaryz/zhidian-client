@@ -201,7 +201,6 @@
       },
       _formatRuleInfo(res) {
         if (!(res && res.data && res.data.activity_prizes)) return
-        console.log(123)
         let ruleList = [
           {
             title: '活动说明',

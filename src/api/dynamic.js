@@ -18,7 +18,7 @@ export default {
     return request.post(url, data)
   },
   /**
-   * 评论动态
+   * 动态
    * @returns {*}
    */
   commentLog (data) {
@@ -26,7 +26,7 @@ export default {
     return request.post(url, data)
   },
   /**
-   * 发布动态
+   * 动态
    * @returns {*}
    */
   liveLogs (data) {

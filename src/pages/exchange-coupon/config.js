@@ -6,6 +6,6 @@ page.$mount()
 
 export default {
   config: {
-    navigationBarTitleText: '兑换券'
+    navigationBarTitleText: '奖品券'
   }
 }

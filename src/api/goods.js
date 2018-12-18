@@ -80,7 +80,7 @@ export default {
     return request.post(url, {}, loading)
   },
   /**
-   * 用户领取兑换券
+   * 用户领取奖品券
    * @return {*}
    */
   getExchangeCoupon(data, loading) {

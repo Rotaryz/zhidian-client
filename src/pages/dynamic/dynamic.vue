@@ -351,11 +351,11 @@
         this.showDown = false
         // this.pictureObj = null
       },
-      _getList() {
+      _getList(loading = true) {
         if (!this.loadMoreDy) {
           return
         }
-        Dynamic.liveLogsList({ page: this.page }).then((res) => {
+        Dynamic.liveLogsList({ page: this.page }, loading).then((res) => {
           // this.testShow = res.check_code ? 1 : 0
           // if (this.testShow) {
           //   Im.getCount(1, false)

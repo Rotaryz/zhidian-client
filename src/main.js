@@ -37,7 +37,7 @@ export default {
       list: [
         {
           pagePath: 'pages/guide',
-          text: '导购',
+          text: '首页',
           iconPath: '/static/img/icon-guide.png',
           selectedIconPath: '/static/img/icon-guide_select.png'
         },
