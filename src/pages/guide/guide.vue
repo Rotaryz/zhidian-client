@@ -10,8 +10,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import GuideHeader from 'components/guide-header/guide-header'
-  import GuideActive from 'components/guide-active/guide-active'
+  import GuideHeader from './guide-header/guide-header'
+  import GuideActive from './guide-active/guide-active'
   import HeadItem from 'components/head-item/head-item'
   import BackShop from 'components/back-shop/back-shop'
   import ImFixed from 'components/im-fixed/im-fixed'

@@ -49,6 +49,11 @@
                     <wheel-card :item="item"></wheel-card>
                   </div>
                 </swiper-item>
+                <!--<swiper-item>-->
+                  <!--<div class="card-item-wrapper">-->
+                    <!--<wheel-card :item="item"></wheel-card>-->
+                  <!--</div>-->
+                <!--</swiper-item>-->
               </block>
             </swiper>
           </section>
@@ -61,9 +66,9 @@
 
 <script type="text/ecmascript-6">
   import HeadItem from 'components/head-item/head-item'
-  import WheelHeader from 'components/wheel-header/wheel-header'
-  import WheelCard from 'components/wheel-card/wheel-card'
-  import WheelModal from 'components/wheel-modal/wheel-modal'
+  import WheelHeader from './wheel-header/wheel-header'
+  import WheelCard from './wheel-card/wheel-card'
+  import WheelModal from './wheel-modal/wheel-modal'
   import { ActiveExtend, Guide } from 'api'
 
   const system = wx.getSystemInfoSync()
@@ -132,7 +137,8 @@
       cardsNumber() {
         let height = system.screenHeight
         let arr = [2, 5]
-        return arr[height > 736 ? 1 : 0]
+        let length = this.receive_customer.length
+        return length > 1 ? arr[height > 736 ? 1 : 0] : 1
       },
       cardsStyle() {
         return `transition :transform ${this.runCardSeconds}ms ease-in-out;transform :translate3d(0, ${-this.runCardStep * 9.866666666666667}vw, 0)`
@@ -319,6 +325,7 @@
             .cards-wrapper
               position: relative
               overflow: hidden
+              min-height :9.866666666666667vw
               .card-item-wrapper
                 margin 0 6.666666666666667vw 1.3333333333333335vw
           .wheel-wrapper

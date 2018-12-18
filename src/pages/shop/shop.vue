@@ -11,8 +11,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import ShopHeader from 'components/shop-header/shop-header'
-  import ShopContent from 'components/shop-content/shop-content'
+  import ShopHeader from './shop-header/shop-header'
+  import ShopContent from './shop-content/shop-content'
   import ImFixed from 'components/im-fixed/im-fixed'
   import { Guide, Shop } from 'api'
   import clearWatch from 'common/mixins/clear-watch'
