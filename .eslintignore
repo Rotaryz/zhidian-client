@@ -3,3 +3,4 @@ config/*.js
 src/utils/we-im/lib/**/*
 src/utils/we-cos/libs/**/*
 src/components/mpvue-cropper/**/*
+_config/
