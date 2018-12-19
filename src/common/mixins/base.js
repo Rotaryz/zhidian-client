@@ -132,7 +132,7 @@ export default {
       this.forzenTimer = setTimeout(() => {
         clearTimeout(this.forzenTimer)
         let isMyShop = this.$isMyShop()
-        this.$refs.frozen.getType(isMyShop)
+        this.$refs.frozen && this.$refs.frozen.getType(isMyShop)
         let frozen = wx.getStorageSync('frozen')
         if (!frozen) {
           this.$refs.frozen.cancel()
