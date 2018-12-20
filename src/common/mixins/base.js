@@ -135,10 +135,10 @@ export default {
         this.$refs.frozen && this.$refs.frozen.getType(isMyShop)
         let frozen = wx.getStorageSync('frozen')
         if (!frozen) {
-          this.$refs.frozen.cancel()
+          this.$refs.frozen && this.$refs.frozen.cancel()
           return
         }
-        this.$refs.frozen.show()
+        this.$refs.frozen && this.$refs.frozen.show()
       }, 500)
     }
   }

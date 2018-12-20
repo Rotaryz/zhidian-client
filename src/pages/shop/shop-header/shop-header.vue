@@ -40,7 +40,7 @@
         <img class="icon right" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-tel@2x.png'" alt="" @click="toMobile">
       </article>
     </section>
-    <video class="my-video" id="my-video" v-if="shopInfo.video && shopInfo.video.image_url" :src="shopInfo.video.url" @fullscreenchange="videoChange" @play="videoPlay" @pause="videoPause"></video>
+    <video class="my-video" id="my-video" :src="shopInfo.video ? shopInfo.video.url : ''" @fullscreenchange="videoChange"></video>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -121,8 +121,10 @@
 
   .my-video
     position: absolute
-    left: -200vw
+    left: -320px
     top: 0
+    width: 0
+    height: 0
 
   .shop-header
     padding: 0 15px
