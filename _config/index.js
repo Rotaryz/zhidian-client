@@ -2,7 +2,6 @@ const path = require('path')
 const fs = require('fs')
 const {APP,ENV} = require('./constant')
 const argv = process.argv
-console.log(argv, '----------')
 let appPath = APP.platform
 let envPath = ENV.production
 argv.forEach((item) => {
