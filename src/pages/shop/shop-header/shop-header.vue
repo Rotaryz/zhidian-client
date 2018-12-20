@@ -121,8 +121,10 @@
 
   .my-video
     position: absolute
-    left: -200vw
+    left: -320px
     top: 0
+    width: 0
+    height: 0
 
   .shop-header
     padding: 0 15px
