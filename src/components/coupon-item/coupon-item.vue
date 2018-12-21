@@ -93,6 +93,7 @@
             font-family: $font-family-regular
             color: $color-1F1F1F
             font-size: $font-size-14
+            line-height: 16px
             word-wrap:break-word
             text-overflow: -o-ellipsis-lastline
             overflow: hidden
