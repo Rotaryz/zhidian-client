@@ -5,7 +5,7 @@ export function envClear() {
   const env = APP_CONFIG.env + '：' + APP_CONFIG.api
   const app = APP_CONFIG.app
   const currentEnv = wx.getStorageSync('env')
-  if (env !== currentEnv) {
+  if (env !== currentEnv && currentEnv) {
     wx.clearStorageSync()
     wx.setStorageSync('env', env)
   }
