@@ -77,7 +77,6 @@
       },
       _resolveQrCode(options) {
         const qrCodeParams = options.query.scene
-        console.log(qrCodeParams)
         if (!qrCodeParams) {
           this._resolveOptions(options)
           return
