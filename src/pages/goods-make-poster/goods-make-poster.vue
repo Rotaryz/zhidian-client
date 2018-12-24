@@ -9,7 +9,7 @@
           <div class="name">{{name}}</div>
           <img class="icon" :src="posterIconUrl" v-if="posterIconUrl">
         </header>
-        <img class="goods-img" mode="aspectFill" :src="goodsUrl" alt="">
+        <img class="goods-img" mode="widthFix" :src="goodsUrl" alt="">
         <footer class="footer">
           <div class="title">{{title}}</div>
           <div class="explain">{{explain}}</div>
@@ -372,7 +372,6 @@
     box-sizing: border-box
     .share-container
       margin: 4vw 9.3vw 6.1vw
-      min-height: 132.8vw
       box-shadow: 0 4px 9px 0 rgba(55, 75, 99, 0.15)
       border-radius: 6px
       overflow: hidden

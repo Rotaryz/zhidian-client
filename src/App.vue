@@ -53,7 +53,7 @@
           let height = +statusBarHeight + 44
           this.setPageHeadH(height)
         } catch (e) {
-          console.log(e)
+          console.error(e)
         }
       },
       async _setDefaultShop() {
