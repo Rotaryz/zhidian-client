@@ -61,6 +61,9 @@
           let res = await Jwt.getDefaultShop()
           if (res.error !== this.$ERR_OK) return
           this.$wx.setStorageSync('defaultShop', res.data.default_shop)
+          if (!res.data.exist) {
+            this.$wx.setStorageSync('shopId', res.data.default_shop)
+          }
           return res.data.default_shop
         } catch (e) {
           console.error(e)

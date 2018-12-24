@@ -1,9 +1,9 @@
 const version = ``
 export default {
-  app: 'ME时代',
+  app: '赞播平台',
   env: 'production',
-  api: 'https://zhidian-me-era-api.jkweixin.com' + version,
-  upload: 'https://zhidian-me-era-api.jkweixin.com' + version,
+  api: 'https://zhidian-api.jkweixin.com' + version,
+  upload: 'https://zhidian-api.jkweixin.com' + version,
   image: 'https://img.jkweixin.com/defaults',
   imRecord: 'https://data-analysis-api.jkweixin.com'
 }

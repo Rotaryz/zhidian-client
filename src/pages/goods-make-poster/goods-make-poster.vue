@@ -250,7 +250,7 @@
               el: '.goods-img',
               drawType: 'img',
               source: this.goodsUrl,
-              mode: 'aspectFill',
+              mode: 'widthFix',
               unLoad: false
             },
             {
