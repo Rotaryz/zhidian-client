@@ -1,7 +1,8 @@
 <template>
   <div class="head-item" :style="headStyle">
     <div class="status-bar" :style="{height: statusBarHeight + 'px'}"></div>
-    <div class="head-content" :style="{color: titleColor}">{{Ltitle}}</div>
+    <div class="head-content head-order" v-if="pageType === 'orderList'" @click="showMenu" :style="{color: titleColor}">{{Ltitle}} <span class="icon"></span></div>
+    <div class="head-content" v-else :style="{color: titleColor}">{{Ltitle}}</div>
     <div class="head-arrow" v-if="showArrow" @click="goBackUrl">
       <img v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-title_back@2x.png'" class="head-arrow-img">
     </div>
@@ -12,6 +13,10 @@
   /* eslint-disable no-undef */
   export default {
     props: {
+      pageType: {
+        type: 'String',
+        default: ''
+      },
       title: {
         type: 'String',
         default: ''
@@ -31,7 +36,11 @@
       custom: {
         type: 'Boolean',
         default: false
-      } // 是否在点击返回时自定义方法
+      }, // 是否在点击返回时自定义方法
+      menuShow: {
+        type: 'Boolean',
+        default: false
+      }
     },
     data () {
       return {
@@ -56,6 +65,9 @@
         } else {
           wx.navigateBack({delta: 1})
         }
+      },
+      showMenu() {
+        this.menuShow ? this.$emit('cancelMenu') : this.$emit('showMenu')
       }
     },
     computed: {
@@ -105,4 +117,18 @@
       font-size: $font-size-18
       font-family: $font-family-medium
       color: $color-black
+    .head-order
+      display: flex
+      justify-content: center
+      align-items: center
+      .icon
+        width: 0
+        height: 0
+        border: 6px solid #333
+        border-left: 4px solid transparent
+        border-right: 4px solid transparent
+        border-bottom: 6px solid transparent
+        margin-left: 5px
+        margin-top: 5px
+
 </style>

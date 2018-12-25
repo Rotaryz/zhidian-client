@@ -1,6 +1,6 @@
 <template>
   <div class="order-list" :class="{'order-none': showNone,'add-padding': !status}" :style="{paddingTop: !status ? (pageHeadH * 1 + 40) + 'px' : pageHeadH + 'px'}">
-    <head-item :title="title" :showArrow="true"></head-item>
+    <head-item :title="title" :showArrow="true" pageType="orderList" @cancelMenu="cancelMenu" @showMenu="showMenu" :menuShow="menuShow"></head-item>
     <div class="order-box border-bottom-1px" v-if="!status" :style="{top: pageHeadH + 'px'}">
       <div class="order-tab" hover-class="none" v-for="(item, index) in order" :key="index" @click="_goOrderTab(item,index)">
         <div class="order-tab-item" :class="selectTab * 1 === index * 1 ? 'active-font' : ''">{{item.title}}</div>
@@ -35,6 +35,16 @@
     <div class="block" v-if="!showNone"></div>
     <panel-end v-if="showEnd"></panel-end>
     <Blank v-if="showNone"></Blank>
+    <div class="model">
+      <transition name="fade">
+        <div class="bg" v-if="menuShow" @click="cancelMenu"></div>
+      </transition>
+      <div class="box" :class="{'show': menuShow}">
+        <p class="item border-bottom-1px" @click="selectType('service')">服务订单</p>
+        <p class="item" @click="selectType('goods')">商品订单</p>
+        <p class="item cancel" @click="cancelMenu">取消</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -59,7 +69,10 @@
         showNone: false,
         order: ORDER,
         selectTab: '0',
-        title: '订单列表'
+        title: '订单列表',
+        menuShow: false,
+        listType: '',
+        noSelect: false
       }
     },
     computed: {
@@ -175,6 +188,21 @@
           this.orderList = this.orderList.concat(res.data)
         }
         this.$wechat.hideLoading()
+      },
+      showMenu() {
+        this.menuShow = true
+      },
+      cancelMenu() {
+        this.menuShow = false
+      },
+      selectType(type) {
+        if (this.noSelect) return
+        this.noSelect = true
+        setTimeout(() => {
+          this.noSelect = false
+        }, 500)
+        this.listType = type
+        this.cancelMenu()
       }
     },
     components: {
@@ -324,6 +352,37 @@
           &.btn-disable
             manager-button-style(un-click)
 
+
+    .bg
+      position: fixed
+      left: 0
+      right: 0
+      top: 0
+      bottom: 0
+      background: rgba(0,0,0,0.8)
+      z-index: 40
+    .box
+      position: fixed
+      bottom: -200px
+      left: 0
+      font-size: 14px
+      font-family: $font-family-regular
+      color: $color-27273E
+      width: 100%
+      height: 175px
+      line-height: 55px
+      text-align: center
+      background: #F6F6F6
+      transition: all 0.3s
+      z-index: 40
+      .item
+        background: $color-white
+      .item:first-child
+        border-bottom-1px(#E6E6E6)
+      .cancel
+        margin-top: 10px
+    .show
+      bottom: 0
   .order-none
     background: $color-white
 </style>
