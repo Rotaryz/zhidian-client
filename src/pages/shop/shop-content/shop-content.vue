@@ -1,17 +1,17 @@
 <template>
   <div class="shop-content">
-    <section class="tab-container">
-      <form report-submit @submit="$getFormId">
-        <ul class="tab-wrapper">
-          <li class="tab-item" v-for="(item, index) in tabList" :key="index" @click="changeTab(index)">
-            <button formType="submit">{{item.title}}</button>
-          </li>
-        </ul>
-      </form>
-      <div class="tab-line-wrapper" :style="'transform: translate3d(' + selectTab*100 + '%,0,0)'">
-        <div class="tab-line"></div>
-      </div>
-    </section>
+    <!--<section class="tab-container">-->
+      <!--<form report-submit @submit="$getFormId">-->
+        <!--<ul class="tab-wrapper">-->
+          <!--<li class="tab-item" v-for="(item, index) in tabList" :key="index" @click="changeTab(index)">-->
+            <!--<button formType="submit">{{item.title}}</button>-->
+          <!--</li>-->
+        <!--</ul>-->
+      <!--</form>-->
+      <!--<div class="tab-line-wrapper" :style="'transform: translate3d(' + selectTab*100 + '%,0,0)'">-->
+        <!--<div class="tab-line"></div>-->
+      <!--</div>-->
+    <!--</section>-->
     <ul class="server-wrapper" v-if="selectTab === 0">
       <li class="coupon-item" v-if="goodsList.length" v-for="(item,index) in goodsList" :key="index" @click="toGoodsDetail(item)">
         <div class="logo">

@@ -4,7 +4,12 @@
     <shop-header :shopInfo="shopInfo" :employee="employee" :photoInfo="photoInfo" v-if="showHeader"></shop-header>
     <div style="height: 10px; background: #F4F5F7 "></div>
     <div style="height: 20px; background: #fff "></div>
+    <div class="tabs" id="tabs" :class="{'fixed-top' : scrollType > 1}">
+      <div class="tabs-item" :class="{'active' : scrollType <= 2}" @click="toService">服务项目</div>
+      <div class="tabs-item" :class="{'active' : scrollType == 3}">热销商品</div>
+    </div>
     <shop-content :goodsList="goodsList" :selectTab="selectTab" :storyInfo="storyInfo" @changeTab="changeTab"></shop-content>
+    <div class="goods"></div>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
     <frozen ref="frozen"></frozen>
   </article>
@@ -47,10 +52,19 @@
         isMyShop: false,
         showHeader: true,
         title: '门店',
-        shopChange: true // 优化， 切店才显示loading
+        shopChange: true, // 优化， 切店才显示loading
+        tabsIdx: 0,
+        tabsTop: 0,
+        serviceTop: 0,
+        goodsTop: 0,
+        scrollType: 0 // 0为初始， 大于1为tabs吸顶， 2为服务， 3为商品
       }
     },
     onLoad() {
+    },
+    onPageScroll(e) {
+      let top = +e.scrollTop + 64
+      this._checkScroll(top)
     },
     onHide() {
       this.$refs.frozen.close()
@@ -62,6 +76,9 @@
       this._changeShopResetData()
       this._verdictRole()
       await this.getBaseInfo()
+      setTimeout(() => {
+        this.initDomPosition()
+      }, 200)
     },
     async onReachBottom() {
       if (!this.more || this.selectTab) return
@@ -95,6 +112,40 @@
           await this._getGoodsList()
           this.$wechat.hideLoading()
         }
+      },
+      initDomPosition() {
+        wx.createSelectorQuery()
+          .select('.tabs')
+          .boundingClientRect()
+          .select('.shop-content')
+          .boundingClientRect()
+          .select('.goods')
+          .boundingClientRect()
+          .exec(([tabs, shopContent, goods]) => {
+            console.log(tabs, shopContent, goods)
+            this.tabsTop = tabs ? +tabs.top : 0
+            this.serviceTop = shopContent ? +shopContent.top : 0
+            this.goodsTop = goods ? +goods.top : 0
+          })
+      },
+      _checkScroll(top) {
+        console.log(top, this.tabsTop, this.serviceTop, this.goodsTop)
+        if (top < this.tabsTop) {
+          this.scrollType = 0
+        } else if (this.tabsTop <= top && top < this.serviceTop) {
+          this.scrollType = 1
+        } else if (this.serviceTop <= top && top < this.goodsTop) {
+          this.scrollType = 2
+        } else if (top >= this.goodsTop) {
+          this.scrollType = 3
+        }
+        console.log(this.scrollType)
+      },
+      toService() {
+        wx.pageScrollTo({
+          scrollTop: this.serviceTop - 64,
+          duration: 300
+        })
       },
       _changeShopResetData() {
         if (+this.oldShopId !== +this.$wx.getStorageSync('shopId')) {
@@ -219,4 +270,18 @@
   .shop
     min-height: 100vh
     box-sizing: border-box
+
+  .tabs
+    height: 50px
+    display: flex
+    .tabs-item
+      width: 100px
+      text-align: center
+      line-height: 50px
+      &.active
+        color: red
+
+  .goods
+    height: 800px
+    background: red
 </style>
