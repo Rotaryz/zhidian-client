@@ -71,6 +71,7 @@ function checkCode(res) {
         if (wx.getStorageSync('errPage') !== LOGINPAGE) {
           wx.setStorageSync('errPage', LOGINPAGE)
           wx.removeStorageSync('token')
+          // wx.setStorageSync('shopId', wx.getStorageSync('defaultShop') || 1)
           wx.reLaunch({ url: LOGINPAGE })
         }
         break

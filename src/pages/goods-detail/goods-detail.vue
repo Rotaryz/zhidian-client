@@ -254,7 +254,8 @@
           code: this.code,
           hasPhone: this.hasPhone,
           shopName: this.goodsDetail.shop_data.name,
-          shopImg: this.goodsDetail.shop_data.image_url
+          shopImg: this.goodsDetail.shop_data.image_url,
+          type: this.goodsDetail.type
         }
         this.$refs.payment.showOrder(paymentMsg)
       },

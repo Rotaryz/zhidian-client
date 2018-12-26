@@ -1,19 +1,23 @@
 <template>
   <div class="shop-content">
-    <section class="tab-container">
-      <form report-submit @submit="$getFormId">
-        <ul class="tab-wrapper">
-          <li class="tab-item" v-for="(item, index) in tabList" :key="index" @click="changeTab(index)">
-            <button formType="submit">{{item.title}}</button>
-          </li>
-        </ul>
-      </form>
-      <div class="tab-line-wrapper" :style="'transform: translate3d(' + selectTab*100 + '%,0,0)'">
-        <div class="tab-line"></div>
+    <!--<section class="tab-container">-->
+      <!--<form report-submit @submit="$getFormId">-->
+        <!--<ul class="tab-wrapper">-->
+          <!--<li class="tab-item" v-for="(item, index) in tabList" :key="index" @click="changeTab(index)">-->
+            <!--<button formType="submit">{{item.title}}</button>-->
+          <!--</li>-->
+        <!--</ul>-->
+      <!--</form>-->
+      <!--<div class="tab-line-wrapper" :style="'transform: translate3d(' + selectTab*100 + '%,0,0)'">-->
+        <!--<div class="tab-line"></div>-->
+      <!--</div>-->
+    <!--</section>-->
+    <ul class="server-wrapper">
+      <div class="service-title">
+        <img class="title-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.4/icon-service@2x.png'" alt="">
+        <span class="title-txt">服务项目({{serviceTotal}})</span>
       </div>
-    </section>
-    <ul class="server-wrapper" v-if="selectTab === 0">
-      <li class="coupon-item" v-if="goodsList.length" v-for="(item,index) in goodsList" :key="index" @click="toGoodsDetail(item)">
+      <li class="coupon-item" :class="{'last' : (index == goodsListShow.length - 1)}"v-if="goodsListShow.length" v-for="(item,index) in goodsListShow" :key="index" @click="toGoodsDetail(item)">
         <div class="logo">
           <img class="logo-pic" mode="aspectFill" :src="item.image_url_thumb" alt="">
         </div>
@@ -34,34 +38,38 @@
           </div>
         </section>
       </li>
+      <div class="service-more border-top-1px" v-if="serviceTotal > 5 && !showMore" @click="showMoreList">
+        <span>查看其它{{serviceTotal - 5}}个服务</span>
+        <img class="more-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" alt="">
+      </div>
     </ul>
-    <blank v-if="selectTab===0 && goodsList.length===0" styles="padding:50px 0"></blank>
-    <section class="story-wrapper" v-if="selectTab === 1 && storyInfo.title && storyInfo.details.length!==0">
-      <article class="video-wrapper" v-if="storyInfo.video_url">
-        <div class="video-mask" v-if="!headerVideoPlay" @click="playVideo(-1)">
-          <img class="icon-btn" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-video@2x.png'" alt="">
-        </div>
-        <img class="video" mode="aspectFill" v-if="storyInfo.cover_image && !headerVideoPlay" :src="storyInfo.cover_image"/>
-        <video class="video" v-else-if="headerVideoPlay" :src="storyInfo.video_url" objectFit="contain" autoplay></video>
-      </article>
-      <div class="title">{{storyInfo.title}}</div>
-      <div class="line"></div>
-      <ul class="content">
-        <li class="item" v-if="storyInfo.details.length" v-for="(item, index) in storyVideos" :key="index">
-          <img class="pic" mode="widthFix" v-if="item.type === 0 && item.image_url" :src="item.image_url"/>
-          <text class="text" v-if="item.type === 1">{{item.text}}</text>
-          <div class="video-wrapper-item" v-if="item.type === 2 && item.video_url" @click="playVideo(index, item)">
-            <div class="video-mask" v-if="!item.videoPlay">
-              <img class="icon-btn" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-video@2x.png'" alt="">
-            </div>
-            <img class="video" mode="aspectFill" v-if="!item.videoPlay" :src="item.cover_image"/>
-            <video class="video-item" v-if="item.videoPlay" :src="item.video_url" objectFit="contain" autoplay></video>
-          </div>
-        </li>
-      </ul>
-      <div class="end">END</div>
-    </section>
-    <blank v-if="selectTab===1 && !storyInfo.title && storyInfo.details.length===0" styles="padding:50px 0"></blank>
+    <blank v-if="goodsListShow.length===0" styles="padding:50px 0"></blank>
+    <!--<section class="story-wrapper" v-if="selectTab === 1 && storyInfo.title && storyInfo.details.length!==0">-->
+      <!--<article class="video-wrapper" v-if="storyInfo.video_url">-->
+        <!--<div class="video-mask" v-if="!headerVideoPlay" @click="playVideo(-1)">-->
+          <!--<img class="icon-btn" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-video@2x.png'" alt="">-->
+        <!--</div>-->
+        <!--<img class="video" mode="aspectFill" v-if="storyInfo.cover_image && !headerVideoPlay" :src="storyInfo.cover_image"/>-->
+        <!--<video class="video" v-else-if="headerVideoPlay" :src="storyInfo.video_url" objectFit="contain" autoplay></video>-->
+      <!--</article>-->
+      <!--<div class="title">{{storyInfo.title}}</div>-->
+      <!--<div class="line"></div>-->
+      <!--<ul class="content">-->
+        <!--<li class="item" v-if="storyInfo.details.length" v-for="(item, index) in storyVideos" :key="index">-->
+          <!--<img class="pic" mode="widthFix" v-if="item.type === 0 && item.image_url" :src="item.image_url"/>-->
+          <!--<text class="text" v-if="item.type === 1">{{item.text}}</text>-->
+          <!--<div class="video-wrapper-item" v-if="item.type === 2 && item.video_url" @click="playVideo(index, item)">-->
+            <!--<div class="video-mask" v-if="!item.videoPlay">-->
+              <!--<img class="icon-btn" v-if="imageUrl" :src="imageUrl + '/zd-image/1.1/icon-video@2x.png'" alt="">-->
+            <!--</div>-->
+            <!--<img class="video" mode="aspectFill" v-if="!item.videoPlay" :src="item.cover_image"/>-->
+            <!--<video class="video-item" v-if="item.videoPlay" :src="item.video_url" objectFit="contain" autoplay></video>-->
+          <!--</div>-->
+        <!--</li>-->
+      <!--</ul>-->
+      <!--<div class="end">END</div>-->
+    <!--</section>-->
+    <!--<blank v-if="selectTab===1 && !storyInfo.title && storyInfo.details.length===0" styles="padding:50px 0"></blank>-->
   </div>
 </template>
 
@@ -76,9 +84,13 @@
       Blank
     },
     props: {
-      goodsList: {
+      serviceList: {
         type: Array,
         default: []
+      },
+      serviceTotal: {
+        type: Number,
+        default: 0
       },
       storyInfo: {
         type: Object,
@@ -96,12 +108,20 @@
         tabList,
         selectTab: 0,
         headerVideoPlay: false,
-        storyVideos: []
+        storyVideos: [],
+        showMore: false
       }
     },
     created() {
     },
     methods: {
+      init() {
+        this.showMore = false
+      },
+      showMoreList() {
+        this.$emit('refreshBox')
+        this.showMore = true
+      },
       changeTab(index) {
         index === 1 && this.sendCustomMsg(40007)
         index === 1 && (this.headerVideoPlay = false)
@@ -122,6 +142,13 @@
     computed: {
       updateStoryVideos() {
         this.storyVideos = this.storyInfo.details
+      },
+      goodsListShow() {
+        if (this.showMore) {
+          return this.serviceList
+        } else {
+          return this.serviceList.slice(0, 5)
+        }
       }
     }
   }
@@ -129,6 +156,7 @@
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
+  @import "~common/stylus/base"
 
   button
     reset-button()
@@ -136,14 +164,6 @@
 
   .shop-content
     position: relative
-    &:after
-      content: ""
-      position: absolute
-      top: 29px
-      right: 0
-      width: 100%
-      transform: scaleY(.5) translateZ(0)
-      border-bottom: 1px solid $color-col-line
     .tab-container
       height: 26px
       margin: 0 15px
@@ -175,12 +195,41 @@
           background: $color-ED2C2B
           border-radius: 3px
     .server-wrapper
-      padding: 0 15px 37.5px
+      padding: 0 15px
+      .service-title
+        padding-top: 15px
+        height: 16px
+        display: flex
+        align-items: center
+        .title-icon
+          width: 15px
+          height: 15px
+          display: block
+          margin-right: 4px
+        .title-txt
+          font-family: $font-family-regular
+          color: $color-1F1F1F
+          font-size: $font-size-16
+          line-height: 16px
+      .service-more
+        height: 50px
+        display: flex
+        align-items: center
+        justify-content: center
+        font-size: $font-size-14
+        font-family: $font-family-regular
+        color: $color-6E6E6E
+        .more-icon
+          width: 7.5px
+          height: 12.5px
+          transform: rotate(90deg)
+          margin-left: 10px
       .coupon-item
         margin-top: 20px
         layout(row, block, nowrap)
         position: relative
-        padding: 10px 0
+        &.last
+          margin-bottom: 15px
         .logo
           width: 76px
           height: 76px
@@ -213,11 +262,14 @@
               .price
                 layout(row, block, nowrap)
                 align-items: flex-end
-                font-family: $font-family-bold
-                color: $color-455A64
+                color: $color-ED2C2B
                 .numbers
-                  font-size: 19px
+                  font-family: $font-family-bold
+                  color: $color-ED2C2B
+                  font-size: 24px
                 .unit
+                  font-family: $font-family-medium
+                  color: $color-ED2C2B
                   font-size: $font-size-12
                   padding: 0 3px 3px 0
               .old-price
