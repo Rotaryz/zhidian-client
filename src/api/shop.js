@@ -25,5 +25,10 @@ export default {
   getStory(data, loading) {
     const url = `/api/customer/merchants/contents`
     return request.get(url, data, loading)
+  },
+  // 获取商品和服务列表
+  getAllList(loading) {
+    const url = `/api/customer/goods-lists`
+    return request.get(url, {}, loading)
   }
 }

@@ -318,6 +318,9 @@
           console.error(e)
         }
       },
+      // 获取服务商品列表
+      async _getAllList() {
+      },
       _formatStars(rate) {
         let arr = []
         if (rate) {
