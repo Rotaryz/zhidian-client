@@ -69,7 +69,7 @@
         showNone: false,
         order: ORDER,
         selectTab: '0',
-        title: '服务列表',
+        title: '服务订单',
         menuShow: false,
         listType: 'service',
         noSelect: false,
@@ -213,7 +213,7 @@
           this.noSelect = false
         }, 500)
         this.listType = type
-        this.title = type === 'service' ? '服务列表' : '商品列表'
+        this.title = type === 'service' ? '服务订单' : '商品订单'
         this._getOrderList()
         this.cancelMenu()
       }
