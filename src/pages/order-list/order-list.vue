@@ -69,15 +69,19 @@
         showNone: false,
         order: ORDER,
         selectTab: '0',
-        title: '订单列表',
+        title: '服务列表',
         menuShow: false,
-        listType: '',
-        noSelect: false
+        listType: 'service',
+        noSelect: false,
+        tabStatus: ''
       }
     },
     computed: {
       showEnd() {
         return this.orderList.length > 0 && (this.length === this.orderList.length || this.orderList.length < 15)
+      },
+      orderKind() { // 1实体商品，2虚拟，3服务
+        return this.listType === 'service' ? 3 : 1
       }
     },
     async onLoad(option, item, index) {
@@ -108,7 +112,7 @@
         let status = item.status
         switch (status) {
           case 'payment': // 付款
-            let res = await Order.payOrder({ pay_method_id: 1, order_id: item.id })
+            let res = await Order.payOrder({ pay_method_id: 1, order_id: item.id, order_kind: this.orderKind })
             // 支付
             this.$wechat.hideLoading()
             if (res.error !== this.$ERR_OK) {
@@ -154,8 +158,9 @@
       },
       async _goOrderTab(item, index) {
         let status = item.status
+        this.tabStatus = item.status
         this.selectTab = index
-        let res = await Order.customerOrder({ limit: 10, page: 1, status: status })
+        let res = await Order.customerOrder({ limit: 10, page: 1, status: status, order_kind: this.orderKind })
         if (res.error !== this.$ERR_OK) {
           this.$showToast(res.message)
           this.$wechat.hideLoading()
@@ -173,7 +178,13 @@
         this.$wechat.hideLoading()
       },
       async _getOrderList() {
-        let res = await Order.customerOrder({ limit: 10, page: this.page, status: this.status })
+        let data = {
+          limit: 10,
+          page: this.page,
+          status: this.status || this.tabStatus,
+          order_kind: this.orderKind
+        }
+        let res = await Order.customerOrder(data)
         if (res.error !== this.$ERR_OK) {
           this.$showToast(res.message)
           this.$wechat.hideLoading()
@@ -202,6 +213,8 @@
           this.noSelect = false
         }, 500)
         this.listType = type
+        this.title = type === 'service' ? '服务列表' : '商品列表'
+        this._getOrderList()
         this.cancelMenu()
       }
     },
