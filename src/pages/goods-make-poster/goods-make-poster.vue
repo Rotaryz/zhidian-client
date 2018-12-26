@@ -102,7 +102,7 @@
       let shopId = this.$wx.getStorageSync('shopId')
       let path
       if (this.useType * 1 === 0) {
-        path = `pages/goods-detail?fromType=3&fromId=${id}&shopId=${shopId}&goodId=${this.id}`
+        path = `pages/goods-detail?fromType=3&fromId=${id}&shopId=${shopId}&goodsId=${this.id}`
       } else if (this.useType * 1 === 1) {
         path = `pages/activity-detail?activityType=group&fromType=3&fromId=${id}&shopId=${shopId}&activityId=${this.id}`
       } else if (this.useType * 1 === 3) {

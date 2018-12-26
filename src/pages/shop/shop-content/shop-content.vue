@@ -15,7 +15,7 @@
     <ul class="server-wrapper">
       <div class="service-title">
         <img class="title-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.4/icon-service@2x.png'" alt="">
-        <span class="title-txt">服务项目(10)</span>
+        <span class="title-txt">服务项目({{serviceTotal}})</span>
       </div>
       <li class="coupon-item" v-if="goodsListShow.length" v-for="(item,index) in goodsListShow" :key="index" @click="toGoodsDetail(item)">
         <div class="logo">
@@ -38,12 +38,12 @@
           </div>
         </section>
       </li>
-      <div class="service-more border-top-1px" v-if="goodsListShow.length > 5 && !showMore" @click="showMoreList">
-        <span>查看其它3个服务</span>
+      <div class="service-more border-top-1px" v-if="serviceTotal > 5 && !showMore" @click="showMoreList">
+        <span>查看其它{{serviceTotal - 5}}个服务</span>
         <img class="more-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" alt="">
       </div>
     </ul>
-    <blank v-if="selectTab===0 && goodsListShow.length===0" styles="padding:50px 0"></blank>
+    <blank v-if="goodsListShow.length===0" styles="padding:50px 0"></blank>
     <!--<section class="story-wrapper" v-if="selectTab === 1 && storyInfo.title && storyInfo.details.length!==0">-->
       <!--<article class="video-wrapper" v-if="storyInfo.video_url">-->
         <!--<div class="video-mask" v-if="!headerVideoPlay" @click="playVideo(-1)">-->
@@ -87,6 +87,10 @@
       serviceList: {
         type: Array,
         default: []
+      },
+      serviceTotal: {
+        type: Number,
+        default: 0
       },
       storyInfo: {
         type: Object,

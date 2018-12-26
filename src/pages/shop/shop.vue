@@ -6,7 +6,7 @@
     <navigator url="/pages/shop-story" class="brand-tab">
       <div class="brand-left">
         <div class="brand-title">品牌故事</div>
-        <div class="brand-subtitle">国颐堂养发护发第一品牌</div>
+        <div class="brand-subtitle">{{shopInfo.brand_title}}</div>
       </div>
       <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="right-arrow">
     </navigator>
@@ -23,13 +23,13 @@
       </div>
     </div>
     <div class="tabs-box-holder" v-if="scrollType >= 1 && isIos"></div>
-    <shop-content :serviceList="serviceList" :selectTab="selectTab" :storyInfo="storyInfo" @changeTab="changeTab" @refreshBox="refreshBox" ref="shopContent"></shop-content>
+    <shop-content :serviceList="serviceList" :serviceTotal="serviceTotal" :selectTab="selectTab" :storyInfo="storyInfo" @changeTab="changeTab" @refreshBox="refreshBox" ref="shopContent"></shop-content>
     <div style="height: 10px; background: #F4F5F7 "></div>
     <div class="goods-list">
       <div class="goods-list-top">
         <div class="goods-list-title">
           <img class="title-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.4/icon-hotgoods@2x.png'" alt="">
-          <span class="title-txt">热销商品(40)</span>
+          <span class="title-txt">热销商品({{goodsTotal}})</span>
         </div>
         <navigator url="/pages/goods-list" hover-class="none">
           <div class="goods-top-right">
@@ -43,6 +43,7 @@
           <goods-item></goods-item>
         </div>
       </div>
+      <blank v-if="goodsList.length===0" styles="padding:50px 0"></blank>
     </div>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
     <frozen ref="frozen"></frozen>
@@ -59,6 +60,7 @@
   import HeadItem from 'components/head-item/head-item'
   import Frozen from 'components/frozen/frozen'
   import GoodsItem from 'components/goods-item/goods-item'
+  import Blank from 'components/blank/blank'
 
   export default {
     mixins: [clearWatch, imMixin],
@@ -68,7 +70,8 @@
       ImFixed,
       HeadItem,
       Frozen,
-      GoodsItem
+      GoodsItem,
+      Blank
     },
     data() {
       return {
@@ -78,7 +81,9 @@
         },
         employee: {},
         serviceList: [],
+        serviceTotal: 0,
         goodsList: [1, 2, 3, 4],
+        goodsTotal: 0,
         photoInfo: {},
         storyInfo: {
           details: []
@@ -124,19 +129,9 @@
       await this.getBaseInfo()
       this._initDom()
     },
-    async onReachBottom() {
-      if (!this.more || this.selectTab) return
-      this.page++
-      await this._getGoodsList()
-      this.$wechat.hideLoading()
-    },
     async onPullDownRefresh() {
-      if (this.selectTab === 0) {
-        this.page = 1
-        this.more = true
-        await this._getGoodsList(false)
-        this.$wx.stopPullDownRefresh()
-      }
+      await this._getAllList(false)
+      this.$wx.stopPullDownRefresh()
     },
     methods: {
       refreshBox() {
@@ -151,15 +146,6 @@
           })
         } else {
           this.isMyShop = !!this.$isMyShop()
-        }
-      },
-      async changeTab(index) {
-        this.selectTab = index
-        if (index === 0) {
-          this.page = 1
-          this.more = true
-          await this._getGoodsList()
-          this.$wechat.hideLoading()
         }
       },
       _initDom() {
@@ -238,9 +224,8 @@
         this.shopChange && this.$wechat.showLoading()
         await Promise.all([
           this._getLocation(false),
-          this._getGoodsList(false),
-          this._getMerchantsImg(false),
-          this._getStory(false)
+          this._getAllList(false),
+          this._getMerchantsImg(false)
         ])
         this.$wechat.hideLoading()
       },
@@ -258,18 +243,6 @@
           console.error(e)
         } finally {
           await this._getShopInfo(location, loading)
-        }
-      },
-      async _getStory(loading) {
-        try {
-          let res = await Shop.getStory({}, loading)
-          if (res.error !== this.$ERR_OK) {
-            this.$showToast(res.message)
-            return
-          }
-          this.storyInfo = res.data || { details: [] }
-        } catch (e) {
-          console.error(e)
         }
       },
       async _getMerchantsImg(loading) {
@@ -299,27 +272,21 @@
           console.error(e)
         }
       },
-      async _getGoodsList(loading) {
-        if (!this.more) return
+      // 获取服务商品列表
+      async _getAllList(loading) {
         try {
-          let res = await Shop.getGoodsList({ page: this.page }, loading)
+          let res = await Shop.getAllList(loading)
           if (res.error !== this.$ERR_OK) {
             this.$showToast(res.message)
             return
           }
-          if (!res.meta || res.meta.current_page === 1) {
-            this.serviceList = [...res.data, ...res.data]
-          } else {
-            let arr = this.serviceList.concat(res.data)
-            this.serviceList = arr
-          }
-          this.more = this.serviceList.length < res.meta.total
+          this.serviceList = res.data.goods
+          this.serviceTotal = res.data.goods_count
+          this.goodsList = res.data.products
+          this.goodsTotal = res.data.product_count
         } catch (e) {
           console.error(e)
         }
-      },
-      // 获取服务商品列表
-      async _getAllList() {
       },
       _formatStars(rate) {
         let arr = []
