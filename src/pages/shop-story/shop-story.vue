@@ -1,7 +1,6 @@
 <template>
-  <div class="shop-story">
-    <head-item :title="headTitle" :showArrow="false"></head-item>
-    <div :style="{height: statusBarHeight}"></div>
+  <div class="shop-story":style="{paddingTop: pageHeadH + 'px'}">
+    <head-item :title="headTitle"></head-item>
     <section class="story-wrapper" v-if="title && details.length!==0">
       <article class="video-wrapper" v-if="video_url">
         <div class="video-mask" v-if="!headerVideoPlay" @click="playVideo(-1)">
@@ -56,10 +55,6 @@
         title: '',
         headerVideoPlay: false
       }
-    },
-    created() {
-      let res = this.$wx.getSystemInfoSync()
-      this.statusBarHeight = (res.statusBarHeight || 20) + 44 + 'px'
     },
     onLoad() {
       this._getStory(true)
