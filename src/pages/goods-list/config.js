@@ -6,6 +6,9 @@ page.$mount()
 
 export default {
   config: {
-    navigationBarTitleText: '全部商品'
+    navigationBarTitleText: '全部商品',
+    backgroundColor: '#f4f5f7',
+    enablePullDownRefresh: true,
+    backgroundTextStyle: 'dark'
   }
 }

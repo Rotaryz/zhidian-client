@@ -2,21 +2,22 @@
   <div class="goods-list-box" :style="{paddingTop: (pageHeadH + 40) + 'px'}">
     <head-item :title="title"></head-item>
     <div class="nav-head" :style="{top: pageHeadH + 'px'}">
-      <div class="nav-item" v-for="(item, idx) in navList" :key="idx" @click="checkTab(item.name, idx)">
-        <span class="nav-txt" :class="{'active' : sortName === item.name}">{{item.txt}}</span>
+      <div class="nav-item" v-for="(item, idx) in navList" :key="idx" @click="checkTab(item.id, idx)">
+        <span class="nav-txt" :class="{'active' : sort == item.id}">{{item.txt}}</span>
         <div class="sort-box" v-if="item.sort">
-          <div class="arrow-up" :class="{'active' : sortName === item.name && sortType === 'asc'}"></div>
-          <div class="arrow-down" :class="{'active' : sortName === item.name && sortType === 'desc'}"></div>
+          <div class="arrow-up" :class="{'active' : sort == item.id && sortType === 'asc'}"></div>
+          <div class="arrow-down" :class="{'active' : sort == item.id && sortType === 'desc'}"></div>
         </div>
       </div>
     </div>
     <div class="list-container">
       <ul class="goods-list">
         <li class="goods-item-box" v-for="(item, idx) in goodsList" :key="idx">
-          <goods-item></goods-item>
+          <goods-item :item="item"></goods-item>
         </li>
       </ul>
     </div>
+    <blank v-if="hasNone" styles="padding:50px 0"></blank>
   </div>
 </template>
 
@@ -25,10 +26,12 @@
   import imMixin from 'common/mixins/im-mixin'
   import HeadItem from 'components/head-item/head-item'
   import GoodsItem from 'components/goods-item/goods-item'
+  import Blank from 'components/blank/blank'
+  import { Goods } from 'api'
   const NAVS = [
-    {txt: '综合', sort: false, name: 'default'},
-    {txt: '销量', sort: true, name: 'sale_count'},
-    {txt: '价格', sort: true, name: 'original_price'}
+    {txt: '综合', sort: false, id: ''},
+    {txt: '销量', sort: true, id: 2},
+    {txt: '价格', sort: true, id: 1}
   ]
 
   export default {
@@ -37,17 +40,30 @@
       return {
         title: '全部商品',
         navList: NAVS,
-        sortName: 'default', // 排序名
         sortType: '', // 排序方式 asc 升序 desc 降序
-        goodsList: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        goodsList: [],
         page: 1,
         limit: 10,
         hasMore: true,
-        orderBy: {},
-        tabIndex: 0
+        tabIndex: 0,
+        sort: '',
+        hasNone: false
       }
     },
     created() {
+    },
+    onLoad() {
+      this.getList()
+    },
+    onReachBottom() {
+      this.page++
+      this.getList()
+    },
+    onPullDownRefresh() {
+      this.page = 1
+      this.getList(() => {
+        this.$wx.stopPullDownRefresh()
+      })
     },
     methods: {
       // 跳详情
@@ -56,29 +72,54 @@
         this.$router.push(path)
       },
       // 切换tab栏
-      checkTab(name, idx) {
+      checkTab(id, idx) {
         if (this.tabIndex === idx && idx === 0) return
         // 样式
-        if (name === NAVS[this.tabIndex].name) {
+        if (+id === NAVS[this.tabIndex].id) {
           this.sortType = this.sortType === 'desc' ? 'asc' : 'desc'
         } else {
-          this.sortType = name === NAVS[1].name ? 'desc' : 'asc'
+          this.sortType = +id === NAVS[1].id ? 'desc' : 'asc'
         }
         // 请求参数
-        let orderBy = {}
-        if (name !== NAVS[0].name) {
-          orderBy[name] = this.sortType
-        }
-        this.orderBy = orderBy
-        this.sortName = name
+        this.sort = id
         this.tabIndex = idx
         this.page = 1
         this.hasMore = true
+        this.$wechat.pageScrollTo()
+        this.getList()
+      },
+      getList(callback) {
+        if (!this.hasMore && !callback) return
+        let data = {
+          page: this.page,
+          sort: this.sortType,
+          limit: this.limit,
+          sort_type: this.sort
+        }
+        Goods.getGoodsListBy(data).then((res) => {
+          this.$wechat.hideLoading()
+          if (res.error !== this.$ERR_OK) {
+            this.$showToast(res.message)
+            return
+          }
+          if (this.page > 1) {
+            this.goodsList = [...this.goodsList, ...res.data]
+          } else {
+            this.goodsList = res.data
+          }
+          this.hasNone = !this.goodsList.length
+          if (!res.data.length) {
+            this.page--
+            this.hasMore = false
+          }
+          callback && callback()
+        })
       }
     },
     components: {
       HeadItem,
-      GoodsItem
+      GoodsItem,
+      Blank
     }
   }
 </script>
@@ -88,6 +129,9 @@
   @import "~common/stylus/base"
 
   .goods-list-box
+    box-sizing: border-box
+    background: $color-background
+    min-height: 100vh
     .nav-head
       position: fixed
       left: 0

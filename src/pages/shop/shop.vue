@@ -6,7 +6,7 @@
     <navigator url="/pages/shop-story" class="brand-tab">
       <div class="brand-left">
         <div class="brand-title">品牌故事</div>
-        <div class="brand-subtitle">{{shopInfo.brand_title}}</div>
+        <div class="brand-subtitle" v-if="shopInfo.brand_title">{{shopInfo.brand_title}}</div>
       </div>
       <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="right-arrow">
     </navigator>
@@ -40,7 +40,7 @@
       </div>
       <div class="goods-list-content">
         <div class="goods-item-box" v-for="(item, idx) in goodsList" :key="idx">
-          <goods-item></goods-item>
+          <goods-item :item="item"></goods-item>
         </div>
       </div>
       <blank v-if="goodsList.length===0" styles="padding:50px 0"></blank>
@@ -82,7 +82,7 @@
         employee: {},
         serviceList: [],
         serviceTotal: 0,
-        goodsList: [1, 2, 3, 4],
+        goodsList: [],
         goodsTotal: 0,
         photoInfo: {},
         storyInfo: {
@@ -131,6 +131,7 @@
     },
     async onPullDownRefresh() {
       await this._getAllList(false)
+      this.refreshBox()
       this.$wx.stopPullDownRefresh()
     },
     methods: {
@@ -334,8 +335,8 @@
         line-height: 14px
         color: $color-1F1F1F
         letter-spacing: 0.6px
-        margin-bottom: 6px
       .brand-subtitle
+        margin-top: 6px
         line-height: 12px
         font-family: $font-family-regular
         font-size: $font-size-12

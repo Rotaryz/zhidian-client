@@ -1,16 +1,16 @@
 <template>
-  <div class="goods-item">
+  <div class="goods-item" @click="toDetail(item)">
     <div class="goods-img-box">
-      <img class="goods-img" src="" alt="" mode="aspectFit">
+      <img class="goods-img" :src="item.image_url" alt="" mode="aspectFill">
     </div>
-    <div class="goods-title">就放假高合金钢活佛济公海景房搞活动发几个黄金分割活佛济公活佛济公和复读机该回复</div>
+    <div class="goods-title">{{item.goods_title}}</div>
     <div class="goods-down">
       <div class="down-left">
         <div class="red-icon">¥</div>
-        <div class="red-num">800</div>
-        <div class="del-num">¥198</div>
+        <div class="red-num">{{item.platform_price}}</div>
+        <div class="del-num">¥{{item.original_price}}</div>
       </div>
-      <div class="down-right">销量200</div>
+      <div class="down-right">销量{{item.sale_count}}</div>
     </div>
   </div>
 </template>
@@ -19,16 +19,16 @@
   export default {
     name: 'coupon-item',
     props: {
-      coupontype: {
-        type: Number,
-        default: 0 // 未使用: 0 不可用: 1
-      },
-      couponInfo: {
+      item: {
         type: Object,
         default: {}
       }
     },
     methods: {
+      toDetail(item) {
+        let url = `/pages/goods-detail?goodsId=${item.recommend_goods_id}`
+        this.$wx.navigateTo({url})
+      }
     }
   }
 </script>
@@ -57,7 +57,9 @@
       top: 0
       background: #ccc
     .goods-title
+      height: 42px
       line-height: 21px
+      word-break: break-all
       font-family: $font-family-medium
       font-size: $font-size-14
       color: $color-1F1F1F

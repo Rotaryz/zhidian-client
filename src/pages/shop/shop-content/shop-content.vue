@@ -17,7 +17,7 @@
         <img class="title-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.4/icon-service@2x.png'" alt="">
         <span class="title-txt">服务项目({{serviceTotal}})</span>
       </div>
-      <li class="coupon-item" v-if="goodsListShow.length" v-for="(item,index) in goodsListShow" :key="index" @click="toGoodsDetail(item)">
+      <li class="coupon-item" :class="{'last' : (index == goodsListShow.length - 1)}"v-if="goodsListShow.length" v-for="(item,index) in goodsListShow" :key="index" @click="toGoodsDetail(item)">
         <div class="logo">
           <img class="logo-pic" mode="aspectFill" :src="item.image_url_thumb" alt="">
         </div>
@@ -228,7 +228,7 @@
         margin-top: 20px
         layout(row, block, nowrap)
         position: relative
-        &:last-child
+        &.last
           margin-bottom: 15px
         .logo
           width: 76px

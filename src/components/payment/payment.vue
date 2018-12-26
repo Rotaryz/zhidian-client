@@ -143,7 +143,8 @@
               goods,
               pay_method_id: 1,
               order_id: 0,
-              recommend_goods_id: this.paymentMsg.recommend_goods_id
+              recommend_goods_id: this.paymentMsg.recommend_goods_id,
+              type: this.paymentMsg.type
             }
             msgCode = 40006
             msgData.goods_id = this.paymentMsg.recommend_goods_id
