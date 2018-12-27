@@ -29,7 +29,7 @@
       </div>
       <div class="order-status">
         <div class="order-type">{{item.order_type}}</div>
-        <div class="btn" @click.stop="_goUse(item)" :class="{'btn-disable' : item.status === 'success_groupon' && item.coupon_status}">{{item.status === 'success_groupon' ? item.coupon_status ? '已使用' : '未使用' : manager[item.status]}}</div>
+        <div class="btn" @click.stop="_goUse(item)" :class="{'btn-disable' : item.status === 'success_groupon' && item.coupon_status}">{{item.status === 'success_groupon' ? item.coupon_status ? '已使用' : '去使用' : manager[item.status]}}</div>
       </div>
     </div>
     <div class="block" v-if="!showNone"></div>
@@ -214,6 +214,9 @@
         }, 500)
         this.listType = type
         this.title = type === 'service' ? '服务订单' : '商品订单'
+        this.page = 1
+        this.showNone = false
+        this.orderList = []
         this._getOrderList()
         this.cancelMenu()
       }
