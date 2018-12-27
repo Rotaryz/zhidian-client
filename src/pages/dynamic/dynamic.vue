@@ -33,7 +33,7 @@
               <p v-if="item.can_delete" class="del" @click="_delItem(index)">删除</p>
             </div>
             <div class="share" :class="{'share-active': item.show}">
-              <div class="share-item comment" @click="_comment(item.id)">
+              <div class="share-item comment" @click.stop="_comment(item.id)">
                 <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-comments@2x.png'">
               </div>
               <div class="share-item" @click="_goodLike(index)">
@@ -80,7 +80,7 @@
               <p v-if="item.can_delete" class="del" @click="_delItem(index)">删除</p>
             </div>
             <div class="share" :class="{'share-active': item.show}">
-              <div class="share-item comment" @click="_comment(item.id)">
+              <div class="share-item comment" @click.stop="_comment(item.id)">
                 <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-comments@2x.png'">
               </div>
               <div class="share-item" @click="_goodLike(index)">
@@ -128,7 +128,7 @@
               <p v-if="item.can_delete" class="del" @click="_delItem(index)">删除</p>
             </div>
             <div class="share" :class="{'share-active': item.show}">
-              <div class="share-item comment" @click="_comment(item.id)">
+              <div class="share-item comment" @click.stop="_comment(item.id)">
                 <img class="find-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-comments@2x.png'">
               </div>
               <div class="share-item" @click="_goodLike(index)">
@@ -159,9 +159,9 @@
       <img mode="widthFix" v-if="imageUrl" :src="imageUrl + '/zd-image/dynamic/icon-write@2x.png'" class="new-dynamic-img">
     </navigator>
     <confirm-msg ref="confirm" @confirm="_sureDel" @cancel="cancel"></confirm-msg>
-    <div class="chat-input border-top-1px" v-if="textArea">
+    <div class="chat-input border-top-1px" v-if="textArea" @click.stop>
       <div class="input-container" :class="system === 'android' ? 'android' : ''" ref="textBox">
-        <textarea auto-height="true" :focus="true" fixed="true" @confirm="sendMsg" @blur="textArea = false" class="textarea" maxlength="-1" v-model="inputMsg" cursor-spacing="15"></textarea>
+        <textarea auto-height="true" :focus="true" fixed="true" @confirm="sendMsg" class="textarea" maxlength="-1" v-model="inputMsg" cursor-spacing="15"></textarea>
       </div>
       <div class="submit-btn" @click="sendMsg">发送</div>
     </div>
@@ -484,6 +484,7 @@
           item.show = false
           return item
         })
+        this.textArea = false
         // this._closeCover()
       },
       sendMsg() {
