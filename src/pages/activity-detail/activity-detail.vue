@@ -255,7 +255,7 @@
         this.activityType = options.activityType ? options.activityType : ''
       }
       try {
-        let res = await this.$wechat.getLocation()
+        let res = await this.$wechat.getLocation('gcj02')
         if (res.errMsg === 'getLocation:ok') {
           this.location = {
             longitude: res.longitude,

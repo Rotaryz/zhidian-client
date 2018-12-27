@@ -125,7 +125,7 @@
         this.reqGoodsId = options.goodsId ? options.goodsId : ''
       }
       try {
-        let res = await this.$wechat.getLocation()
+        let res = await this.$wechat.getLocation('gcj02')
         if (res.errMsg === 'getLocation:ok') {
           this.location = {
             longitude: res.longitude,
