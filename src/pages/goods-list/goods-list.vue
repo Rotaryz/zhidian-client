@@ -1,7 +1,7 @@
 <template>
   <div class="goods-list-box" :style="{paddingTop: (pageHeadH + 40) + 'px'}">
     <head-item :title="title"></head-item>
-    <div class="nav-head" :style="{top: pageHeadH + 'px'}">
+    <div class="nav-head border-bottom-1px" :style="{top: pageHeadH + 'px'}">
       <div class="nav-item" v-for="(item, idx) in navList" :key="idx" @click="checkTab(item.id, idx)">
         <span class="nav-txt" :class="{'active' : sort == item.id}">{{item.txt}}</span>
         <div class="sort-box" v-if="item.sort">

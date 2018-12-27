@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-item" @click="toDetail(item)">
+  <div class="goods-item" :class="{'border-line' : border}" @click="toDetail(item)">
     <div class="goods-img-box">
       <img class="goods-img" :src="item.image_url" alt="" mode="aspectFill">
     </div>
@@ -22,6 +22,10 @@
       item: {
         type: Object,
         default: {}
+      },
+      border: {
+        type: Boolean,
+        default: false
       }
     },
     methods: {
@@ -39,10 +43,11 @@
 
   .goods-item
     border-radius: 4px
-    border-1px($color-E0E2E5, 4px)
     width: 100%
     overflow: hidden
     background: $color-white
+    &.border-line
+      border-1px($color-E0E2E5, 4px)
     .goods-img-box
       width: 100%
       height: 0

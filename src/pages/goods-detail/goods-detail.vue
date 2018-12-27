@@ -1,6 +1,6 @@
 <template>
   <div class="goods-detail" :style="{paddingTop: pageHeadH + 'px'}">
-    <head-item :title="title" :showArrow="true"></head-item>
+    <head-item :title="headTitle" :showArrow="true"></head-item>
     <div class="banner-box">
       <swiper class="banner" @change="bannerChange">
         <block v-for="(item, index) in bannerImgs" :key="index">
@@ -125,7 +125,7 @@
         this.reqGoodsId = options.goodsId ? options.goodsId : ''
       }
       try {
-        let res = await this.$wechat.getLocation()
+        let res = await this.$wechat.getLocation('gcj02')
         if (res.errMsg === 'getLocation:ok') {
           this.location = {
             longitude: res.longitude,
@@ -294,7 +294,14 @@
         'targetPage',
         'scene',
         'currentMsg'
-      ])
+      ]),
+      headTitle() {
+        let title = ''
+        if (this.goodsDetail.type) {
+          title = +this.goodsDetail.type === 1 ? '商品详情' : '服务详情'
+        }
+        return title
+      }
     }
   }
 </script>

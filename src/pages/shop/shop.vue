@@ -40,7 +40,7 @@
       </div>
       <div class="goods-list-content">
         <div class="goods-item-box" v-for="(item, idx) in goodsList" :key="idx">
-          <goods-item :item="item"></goods-item>
+          <goods-item :item="item" :border="true"></goods-item>
         </div>
       </div>
       <blank v-if="goodsList.length===0" styles="padding:50px 0"></blank>
@@ -193,10 +193,10 @@
         let top
         switch (type) {
           case 'service':
-            top = this.serviceTop - 64 - 45
+            top = this.serviceTop - this.pageHeadH - 45
             break
           case 'goods':
-            top = this.goodsTop - 64 - 45
+            top = this.goodsTop - this.pageHeadH - 45
             break
         }
         wx.pageScrollTo({
@@ -316,7 +316,7 @@
     box-sizing: border-box
 
   .brand-tab
-    height: 75px
+    height: 65px
     padding: 0 15px
     display: flex
     align-items: center

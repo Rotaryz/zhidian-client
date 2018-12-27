@@ -38,8 +38,9 @@
           </div>
         </section>
       </li>
-      <div class="service-more border-top-1px" v-if="serviceTotal > 5 && !showMore" @click="showMoreList">
-        <span>查看其它{{serviceTotal - 5}}个服务</span>
+      <div class="service-more border-top-1px" :class="{'reversal' : showMore}" @click="showMoreList" v-if="serviceTotal > 5">
+        <span v-if="!showMore">查看其它{{serviceTotal - 5}}个服务</span>
+        <span v-if="showMore">收起</span>
         <img class="more-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" alt="">
       </div>
     </ul>
@@ -120,7 +121,7 @@
       },
       showMoreList() {
         this.$emit('refreshBox')
-        this.showMore = true
+        this.showMore = !this.showMore
       },
       changeTab(index) {
         index === 1 && this.sendCustomMsg(40007)
@@ -224,6 +225,8 @@
           height: 12.5px
           transform: rotate(90deg)
           margin-left: 10px
+        &.reversal .more-icon
+          transform: rotate(-90deg)
       .coupon-item
         margin-top: 20px
         layout(row, block, nowrap)
