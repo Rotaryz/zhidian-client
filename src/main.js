@@ -59,11 +59,11 @@ export default {
           iconPath: '/static/img/icon-my.png',
           selectedIconPath: '/static/img/icon-my_select.png'
         }
-      ],
-      'permission': {
-        'scope.userLocation': {
-          'desc': '导航'
-        }
+      ]
+    },
+    'permission': {
+      'scope.userLocation': {
+        'desc': '导航'
       }
     }
   }
