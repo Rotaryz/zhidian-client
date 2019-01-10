@@ -124,6 +124,7 @@
         let url
         switch (this.detail.order_type * 1) {
           case 1:
+          case 8:
             url = `/pages/goods-detail?goodsId=${this.detail.attach.recommend_goods_id}`
             break
           case 4:

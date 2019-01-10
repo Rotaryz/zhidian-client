@@ -83,7 +83,7 @@
       this._sendRecordToServer()
     },
     async onShow() {
-      this.$showForzen()
+      // this.$showForzen()
       if (!this.$wx.getStorageSync('token')) {
         this.showBackBtn = true
         return

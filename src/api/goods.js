@@ -86,5 +86,13 @@ export default {
   getExchangeCoupon(data, loading) {
     let url = `api/customer/exchange-coupon`
     return request.post(url, data, loading)
+  },
+  /**
+   * 实体商品列表
+   * @return {*}
+   */
+  getGoodsListBy(data, loading) {
+    let url = `api/customer/product-lists`
+    return request.get(url, data, loading)
   }
 }
