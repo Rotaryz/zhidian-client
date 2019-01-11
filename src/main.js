@@ -63,7 +63,7 @@ export default {
     },
     'permission': {
       'scope.userLocation': {
-        'desc': '导航'
+        'desc': '你的位置信息将用于小程序导航的效果展示'
       }
     }
   }
