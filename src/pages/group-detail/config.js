@@ -6,6 +6,7 @@ page.$mount()
 
 export default {
   config: {
-    navigationBarTitleText: '拼团详情'
+    navigationBarTitleText: '拼团详情',
+    usingComponents: {}
   }
 }
