@@ -49,25 +49,25 @@
           if (res.error === this.$ERR_OK) {
             this.browseShopList = res.data
             this.isNull = true
-            this._isUpList(res)
+            if (res.data.length < 10) {
+              this.upMore = true
+            }
           } else {
             this.$showToast(res.message)
           }
         })
-      },
-      _isUpList (res) {
-        this.page++
-        if (this.browseShopList.length >= res.meta.total * 1) {
-          this.upMore = true
-        }
       },
       getMoreBrowserList() {
         if (this.upMore) return
         Shop.getMerchantsImg({page: this.page, limit: 10}).then((res) => {
           this.$wechat.hideLoading()
           if (res.error === this.$ERR_OK) {
+            if (!res.data.length) {
+              this.page--
+              this.upMore = true
+              return
+            }
             this.shopList.push(...res.data)
-            this._isUpList(res)
           } else {
             this.$showToast(res.message)
           }
