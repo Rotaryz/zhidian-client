@@ -24,7 +24,11 @@ const state = {
     startX: 0
   }, // IM浮窗的相对位置
   chatMsgTitle: '', // IM聊天页面title
-  pageHeadH: 64 // 自定义头部高度，用于页面设置padding-top, 默认64
+  pageHeadH: 64, // 自定义头部高度，用于页面设置padding-top, 默认64
+  couponList: [], // 可用优惠券列表
+  selectCoupon: {}, // 选择的优惠券
+  checkoutCouponList: {}, // 判断可用不可用后的数据
+  canUseNum: 0 // 可用优惠券数量
 }
 
 export default state

@@ -1,33 +1,33 @@
 <template>
   <div class="big-mine" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item :title="title" :showArrow="false"></head-item>
-    <!--<back-shop v-if="!mineShop && hasShop" :shopName="shopName"></back-shop>-->
+    <back-shop v-if="!mineShop && hasShop" :shopName="shopName"></back-shop>
     <div class="mine">
-      <div class="back-box" @click="backShop" v-if="!mineShop && hasShop">
-        <img class="back-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-shop_my@2x.png'">
-        <div class="back-txt">返回店铺</div>
-      </div>
+      <!--<div class="back-box" @click="backShop" v-if="!mineShop && hasShop">-->
+        <!--<img class="back-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-shop_my@2x.png'">-->
+        <!--<div class="back-txt">返回店铺</div>-->
+      <!--</div>-->
       <div class="mine-msg">
         <img class="mine-header" mode="aspectFill" :src="userInfo.avatar">
         <p class="mine-name">{{userInfo.nickname}}</p>
       </div>
       <div class="order-tab">
         <navigator :url="'/pages/order-list?status=' + item.status" hover-class="none" class="order-tab-item" v-for="(item, index) in order" :key="index">
-          <img :src="imageUrl + '/zd-image/mine/' + item.image" class="order-tab-icon">
+          <img v-if="imageUrl" :src="imageUrl + item.image" class="order-tab-icon">
           <p class="order-tab-title">{{item.title}}</p>
         </navigator>
       </div>
       <div class="manager-list">
         <navigator hover-class="none" :url="item.url" class="manager-item" v-for="(item, index) in manager" :key="index">
-          <img :src="imageUrl + '/zd-image/mine/' + item.image" class="manager-image">
+          <img v-if="imageUrl" :src="imageUrl + item.image" class="manager-image">
           <p class="manager-image-title">{{item.title}}</p>
-          <div class="mine-serve-avatar-box" v-if="index === 2">
+          <div class="mine-serve-avatar-box" v-if="index === manager.length - 1">
             <div class="mine-serve-avatarBox-item" v-for="(items, idx) in shopList" :key="idx">
               <img class="mine-serve-avatarBox-img" :src="items.image_url" mode="aspectFill">
             </div>
             <span class="shop-num">{{length}}家</span>
           </div>
-          <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
+          <img v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" class="way">
         </navigator>
         <!--<button class="manager-item" v-if="!hasShop" open-type="contact" :session-from="'open_service,' + shopId" :send-message-img="imageUrl + '/zd-image/mine/pic-openshop@2x.png'" send-message-title="点击下方消息开店" show-message-card="true">-->
           <!--<img :src="imageUrl + '/zd-image/mine/icon-openshop@2x.png'" class="manager-image" v-if="imageUrl">-->
@@ -48,8 +48,16 @@
   import HeadItem from 'components/head-item/head-item'
   import Frozen from 'components/frozen/frozen'
 
-  const ORDER = [{ title: '待付款', status: 'payment', image: 'icon-obligation@2x.png' }, { title: '待成团', status: 'waiting_groupon', image: 'icon-staygroup@2x.png' }, { title: '已退款', status: 'refund', image: 'icon-refund@2x.png' }, { title: '全部订单', status: '', image: 'icon-alloeder@2x.png' }]
-  const MANAGER = [{ title: '我的奖品券', url: '/pages/exchange-coupon', image: 'icon-coupon_my@2x.png' }, { title: '我的砍价', url: '/pages/mine-bargain', image: 'icon-sale@2x.png' }, { title: '浏览过的店', url: '/pages/browse-shop', image: 'icon-shop_my@2x.png' }]
+  const ORDER = [
+    { title: '待付款', status: 'payment', image: '/zd-image/1.5/icon-obligation@2x.png' },
+    { title: '待成团', status: 'waiting_groupon', image: '/zd-image/1.5/icon-staygroup@2x.png' },
+    { title: '待使用', status: 'waiting_received', image: '/zd-image/1.5/icon-used@2x.png' },
+    { title: '全部订单', status: '', image: '/zd-image/1.5/icon-alloeder@2x.png' }]
+  const MANAGER = [
+    { title: '奖品券', url: '/pages/exchange-coupon', image: '/zd-image/1.5/icon-coupon_prize@2x.png' },
+    { title: '优惠券', url: '/pages/mine-coupon', image: '/zd-image/1.5/icon-coupon_my@2x.png' },
+    { title: '砍价活动', url: '/pages/mine-bargain', image: '/zd-image/1.5/icon-sale@2x.png' },
+    { title: '浏览过的店铺', url: '/pages/browse-shop', image: '/zd-image/mine/icon-shop_my@2x.png' }]
 
   export default {
     data() {

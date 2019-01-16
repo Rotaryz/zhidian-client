@@ -10,6 +10,7 @@ import customer from './customer'
 import shop from './shop'
 import activeCode from './active-code'
 import activeExtend from './active-extend'
+import mine from './mine'
 
 // 大转盘等活动
 export const ActiveExtend = activeExtend
@@ -38,3 +39,6 @@ export const Guide = guide
 export const Customer = customer
 // 二维码
 export const ActiveCode = activeCode
+
+// 我的
+export const Mine = mine

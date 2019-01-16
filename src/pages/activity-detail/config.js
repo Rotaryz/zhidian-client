@@ -8,6 +8,7 @@ export default {
   config: {
     navigationBarTitleText: '活动详情',
     enablePullDownRefresh: true,
-    backgroundTextStyle: 'dark'
+    backgroundTextStyle: 'dark',
+    usingComponents: {}
   }
 }

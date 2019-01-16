@@ -1,6 +1,6 @@
 <template>
   <div class="goods-detail" :style="{paddingTop: pageHeadH + 'px'}">
-    <head-item :title="title" :showArrow="true"></head-item>
+    <head-item :title="headTitle" :showArrow="true"></head-item>
     <div class="banner-box">
       <swiper class="banner" @change="bannerChange">
         <block v-for="(item, index) in bannerImgs" :key="index">
@@ -26,6 +26,7 @@
         </div>
       </div>
     </div>
+    <show-coupon ref="showCoupon" :couponList="couponList" @showList="showList"></show-coupon>
     <detail-content ref="detailContent" :goodsDetail="goodsDetail" @noRefresh="noRefresh"></detail-content>
     <div class="pay-order-bottom border-top-1px">
       <div class="left-box">
@@ -49,6 +50,7 @@
     </div>
     <payment ref="payment" @getPhone="phoneOk"></payment>
     <share ref="share" @friendShare="friendShare" @getPicture="getPicture"></share>
+    <get-coupon ref="getCoupon" @loadMoreCoupon="loadMoreCoupon" @refresh="refreshCoupon"></get-coupon>
   </div>
 </template>
 
@@ -56,11 +58,13 @@
   import DetailContent from 'components/detail-content/detail-content'
   import Payment from 'components/payment/payment'
   import Share from 'components/share/share'
-  import { Goods, Customer } from 'api'
+  import { Goods, Customer, Mine } from 'api'
   import { getParams } from 'common/js/util'
   import { mapGetters, mapActions } from 'vuex'
   import ImMixin from 'common/mixins/im-mixin'
   import HeadItem from 'components/head-item/head-item'
+  import ShowCoupon from 'components/show-coupon/show-coupon'
+  import GetCoupon from 'components/get-coupon/get-coupon'
 
   export default {
     mixins: [ImMixin],
@@ -80,7 +84,8 @@
           longitude: '',
           latitude: ''
         },
-        title: '商品详情'
+        title: '商品详情',
+        couponList: []
       }
     },
     async onPullDownRefresh() {
@@ -151,14 +156,19 @@
           msgCode = 40001
           break
       }
+      this._getCouponList()
       this.sendCustomMsg(msgCode, msgData)
     },
     methods: {
       ...mapActions([
-        'setGoodsDrawInfo'
+        'setGoodsDrawInfo',
+        'setCouponList'
       ]),
       test() {
         this.$showToast('askjdhakdhashd')
+      },
+      showList() {
+        this.$refs.getCoupon && this.$refs.getCoupon.showOrder(this.reqGoodsId)
       },
       noRefresh() {
         this.refreshPage = false
@@ -239,8 +249,36 @@
         this.setGoodsDrawInfo(picMsg)
         this.$wx.navigateTo({ url: `goods-make-poster` })
       },
+      refreshCoupon() {
+        this._getCouponList()
+      },
+      // 获取店铺优惠券列表
+      _getCouponList(loading = false) {
+        let data = {
+          recommend_goods_id: this.reqGoodsId,
+          limit: 3
+        }
+        Goods.getCouponList(data, loading).then((res) => {
+          if (res.error === this.$ERR_OK) {
+            this.couponList = res.data
+          }
+        })
+      },
+      // 获取我的优惠券列表
+      async _getMineCouponList() {
+        let data = {
+          shop_id: wx.getStorageSync('shopId'),
+          has_page: false,
+          status: 0
+        }
+        let res = await Mine.getCouponList(data, false)
+        if (res.error === this.$ERR_OK) {
+          this.setCouponList(res.data)
+        }
+      },
       async payOrderMsg() {
         await this._checkHasPhone()
+        await this._getMineCouponList()
         let userInfo = wx.getStorageSync('userInfo')
         let paymentMsg = {
           price: this.goodsDetail.platform_price,
@@ -254,7 +292,8 @@
           code: this.code,
           hasPhone: this.hasPhone,
           shopName: this.goodsDetail.shop_data.name,
-          shopImg: this.goodsDetail.shop_data.image_url
+          shopImg: this.goodsDetail.shop_data.image_url,
+          type: this.goodsDetail.type
         }
         this.$refs.payment.showOrder(paymentMsg)
       },
@@ -286,14 +325,24 @@
       DetailContent,
       Payment,
       Share,
-      HeadItem
+      HeadItem,
+      ShowCoupon,
+      GetCoupon
     },
     computed: {
       ...mapGetters([
         'targetPage',
         'scene',
-        'currentMsg'
-      ])
+        'currentMsg',
+        'selectCoupon'
+      ]),
+      headTitle() {
+        let title = ''
+        if (this.goodsDetail.type) {
+          title = +this.goodsDetail.type === 1 ? '商品详情' : '服务详情'
+        }
+        return title
+      }
     }
   }
 </script>
@@ -393,8 +442,8 @@
             color: $color-99A0AA
             font-size: $font-size-12
           .msg-right-icon
-            width: 60px
-            height: 60px
+            width: 53px
+            height: 53px
 
     .pay-order-bottom
       width: 100vw

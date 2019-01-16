@@ -160,6 +160,16 @@ const mutations = {
   },
   [types.SET_PAGE_HEAD](state, px) {
     state.pageHeadH = px
+  },
+  [types.SET_COUPON_LIST](state, list) {
+    state.couponList = list
+  },
+  [types.SET_SELECT_COUPON](state, item) {
+    state.selectCoupon = item
+  },
+  [types.CHECK_COUPON](state, resultList) {
+    state.checkoutCouponList = resultList
+    state.canUseNum = resultList.canUse.length
   }
 }
 

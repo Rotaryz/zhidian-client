@@ -22,7 +22,12 @@
               <div class="price-box"><span class="red-money-icon">¥</span><span class="red-big-money">{{item.platform_price}}</span><span class="del-money">¥{{item.original_price}}</span></div>
             </div>
             <div class="down-right">
-              <div class="right-btn" :class="item.status * 1 === 0 ? 'un-used' : item.status * 1 === 4 ? 'gray' : 'used'">{{item.status_str}}</div>
+              <form report-submit class="right-btn" @submit="$getFormId">
+                <button hover-class="none" formType="submit" class="right-btn"  :class="item.status * 1 === 0 ? 'un-used' : item.status * 1 === 4 ? 'gray' : 'used'">
+                  <span>{{item.status_str}}</span>
+                </button>
+              </form>
+              <!--<div class="right-btn" :class="item.status * 1 === 0 ? 'un-used' : item.status * 1 === 4 ? 'gray' : 'used'">{{item.status_str}}</div>-->
             </div>
           </div>
         </div>
@@ -193,6 +198,7 @@
               align-items: flex-end
               padding-bottom: 3px
               .right-btn
+                reset-button()
                 width: 85px
                 height: 32px
                 text-align: center

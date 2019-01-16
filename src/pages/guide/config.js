@@ -8,6 +8,7 @@ export default {
   config: {
     navigationBarTitleText: '导购',
     enablePullDownRefresh: true,
-    backgroundTextStyle: 'dark'
+    backgroundTextStyle: 'dark',
+    usingComponents: {}
   }
 }

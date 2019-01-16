@@ -39,3 +39,11 @@ export const imPosition = state => state.imPosition
 export const chatMsgTitle = state => state.chatMsgTitle
 
 export const pageHeadH = state => state.pageHeadH
+
+export const couponList = state => state.couponList
+
+export const selectCoupon = state => state.selectCoupon
+
+export const checkoutCouponList = state => state.checkoutCouponList
+
+export const canUseNum = state => state.canUseNum

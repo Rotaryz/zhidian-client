@@ -47,3 +47,9 @@ export const SET_IM_POSITION = 'SET_IM_POSITION'
 export const SET_IM_TITLE = 'SET_IM_TITLE'
 
 export const SET_PAGE_HEAD = 'SET_PAGE_HEAD'
+
+export const SET_SELECT_COUPON = 'SET_SELECT_COUPON'
+
+export const SET_COUPON_LIST = 'SET_COUPON_LIST'
+
+export const CHECK_COUPON = 'CHECK_COUPON'

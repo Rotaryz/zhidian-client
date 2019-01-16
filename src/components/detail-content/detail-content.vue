@@ -35,10 +35,10 @@
       </div>
     </div>
     <div class="f4-line"></div>
-    <div class="store-container">
-      <div class="detail-title border-bottom-1px">服务套餐</div>
-      <div class="service-detail" v-if="goodsDetail.detail_config && goodsDetail.detail_config.length">
-        <div class="service-content border-bottom-1px">
+    <div class="store-container" @click="test">
+      <div class="detail-title border-bottom-1px">{{goodsDetail.type == 3 ? '服务套餐' : '商品详情'}}</div>
+      <div class="service-detail">
+        <div class="service-content border-bottom-1px" v-if="goodsDetail.detail_config && goodsDetail.detail_config.length">
           <div class="service-item" v-for="(item, index) in goodsDetail.detail_config" :key="index">
             <span class="item-left">{{item.servie}}</span>
             <span class="item-right">
@@ -84,6 +84,9 @@
       }
     },
     methods: {
+      test() {
+        console.log(this.goodsDetail.goods_images)
+      },
       showLocation() {
         this.$emit('noRefresh')
         let data = {
