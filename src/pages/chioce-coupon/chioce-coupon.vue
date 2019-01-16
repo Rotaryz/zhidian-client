@@ -58,7 +58,7 @@
                 <div class="right-status"></div>
               </div>
             </div>
-            <div class="coupon-down">不可用原因：{{item.unUseType == 1 ? item.range_type_str : item.condition_str}}</div>
+            <div class="coupon-down">不可用原因：{{item.unUseType == 3 ? '订单金额小于优惠券面额' : item.unUseType == 1 ? item.range_type_str : item.condition_str}}</div>
           </div>
         </div>
       </div>
