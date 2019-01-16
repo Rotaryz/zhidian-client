@@ -10,7 +10,8 @@
     "test": "node build/dev-server.js test",
     "prod": "node build/dev-server.js production",
     "build": "rimraf dist && node build/build.js",
-    "init": "node _config/index.js"
+    "init": "node _config/index.js",
+    "look": "node _config/look.js"
   },
   "dependencies": {
     "base-64": "^0.1.0",

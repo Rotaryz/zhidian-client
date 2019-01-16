@@ -26,9 +26,33 @@ const GIT = {
   'default': path.join(__dirname, '' + APP.platform),
   'dev_version' : ''
 }
+// 版本号
+const VERSION = _createVersion()
+// IM版本号
+const VERSION_IM = _createVersionIm()
 
 module.exports = {
   APP,
   ENV,
-  GIT
+  GIT,
+  VERSION,
+  VERSION_IM
+}
+
+function _createVersion(length = 6) {
+  let version = {}
+  new Array(length).fill(1).forEach((item, index) => {
+    let code = index + 1
+    version[`v${code}`]  = `/v${code}`
+  })
+  return version
+}
+
+function _createVersionIm(length = 6) {
+  let version = {}
+  new Array(length).fill(1).forEach((item, index) => {
+    let code = index + 1
+    version[`im-v${code}`]  = `/v${code}`
+  })
+  return version
 }
