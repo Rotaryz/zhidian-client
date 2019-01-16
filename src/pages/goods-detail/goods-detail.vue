@@ -43,10 +43,10 @@
           </button>
         </form>
       </div>
-      <form class="right-box outSide" report-submit @submit="$getFormId" v-if="goodsDetail.stock">
+      <form class="right-box outSide" report-submit @submit="$getFormId" v-if="goodsDetail.stock && goodsDetail.id">
         <button hover-class="none" formType="submit" class="right-box" @click="payOrderMsg">立即购买</button>
       </form>
-      <div class="right-box un-click outSide" v-if="!goodsDetail.stock">已售罄</div>
+      <div class="right-box un-click outSide" v-if="!goodsDetail.stock && goodsDetail.id">已售罄</div>
     </div>
     <payment ref="payment" @getPhone="phoneOk"></payment>
     <share ref="share" @friendShare="friendShare" @getPicture="getPicture"></share>

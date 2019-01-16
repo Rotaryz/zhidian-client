@@ -179,7 +179,7 @@
       .content-view
         height: 70vh
         .coupon-list
-          padding: 20px 15px 0
+          padding: 20px 15px 10px
           .coupon-item
             margin-bottom: 15px
             display: flex

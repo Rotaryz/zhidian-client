@@ -75,7 +75,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import { Customer, Goods } from 'api'
+  import { Customer, Goods, Mine } from 'api'
   import { mapActions, mapGetters } from 'vuex'
   import ImMixin from 'common/mixins/im-mixin'
 
@@ -132,7 +132,8 @@
         'setShowType',
         'setOrderResultMsg',
         'checkoutCoupon',
-        'setSelectCoupon'
+        'setSelectCoupon',
+        'setCouponList'
       ]),
       async showOrder(msg, type = 'default') {
         this.type = type
@@ -144,8 +145,26 @@
         this.total = (this.orderNum * this.paymentMsg.price).toFixed(2)
         this._checkCoupon()
       },
+      // 获取我的优惠券列表
+      async _getMineCouponList() {
+        let data = {
+          shop_id: wx.getStorageSync('shopId'),
+          has_page: false,
+          status: 0
+        }
+        let res = await Mine.getCouponList(data, false)
+        if (res.error === this.$ERR_OK) {
+          this.setCouponList(res.data)
+          this._checkCoupon()
+        }
+      },
       hideOrder() {
         this.orderShow = false
+      },
+      initDiscount() {
+        this.setSelectCoupon({})
+        this.discountNum = 0
+        this._getMineCouponList()
       },
       _checkCoupon() {
         if (this.showDiscount) {
@@ -252,6 +271,9 @@
             }
             let payRes = res.data
             const { timestamp, nonceStr, signType, paySign } = payRes
+            if (this.type === 'default') {
+              this.initDiscount()
+            }
             this.setShowType(true)
             wx.requestPayment({
               timeStamp: timestamp,
