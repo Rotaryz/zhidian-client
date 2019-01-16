@@ -30,7 +30,7 @@
           </div>
         </div>
         <div class="detail-item">
-          <div class="detail-title">商品总额</div>
+          <div class="detail-title">价格</div>
           <div class="payment-money"><span class="money-icon">¥</span>{{total}}</div>
         </div>
       </div>
@@ -44,6 +44,29 @@
           <div class="phone-num" v-if="paymentMsg.phoneNum">{{paymentMsg.phoneNum}}</div>
         </div>
       </div>
+      <navigator url="/pages/chioce-coupon" hover-class="none" v-if="showDiscount">
+        <div class="discount-li border-top-1px">
+          <div class="li-left">使用优惠券</div>
+          <div class="li-right">
+            <div class="right-content">
+              <div class="discount-txt" v-if="!selectCoupon.id">{{canUseNum}}张可用</div>
+              <div class="discount-num" v-if="selectCoupon.id">{{selectCoupon.coupon_type == 3 ? '-¥' + selectCoupon.denomination : selectCoupon.denomination + '折'}}</div>
+              <img class="right-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" alt="">
+            </div>
+          </div>
+        </div>
+      </navigator>
+      <div class="discount-li" v-if="showDiscount">
+        <div class="li-left">实付金额</div>
+        <div class="li-right">
+          <div class="right-content">
+            <div class="right-txt">已优惠</div>
+            <div class="right-red-num">¥{{discountNum}}</div>
+            <div class="right-black-icon">¥</div>
+            <div class="right-black-num">{{payTotal}}</div>
+          </div>
+        </div>
+      </div>
       <div class="buy-btn-box">
         <div class="buy-btn" :class="paymentMsg.phoneNum ? '' : 'un-click'" @click.stop="submitOrder">立即购买</div>
       </div>
@@ -53,7 +76,7 @@
 
 <script type="text/ecmascript-6">
   import { Customer, Goods } from 'api'
-  import { mapActions } from 'vuex'
+  import { mapActions, mapGetters } from 'vuex'
   import ImMixin from 'common/mixins/im-mixin'
 
   export default {
@@ -64,9 +87,11 @@
         orderShow: false,
         orderNum: 1,
         total: '',
-        paymentMsg: {},
+        paymentMsg: {}, // 支付信息
         code: '',
-        type: ''
+        type: '',
+        showDiscount: false, // 是否显示优惠券
+        discountNum: 0
       }
     },
     created() {
@@ -77,30 +102,69 @@
       this.paymentMsg = {}
       this.code = ''
       this.type = ''
+      this.setSelectCoupon({})
+      this.showDiscount = false
+      this.discountNum = 0
+    },
+    computed: {
+      ...mapGetters([
+        'canUseNum',
+        'selectCoupon'
+      ]),
+      payTotal() {
+        if (this.showDiscount && this.selectCoupon.id) {
+          let total
+          if (+this.selectCoupon.coupon_type === 3) {
+            total = (+this.total - +this.selectCoupon.denomination).toFixed(2)
+            this.discountNum = +this.selectCoupon.denomination
+          } else {
+            total = (this.total * this.selectCoupon.denomination / 10).toFixed(2)
+            this.discountNum = (this.total - total).toFixed(2)
+          }
+          return total
+        } else {
+          return this.total
+        }
+      }
     },
     methods: {
       ...mapActions([
         'setShowType',
-        'setOrderResultMsg'
+        'setOrderResultMsg',
+        'checkoutCoupon',
+        'setSelectCoupon'
       ]),
       async showOrder(msg, type = 'default') {
         this.type = type
+        this.showDiscount = type === 'default'
         this.paymentMsg = msg
         this.code = msg.code
         this.orderShow = true
         this.orderNum = 1
         this.total = (this.orderNum * this.paymentMsg.price).toFixed(2)
+        this._checkCoupon()
       },
       hideOrder() {
         this.orderShow = false
       },
+      _checkCoupon() {
+        if (this.showDiscount) {
+          let condition = {
+            goodsId: this.paymentMsg.goods_id,
+            money: this.total
+          }
+          this.checkoutCoupon(condition)
+        }
+      },
       addNum() {
         this.orderNum++
         this.total = (this.orderNum * this.paymentMsg.price).toFixed(2)
+        this._checkCoupon()
       },
       subNum() {
         this.orderNum--
         this.total = (this.orderNum * this.paymentMsg.price).toFixed(2)
+        this._checkCoupon()
       },
       getPhone(event) {
         const e = event.mp
@@ -144,7 +208,8 @@
               pay_method_id: 1,
               order_id: 0,
               recommend_goods_id: this.paymentMsg.recommend_goods_id,
-              type: this.paymentMsg.type
+              type: this.paymentMsg.type,
+              customer_coupon_id: this.selectCoupon.id || ''
             }
             msgCode = 40006
             msgData.goods_id = this.paymentMsg.recommend_goods_id
@@ -354,7 +419,6 @@
               margin-right: 3px
       .phone-auth
         height: 66px
-        margin-bottom: 10px
         display: flex
         align-items: center
         justify-content: space-between
@@ -382,6 +446,54 @@
             font-family: $font-family-regular
             color: $color-1F1F1F
             font-size: $font-size-16
+      .discount-li
+        height: 64px
+        display: flex
+        justify-content: space-between
+        align-items: center
+        .li-left
+          font-family: $font-family-regular
+          font-size: $font-size-16
+          color: $color-1F1F1F
+        .li-right
+          display: flex
+          align-items: center
+          .right-content
+            display: flex
+            align-items: center
+            .discount-num
+              font-family: $font-family-medium
+              font-size: $font-size-16
+              color: $color-ED2C2B
+            .discount-txt
+              font-family: $font-family-regular
+              font-size: $font-size-16
+              color: $color-ED2C2B
+            .right-icon
+              width: 7.5px
+              height: 12.5px
+              margin-left: 7px
+            .right-txt
+              font-family: $font-family-regular
+              font-size: $font-size-16
+              color: $color-1f1f1f
+              margin-right: 5px
+            .right-red-num
+              font-family: $font-family-regular
+              font-size: $font-size-16
+              color: $color-ED2C2B
+              margin-right: 10px
+            .right-black-icon
+              font-family: $font-family-medium
+              font-size: $font-size-18
+              color: $color-1f1f1f
+              margin-right: 1px
+            .right-black-num
+              font-family: $font-family-medium
+              font-size: 25px
+              line-height: 25px
+              color: $color-1f1f1f
+              padding-bottom: 3px
       .buy-btn-box
         padding: 15px 0
         .buy-btn

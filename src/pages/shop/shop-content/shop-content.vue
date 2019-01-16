@@ -33,7 +33,12 @@
             </div>
           </article>
           <div class="btn-wrapper">
-            <div class="btn">购买</div>
+            <!--<div class="btn">购买</div>-->
+            <form report-submit @submit="$getFormId">
+              <button hover-class="none" formType="submit" class="btn">
+                <span>购买</span>
+              </button>
+            </form>
             <div class="txt">已售{{item.sale_count}}份</div>
           </div>
         </section>
@@ -292,6 +297,7 @@
             justify-content: center
             align-items: center
             .btn
+              reset-button()
               normal-button-style(normal, 68px, 27px, 27px)
               font-family: $font-family-bold
               font-size: $font-size-14

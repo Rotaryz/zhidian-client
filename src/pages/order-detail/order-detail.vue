@@ -61,6 +61,8 @@
         <div class="order-item order-last">下单时间 : <span class="msg-detail">{{detail.create_at}}</span></div>
         <div class="order-item order-first">购买数量 : <span class="msg-detail">{{detail.order_details ? detail.order_details[0].num : ''}}</span></div>
         <div class="order-item">购买价格 : <span class="msg-detail">{{detail.order_details ? detail.order_details[0].total : ''}}</span></div>
+        <div class="order-item">优惠金额 : <span class="msg-detail">{{detail.discount_price}}</span></div>
+        <div class="order-item">实付金额 : <span class="msg-detail">{{detail.total}}</span></div>
       </div>
       <!--按钮-->
       <div class="order-btn" v-if="detail.status === 'payment' || detail.status === 'waiting_groupon' || detail.status === 'success_groupon' || detail.status === 'fail_groupon'">

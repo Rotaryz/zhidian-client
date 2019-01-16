@@ -3,6 +3,7 @@
     <head-item :title="title" :headStyle="headStyle" :showArrow="false" :titleColor="titleColor"></head-item>
     <!--<back-shop v-if="showBackBtn" @goBack="goBack" :shopName="shopName"></back-shop>-->
     <guide-header :shopInfo="shopInfo" :employee="employee" :isMyShop="isMyShop" :showBackBtn="showBackBtn" @goBack="goBack"></guide-header>
+    <guide-navigator></guide-navigator>
     <guide-active :groupList="groupData.list" :cutList="cutData.list" :selectTab="selectTab" @changeTab="changeTab" :nothing="nothing"></guide-active>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
     <frozen ref="frozen"></frozen>
@@ -12,6 +13,7 @@
 <script type="text/ecmascript-6">
   import GuideHeader from './guide-header/guide-header'
   import GuideActive from './guide-active/guide-active'
+  import GuideNavigator from './guide-navigator/guide-navigator'
   import HeadItem from 'components/head-item/head-item'
   import BackShop from 'components/back-shop/back-shop'
   import ImFixed from 'components/im-fixed/im-fixed'
@@ -25,6 +27,7 @@
     components: {
       GuideHeader,
       GuideActive,
+      GuideNavigator,
       BackShop,
       ImFixed,
       HeadItem,

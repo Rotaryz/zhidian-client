@@ -1,4 +1,5 @@
 import * as types from './mutation-types'
+import {checkCoupon} from '../common/js/util'
 
 export const saveRole = ({ commit, state }, role) => {
   commit(types.ROLE_TYPE, role)
@@ -98,4 +99,17 @@ export const setImTitle = ({ commit, state }, title) => {
 
 export const setPageHeadH = ({ commit, state }, px) => {
   commit(types.SET_PAGE_HEAD, px)
+}
+
+export const setCouponList = ({ commit, state }, list) => {
+  commit(types.SET_COUPON_LIST, list)
+}
+
+export const setSelectCoupon = ({ commit, state }, item) => {
+  commit(types.SET_SELECT_COUPON, item)
+}
+
+export const checkoutCoupon = ({ commit, state }, msg) => {
+  let res = checkCoupon(state.couponList, msg)
+  commit(types.CHECK_COUPON, res)
 }

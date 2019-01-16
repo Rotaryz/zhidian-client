@@ -142,3 +142,39 @@ export function arrayBufferToBase64(raw) {
   base64 += encodings[a] + encodings[b] + encodings[c] + '='
   return 'data:image/png;base64,' + base64
 }
+
+export function checkCoupon(arr, condition) {
+  let canUseArr = []
+  let unUseArr = []
+  arr.forEach((item) => {
+    let copyItem = Object.assign({}, item)
+    let useType = checkUnUse(item, condition)
+    if (!useType) {
+      canUseArr.push(copyItem)
+    } else {
+      copyItem.unUseType = useType
+      unUseArr.push(copyItem)
+    }
+  })
+  return {
+    canUse: canUseArr,
+    unUse: unUseArr
+  }
+}
+
+// 判断优惠券是否不可用， false为可用， 1为不符合指定商品， 2为不符合使用条件
+export function checkUnUse(item, condition) {
+  if (item.range_type) {
+    let goodsIdArr = item.range_value.split(',')
+    let hasIn = goodsIdArr.indexOf('' + condition.goodsId)
+    if (hasIn === -1) {
+      return 1
+    }
+  } else {
+    if (item.use_type && +item.condition >= +condition.money) {
+      return 2
+    } else {
+      return false
+    }
+  }
+}

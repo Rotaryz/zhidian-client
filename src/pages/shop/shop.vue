@@ -326,7 +326,7 @@
     justify-content: center
 
     .brand-left
-      height: 75px
+      height: 65px
       flex: 1
       overflow: hidden
       display: flex
