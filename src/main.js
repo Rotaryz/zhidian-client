@@ -1,9 +1,9 @@
+import '../static/sdk/ald-stat'
 import Vue from 'vue'
 import store from '@/store'
 import App from './App'
 import './utils/app-plugins'
 import './utils/env-clear'
-import '@static/sdk/ald-stat'
 
 Vue.config.productionTip = false
 App.mpType = 'app'
