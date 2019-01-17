@@ -30,7 +30,7 @@
       <!--<div class="prize-box" v-if="shopInfo.lucky_draw_status" @click="navToWheel">-->
         <!--<img class="prize-img" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/pic-gift_banner@2x.png'">-->
       <!--</div>-->
-      <form report-submit class="prize-box" @submit="$getFormId">
+      <form report-submit v-if="shopInfo.lucky_draw_status" class="prize-box" @submit="$getFormId">
         <button hover-class="none" formType="submit" class="prize-box" @click="navToWheel">
           <img class="prize-img" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/pic-gift_banner@2x.png'">
         </button>
