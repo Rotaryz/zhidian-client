@@ -29,7 +29,7 @@
                 <div class="unit">¥</div>
                 <div class="numbers">{{item.platform_price}}</div>
               </div>
-              <span class="old-price">{{item.original_price}}元</span>
+              <span class="old-price">¥{{item.original_price}}</span>
             </div>
           </article>
           <div class="btn-wrapper">

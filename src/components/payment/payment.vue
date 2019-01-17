@@ -10,7 +10,7 @@
           <div class="payment-title">{{paymentMsg.title}}</div>
           <div class="payment-money">
             <span class="price-left"><span class="price-icon">¥</span><span class="big-money">{{paymentMsg.price}}</span></span>
-            <span class="del-money">{{paymentMsg.originPrice}}元</span>
+            <span class="del-money">¥{{paymentMsg.originPrice}}</span>
           </div>
         </div>
       </div>
@@ -433,12 +433,12 @@
               font-size: $font-size-18
               color: $color-1F1F1F
           .payment-money
-            font-size: $font-size-20
+            font-size: $font-size-16
             font-family: PingFang-SC-Bold
-            color: $color-ED2C2B
-            letter-spacing: 0.6px
+            color: $color-1F1F1F
             .money-icon
-              margin-right: 3px
+              font-size: $font-size-12
+              margin-right: 1px
       .phone-auth
         height: 66px
         display: flex

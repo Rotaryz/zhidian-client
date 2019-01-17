@@ -32,7 +32,7 @@
         <div class="goods-title">{{goodsDetail.goods_title}}</div>
         <div class="goods-money-box">
           <span class="big-money-box"><span class="red-money-icon">¥</span><span class="red-big-money">{{goodsDetail.platform_price}}</span></span>
-          <span class="del-money">{{goodsDetail.original_price}}元</span>
+          <span class="del-money">¥{{goodsDetail.original_price}}</span>
         </div>
       </div>
       <div class="goods-msg-right">

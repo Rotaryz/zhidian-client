@@ -3,14 +3,14 @@
     <!--<canvas class="canvas" canvas-id="dynamic-share" :style="canvasStyle"></canvas>-->
     <article class="panel">
       <header class="header">
-        <img class="h-bg" mode="aspectFill" :src="imageUrl + '/zd-image/dynamic/bg-card_trends@2x.png'" alt="">
+        <img v-if="imageUrl" class="h-bg" mode="aspectFill" :src="imageUrl + '/zd-image/dynamic/bg-card_trends@2x.png'" alt="">
         <img class="h-avatar" id="h-avatar" :src="avatarUrlTmp" alt="" mode="aspectFill">
         <div class="h-name">{{name}}</div>
         <div class="h-title">{{hTitle}}</div>
       </header>
       <section class="content">
         <div class="time-wrapper">
-          <img class="icon" id="icon" :src="imageUrl + '/zd-image/dynamic/icon-time@2x.png'" alt="">
+          <img v-if="imageUrl" class="icon" id="icon" :src="imageUrl + '/zd-image/dynamic/icon-time@2x.png'" alt="">
           <div class="time" id="time">{{item.created_at}}</div>
         </div>
         <text class="words">{{item.content}}</text>
