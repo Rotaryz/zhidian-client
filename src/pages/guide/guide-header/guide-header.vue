@@ -1,7 +1,7 @@
 <template>
   <div class="guide-header">
     <section class="logo-wrapper">
-      <img class="img" mode="aspectFill" :src="shopInfo.image_url" alt="">
+      <img v-if="shopInfo.image_url" class="img" mode="aspectFill" :src="shopInfo.image_url" alt="">
       <!--<div class="back-box" @click="backShop" v-if="showBackBtn">-->
         <!--<img class="back-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-shop_my@2x.png'">-->
         <!--<div class="back-txt">返回店铺</div>-->
@@ -12,7 +12,7 @@
       <div class="msg-box">
         <div class="msg-left">
           <div class="avatar-box">
-            <img :src="shopInfo.avatar" class="avatar-img" mode="aspectFill">
+            <img v-if="shopInfo.avatar" :src="shopInfo.avatar" class="avatar-img" mode="aspectFill">
           </div>
           <div class="msg-detail">
             <div class="detail-top"><span class="top-name">{{employee.name || employee.nickname}}</span></div>

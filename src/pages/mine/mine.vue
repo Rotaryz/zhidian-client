@@ -8,7 +8,7 @@
         <!--<div class="back-txt">返回店铺</div>-->
       <!--</div>-->
       <div class="mine-msg">
-        <img class="mine-header" mode="aspectFill" :src="userInfo.avatar">
+        <img v-if="userInfo.avatar" class="mine-header" mode="aspectFill" :src="userInfo.avatar">
         <p class="mine-name">{{userInfo.nickname}}</p>
       </div>
       <div class="order-tab">
@@ -23,7 +23,7 @@
           <p class="manager-image-title">{{item.title}}</p>
           <div class="mine-serve-avatar-box" v-if="index === manager.length - 1">
             <div class="mine-serve-avatarBox-item" v-for="(items, idx) in shopList" :key="idx">
-              <img class="mine-serve-avatarBox-img" :src="items.image_url" mode="aspectFill">
+              <img v-if="items.image_url" class="mine-serve-avatarBox-img" :src="items.image_url" mode="aspectFill">
             </div>
             <span class="shop-num">{{length}}家</span>
           </div>
