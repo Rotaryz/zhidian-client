@@ -57,12 +57,12 @@
         margin-right: 5px
         border-radius: 3px
         overflow: hidden
-        border-1px(#E3E5E8, 3px)
         box-shadow: 0 5px 13px 0 rgba(0,0,0,0.06)
         &:last-child
           margin-right: 0
         .item-img-box
           reset-button()
+          border-1px(#E3E5E8, 3px)
           width: 100%
           height: 0
           padding-bottom: 53.57%

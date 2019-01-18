@@ -1,35 +1,28 @@
 <template>
   <div class="guide-header">
     <section class="logo-wrapper">
-      <img v-if="shopInfo.image_url" class="img" mode="aspectFill" :src="shopInfo.image_url" alt="">
-      <!--<div class="back-box" @click="backShop" v-if="showBackBtn">-->
-        <!--<img class="back-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-shop_my@2x.png'">-->
-        <!--<div class="back-txt">返回店铺</div>-->
-      <!--</div>-->
+      <img v-if="storeInfo.cover_url" class="img" mode="aspectFill" :src="storeInfo.cover_url" alt="">
+      <img v-else-if="imageUrl" class="img" mode="aspectFill" :src="imageUrl + '/zd-image/1.5/pic-mrbg@2x.png'" alt="">
       <div class="cover-down"></div>
     </section>
     <section class="content">
       <div class="msg-box">
         <div class="msg-left">
           <div class="avatar-box">
-            <img v-if="shopInfo.avatar" :src="shopInfo.avatar" class="avatar-img" mode="aspectFill">
+            <img v-if="storeInfo.logo_url" class="avatar-img" mode="aspectFill" :src="storeInfo.logo_url" alt="">
+            <img v-else-if="imageUrl" :src="imageUrl + '/zd-image/1.5/pic-mrtx@2x.png'" class="avatar-img" mode="aspectFill">
           </div>
           <div class="msg-detail">
-            <div class="detail-top"><span class="top-name">{{employee.name || employee.nickname}}</span></div>
-            <div class="detail-down">我的小店开张了，欢迎大家光临！</div>
+            <div class="detail-top"><span class="top-name">{{storeInfo.name}}</span></div>
           </div>
         </div>
         <div class="msg-right">
-          <img class="btn-editor" v-if="isMyShop && imageUrl" :src="imageUrl + '/zd-image/1.2/icon-exchange@2x.png'" alt="" @click="editorAvatar">
           <button class="share-btn" open-type="share">
             <img class="share-icon" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/icon-share_dg@2x.png'" alt="">
           </button>
         </div>
       </div>
       <div class="height-10px-box" v-if="!shopInfo.lucky_draw_status"></div>
-      <!--<div class="prize-box" v-if="shopInfo.lucky_draw_status" @click="navToWheel">-->
-        <!--<img class="prize-img" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/pic-gift_banner@2x.png'">-->
-      <!--</div>-->
       <form report-submit v-if="shopInfo.lucky_draw_status" class="prize-box" @submit="$getFormId">
         <button hover-class="none" formType="submit" class="prize-box" @click="navToWheel">
           <img class="prize-img" v-if="imageUrl" :src="imageUrl + '/zd-image/1.2/pic-gift_banner@2x.png'">
@@ -65,23 +58,31 @@
     data() {
       return {}
     },
-    onShareAppMessage() {
-      this.setShowType(true)
-      this.sendCustomMsg(10004) // 转发给好友
-      let id = wx.getStorageSync('userInfo').id
-      let shopId = wx.getStorageSync('shopId')
-      return {
-        title: this.shopInfo.name,
-        path: `/pages/guide?fromType=3&fromId=${id}&shopId=${shopId}`,
-        imageUrl: this.shopInfo.image_url,
-        success: (res) => {
-          // 转发成功
-        },
-        fail: (res) => {
-          // 转发失败
-        }
+    computed: {
+      storeInfo() {
+        let storeInfo = this.shopInfo.store || {}
+        return storeInfo
       }
     },
+    // onShareAppMessage() {
+    //   this.setShowType(true)
+    //   this.sendCustomMsg(10004) // 转发给好友
+    //   let id = wx.getStorageSync('userInfo').id
+    //   let shopId = wx.getStorageSync('shopId')
+    //   let imageUrl = this.storeInfo.cover_url || `${this.$imageUrl}/zd-image/1.5/pic-mrbg@2x.png`
+    //   let title = this.storeInfo.name
+    //   return {
+    //     title,
+    //     path: `/pages/guide?fromType=3&fromId=${id}&shopId=${shopId}`,
+    //     imageUrl,
+    //     success: (res) => {
+    //       // 转发成功
+    //     },
+    //     fail: (res) => {
+    //       // 转发失败
+    //     }
+    //   }
+    // },
     created() {
     },
     methods: {
@@ -118,40 +119,22 @@
   .guide-header
     position: relative
     .logo-wrapper
-      height: 80vw
+      height: 42.66666666666667vw
+      overflow :hidden
       .img
         height: 100%
         width: 100%
         display: block
         background: $color-white
       .cover-down
+        position :absolute
+        top:0
+        left :0
         display: block
-        width: 100%
-        height: 40vw
-        opacity: 0.5
-        background-image: linear-gradient(180deg, rgba(7,7,7,0.00) 20%, rgba(5,5,5,0.15) 35%, rgba(0,0,0,0.80) 75%)
-        margin-top: -40vw
-      .back-box
-        position: absolute
-        right: 0
-        top: 11.5vh
-        font-family: $font-family-regular
-        background-image: linear-gradient(90deg, #FE7754 0%, #ED2B2B 100%)
-        border-radius: 100px 0 0 100px
-        layout(row, block, nowrap)
-        align-items: center
-        font-size: 0
-        width: 97px
-        height: 32px
-        .back-icon
-          width: 17px
-          height: 15px
-          margin-left: 11px
-        .back-txt
-          font-size: $font-size-14
-          color: $color-white
-          margin-left: 6px
-          line-height: 14px
+        width: 100vw
+        height: 42.66666666666667vw
+        opacity :0.25
+        background: #000
     .content
       display: block
       padding: 0 15px
@@ -177,15 +160,16 @@
           display: flex
           align-items: center
           .avatar-box
-            width: 60px
-            height: 60px
-            border: 2px solid $color-white
-            border-radius: 50%
-            overflow: hidden
-            margin-right: 10px
+            width: 55px
+            height: @width
+            border: 1px solid rgba(255,255,255,0.6)
+            box-shadow: 0 2px 10px 0 rgba(31,31,31,0.10)
+            border-radius: 6px
+            box-sizing :border-box
             .avatar-img
               width: 100%
               height: 100%
+              border-radius: 6px
           .msg-detail
             flex: 1
             overflow: hidden
@@ -193,61 +177,37 @@
             height: 64px
             justify-content: center
             flex-direction: column
+            padding :0 8px
             .detail-top
               width: 100%
               overflow: hidden
               display: flex
-              align-items: flex-end
+              align-items: center
+              position :relative
+              top:10px
               .top-name
                 font-family: $font-family-medium
                 color: $color-white
-                font-size: 25px
-                letter-spacing: 2px
+                font-size: 18px
                 white-space: nowrap
                 overflow: hidden
                 text-overflow: ellipsis
-                line-height: 25px
-              .top-position
-                font-family: $font-family-regular
-                color: $color-white
-                letter-spacing: 0.8px
-                font-size: $font-size-16
-                margin-left: 2px
-                max-width: 30%
-                overflow: hidden
-                line-height: 16px
-                margin-bottom: 2px
-            .detail-down
-              font-family: $font-family-regular
-              color: $color-white
-              font-size: 13px
-              letter-spacing: 0.6px
-              width: 100%
-              overflow: hidden
-              white-space: nowrap
-              text-overflow: ellipsis
-              line-height: 13px
-              margin-top: 6px
+                line-height: 18px
         .msg-right
           font-size: 0
           width: 42px
           height: 32px
           position: relative
-          .btn-editor
-            position: absolute
-            right: 0
-            top: -45px
-            width: 32px
-            height: 32px
           .share-btn
+            top: 13px
             margin-left: 10px
-            height: 32px
-            width: 32px
+            height: 29px
+            width: @height
             border-radius: 50%
             opacity: 1
             .share-icon
-              width: 32px
-              height: 32px
+              height: 29px
+              width: @height
       .prize-box
         padding-bottom: 27.82%
         position: relative

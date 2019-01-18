@@ -135,7 +135,14 @@ export default {
           if (this.behaviorList.length && shopId) {
             Promise.all(this.behaviorList.map((item) => {
               let opt = Object.assign({}, item, {desc: JSON.stringify(descMsg)})
-              return this.$webimHandler.onSendCustomMsg(opt, this.currentMsg.account)
+              // 判定切店后,发送的店铺是否一致
+              let descObj = (opt.desc && JSON.parse(opt.desc)) || {}
+              let shopId = descObj.shop_id
+              if (this.currentMsg.shopId === shopId) {
+                return this.$webimHandler.onSendCustomMsg(opt, this.currentMsg.account)
+              } else {
+                return true
+              }
             })).then(() => {
               this.clearBehaviorList()
             })

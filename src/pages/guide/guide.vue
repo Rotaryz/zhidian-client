@@ -1,6 +1,6 @@
 <template>
-  <article class="guide">
-    <head-item :title="title" :headStyle="headStyle" :showArrow="false" :titleColor="titleColor"></head-item>
+  <article class="guide" :style="{paddingTop: pageHeadH + 'px'}">
+    <head-item :title="title" :showArrow="false"></head-item>
     <!--<back-shop v-if="showBackBtn" @goBack="goBack" :shopName="shopName"></back-shop>-->
     <guide-header :shopInfo="shopInfo" :employee="employee" :isMyShop="isMyShop" :showBackBtn="showBackBtn" @goBack="goBack"></guide-header>
     <guide-navigator></guide-navigator>
@@ -56,11 +56,17 @@
         shopName: '',
         nothing: false,
         timer: '',
-        title: '',
+        title: '首页',
         headStyle: 'background: rgba(255, 255, 255, 0)',
         titleColor: 'white',
         forzenTimer: '',
         shopChange: true // 优化， 切店才显示loading
+      }
+    },
+    computed: {
+      storeInfo() {
+        let storeInfo = this.shopInfo.store || {}
+        return storeInfo
       }
     },
     onTabItemTap() {
@@ -69,17 +75,17 @@
     onHide() {
       this.$refs.frozen.close()
     },
-    onPageScroll(e) {
-      if (e.scrollTop >= 100) {
-        this.headStyle = 'background: rgba(255, 255, 255, 1)'
-        this.titleColor = '#000000'
-        this.title = '首页'
-      } else {
-        this.headStyle = 'background: rgba(255, 255, 255, 0)'
-        this.titleColor = 'white'
-        this.title = ''
-      }
-    },
+    // onPageScroll(e) {
+    //   if (e.scrollTop >= 100) {
+    //     this.headStyle = 'background: rgba(255, 255, 255, 1)'
+    //     this.titleColor = '#000000'
+    //     this.title = '首页'
+    //   } else {
+    //     this.headStyle = 'background: rgba(255, 255, 255, 0)'
+    //     this.titleColor = 'white'
+    //     this.title = ''
+    //   }
+    // },
     onLoad(options) {
       if (!this.$wx.getStorageSync('token')) return
       this.oldShopId = this.$wx.getStorageSync('shopId')
@@ -114,12 +120,16 @@
       }
     },
     onShareAppMessage() {
-      let id = this.$wx.getStorageSync('userInfo').id
-      let shopId = this.$wx.getStorageSync('shopId')
+      this.setShowType(true)
+      this.sendCustomMsg(10004) // 转发给好友
+      let id = wx.getStorageSync('userInfo').id
+      let shopId = wx.getStorageSync('shopId')
+      let imageUrl = this.storeInfo.cover_url || `${this.$imageUrl}/zd-image/1.5/pic-mrbg@2x.png`
+      let title = this.storeInfo.name
       return {
-        title: this.shopInfo.name || this.shopInfo.employee.name,
-        path: `pages/guide?fromType=3&fromId=${id}&shopId=${shopId}`,
-        imageUrl: this.shopInfo.image_url,
+        title,
+        path: `/pages/guide?fromType=3&fromId=${id}&shopId=${shopId}`,
+        imageUrl,
         success: (res) => {
           // 转发成功
         },
@@ -128,6 +138,21 @@
         }
       }
     },
+    // onShareAppMessage() {
+    //   let id = this.$wx.getStorageSync('userInfo').id
+    //   let shopId = this.$wx.getStorageSync('shopId')
+    //   return {
+    //     title: this.shopInfo.name || this.shopInfo.employee.name,
+    //     path: `pages/guide?fromType=3&fromId=${id}&shopId=${shopId}`,
+    //     imageUrl: this.shopInfo.image_url,
+    //     success: (res) => {
+    //       // 转发成功
+    //     },
+    //     fail: (res) => {
+    //       // 转发失败
+    //     }
+    //   }
+    // },
     async onPullDownRefresh() {
       await Promise.all([
         this._getShopInfo({}, false),
