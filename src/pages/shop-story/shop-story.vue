@@ -35,12 +35,13 @@
   import clearWatch from 'common/mixins/clear-watch'
   import HeadItem from 'components/head-item/head-item'
   import Blank from 'components/blank/blank'
+  import imMixin from 'common/mixins/im-mixin'
 
   const PAGE_NAME = 'SHOP_STORY'
 
   export default {
     name: PAGE_NAME,
-    mixins: [clearWatch],
+    mixins: [clearWatch, imMixin],
     components: {
       HeadItem,
       Blank
@@ -58,6 +59,7 @@
     },
     onLoad() {
       this._getStory(true)
+      this.sendCustomMsg(40007)
     },
     methods: {
       async _getStory(loading) {

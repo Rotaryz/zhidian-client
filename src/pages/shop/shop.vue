@@ -3,7 +3,7 @@
     <head-item :title="title" :showArrow="false"></head-item>
     <shop-header :shopInfo="shopInfo" :employee="employee" :photoInfo="photoInfo" v-if="showHeader"></shop-header>
     <div style="height: 10px; background: #F4F5F7 "></div>
-    <navigator url="/pages/shop-story" class="brand-tab" @click="sendBrand">
+    <navigator url="/pages/shop-story" class="brand-tab">
       <div class="brand-left">
         <div class="brand-title">品牌故事</div>
         <div class="brand-subtitle" v-if="shopInfo.brand_title">{{shopInfo.brand_title}}</div>
@@ -135,9 +135,6 @@
       this.$wx.stopPullDownRefresh()
     },
     methods: {
-      sendBrand() {
-        this.sendCustomMsg(40007)
-      },
       refreshBox() {
         setTimeout(() => {
           this.initDomPosition()
