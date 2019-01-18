@@ -2,7 +2,7 @@
   <div class="guide-navigate">
     <div class="navigate-list">
       <div class="navigate-item" v-for="(item, idx) in list" :key="idx">
-        <form report-submit @submit="$getFormId">
+        <form report-submit @submit="$getFormId" class="form-box">
           <button hover-class="none" formType="submit" class="item-img-box" @click="navTo(item)">
             <img class="item-img" v-if="imageUrl" :src="imageUrl + '/zd-image/1.5/' + item.img" alt="">
           </button>
@@ -51,27 +51,31 @@
       display: flex
       justify-content: space-between
       background: $color-white
-
       .navigate-item
         flex: 1
         margin-right: 5px
-        border-radius: 3px
-        overflow: hidden
-        box-shadow: 0 5px 13px 0 rgba(0,0,0,0.06)
         &:last-child
           margin-right: 0
-        .item-img-box
-          reset-button()
-          border-1px(#E3E5E8, 3px)
+        .form-box
+          display: block
           width: 100%
           height: 0
           padding-bottom: 53.57%
           position: relative
+        .item-img-box
+          reset-button()
+          box-sizing: border-box
+          border: 0.5px solid #e3e5e8
+          position: absolute
+          left: 0
+          top: 0
+          right: 0
+          bottom: 0
+          border-radius: 3px
+          box-shadow: 0 5px 13px 0 rgba(0,0,0,0.06)
+          overflow: hidden
           .item-img
             width: 100%
             height: 100%
-            position: absolute
-            left: 0
-            top: 0
 
 </style>
