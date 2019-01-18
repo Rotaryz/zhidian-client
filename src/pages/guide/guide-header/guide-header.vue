@@ -161,15 +161,16 @@
           align-items: center
           .avatar-box
             width: 55px
-            height: @width
+            height: 55px
+            box-sizing: border-box
             border: 1px solid rgba(255,255,255,0.6)
             box-shadow: 0 2px 10px 0 rgba(31,31,31,0.10)
             border-radius: 6px
-            box-sizing :border-box
+            overflow :hidden
+            font-size :0
             .avatar-img
-              width: 100%
-              height: 100%
-              border-radius: 6px
+              width: 56px
+              height: 56px
           .msg-detail
             flex: 1
             overflow: hidden
