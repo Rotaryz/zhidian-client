@@ -189,6 +189,8 @@
             line-height: 1.8
             word-break: break-all
             text-align: justify
+            display: block
+            padding: 0 15px
       .end
         font-size: $font-size-14
         color: $color-99A0AA

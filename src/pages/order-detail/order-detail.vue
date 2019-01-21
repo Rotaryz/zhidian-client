@@ -60,7 +60,7 @@
         <div class="order-item">手机号码 : <span class="msg-detail">{{detail.mobile}}</span></div>
         <div class="order-item order-last">下单时间 : <span class="msg-detail">{{detail.create_at}}</span></div>
         <div class="order-item order-first">购买数量 : <span class="msg-detail">{{detail.order_details ? detail.order_details[0].num : ''}}</span></div>
-        <div class="order-item">购买价格 : <span class="msg-detail">{{detail.order_details ? detail.order_details[0].total : ''}}</span></div>
+        <div class="order-item">应付金额 : <span class="msg-detail">{{detail.actually_price}}</span></div>
         <div class="order-item">优惠金额 : <span class="msg-detail">{{detail.discount_price}}</span></div>
         <div class="order-item">实付金额 : <span class="msg-detail">{{detail.total}}</span></div>
       </div>
