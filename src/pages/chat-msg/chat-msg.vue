@@ -1,7 +1,7 @@
 <template>
   <div class="chat">
     <head-item :title="chatMsgTitle" :showArrow="true"></head-item>
-    <scroll-view scroll-y class="chat-container" :scroll-into-view="scrollId" @scrolltoupper="loadMore" :style="{paddingTop: pageHeadH + 'px'}">
+    <scroll-view scroll-y id="scroll" class="chat-container" :scroll-into-view="scrollId" @scrolltoupper="loadMore" :style="{paddingTop: pageHeadH + 'px'}">
       <div class="chat-list">
         <div class="line-view"></div>
         <div class="chat-item" v-for="(item, index) in nowChat" :key="index" :id="'item' + index">
@@ -57,7 +57,7 @@
                 </div>
               </button>
             </div>
-            <image class="chat-msg-img other" :src="item.url" v-if="item.type * 1 == 20" mode="widthFix" @click="showPic(item, index)"></image>
+            <image class="chat-msg-img other" :src="item.url" v-if="item.type * 1 == 20" @click="showPic(item, index)"></image>
           </section>
           <section class="chat-content mine" v-if="item.from_account_id === imAccount">
             <div class="chat-msg-box mine" v-if="item.type * 1 === 1">
@@ -86,7 +86,7 @@
                 <span>赞播智店</span>
               </div>
             </div>
-            <img class="chat-msg-img mine" :src="item.url" v-if="item.type * 1 == 20" mode="widthFix" @click="showPic(item, index)"/>
+            <img class="chat-msg-img mine" :src="item.url" v-if="item.type * 1 == 20" @click="showPic(item, index)"/>
             <div class="chat-msg-goods" v-if="item.type * 1 === 2">
               <img :src="item.url" class="goods-img" mode="widthFix">
               <p class="goods-title">{{item.title}}</p>
@@ -166,7 +166,11 @@
         from: '',
         focus: false,
         shopId: '',
-        noMore: false
+        noMore: false,
+        scrollTop: 0,
+        scrollHeight: 0, // 内容高度
+        viewHeight: 0, // scrollView盒子高度
+        timer: ''
       }
     },
     created() {
@@ -183,6 +187,17 @@
       this.setImIng(true)
       this._getWelcomeInfo()
       this._getMsgList()
+      console.log(this)
+      setTimeout(() => {
+        const query = wx.createSelectorQuery()
+        query.select('#scroll')
+          .boundingClientRect()
+          .select('.chat-list')
+          .boundingClientRect()
+          .exec(function (res) {
+            console.log(res)
+          })
+      }, 2000)
     },
     onUnload() {
       this.setNowChat([])
@@ -215,6 +230,17 @@
         'setShowType',
         'setChatGoods'
       ]),
+      _chatViewMove() {
+        let scrollY = this.scrollHeight - this.scrollTop
+        console.log(scrollY, this.viewHeight)
+        if (scrollY && scrollY < this.viewHeight) {
+          this.scrollId = 'item' + (this.nowChat.length - 1)
+        }
+      },
+      viewScroll(e) {
+        this.scrollTop = e.target.scrollTop
+        this.scrollHeight = e.target.scrollHeight
+      },
       _getChatParams() {
         this.shopId = wx.getStorageSync('shopId')
         this.userInfo = wx.getStorageSync('userInfo')
@@ -234,6 +260,7 @@
       _getSystemInfo() {
         let phoneInfo = wx.getSystemInfoSync()
         let system = phoneInfo.system
+        this.viewHeight = phoneInfo.screenHeight - this.pageHeadH - 50
         if (system.indexOf('IOS') !== -1) {
           this.system = 'iphone'
         } else {
@@ -479,6 +506,8 @@
   @import "~common/stylus/variable"
   @import '~common/stylus/mixin'
   @import '~common/stylus/base'
+  .chat-msg-img
+    height: 400px
   .chat
     width: 100vw
     height: 100vh
@@ -490,7 +519,7 @@
       padding-bottom: 50px
       box-sizing: border-box
       .chat-list
-        padding-bottom: 40px
+        padding-bottom: 15px
       .line-view
         height: 20px
         width: 100%

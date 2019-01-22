@@ -68,6 +68,8 @@ export default {
                   this.setNowCount('add')
                 } else {
                   this.addNowChat(res)
+                  console.log(this)
+                  this._chatViewMove && this._chatViewMove()
                 }
               }
             }, // 监听新消息(私聊(包括普通消息和全员推送消息)，普通群(非直播聊天室)消息)事件，必填
