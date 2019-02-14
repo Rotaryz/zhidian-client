@@ -82,6 +82,7 @@
         e.mp.detail.fullScreen ? this.ctx.play() : this.ctx.pause()
       },
       toPhotos() {
+        this.sendCustomMsg(40008)
         this.$wx.navigateTo({ url: '/pages/album' })
       },
       async toMap() {
@@ -96,6 +97,7 @@
           }
           this.setShowType(true)
           this.$wechat.showLoading()
+          this.sendCustomMsg(40009)
           await this.$wechat.openLocation({ latitude, longitude, name, address })
           this.$wechat.hideLoading()
         } catch (e) {
@@ -104,6 +106,7 @@
       },
       toMobile() {
         this.setShowType(true)
+        this.sendCustomMsg(40010)
         this.$wx.makePhoneCall && this.$wx.makePhoneCall({ phoneNumber: '' + this.employee.mobile })
       }
     },

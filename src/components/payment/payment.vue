@@ -230,7 +230,7 @@
               type: this.paymentMsg.type,
               customer_coupon_id: this.selectCoupon.id || ''
             }
-            msgCode = 40006
+            msgCode = this.paymentMsg.type === 1 ? 40023 : 40006
             msgData.goods_id = this.paymentMsg.recommend_goods_id
             break
           case 'group':

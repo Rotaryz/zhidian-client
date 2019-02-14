@@ -27,7 +27,7 @@
       </div>
     </div>
     <show-coupon ref="showCoupon" :couponList="couponList" @showList="showList"></show-coupon>
-    <detail-content ref="detailContent" :goodsDetail="goodsDetail" @noRefresh="noRefresh"></detail-content>
+    <detail-content ref="detailContent" :goodsDetail="goodsDetail" :type="detailType" :goodsId="reqGoodsId" @noRefresh="noRefresh"></detail-content>
     <div class="pay-order-bottom border-top-1px">
       <div class="left-box">
         <form report-submit class="left-item" @submit="$getFormId">
@@ -85,6 +85,7 @@
           latitude: ''
         },
         title: '商品详情',
+        detailType: 1, // 详情类型 1商品 2服务 3拼团 4砍价
         couponList: []
       }
     },
@@ -147,13 +148,13 @@
       let msgCode
       switch (this.scene * 1) {
         case 0:
-          msgCode = 40003
+          msgCode = this.goodsDetail.type === 1 ? 40015 : 40003
           break
         case 1:
-          msgCode = 40002
+          msgCode = this.goodsDetail.type === 1 ? 40016 : 40002
           break
         case 2:
-          msgCode = 40001
+          msgCode = this.goodsDetail.type === 1 ? 40017 : 40001
           break
       }
       this._getCouponList()
@@ -199,7 +200,8 @@
         }
         this.sendCustomMsg(20005, { product: dataMsg, type: 3 })
         let msgData = { title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId }
-        this.sendCustomMsg(60004, msgData)
+        let msgCode = this.goodsDetail.type === 1 ? 40020 : 60004
+        this.sendCustomMsg(msgCode, msgData)
         let url = `/pages/chat-msg`
         wx.navigateTo({ url })
       },
@@ -230,7 +232,8 @@
       },
       friendShare() {
         let msgData = { title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId }
-        this.sendCustomMsg(40004, msgData)
+        let msgCode = this.goodsDetail.type === 1 ? 40018 : 40004
+        this.sendCustomMsg(msgCode, msgData)
         this._shareReq()
       },
       getPicture() {
@@ -244,7 +247,8 @@
           price: this.goodsDetail.platform_price,
           goodsImg: this.goodsDetail.image_url,
           type,
-          id
+          id,
+          goodsType: this.goodsDetail.type
         }
         this.setGoodsDrawInfo(picMsg)
         this.$wx.navigateTo({ url: `goods-make-poster` })
@@ -295,6 +299,9 @@
           shopImg: this.goodsDetail.shop_data.image_url,
           type: this.goodsDetail.type
         }
+        let msgData = { title: this.goodsDetail.goods_title, goods_id: this.reqGoodsId }
+        let msgCode = this.goodsDetail.type === 1 ? 40021 : 40013
+        this.sendCustomMsg(msgCode, msgData)
         this.$refs.payment.showOrder(paymentMsg)
       },
       async _getGoodsDetail(id, loading = false) {
@@ -303,6 +310,7 @@
         if (res.error === this.$ERR_OK) {
           this.bannerImgs = res.data.goods_banner_images
           this.goodsDetail = res.data
+          this.detailType = +res.data.type === 1 ? 1 : 2
         }
       },
       async _checkHasPhone() {

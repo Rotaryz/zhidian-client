@@ -7,7 +7,7 @@
       <img style="width: 100%" mode="widthFix" v-if="imageUrl" :src="imageUrl + '/zd-image/wheel/pic-thrntable_title@2x.png'" alt="">
     </div>
     <div class="btn-wrapper">
-      <button class="btn-share" open-type="share">
+      <button class="btn-share" open-type="share" @click="share">
         <img class="icon-img" mode="aspectFill" v-if="imageUrl" :src="imageUrl + '/zd-image/wheel/pic-share_turntable@2x.png'" alt="">
       </button>
     </div>
@@ -19,6 +19,9 @@
     methods: {
       showRule() {
         this.$emit('showRule')
+      },
+      share() {
+        this.sendCustomMsg(20002)
       }
     }
   }

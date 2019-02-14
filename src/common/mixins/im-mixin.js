@@ -12,7 +12,9 @@ const DEFAULTOBJ = {
   customer_id: 0,
   total: '',
   title: '',
-  customer_name: ''
+  customer_name: '',
+  from_customer_id: 0,
+  user_info: {}
 }
 
 export default {
@@ -68,8 +70,6 @@ export default {
                   this.setNowCount('add')
                 } else {
                   this.addNowChat(res)
-                  console.log(this)
-                  this._chatViewMove && this._chatViewMove()
                 }
               }
             }, // 监听新消息(私聊(包括普通消息和全员推送消息)，普通群(非直播聊天室)消息)事件，必填
@@ -184,7 +184,8 @@ export default {
         total: obj.total || '',
         title: obj.title || '',
         goods_id: obj.goods_id || 0,
-        activity_id: obj.activity_id || 0
+        activity_id: obj.activity_id || 0,
+        from_customer_id: +this.fromMsg.fromType === 3 ? this.fromMsg.fromId : 0
       }
       switch (code) {
         case 20005:
@@ -198,7 +199,8 @@ export default {
         data,
         ext
       }
-      let option4Servers = Object.assign({}, DEFAULTOBJ, this.descMsg, sendObj)
+      let userInfo = wx.getStorageSync('userInfo')
+      let option4Servers = Object.assign({}, DEFAULTOBJ, this.descMsg, sendObj, {user_info: JSON.stringify(userInfo)})
       // im登录再执行发送
       if (this.imLogin && this.descMsg.flow_id) {
         let account = this.currentMsg.account
@@ -214,7 +216,7 @@ export default {
       }
     },
     _ImSendRecordToServer(obj) {
-      Im.sendRecord(obj)
+      Im.sendNewRecord(obj)
     }
   }
 }

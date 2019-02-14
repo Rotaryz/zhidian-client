@@ -123,6 +123,7 @@
         wx.navigateTo({url: pageRouter[this.prizeInfo.prize_type]})
       },
       shareBtnHandle() {
+        this.sendCustomMsg(20002)
         wx.navigateTo({url: `/pages/wheel-poster?name=${this.employeeInfo.name}&avatar=${this.employeeInfo.avatar}`})
       },
       btnHandle(index, number) {
@@ -130,6 +131,7 @@
           this.submit()
         } else {
           this.submit()
+          this.sendCustomMsg(20006)
           wx.switchTab({url: '/pages/guide'})
         }
       },

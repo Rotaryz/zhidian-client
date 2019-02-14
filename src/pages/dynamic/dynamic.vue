@@ -335,6 +335,7 @@
         this.pictureObj = null
       },
       makePoster() {
+        this.sendCustomMsg(50007)
         this.$refs.share.closeCover()
         this.$refs.dynamic.action()
       },
@@ -344,6 +345,7 @@
         this.showCover = true
       },
       friendShare() {
+        this.sendCustomMsg(50006)
         this.$refs.share.closeCover()
       },
       _hideDown() {

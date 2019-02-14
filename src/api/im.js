@@ -31,5 +31,13 @@ export default {
   sendRecord(data, loading = false) {
     let url = '/api/analysis/send-record'
     return request.get(url, data, loading, 'imRecord')
+  },
+  /**
+   * 采集行为消息 - 新1.5
+   * @return {*}
+   */
+  sendNewRecord(data, loading = false) {
+    let url = '/api/customer/action-collect'
+    return request.get(url, data, loading)
   }
 }

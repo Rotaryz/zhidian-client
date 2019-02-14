@@ -125,7 +125,8 @@
         let dataJson = {title, activity_id: id}
         switch (this.useType * 1) {
           case 0:
-            this.sendCustomMsg(40004, {title, goodsId: id})
+            let code = +this.goodsDrawInfo.goodsType === 1 ? 40018 : 40004
+            this.sendCustomMsg(code, { title, goodsId: id })
             break
           case 1:
             this.sendCustomMsg(30002, dataJson)
@@ -307,7 +308,8 @@
         let dataJson = {title, activity_id: id}
         switch (this.useType * 1) {
           case 0:
-            this.sendCustomMsg(40005, { title, goodsId: id })
+            let code = +this.goodsDrawInfo.goodsType === 1 ? 40019 : 40005
+            this.sendCustomMsg(code, { title, goodsId: id })
             break
           case 1:
             this.sendCustomMsg(30003, dataJson)

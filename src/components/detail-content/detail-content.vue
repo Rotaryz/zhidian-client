@@ -77,10 +77,14 @@
   import ImMixin from 'common/mixins/im-mixin'
   export default {
     mixins: [ImMixin],
-    props: ['goodsDetail'],
+    props: ['goodsDetail', 'type', 'goodsId', 'activityId'], // type: 1商品 2服务 3拼团 4砍价
     data () {
       return {
-        imageUrl: this.$imageUrl
+        imageUrl: this.$imageUrl,
+        msgCode: {
+          1: 40022,
+          2: 40014
+        }
       }
     },
     methods: {
@@ -105,6 +109,13 @@
         })
       },
       toShop() {
+        let msgData = {
+          title: this.goodsDetail.goods_title, goods_id: this.goodsId
+        }
+        if (+this.type <= 2) {
+          console.log(this.msgCode[this.type], msgData)
+          this.sendCustomMsg(this.msgCode[this.type], msgData)
+        }
         let url = '/pages/shop'
         wx.switchTab({url})
       }

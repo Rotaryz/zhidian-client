@@ -1,7 +1,7 @@
 <template>
   <div class="chat">
     <head-item :title="chatMsgTitle" :showArrow="true"></head-item>
-    <scroll-view scroll-y id="scroll" class="chat-container" :scroll-into-view="scrollId" @scrolltoupper="loadMore" :style="{paddingTop: pageHeadH + 'px'}">
+    <scroll-view scroll-y id="scroll" class="chat-container" :scroll-into-view="scrollId" @scroll="viewScroll" @scrolltoupper="loadMore" :style="{paddingTop: pageHeadH + 'px'}">
       <div class="chat-list">
         <div class="line-view"></div>
         <div class="chat-item" v-for="(item, index) in nowChat" :key="index" :id="'item' + index">
@@ -167,9 +167,7 @@
         focus: false,
         shopId: '',
         noMore: false,
-        scrollTop: 0,
-        scrollHeight: 0, // 内容高度
-        viewHeight: 0, // scrollView盒子高度
+        hasLoadMore: false, // 是否加载了另一页
         timer: ''
       }
     },
@@ -183,21 +181,9 @@
     onLoad() {
       this._getSystemInfo()
       this._getChatParams()
-      this.setNowChat([])
       this.setImIng(true)
       this._getWelcomeInfo()
       this._getMsgList()
-      console.log(this)
-      setTimeout(() => {
-        const query = wx.createSelectorQuery()
-        query.select('#scroll')
-          .boundingClientRect()
-          .select('.chat-list')
-          .boundingClientRect()
-          .exec(function (res) {
-            console.log(res)
-          })
-      }, 2000)
     },
     onUnload() {
       this.setNowChat([])
@@ -222,6 +208,14 @@
         }
       }
     },
+    watch: {
+      nowChat(newVal, old) {
+        if (newVal.length === old.length) return
+        setTimeout(() => {
+          this.scrollId = 'item' + (newVal.length - 1)
+        }, 20)
+      }
+    },
     methods: {
       ...mapActions([
         'setNowChat',
@@ -230,17 +224,6 @@
         'setShowType',
         'setChatGoods'
       ]),
-      _chatViewMove() {
-        let scrollY = this.scrollHeight - this.scrollTop
-        console.log(scrollY, this.viewHeight)
-        if (scrollY && scrollY < this.viewHeight) {
-          this.scrollId = 'item' + (this.nowChat.length - 1)
-        }
-      },
-      viewScroll(e) {
-        this.scrollTop = e.target.scrollTop
-        this.scrollHeight = e.target.scrollHeight
-      },
       _getChatParams() {
         this.shopId = wx.getStorageSync('shopId')
         this.userInfo = wx.getStorageSync('userInfo')
@@ -260,7 +243,6 @@
       _getSystemInfo() {
         let phoneInfo = wx.getSystemInfoSync()
         let system = phoneInfo.system
-        this.viewHeight = phoneInfo.screenHeight - this.pageHeadH - 50
         if (system.indexOf('IOS') !== -1) {
           this.system = 'iphone'
         } else {
@@ -376,6 +358,7 @@
         Im.getMsgList(data).then((res) => {
           if (res.error === ERR_OK) {
             if (res.data.length) {
+              this.hasLoadMore = true
               let resData = res.data.reverse()
               let list = [...resData, ...this.nowChat]
               this.setNowChat(list)

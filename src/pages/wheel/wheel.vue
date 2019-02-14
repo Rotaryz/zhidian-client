@@ -147,6 +147,7 @@
     onLoad() {
       this._getWheelInfo()
       this._getShopInfo({}, false)
+      this.sendCustomMsg(20001)
     },
     onUnload() {
       clearTimeout(this.timer)
@@ -228,6 +229,7 @@
         }
         // 判断是否正在转
         if (this.running) return
+        this.sendCustomMsg(20003)
         this.running = true
         this.$wx.vibrateShort() // 震动
         ActiveExtend.drawWheel({}, false).then(res => {
@@ -244,6 +246,10 @@
             return
           }
           this.prizeInfo = { ...res.data }
+          if (this.prizeInfo.has_prize) {
+            let msgData = { title: this.prizeInfo.customer_receive.prize_title }
+            this.sendCustomMsg(20004, msgData)
+          }
           this.usable_times = res.data.usable_times
           let index = this.wheelList.findIndex(item => item.activity_prize_id === res.data.activity_prize_id)
           this._action(index === -1 ? 0 : index, () => {
