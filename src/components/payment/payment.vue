@@ -38,7 +38,7 @@
         <div class="detail-title">手机号码</div>
         <div class="phone-right">
           <button class="phone-get-btn" open-type="getPhoneNumber" @getphonenumber="getPhone" v-if="!paymentMsg.phoneNum">
-            <span class="get-btn-txt">授权获取</span>
+            <span class="get-btn-txt">授权手机方便商家联系</span>
             <img :src="imageUrl + '/zd-image/mine/icon-pressed@2x.png'" v-if="imageUrl" class="get-btn-icon">
           </button>
           <div class="phone-num" v-if="paymentMsg.phoneNum">{{paymentMsg.phoneNum}}</div>
@@ -68,7 +68,7 @@
         </div>
       </div>
       <div class="buy-btn-box">
-        <div class="buy-btn" :class="paymentMsg.phoneNum ? '' : 'un-click'" @click.stop="submitOrder">立即购买</div>
+        <div class="buy-btn" @click.stop="submitOrder">立即购买</div>
       </div>
     </div>
   </div>
@@ -206,10 +206,10 @@
         })
       },
       submitOrder() {
-        if (!this.paymentMsg.phoneNum) {
+        /** if (!this.paymentMsg.phoneNum) {
           this.$showToast('请先授权手机号')
           return
-        }
+        } **/
         let data, msgCode
         let goods = [{
           goods_id: this.paymentMsg.goods_id,

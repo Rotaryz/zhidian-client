@@ -128,6 +128,7 @@
         }
       } else {
         this.reqGoodsId = options.goodsId ? options.goodsId : ''
+        this.showType = options.showType ? options.showType : ''
       }
       try {
         let res = await this.$wechat.getLocation('gcj02')
@@ -157,6 +158,9 @@
           break
       }
       this._getCouponList()
+      if (this.showType === 'buy') {
+        this.payOrderMsg()
+      }
       this.sendCustomMsg(msgCode, msgData)
     },
     methods: {
