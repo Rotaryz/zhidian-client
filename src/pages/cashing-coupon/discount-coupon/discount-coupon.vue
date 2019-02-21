@@ -3,16 +3,16 @@
     <div class="wrapper">
       <section class="left">
         <div class="money-wrapper">
-          <p v-if="false" class="unit">¥</p>
-          <p class="number">9.9</p>
-          <p v-if="true" class="unit">折</p>
+          <p v-if="dataInfo.coupon_type === 3" class="unit">¥</p>
+          <p class="number">{{dataInfo.denomination}}</p>
+          <p v-if="dataInfo.coupon_type === 4" class="unit">折</p>
         </div>
-        <div class="explain">满100元可用</div>
+        <div v-if="dataInfo.condition" class="explain">满{{dataInfo.condition}}元可用</div>
       </section>
       <ul class="right" :style="{flex: rightFlex}">
-        <li class="title">国颐堂新手优惠券</li>
-        <li class="date">全商品可用</li>
-        <li class="date">有效期至2019-10-01</li>
+        <li class="title">{{dataInfo.coupon_name}}</li>
+        <li class="date">{{dataInfo.range_type === 0? '全商品可用' : '指定商品可用'}}</li>
+        <li class="date">有效期{{dataInfo.start_at}}至{{dataInfo.end_at}}</li>
       </ul>
     </div>
   </div>
@@ -24,6 +24,10 @@
   export default {
     name: COMPONENT_NAME,
     props: {
+      dataInfo: {
+        type: Object,
+        default: () => {}
+      }
     },
     data() {
       return {

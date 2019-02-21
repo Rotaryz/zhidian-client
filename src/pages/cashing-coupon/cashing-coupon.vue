@@ -7,11 +7,11 @@
       <div class="bottom-empty"></div>
       <article class="container">
         <div class="coupon">
-          <discount-coupon></discount-coupon>
+          <discount-coupon :dataInfo="dataInfo"></discount-coupon>
         </div>
         <div class="line" :style="{backgroundImage: imageUrl && 'url(' + imageUrl+ '/zd-image/ai-2.1/pic-wire@2x.png)'}"></div>
         <!--<div class="explain">优惠券已放入账号</div>-->
-        <div class="button take" @click="takeHandle">马上领取</div>
+        <div class="button take" :class="{active: !hasReceiveCount}" @click="takeHandle">{{hasReceiveCount? '马上领取': '已经抢光'}}</div>
         <div class="button use" @click="useHandle">立即使用</div>
       </article>
     </article>
@@ -21,6 +21,7 @@
 <script type="text/ecmascript-6">
   import HeadItem from 'components/head-item/head-item'
   import DiscountCoupon from './discount-coupon/discount-coupon'
+  import {Market} from 'api'
 
   const PAGE_NAME = 'CASHING_COUPON'
   export default {
@@ -31,16 +32,52 @@
     },
     data() {
       return {
+        marketId: -1,
+        couponId: -1,
+        dataInfo: {},
+        hasReceiveCount: 100
       }
     },
-    computed: {
+    async onLoad(options) {
+      this.couponId = options.couponId
+      this.marketId = options.marketId
+      let res = await this._getCouponDetail()
+      this.dataInfo = res.data
     },
     methods: {
-      takeHandle() {
-        // this.$refs.wxcode && this.$refs.wxcode.show()
+      _getParams() {
+      },
+      // 获取优惠券详情
+      async _getCouponDetail() {
+        let res = await Market.getCouponDetail({ coupon_id: this.couponId })
+        if (res.error !== this.$ERR_OK) {
+          return null
+        }
+        return res
+      },
+      async takeHandle() {
+        if (this.hasReceiveCount <= 0) {
+          // this.$wechat.showToast('已达到优惠券限领张数.')
+          return
+        }
+        await this._takeCoupon()
       },
       useHandle() {
         this.$wx.switchTab({url: '/pages/shop'})
+      },
+      // 领取优惠券
+      async _takeCoupon() {
+        let couponId = this.couponId
+        let res = await Market.takeCoupon({ coupon_id: couponId })
+        this.$wechat.hideLoading()
+        if (res.error !== this.$ERR_OK) {
+          this.$wechat.showToast(res.message)
+          this.hasReceiveCount = 0
+          return null
+        }
+        Market.sendModalEvent({ type: 1, activity_id: this.marketId })
+        this.hasReceiveCount = res.data.has_receive_count
+        return res.data
       }
     }
   }
@@ -51,6 +88,9 @@
 
   .cashing-coupon
     position :relative
+    min-height :100vh
+    background-color :#FF4D29
+    box-sizing :border-box
     .top-bg
       width :100vw
       height :96.39999999999999vw
@@ -67,7 +107,7 @@
         width :100%
         height :110%
       .bottom-empty
-        height :15.733333333333333vw
+        height :16.733333333333333vw
       .container
         position :relative
         margin :0 4vw
@@ -104,6 +144,8 @@
           box-sizing :border-box
           &.take
             margin-top :1.3333333333333335vw
+          &.active
+            opacity :0.6
           &.use
             border: 2px solid #F94346;
             color:#F94346;

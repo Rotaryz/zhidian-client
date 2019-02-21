@@ -9,7 +9,7 @@
           <p class="title">{{config.title}}</p>
           <section class="content">
             <div class="coupon">
-              <coupon></coupon>
+              <coupon :dataInfo="dataInfo"></coupon>
             </div>
             <div class="explain-wrapper">
               <e v-if="config.isShowTakeExplain" class="line"></e>

@@ -4,7 +4,7 @@
       <div class="wrapper">
         <section class="top">
           <div class="avatar-wrapper">
-            <img class="icon-img" mode="aspectFill" v-if="imageUrl" :src="imageUrl + '/zd-image/test-img/2@1x.png'" alt="">
+            <img class="icon-img" mode="aspectFill" v-if="dataInfo.avatar" :src="dataInfo.avatar" alt="">
           </div>
           <div class="msg-wrapper">
             <p class="msg">这是我的微信号，请复制添加</p>
@@ -12,7 +12,7 @@
           </div>
         </section>
         <section class="bottom">
-          <div class="code">Wechat123</div>
+          <div class="code">{{dataInfo.weixin_no}}</div>
           <div class="button" @click="submitHandle">复制</div>
           <div class="cancel-wrapper">
             <section class="button-wrapper" @click="cancel">
@@ -37,11 +37,14 @@
       return {
         isShow: false,
         maskAnimation: '',
-        modalAnimation: ''
+        modalAnimation: '',
+        dataInfo: {}
       }
     },
     methods: {
-      show() {
+      show(dataInfo) {
+        if (!dataInfo) return
+        this.dataInfo = dataInfo
         this._showAnimation()
       },
       cancel(flag) {
@@ -49,7 +52,7 @@
         this.$emit('cancel', flag)
       },
       submitHandle() {
-        this.$wechat.setClipboardData('ashdjk').then((e) => {
+        this.$wechat.setClipboardData(this.dataInfo.weixin_no).then((e) => {
           this.$emit('submit')
         }).catch(() => {
           this.$emit('submitError')

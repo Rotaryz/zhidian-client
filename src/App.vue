@@ -1,7 +1,7 @@
 <script>
   import { resolvePageDetail, checkIsTabPage, resolveQrCode } from 'common/js/util'
   import {mapActions, mapGetters} from 'vuex'
-  import {Jwt} from 'api'
+  import {Jwt, Market} from 'api'
   import imMixin from 'common/mixins/im-mixin'
 
   export default {
@@ -10,7 +10,8 @@
       return {
         fromType: '',
         fromId: '',
-        shopId: ''
+        shopId: '',
+        lastMarketId: -1 // 上一次marketId
       }
     },
     created() {
@@ -23,6 +24,7 @@
         this.setShowType(false)
         return
       }
+      this._initMarketEvent(options)
       this._getSystemInfo()
       this._saveTargetPage(options)
       this._resolveQrCode(options)
@@ -46,6 +48,14 @@
         'setPageHeadH'
         // 'setAction'
       ]),
+      // 发送事件
+      _initMarketEvent(options) {
+        let marketId = options.query.marketId
+        if (!marketId || this.lastMarketId === marketId) return
+        this.lastMarketId = marketId
+        Market.sendModalEvent({ type: 0, activity_id: marketId })
+        Market.sendModalEvent({ type: 2, activity_id: marketId })
+      },
       _getSystemInfo() {
         try {
           let res = this.$wx.getSystemInfoSync()
