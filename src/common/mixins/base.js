@@ -128,18 +128,21 @@ export default {
       }).catch(e => console.error(e))
     },
     $showForzen() {
-      clearTimeout(this.forzenTimer)
-      this.forzenTimer = setTimeout(() => {
+      return new Promise((resolve, reject) => {
         clearTimeout(this.forzenTimer)
-        let isMyShop = this.$isMyShop()
-        this.$refs.frozen && this.$refs.frozen.getType(isMyShop)
-        let frozen = wx.getStorageSync('frozen')
-        if (!frozen) {
-          this.$refs.frozen && this.$refs.frozen.cancel()
-          return
-        }
-        this.$refs.frozen && this.$refs.frozen.show()
-      }, 500)
+        this.forzenTimer = setTimeout(() => {
+          clearTimeout(this.forzenTimer)
+          let isMyShop = this.$isMyShop()
+          this.$refs.frozen && this.$refs.frozen.getType(isMyShop)
+          let frozen = wx.getStorageSync('frozen')
+          resolve(frozen)
+          if (!frozen) {
+            this.$refs.frozen && this.$refs.frozen.cancel()
+            return
+          }
+          this.$refs.frozen && this.$refs.frozen.show()
+        }, 500)
+      })
     }
   }
 }

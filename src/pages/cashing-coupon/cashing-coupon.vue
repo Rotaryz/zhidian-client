@@ -1,47 +1,46 @@
 <template>
   <div class="cashing-coupon" :style="{paddingTop: pageHeadH + 'px'}">
     <head-item title="领取优惠券" :showArrow="false"></head-item>
-    <img class="top-bg" mode="widthFix" v-if="imageUrl" :src="imageUrl + '/zd-image/ai-2.1/pic-lqyhqbg@1x.png'" alt="">
+    <img class="top-bg" mode="widthFix" v-if="imageUrl" :src="imageUrl + '/zd-image/ai-2.1/pic-lqyhqbg@2x.png'" alt="">
     <article class="bottom-wrapper">
-      <img class="bottom-bg" v-if="imageUrl" :src="imageUrl + '/zd-image/ai-2.1/pic-bgup@2x.png'" alt="">
+      <img class="bottom-bg" mode="widthFill" v-if="imageUrl" :src="imageUrl + '/zd-image/ai-2.1/pic-bgup@2x.png'" alt="">
       <div class="bottom-empty"></div>
       <article class="container">
         <div class="coupon">
           <discount-coupon></discount-coupon>
         </div>
         <div class="line" :style="{backgroundImage: imageUrl && 'url(' + imageUrl+ '/zd-image/ai-2.1/pic-wire@2x.png)'}"></div>
-        <div class="explain">优惠券已放入账号</div>
-        <div class="button" @click="submitHandle">立即使用</div>
+        <!--<div class="explain">优惠券已放入账号</div>-->
+        <div class="button take" @click="takeHandle">马上领取</div>
+        <div class="button use" @click="useHandle">立即使用</div>
       </article>
     </article>
-    <modal-coupon ref="coupon"></modal-coupon>
-    <modal-wxcode ref="wxcode"></modal-wxcode>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import HeadItem from 'components/head-item/head-item'
   import DiscountCoupon from './discount-coupon/discount-coupon'
-  import ModalCoupon from 'components/modal-coupon/modal-coupon'
-  import ModalWxcode from 'components/modal-wxcode/modal-wxcode'
+
   const PAGE_NAME = 'CASHING_COUPON'
   export default {
     name: PAGE_NAME,
     components: {
       HeadItem,
-      DiscountCoupon,
-      ModalCoupon,
-      ModalWxcode
+      DiscountCoupon
     },
     data() {
       return {
-
       }
     },
+    computed: {
+    },
     methods: {
-      submitHandle() {
-        // this.$refs.coupon && this.$refs.coupon.show({})
-        this.$refs.wxcode && this.$refs.wxcode.show()
+      takeHandle() {
+        // this.$refs.wxcode && this.$refs.wxcode.show()
+      },
+      useHandle() {
+        this.$wx.switchTab({url: '/pages/shop'})
       }
     }
   }
@@ -51,35 +50,38 @@
   @import "~common/stylus/private"
 
   .cashing-coupon
-    fill-box(fixed)
-    background-image: linear-gradient(180deg, #FDA12E 0%, #FF4D29 100%);
-    overflow :hidden
+    position :relative
     .top-bg
       width :100vw
       height :96.39999999999999vw
-    .bottom-bg
-      position :absolute
-      width :100vw
-      height :82vw
     .bottom-wrapper
-      position :relative
-      top: -23.200000000000003vw
+      position :absolute
+      left :0
+      right :0
+      top:97.46666666666667vw
+      height :94.66666666666667vw
+      overflow hidden
+      .bottom-bg
+        position absolute
+        top: -14px
+        width :100%
+        height :110%
       .bottom-empty
-        height :20.266666666666666vw
+        height :15.733333333333333vw
       .container
         position :relative
         margin :0 4vw
-        height :62.133333333333326vw
+        height :73.33333333333333vw
         background:rgba(255,255,255,.6)
         border-radius: 1.6vw
         box-sizing :border-box
-        padding :21.5px 15px  25.5px
+        padding :5.733333333333333vw 4vw  6.800000000000001vw
         layout(column, block,nowrap)
         justify-content space-between
         align-items :center
         .coupon
           width :100%
-          height :85px
+          height :22.666666666666664vw
         .line
           width :100%
           height :1px
@@ -87,16 +89,23 @@
           background-position :center center
         .explain
           font-family: $font-family-regular
-          font-size: 15px;
+          font-size: 4vw
           color: #333333;
         .button
-          height :40px
+          height :10.666666666666668vw
           width :100%
           background: #F94346;
-          border-radius: 6px;
+          border-radius: 1.6vw
           font-family: $font-family-regular
           line-height :@height
-          font-size: 18px;
+          font-size: 4.8vw
           color: #FFFFFF;
           text-align: center;
+          box-sizing :border-box
+          &.take
+            margin-top :1.3333333333333335vw
+          &.use
+            border: 2px solid #F94346;
+            color:#F94346;
+            background :transparent
 </style>

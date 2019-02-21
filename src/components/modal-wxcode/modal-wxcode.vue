@@ -35,7 +35,7 @@
     mixins: [ModalAnimation],
     data() {
       return {
-        isShow: true,
+        isShow: false,
         maskAnimation: '',
         modalAnimation: ''
       }
@@ -44,9 +44,9 @@
       show() {
         this._showAnimation()
       },
-      cancel() {
+      cancel(flag) {
         this._cancelAnimation()
-        this.$emit('cancel')
+        this.$emit('cancel', flag)
       },
       submitHandle() {
         this.$wechat.setClipboardData('ashdjk').then((e) => {

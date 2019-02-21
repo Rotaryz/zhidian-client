@@ -6,19 +6,19 @@
           <img class="icon-img" v-if="imageUrl" :src="imageUrl + '/zd-image/ai-2.1/icon-deltc@2x.png'" alt="">
         </dt>
         <dt class="coupon-wrapper">
-          <p class="title">领取成功</p>
+          <p class="title">{{config.title}}</p>
           <section class="content">
             <div class="coupon">
               <coupon></coupon>
             </div>
             <div class="explain-wrapper">
-              <e v-if="false" class="line"></e>
-              <p class="text">{{!isShow ? '已存入您的优惠券': ''}}</p>
+              <e v-if="config.isShowTakeExplain" class="line"></e>
+              <p class="text">{{config.takeExplain}}</p>
             </div>
           </section>
           <section class="button-wrapper">
             <img class="icon-img pos-a" v-if="imageUrl" :src="imageUrl + '/zd-image/ai-2.1/pic-getcoupon@2x.png'" alt="">
-            <div class="button" @click="submitHandle">去使用</div>
+            <div class="button" @click="submitHandle">{{config.buttonText}}</div>
           </section>
         </dt>
       </dl>
@@ -29,6 +29,8 @@
 <script type="text/ecmascript-6">
   import Coupon from './modal-coupon-item/modal-coupon-item'
   import ModalAnimation from 'common/mixins/modal-animation'
+  import CONFIG from './config-modal-coupon'
+
   const COMPONENT_NAME = 'MODAL_COUPON'
   export default {
     name: COMPONENT_NAME,
@@ -41,22 +43,31 @@
         isShow: false,
         maskAnimation: '',
         modalAnimation: '',
-        dataInfo: {}
+        dataInfo: {},
+        configType: ''
+      }
+    },
+    computed: {
+      config() {
+        return CONFIG.get(this.configType)
       }
     },
     methods: {
-      show(dataInfo) {
-        if (!dataInfo) return
+      update(configType) {
+        this.configType = configType
+      },
+      show(dataInfo, configType) {
+        if (!dataInfo || !configType) return
+        this.configType = configType
         this.dataInfo = dataInfo
         this._showAnimation()
       },
-      cancel() {
+      cancel(flag) {
         this._cancelAnimation()
-        this.$emit('cancel')
+        this.$emit('cancel', flag)
       },
       submitHandle() {
-        this.cancel()
-        this.$emit('submit')
+        this.$emit('submit', this.config.submitFn)
       }
     }
   }
@@ -140,6 +151,7 @@
           color: #999999;
           text-align :center
           position :relative
+          top: -3px
           .text
             display :inline-block
             background :#fff

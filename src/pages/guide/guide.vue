@@ -7,6 +7,8 @@
     <guide-active :groupList="groupData.list" :cutList="cutData.list" :selectTab="selectTab" @changeTab="changeTab" :nothing="nothing"></guide-active>
     <im-fixed ref="fixed" v-if="!isMyShop"></im-fixed>
     <frozen ref="frozen"></frozen>
+    <modal-coupon ref="coupon" @cancel="cancelHandleModal" @submit="submitHandleModal"></modal-coupon>
+    <modal-wxcode ref="wxcode" @cancel="cancelHandleModal" @submit="copyWxHandle"></modal-wxcode>
   </article>
 </template>
 
@@ -21,9 +23,12 @@
   import clearWatch from 'common/mixins/clear-watch'
   import imMixin from 'common/mixins/im-mixin'
   import Frozen from 'components/frozen/frozen'
+  import ModalWxcode from 'components/modal-wxcode/modal-wxcode'
+  import ModalCoupon from 'components/modal-coupon/modal-coupon'
+  import MixinModalList from '../guide/mixin-modal-list'
 
   export default {
-    mixins: [imMixin, clearWatch],
+    mixins: [imMixin, clearWatch, MixinModalList],
     components: {
       GuideHeader,
       GuideActive,
@@ -31,7 +36,9 @@
       BackShop,
       ImFixed,
       HeadItem,
-      Frozen
+      Frozen,
+      ModalCoupon,
+      ModalWxcode
     },
     data() {
       return {
@@ -92,7 +99,8 @@
       this._sendRecordToServer()
     },
     async onShow() {
-      this.$showForzen()
+      await this.$showForzen()
+      this._action()
       if (!this.$wx.getStorageSync('token')) {
         this.showBackBtn = true
         return

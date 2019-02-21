@@ -11,7 +11,10 @@ import shop from './shop'
 import activeCode from './active-code'
 import activeExtend from './active-extend'
 import mine from './mine'
+import market from './market'
 
+// 营销活动ai-2.1
+export const Market = market
 // 大转盘等活动
 export const ActiveExtend = activeExtend
 // 雷达消息im
