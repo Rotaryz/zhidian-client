@@ -1,16 +1,10 @@
 <template>
   <div class="chat">
     <head-item :title="chatMsgTitle" :showArrow="true"></head-item>
-    <scroll-view scroll-y id="scroll" class="chat-container" :scroll-into-view="scrollId" @scroll="viewScroll" :style="{paddingTop: pageHeadH + 'px'}">
+    <div class="chat-container" :style="{paddingTop: pageHeadH + 'px'}">
       <div class="chat-list">
         <div class="line-view"></div>
-        <div class="history-box" v-if="nowChat.length > 20">
-          <div class="history-content" @click="toChatList">
-            <span class="history-txt">查看更多历史记录</span>
-            <img :src="imgUrl + '/zd-image/1.5/icon-presse_more@2x.png'" class="arrow">
-          </div>
-        </div>
-        <div class="chat-item" v-for="(item, index) in nowChat" :key="index" :id="'item' + index">
+        <div class="chat-item" v-for="(item, index) in list" :key="index" :id="'item' + index">
           <div class="item-time" v-if="item.is_showtime">
             <span class="time-box">{{item.time}}</span>
           </div>
@@ -129,35 +123,6 @@
           </section>
         </div>
       </div>
-    </scroll-view>
-    <div class="chat-input border-top-1px">
-      <div class="chat-input-box">
-        <div class="face-box" @click.stop="showEmoji">
-          <img :src="imgUrl + '/zd-image/1.5/icon-face@2x.png'" v-if="imgUrl" class="face-icon">
-        </div>
-        <div class="input-container" :class="system === 'android' ? 'android' : ''" ref="textBox">
-          <textarea auto-height="true" class="textarea" maxlength="-1" @input="textInput" :value="inputMsg" cursor-spacing="15" :focus="focus" @focus="textFocus"></textarea>
-        </div>
-        <div class="addimg-box" v-if="!inputMsg" @click.stop="showMoreList">
-          <img :src="imgUrl + '/ws-image/radar/icon-add_im@2x.png'" v-if="imgUrl" class="addimg-icon">
-        </div>
-        <div class="submit-btn" @click="sendMsg" v-if="inputMsg">发送</div>
-      </div>
-      <div class="more-box" :class="{'show' : emojiShow || mortListShow}">
-        <div class="emoji-list" v-if="emojiShow">
-          <div class="emoji-item" v-for="(item, index) in emojiList" :key="index" @click.stop="chioceEmoji(item)">
-            <img :src="item.url" class="emoji-icon">
-          </div>
-        </div>
-        <div class="addimg-list" v-if="mortListShow">
-          <div class="addimg-item" v-for="(item, index) in moreLists" :key="index" @click="nextWork(item)">
-            <div class="img-box">
-              <img :src="item.icon" class="item-icon">
-            </div>
-            <p class="item-txt">{{item.txt}}</p>
-          </div>
-        </div>
-      </div>
     </div>
     <modal-coupon ref="coupon" @submit="submitHandleModal"></modal-coupon>
   </div>
@@ -166,7 +131,7 @@
 <script>
   import { mapActions, mapGetters } from 'vuex'
   import { Im, Guide, Goods } from 'api'
-  import { emotionsFaceArr, TIMELAG } from 'utils/im-plugins'
+  import { TIMELAG, radarTimeFormat, labelEscape, msgFaceToHtml } from 'utils/im-plugins'
   import ChatWelcome from 'components/chat-welcome/chat-welcome'
   import HeadItem from 'components/head-item/head-item'
   import {app} from '@/main'
@@ -177,30 +142,27 @@
   const ERR_OK = _this.$ERR_OK
   const wx = _this.$wx
   const wechat = _this.$wechat
-  const MORELIST = [
-    {txt: '图片', icon: _this.$imageUrl + '/zd-image/1.5/icon-picture@2x.png', type: 1}
-  ]
   export default {
     components: {
       ChatWelcome,
-      HeadItem,
-      ModalCoupon
+      ModalCoupon,
+      HeadItem
     },
     data() {
       return {
         imgUrl: this.$imageUrl,
         inputMsg: '',
         id: '',
+        list: [],
         userInfo: {},
         imAccount: '',
         scrollId: 'item0',
-        moreLists: MORELIST,
-        emojiList: emotionsFaceArr,
         emojiShow: false,
         mortListShow: false,
         shopName: '',
         welcomeMsg: {},
         from: '',
+        page: 1,
         focus: false,
         shopId: '',
         noMore: false,
@@ -212,56 +174,56 @@
     created() {
     },
     onShow() {
-      this._setNowChatNum()
       let title = this.currentMsg.nickName || ''
-      this.setImTitle(title)
+      this.setImTitle(title + '的记录')
     },
     onLoad() {
       this._getSystemInfo()
       this._getChatParams()
-      this.setImIng(true)
       this._getWelcomeInfo()
       this._getMsgList()
       this._getShopInfo()
     },
-    onUnload() {
-      this.setNowChat([])
-      this.setImIng(false)
+    onReachBottom() {
+      if (this.noMore) return
+      this.page++
+      let data = {
+        page: this.page,
+        limit: 40,
+        sort: 1,
+        customer_im_account: this.userInfo.im_account,
+        shop_im_account: this.currentMsg.account
+      }
+      Im.getMsgList(data).then((res) => {
+        if (res.error === ERR_OK) {
+          if (res.data.length) {
+            this.hasLoadMore = true
+            let resData = res.data.map((item, index) => {
+              let time = item.created_at ? item.created_at : item.msgTimeStamp
+              item.time = radarTimeFormat(time).time
+              item.content = labelEscape(item.content)
+              item.html = msgFaceToHtml(item.content)
+              item.nickName = item.shop_name // 名称映射
+              return item
+            })
+            this.list = [...this.list, ...resData]
+          } else {
+            this.noMore = true
+            this.page--
+          }
+        }
+        wechat.hideLoading()
+      })
     },
     computed: {
       ...mapGetters([
         'currentMsg',
-        'nowChat',
-        'imLogin',
         'chatMsgTitle'
-      ]),
-      endDate() {
-        if (this.nowChat.length) {
-          if (!this.nowChat[0].created_at && !this.nowChat[0].msgTimeStamp) {
-            return this.nowChat[1] ? this.nowChat[1].created_at ? this.nowChat[1].created_at : this.nowChat[1].msgTimeStamp : ''
-          } else {
-            return this.nowChat[0].created_at ? this.nowChat[0].created_at : this.nowChat[0].msgTimeStamp
-          }
-        } else {
-          return ''
-        }
-      }
-    },
-    watch: {
-      nowChat(newVal, old) {
-        if (newVal.length === old.length) return
-        setTimeout(() => {
-          this.scrollId = 'item' + (newVal.length - 1)
-        }, 20)
-      }
+      ])
     },
     methods: {
       ...mapActions([
-        'setNowChat',
-        'setImIng',
-        'setNowCountNum',
-        'setShowType',
-        'setChatGoods'
+        'setShowType'
       ]),
       showCouponModel(item) {
         Goods.getCouponDetail(item.coupon_id, false).then(res => {
@@ -294,25 +256,10 @@
         let url = `/pages/shop`
         wx.switchTab({ url })
       },
-      toChatList() {
-        let url = `/pages/chat-msg-list?id=${this.id}`
-        wx.redirectTo({url})
-      },
       _getChatParams() {
         this.shopId = wx.getStorageSync('shopId')
         this.userInfo = wx.getStorageSync('userInfo')
         this.imAccount = this.userInfo.im_account
-      },
-      _setNowChatNum() {
-        if (this.imLogin) {
-          webimHandler.getC2CMsgList(this.currentMsg.account) // 消息已读处理
-          this.setNowCountNum(0)
-        } else {
-          wx.showToast({title: '网络连接异常', icon: 'none', duration: 1000})
-          setTimeout(() => {
-            wx.navigateBack()
-          }, 1000)
-        }
       },
       _getSystemInfo() {
         let phoneInfo = wx.getSystemInfoSync()
@@ -346,20 +293,23 @@
       },
       _getMsgList() {
         let data = {
-          end_date: this.endDate,
+          page: 1,
           limit: 40,
+          sort: 1,
           customer_im_account: this.userInfo.im_account,
           shop_im_account: this.currentMsg.account
         }
         Im.getMsgList(data).then((res) => {
           if (res.error === ERR_OK) {
-            let list = res.data.reverse()
-            if (!list.length) {
-              this.setNowChat([{type: 10000}])
-            } else {
-              this.setNowChat(list)
-            }
-            this.scrollId = 'item' + (list.length - 1)
+            let list = res.data.map((item, index) => {
+              let time = item.created_at ? item.created_at : item.msgTimeStamp
+              item.time = radarTimeFormat(time).time
+              item.content = labelEscape(item.content)
+              item.html = msgFaceToHtml(item.content)
+              item.nickName = item.shop_name // 名称映射
+              return item
+            })
+            this.list = [{type: 10000}, ...list]
           }
           wechat.hideLoading()
         })
@@ -439,28 +389,6 @@
         //     break
         // }
         // this.$wx.navigateTo({url: `/pages/activity-detail?activityId=${item.recommend_activity_id}&activityType=${activityType}`})
-      },
-      loadMore() {
-        if (this.noMore) return
-        let data = {
-          end_date: this.endDate,
-          limit: 40,
-          customer_im_account: this.userInfo.im_account,
-          shop_im_account: this.currentMsg.account
-        }
-        Im.getMsgList(data).then((res) => {
-          if (res.error === ERR_OK) {
-            if (res.data.length) {
-              this.hasLoadMore = true
-              let resData = res.data.reverse()
-              let list = [...resData, ...this.nowChat]
-              this.setNowChat(list)
-            } else {
-              this.noMore = true
-            }
-          }
-          wechat.hideLoading()
-        })
       },
       sendMsg() {
         let value = this.inputMsg.trim()
@@ -598,6 +526,7 @@
       box-sizing: border-box
       .chat-list
         padding-bottom: 15px
+        background: #F1F1F2
       .line-view
         height: 20px
         width: 100%
