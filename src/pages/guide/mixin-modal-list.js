@@ -59,9 +59,6 @@ export default {
       Market.getModalList({ type }).then((res) => {
         if (res.error !== this.$ERR_OK) {
           this.$wechat.showToast(res.message)
-          // todo
-          // let activityId = this.currentRes.data.activity_id
-          // Market.sendModalEvent({ type: 1, activity_id: activityId })
           this._action()
           return
         }
@@ -78,9 +75,17 @@ export default {
     async _takeCoupon() {
       let couponId = this.currentRes.data.content.id
       let activityId = this.currentRes.data.activity_id
-      let res = await Market.takeCoupon({ coupon_id: couponId })
+      let res = null
+      try {
+        res = await Market.takeCoupon({ coupon_id: couponId })
+      } catch (e) {
+        this.$wechat.showToast(e.message)
+        if (e.code !== 501) return
+        let activityId = this.currentRes.data.activity_id
+        Market.sendModalEvent({ type: 1, activity_id: activityId })
+      }
       this.$wechat.hideLoading()
-      if (res.error !== this.$ERR_OK) {
+      if (!res || res.error !== this.$ERR_OK) {
         this.$wechat.showToast(res.message)
         return null
       }
@@ -98,7 +103,9 @@ export default {
     copyWxHandle() {
       let activityId = this.currentRes.data.activity_id
       Market.sendModalEvent({ type: 3, activity_id: activityId })
-      this._hideCurrentModal(false)
+      setTimeout(() => {
+        this._hideCurrentModal(false)
+      }, 200)
       this.sendCustomMsg(60006)
     },
     _hideCurrentModal(flag = true) {
