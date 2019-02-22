@@ -1,5 +1,5 @@
 import { Market } from 'api'
-// import UtilsModalCoupon from 'components/modal-coupon/utils-modal-coupon'
+
 export default {
   data() {
     return {
@@ -59,6 +59,9 @@ export default {
       Market.getModalList({ type }).then((res) => {
         if (res.error !== this.$ERR_OK) {
           this.$wechat.showToast(res.message)
+          // todo
+          // let activityId = this.currentRes.data.activity_id
+          // Market.sendModalEvent({ type: 1, activity_id: activityId })
           this._action()
           return
         }
@@ -96,6 +99,7 @@ export default {
       let activityId = this.currentRes.data.activity_id
       Market.sendModalEvent({ type: 3, activity_id: activityId })
       this._hideCurrentModal(false)
+      this.sendCustomMsg(60006)
     },
     _hideCurrentModal(flag = true) {
       this.modalRefShow.forEach((key) => {
