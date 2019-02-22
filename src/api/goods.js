@@ -110,5 +110,13 @@ export default {
   getCoupon(data, loading = true) {
     let url = `/api/customer/coupon-receive`
     return request.get(url, data, loading)
+  },
+  /**
+   * 获取优惠券列表
+   * @return {*}
+   */
+  getCouponDetail(id, loading = true) {
+    let url = `/api/customer/coupon-show/${id}`
+    return request.get(url, {}, loading)
   }
 }

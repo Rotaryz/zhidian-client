@@ -1,9 +1,15 @@
 <template>
   <div class="chat">
     <head-item :title="chatMsgTitle" :showArrow="true"></head-item>
-    <scroll-view scroll-y id="scroll" class="chat-container" :scroll-into-view="scrollId" @scroll="viewScroll" @scrolltoupper="loadMore" :style="{paddingTop: pageHeadH + 'px'}">
+    <scroll-view scroll-y id="scroll" class="chat-container" :scroll-into-view="scrollId" @scroll="viewScroll" :style="{paddingTop: pageHeadH + 'px'}">
       <div class="chat-list">
         <div class="line-view"></div>
+        <div class="history-box" v-if="nowChat.length > 20">
+          <div class="history-content" @click="toChatList">
+            <span class="history-txt">查看更多历史记录</span>
+            <img :src="imgUrl + '/zd-image/1.5/icon-presse_more@2x.png'" class="arrow">
+          </div>
+        </div>
         <div class="chat-item" v-for="(item, index) in nowChat" :key="index" :id="'item' + index">
           <div class="item-time" v-if="item.is_showtime">
             <span class="time-box">{{item.time}}</span>
@@ -40,13 +46,20 @@
               </div>
             </div>
             <div class="chat-msg-qrCode other" v-if="item.type * 1 === 6">
-              <button class="qrCode-content" open-type="contact" :session-from="'request_friend,' + employeeId" send-message-title="点击下方消息加微信" :send-message-img="imgUrl + '/ws-image/ws1.2/pic-additivepeople@2x.png'" :show-message-card="true">
-                <p class="qrCode-title">欢迎光临我的小店</p>
+              <!--<button class="qrCode-content" open-type="contact" :session-from="'request_friend,' + employeeId" send-message-title="点击下方消息加微信" :send-message-img="imgUrl + '/ws-image/ws1.2/pic-additivepeople@2x.png'" :show-message-card="true">-->
+                <!--<p class="qrCode-title">添加我的个人微信，更多优惠！</p>-->
+                <!--<div class="qrCode-text-content">-->
+                  <!--<div class="qrCode-txt">点击本条消息，长按识别添加，随时找我聊天。</div>-->
+                  <!--<img :src="imgUrl + '/ws-image/pic-code@2x.png'" v-if="imgUrl" class="qrCode-img">-->
+                <!--</div>-->
+              <!--</button>-->
+              <div class="qrCode-content" @click="copyWX">
+                <p class="qrCode-title">添加我的个人微信，更多优惠！</p>
                 <div class="qrCode-text-content">
-                  <div class="qrCode-txt">点击本条消息加微信，随时找我聊天</div>
+                  <div class="qrCode-txt">点击本条消息，复制微信号添加，随时找我聊天。</div>
                   <img :src="imgUrl + '/ws-image/pic-code@2x.png'" v-if="imgUrl" class="qrCode-img">
                 </div>
-              </button>
+              </div>
             </div>
             <div class="chat-msg-qrCode other" v-if="item.type * 1 === 7">
               <button class="qrCode-content" open-type="contact" :session-from="'wx_group,' + employeeId" send-message-title="点击下方消息进群" :send-message-img="imgUrl + '/ws-image/ws1.2/pic-additivegroup@2x.png'" :show-message-card="true">
@@ -57,7 +70,28 @@
                 </div>
               </button>
             </div>
-            <image class="chat-msg-img other" :src="item.url" v-if="item.type * 1 == 20" @click="showPic(item, index)"></image>
+            <div class="chat-msg-coupon mine" v-if="item.type * 1 === 30">
+              <div class="coupon-content" @click="showCouponModel(item)">
+                <img :src="imgUrl + '/zd-image/1.5/pic-coupon_bg@2x.png'" class="coupon-bc">
+                <div class="coupon-container">
+                  <div class="coupon-left">
+                    <div class="left-money">
+                      <span class="money-icon">¥</span>
+                      <span class="money-txt">{{item.coupon_num}}</span>
+                    </div>
+                    <div class="left-money" v-if="item.coupon_type == 4">
+                      <span class="money-txt">{{item.coupon_num}}</span>
+                      <span class="discount-txt">折</span>
+                    </div>
+                  </div>
+                  <div class="coupon-right">
+                    <div class="coupon-title">{{item.title}}</div>
+                    <div class="coupon-time">有效期至{{item.end_at}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <image class="chat-msg-img other" :style="{height: (200 / item.width * item.height) + 'px'}" :src="item.url" v-if="item.type * 1 == 20" @click="showPic(item, index)"></image>
           </section>
           <section class="chat-content mine" v-if="item.from_account_id === imAccount">
             <div class="chat-msg-box mine" v-if="item.type * 1 === 1">
@@ -86,7 +120,7 @@
                 <span>赞播智店</span>
               </div>
             </div>
-            <img class="chat-msg-img mine" :src="item.url" v-if="item.type * 1 == 20" @click="showPic(item, index)"/>
+            <img class="chat-msg-img mine" :style="{height: (200 / item.width * item.height) + 'px'}" :src="item.url" v-if="item.type * 1 == 20" @click="showPic(item, index)"/>
             <div class="chat-msg-goods" v-if="item.type * 1 === 2">
               <img :src="item.url" class="goods-img" mode="widthFix">
               <p class="goods-title">{{item.title}}</p>
@@ -94,12 +128,18 @@
             <img :src="userInfo.avatar" class="avatar" mode="aspectFill">
           </section>
         </div>
+        <div class="history-box" v-if="nowChat.length > 20">
+          <div class="history-content" @click="toChatList">
+            <span class="history-txt">查看更多历史记录</span>
+            <img :src="imgUrl + '/zd-image/1.5/icon-presse_more@2x.png'" class="arrow">
+          </div>
+        </div>
       </div>
     </scroll-view>
     <div class="chat-input border-top-1px">
       <div class="chat-input-box">
         <div class="face-box" @click.stop="showEmoji">
-          <img :src="imgUrl + '/ws-image/radar/icon-emoji@2x.png'" v-if="imgUrl" class="face-icon">
+          <img :src="imgUrl + '/zd-image/1.5/icon-face@2x.png'" v-if="imgUrl" class="face-icon">
         </div>
         <div class="input-container" :class="system === 'android' ? 'android' : ''" ref="textBox">
           <textarea auto-height="true" class="textarea" maxlength="-1" @input="textInput" :value="inputMsg" cursor-spacing="15" :focus="focus" @focus="textFocus"></textarea>
@@ -109,7 +149,7 @@
         </div>
         <div class="submit-btn" @click="sendMsg" v-if="inputMsg">发送</div>
       </div>
-      <div class="more-box">
+      <div class="more-box" :class="{'show' : emojiShow || mortListShow}">
         <div class="emoji-list" v-if="emojiShow">
           <div class="emoji-item" v-for="(item, index) in emojiList" :key="index" @click.stop="chioceEmoji(item)">
             <img :src="item.url" class="emoji-icon">
@@ -125,16 +165,18 @@
         </div>
       </div>
     </div>
+    <modal-coupon ref="coupon" @submit="submitHandleModal"></modal-coupon>
   </div>
 </template>
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { Im } from 'api'
+  import { Im, Guide, Goods } from 'api'
   import { emotionsFaceArr, TIMELAG } from 'utils/im-plugins'
   import ChatWelcome from 'components/chat-welcome/chat-welcome'
   import HeadItem from 'components/head-item/head-item'
   import {app} from '@/main'
+  import ModalCoupon from 'components/modal-coupon/modal-coupon'
 
   const _this = app
   const webimHandler = _this.$webimHandler
@@ -142,12 +184,13 @@
   const wx = _this.$wx
   const wechat = _this.$wechat
   const MORELIST = [
-    {txt: '图片', icon: _this.$imageUrl + '/ws-image/radar/icon-picture@2x.png', type: 1}
+    {txt: '图片', icon: _this.$imageUrl + '/zd-image/1.5/icon-picture@2x.png', type: 1}
   ]
   export default {
     components: {
       ChatWelcome,
-      HeadItem
+      HeadItem,
+      ModalCoupon
     },
     data() {
       return {
@@ -168,7 +211,8 @@
         shopId: '',
         noMore: false,
         hasLoadMore: false, // 是否加载了另一页
-        timer: ''
+        timer: '',
+        weixinNo: '' // 门店微信
       }
     },
     created() {
@@ -184,6 +228,7 @@
       this.setImIng(true)
       this._getWelcomeInfo()
       this._getMsgList()
+      this._getShopInfo()
     },
     onUnload() {
       this.setNowChat([])
@@ -224,6 +269,41 @@
         'setShowType',
         'setChatGoods'
       ]),
+      showCouponModel(item) {
+        Goods.getCouponDetail(item.coupon_id, false).then(res => {
+          if (res.error === this.$ERR_OK) {
+            let content = {
+              type: res.data.coupon_type,
+              name: res.data.coupon_name
+            }
+            let couponRes = Object.assign({}, res.data, content)
+            this.$refs.coupon.show(couponRes, 'chatMsg')
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
+      submitHandleModal(fn, item) {
+        this[fn](item)
+      },
+      getCoupon(item) {
+        Goods.getCoupon({coupon_id: item.id}).then(res => {
+          wechat.hideLoading()
+          if (res.error === this.$ERR_OK) {
+            this.$refs.coupon.update('useFreshCTM')
+          } else {
+            this.$showToast(res.message)
+          }
+        })
+      },
+      _navTo() {
+        let url = `/pages/shop`
+        wx.switchTab({ url })
+      },
+      toChatList() {
+        let url = `/pages/chat-msg-list?id=${this.id}`
+        wx.redirectTo({url})
+      },
       _getChatParams() {
         this.shopId = wx.getStorageSync('shopId')
         this.userInfo = wx.getStorageSync('userInfo')
@@ -261,6 +341,15 @@
           }
         })
       },
+      _getShopInfo() {
+        Guide.getShopInfo().then(res => {
+          if (res.error !== this.$ERR_OK) {
+            this.$showToast(res.message)
+            return
+          }
+          this.weixinNo = res.data.employee.weixin_no
+        })
+      },
       _getMsgList() {
         let data = {
           end_date: this.endDate,
@@ -279,6 +368,16 @@
             this.scrollId = 'item' + (list.length - 1)
           }
           wechat.hideLoading()
+        })
+      },
+      copyWX() {
+        if (!this.weixinNo) {
+          this.$showToast('商家暂未上传微信号')
+          return
+        }
+        this.$wechat.setClipboardData(this.weixinNo).then(res => {
+          let msg = `微信号：${this.weixinNo}已复制至剪切板`
+          this.$showToast(msg)
         })
       },
       textFocus() {
@@ -421,7 +520,9 @@
                 const resData = res[0]
                 let data = {
                   image_id: resData.id,
-                  url: resData.url
+                  url: resData.url,
+                  width: resData.width,
+                  height: resData.height
                 }
                 let desc = {log_type: 20}
                 let ext = '20005'
@@ -443,7 +544,9 @@
                   nickName: this.userInfo.nickname,
                   sessionId: this.userInfo.im_account,
                   unreadMsgCount: 0,
-                  type: 20
+                  type: 20,
+                  width: resData.width,
+                  height: resData.height
                 }
                 if (this.nowChat.length) {
                   let lastItem = this.nowChat[this.nowChat.length - 1]
@@ -489,8 +592,6 @@
   @import "~common/stylus/variable"
   @import '~common/stylus/mixin'
   @import '~common/stylus/base'
-  .chat-msg-img
-    height: 400px
   .chat
     width: 100vw
     height: 100vh
@@ -506,6 +607,26 @@
       .line-view
         height: 20px
         width: 100%
+      .history-box
+        display: flex
+        justify-content: center
+        margin-bottom: 15px
+        height: 20px
+        .history-content
+          display: flex
+          align-items: center
+          background: #D6D6D9
+          border-radius: 4px
+          padding: 0 10px
+          .history-txt
+            font-size: $font-size-12
+            font-family: $font-family-regular
+            color: $color-white
+            margin-right: 3px
+          .arrow
+            height: 8px
+            width: 4.5px
+            display: block
       .chat-item
         padding: 0 15px
         margin-top: 15px
@@ -524,9 +645,9 @@
         .chat-content
           display: flex
           .avatar
-            width: 45px
-            height: 45px
-            border-radius: 2px
+            width: 39px
+            height: 39px
+            border-radius: 50%
           .chat-msg-box
             flex: 1
             overflow: hidden
@@ -539,7 +660,7 @@
               padding: 13px 15px
               border-radius: 8px
               line-height: 19px
-              font-size: $font-size-14
+              font-size: $font-size-16
               font-family: $font-family-regular
               word-wrap: break-word
               word-break: break-all
@@ -590,6 +711,74 @@
                 position: absolute
                 left: 0
                 top: 17.5px
+          .chat-msg-coupon
+            margin-left: 10px
+            .coupon-content
+              width: 232px
+              height: 67px
+              padding: 9px
+              border: 0.5px solid rgba(0, 0, 0, 0.10)
+              border-radius: 4px
+              background: $color-white
+              overflow: hidden
+              position: relative
+              .coupon-bc
+                width: 100%
+                height: 100%
+              .coupon-container
+                position: absolute
+                left: 9px
+                top: 9px
+                right: 9px
+                bottom: 9px
+                display: flex
+                .coupon-left
+                  width: 29%
+                  display: flex
+                  align-items: center
+                  justify-content: center
+                  overflow: hidden
+                  .left-money
+                    display: flex
+                    align-items: flex-end
+                    margin-bottom: 5px
+                    .money-icon
+                      font-family: $font-family-bold
+                      font-size: $font-size-15
+                      color: $color-white
+                      margin-bottom: 4px
+                      line-height: 15px
+                    .money-txt
+                      font-family: $font-family-bold
+                      font-size: 30px
+                      color: $color-white
+                      margin: 0 1px
+                      line-height: 30px
+                    .discount-txt
+                      font-family: $font-family-regular
+                      font-size: $font-size-14
+                      color: $color-white
+                      margin-bottom: 4px
+                      line-height: 14px
+                .coupon-right
+                  width: 71%
+                  display: flex
+                  flex-direction: column
+                  justify-content: center
+                  box-sizing: border-box
+                  padding-left: 10px
+                  .coupon-title
+                    font-family: $font-family-medium
+                    color: $color-white
+                    opacity: 0.9px
+                    font-size: $font-size-15
+                    line-height: 15px
+                    margin-bottom: 17px
+                  .coupon-time
+                    font-family: $font-family-regular
+                    color: $color-white
+                    opacity: 0.7
+                    font-size: $font-size-11
           .chat-msg-img
             width: 200px
             border-radius: 4px
@@ -607,6 +796,7 @@
               background: #fff
               overflow: hidden
               text-align: left
+              box-sizing: content-box
               &:before, &:after
                 border: 0 none
               .qrCode-title
@@ -662,7 +852,7 @@
               .goods-title
                 line-height: 21px
                 font-family: $font-family-regular
-                font-size: $font-size-14
+                font-size: $font-size-16
                 color: #374B63
                 letter-spacing: 0.3px
                 word-wrap: break-word
@@ -779,6 +969,10 @@
           padding-top: 8px
       .more-box
         width: 100%
+        height: 0
+        transition: all 0.3s
+        &.show
+          height: 46.666662vw
         .emoji-list
           display: flex
           flex-wrap: wrap
@@ -794,7 +988,7 @@
               height: 6.666666vw
               display: inline-block
         .addimg-list
-          height: 140px
+          height: 39.999996vw
           padding: 25px 0 0 30px
           display: flex
           .addimg-item
@@ -808,10 +1002,11 @@
             .img-box
               width: 16vw
               height: 16vw
-              border-1px(#ccc, 12px)
+              background: $color-white
               display: flex
               justify-content: center
               align-items: center
+              border-radius: 16px
               .item-icon
                 width: 33px
                 height: 33px

@@ -1,13 +1,13 @@
-const version = '/v1'
+const version = ``
 const versionIm = ``
 export default {
   app: '赞播平台',
   appKey: 'platform',
-  env: 'production',
-  api: 'https://zhidian-api.jkweixin.com' + version,
-  upload: 'https://zhidian-api.jkweixin.com' + version,
-  image: 'https://img.jkweixin.com/defaults',
-  imRecord: 'https://data-analysis-api.jkweixin.com' + versionIm,
+  env: 'release',
+  api: 'https://zhidian-api.jkweixin.net' + version,
+  upload: 'https://zhidian-api.jkweixin.net' + version,
+  image: 'https://img.jkweixin.net/defaults',
+  imRecord: 'https://data-analysis-api.jkweixin.net' + versionIm,
   /**
    * host: 商城H5域名
    * api: 请求api域名
@@ -20,8 +20,8 @@ export default {
    * _404Page: 404页面
    */
   MALL_CONFIG: {
-    host: 'https://mall-client.jkweixin.com', // 商城的域名
-    api: 'https://exchange-mall-api.jkweixin.com' + version, // 请求api域名
+    host: 'https://mall-client.jkweixin.net', // 商城的域名
+    api: 'https://exchange-mall-api.jkweixin.net' + version, // 请求api域名
     token: '',
     merchantUid: '',
     openId: '',

@@ -107,7 +107,7 @@
       toMobile() {
         this.setShowType(true)
         this.sendCustomMsg(40010)
-        this.$wx.makePhoneCall && this.$wx.makePhoneCall({ phoneNumber: '' + this.employee.mobile })
+        this.$wx.makePhoneCall && this.$wx.makePhoneCall({ phoneNumber: '' + this.shopInfo.store.telephone })
       }
     },
     computed: {

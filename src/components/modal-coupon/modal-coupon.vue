@@ -67,7 +67,7 @@
         this.$emit('cancel', flag)
       },
       submitHandle() {
-        this.$emit('submit', this.config.submitFn)
+        this.$emit('submit', this.config.submitFn, this.dataInfo)
       }
     }
   }
