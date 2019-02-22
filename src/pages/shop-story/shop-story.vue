@@ -26,7 +26,7 @@
       </ul>
       <div class="end">END</div>
     </section>
-    <blank v-if="!title && details.length===0" styles="padding:50px 0"></blank>
+    <blank v-if="isShowEmpty" styles="padding:50px 0"></blank>
   </div>
 </template>
 
@@ -54,7 +54,8 @@
         video_url: '',
         cover_image: '',
         title: '',
-        headerVideoPlay: false
+        headerVideoPlay: false,
+        isShowEmpty: false
       }
     },
     onLoad() {
@@ -73,6 +74,9 @@
             return
           }
           Object.assign(this.$data, res.data || {})
+          if (!this.title && this.details.length === 0) {
+            this.isShowEmpty = true
+          }
         } catch (e) {
           console.error(e)
         }
