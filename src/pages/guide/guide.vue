@@ -124,12 +124,10 @@
       this.sendCustomMsg(10004) // 转发给好友
       let id = wx.getStorageSync('userInfo').id
       let shopId = wx.getStorageSync('shopId')
-      let imageUrl = this.storeInfo.cover_url || `${this.$imageUrl}/zd-image/1.5/pic-mrbg@2x.png`
       let title = this.storeInfo.name
       return {
         title,
         path: `/pages/guide?fromType=3&fromId=${id}&shopId=${shopId}`,
-        imageUrl,
         success: (res) => {
           // 转发成功
         },

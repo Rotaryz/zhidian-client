@@ -170,13 +170,12 @@ export function checkUnUse(item, condition) {
     if (hasIn === -1) {
       return 1
     }
+  }
+  if (item.use_type && +item.condition >= +condition.money) {
+    return 2
+  } else if (+item.coupon_type === 3 && +item.denomination > +condition.money) {
+    return 3
   } else {
-    if (item.use_type && +item.condition >= +condition.money) {
-      return 2
-    } else if (+item.coupon_type === 3 && +item.denomination > +condition.money) {
-      return 3
-    } else {
-      return false
-    }
+    return false
   }
 }
