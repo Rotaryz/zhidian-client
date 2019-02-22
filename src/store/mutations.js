@@ -80,6 +80,10 @@ const mutations = {
           original_price: data.original_price,
           shop_name: data.shop_name,
           created_at: msg.time,
+          end_at: data.end_at,
+          coupon_id: data.coupon_id,
+          coupon_num: data.coupon_num,
+          coupon_type: data.coupon_type,
           msgTimeStamp: msg.time,
           nickName: state.currentMsg.nickName,
           sessionId: msg.fromAccount,
@@ -97,7 +101,9 @@ const mutations = {
           nickName: state.currentMsg.nickName,
           sessionId: msg.fromAccount,
           unreadMsgCount: 0,
-          type: desc.log_type
+          type: desc.log_type,
+          width: data.width,
+          height: data.height
         }
       }
     } else {
