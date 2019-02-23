@@ -75,16 +75,22 @@ export default {
     async _takeCoupon() {
       let couponId = this.currentRes.data.content.id
       let activityId = this.currentRes.data.activity_id
-      let res = null
-      try {
-        res = await Market.takeCoupon({ coupon_id: couponId })
-      } catch (e) {
-        this.$wechat.showToast(e.message)
-        if (e.code !== 501) return
+      let res = await Market.takeCoupon({ coupon_id: couponId })
+      // try {
+      //   res = await Market.takeCoupon({ coupon_id: couponId })
+      // } catch (e) {
+      //   this.$wechat.showToast(e.message)
+      //   if (e.code !== 501) return
+      //   let activityId = this.currentRes.data.activity_id
+      //   Market.sendModalEvent({ type: 1, activity_id: activityId })
+      // }
+      this.$wechat.hideLoading()
+      if (res.biz_error_code === 1001) {
+        this.$wechat.showToast(res.message)
         let activityId = this.currentRes.data.activity_id
         Market.sendModalEvent({ type: 1, activity_id: activityId })
+        return
       }
-      this.$wechat.hideLoading()
       if (!res || res.error !== this.$ERR_OK) {
         this.$wechat.showToast(res.message)
         return null
