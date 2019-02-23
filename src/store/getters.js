@@ -47,3 +47,5 @@ export const selectCoupon = state => state.selectCoupon
 export const checkoutCouponList = state => state.checkoutCouponList
 
 export const canUseNum = state => state.canUseNum
+
+export const pageIsJump = state => state.pageIsJump
