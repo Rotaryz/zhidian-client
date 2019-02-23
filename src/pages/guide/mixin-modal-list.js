@@ -10,6 +10,7 @@ export default {
       modalSubmitKey: ['useFreshCTM', ''],
       // 变量
       modalIndex: -1,
+      modalTypeVal: -1,
       currentRes: {},
       resFailed: false
     }
@@ -19,6 +20,7 @@ export default {
   },
   onHide() {
     this.modalIndex = -1
+    this.modalTypeVal = -1
     this._hideCurrentModal(false)
   },
   methods: {
@@ -39,15 +41,29 @@ export default {
       let flag = pages[pages.length - 1].route === 'pages/guide'
       return flag && !frozen
     },
+    _actionPlus() {
+      this.modalIndex++
+      let idx = this.modalIndex
+      let list = this.modalTypeList
+      let val = this.modalTypeVal
+      if (val === list[idx]) {
+        return this._actionPlus()
+      }
+    },
     // 弹窗队列执行器
     _action() {
-      this.modalIndex++
+      this._actionPlus()
       let val = this.modalIndex
-      if (!this._checkAction()) return
+      if (!this._checkAction()) {
+        this.modalIndex = -1
+        this._hideCurrentModal(false)
+        return
+      }
       let type = this.modalTypeList[val]
       let key = this.modalRefShow[val]
       if (!type) return
       this._getModalList(type, async (res) => {
+        this.modalTypeVal = type
         this.currentRes = res
         let content = res.data.content
         this.$refs[key] && this.$refs[key].show(content, this.modalShowKey[val])
