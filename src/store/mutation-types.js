@@ -53,3 +53,5 @@ export const SET_SELECT_COUPON = 'SET_SELECT_COUPON'
 export const SET_COUPON_LIST = 'SET_COUPON_LIST'
 
 export const CHECK_COUPON = 'CHECK_COUPON'
+
+export const SET_PAGE_JUMP = 'SET_PAGE_JUMP'

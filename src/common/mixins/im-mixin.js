@@ -26,7 +26,8 @@ export default {
       'imLogin',
       'descMsg',
       'fromMsg',
-      'behaviorListToServer'
+      'behaviorListToServer',
+      'pageIsJump'
     ])
   },
   methods: {
@@ -40,7 +41,8 @@ export default {
       'setNowCount',
       'setBehaviorList',
       'setBehaviorListToServers',
-      'setImTitle'
+      'setImTitle',
+      'setPageJump'
     ]),
     async loginIm() {
       let userInfo = wx.getStorageSync('userInfo')
@@ -155,6 +157,12 @@ export default {
             })).then(() => {
               this.setBehaviorListToServers([])
             })
+          }
+          // 如果是留言消息模板，则跳到聊天页面
+          if (this.pageIsJump) {
+            this.setPageJump(false)
+            let url = `/pages/chat-msg`
+            this.$wx.navigateTo({url})
           }
           // 读取当前员工的未读信息, 没有则设置成1(欢迎语)
           if (resData.data.ever_talked) {

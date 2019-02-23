@@ -45,7 +45,8 @@
         'setShowType',
         'setScene',
         'setFromMsg',
-        'setPageHeadH'
+        'setPageHeadH',
+        'setPageJump'
         // 'setAction'
       ]),
       // 发送事件
@@ -124,6 +125,9 @@
         this.fromType = options.query.fromType ? options.query.fromType : ''
         this.fromId = options.query.fromId ? options.query.fromId : ''
         this.shopId = options.query.shopId ? options.query.shopId : ''
+        if (options.query.is_jump) {
+          this.setPageJump(options.query.is_jump)
+        }
       },
       _decideEntryType(options) {
         this.source = this.$entryType(options)

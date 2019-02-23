@@ -113,3 +113,7 @@ export const checkoutCoupon = ({ commit, state }, msg) => {
   let res = checkCoupon(state.couponList, msg)
   commit(types.CHECK_COUPON, res)
 }
+
+export const setPageJump = ({ commit, state }, val) => {
+  commit(types.SET_PAGE_JUMP, val)
+}

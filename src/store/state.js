@@ -28,7 +28,8 @@ const state = {
   couponList: [], // 可用优惠券列表
   selectCoupon: {}, // 选择的优惠券
   checkoutCouponList: {}, // 判断可用不可用后的数据
-  canUseNum: 0 // 可用优惠券数量
+  canUseNum: 0, // 可用优惠券数量
+  pageIsJump: 0 // 是否跳转到聊天页面
 }
 
 export default state

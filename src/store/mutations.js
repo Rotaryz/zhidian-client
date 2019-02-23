@@ -176,6 +176,9 @@ const mutations = {
   [types.CHECK_COUPON](state, resultList) {
     state.checkoutCouponList = resultList
     state.canUseNum = resultList.canUse.length
+  },
+  [types.SET_PAGE_JUPM](state, val) {
+    state.pageIsJump = val
   }
 }
 
