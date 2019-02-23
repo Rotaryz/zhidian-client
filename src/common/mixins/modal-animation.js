@@ -1,5 +1,5 @@
 const DURATION_SHOW = 300
-const DURATION_CANCEL = 500
+const DURATION_CANCEL = 100
 export default {
   methods: {
     _showAnimation(callback) {
