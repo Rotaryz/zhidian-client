@@ -75,7 +75,7 @@
                 <img :src="imgUrl + '/zd-image/1.5/pic-coupon_bg@2x.png'" class="coupon-bc">
                 <div class="coupon-container">
                   <div class="coupon-left">
-                    <div class="left-money">
+                    <div class="left-money" v-if="item.coupon_type == 3">
                       <span class="money-icon">¥</span>
                       <span class="money-txt">{{item.coupon_num}}</span>
                     </div>
