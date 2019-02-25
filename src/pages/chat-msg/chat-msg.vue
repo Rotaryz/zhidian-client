@@ -42,7 +42,7 @@
               </div>
               <div class="new-goods-down border-top-1px">
                 <img :src="imgUrl + '/ws-image/radar/pic-logo_zb@2x.png'" v-if="imgUrl" class="down-icon">
-                <span>赞播微店</span>
+                <span>赞播智店</span>
               </div>
             </div>
             <div class="chat-msg-qrCode other" v-if="item.type * 1 === 6">
@@ -75,7 +75,7 @@
                 <img :src="imgUrl + '/zd-image/1.5/pic-coupon_bg@2x.png'" class="coupon-bc">
                 <div class="coupon-container">
                   <div class="coupon-left">
-                    <div class="left-money">
+                    <div class="left-money" v-if="item.coupon_type == 3">
                       <span class="money-icon">¥</span>
                       <span class="money-txt">{{item.coupon_num}}</span>
                     </div>
