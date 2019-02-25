@@ -36,7 +36,7 @@
               </div>
               <div class="new-goods-down border-top-1px">
                 <img :src="imgUrl + '/ws-image/radar/pic-logo_zb@2x.png'" v-if="imgUrl" class="down-icon">
-                <span>赞播微店</span>
+                <span>赞播智店</span>
               </div>
             </div>
             <div class="chat-msg-qrCode other" v-if="item.type * 1 === 6">
