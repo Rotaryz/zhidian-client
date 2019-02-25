@@ -42,7 +42,8 @@ export default {
       'setBehaviorList',
       'setBehaviorListToServers',
       'setImTitle',
-      'setPageJump'
+      'setPageJump',
+      'clearBehaviorListToServers'
     ]),
     async loginIm() {
       let userInfo = wx.getStorageSync('userInfo')
@@ -155,7 +156,7 @@ export default {
               let obj = Object.assign({}, item, descMsg)
               return this._ImSendRecordToServer(obj)
             })).then(() => {
-              this.setBehaviorListToServers([])
+              this.clearBehaviorListToServers()
             })
           }
           // 如果是留言消息模板，则跳到聊天页面

@@ -48,6 +48,10 @@ export const setBehaviorListToServers = ({ commit, state }, opt) => {
   commit(types.SET_BEHAVIOR_LIST_TO_SERVERS, opt)
 }
 
+export const clearBehaviorListToServers = ({ commit, state }) => {
+  commit(types.CLEAR_BEHAVIOR_LIST_TO_SERVERS)
+}
+
 // 当前名片信息
 export const setCurrentMsg = ({ commit, state }, info) => {
   commit(types.SET_CURRENT_MSG, info)
