@@ -140,14 +140,7 @@ export default {
           if (this.behaviorList.length && shopId) {
             Promise.all(this.behaviorList.map((item) => {
               let opt = Object.assign({}, item, {desc: JSON.stringify(descMsg)})
-              // 判定切店后,发送的店铺是否一致
-              let descObj = (opt.desc && JSON.parse(opt.desc)) || {}
-              let shopId = descObj.shop_id
-              if (this.currentMsg.shopId === shopId) {
-                return this.$webimHandler.onSendCustomMsg(opt, this.currentMsg.account)
-              } else {
-                return true
-              }
+              return this.$webimHandler.onSendCustomMsg(opt, this.currentMsg.account)
             })).then(() => {
               this.clearBehaviorList()
             })
@@ -211,7 +204,8 @@ export default {
       let userInfo = wx.getStorageSync('userInfo')
       let option4Servers = Object.assign({}, DEFAULTOBJ, this.descMsg, sendObj, {user_info: JSON.stringify(userInfo)})
       // im登录再执行发送
-      if (this.imLogin && this.descMsg.flow_id) {
+      let shopId = wx.getStorageSync('shopId')
+      if (this.imLogin && this.descMsg.flow_id && +shopId === +this.currentMsg.shopId) {
         let account = this.currentMsg.account
         this.$webimHandler.onSendCustomMsg(option, account)
         if (code !== 20005) {
