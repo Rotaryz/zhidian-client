@@ -253,6 +253,7 @@
         })
       },
       _navTo() {
+        this.$refs.coupon.cancel()
         let url = `/pages/shop`
         wx.switchTab({ url })
       },
