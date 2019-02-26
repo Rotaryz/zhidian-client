@@ -1,5 +1,8 @@
 <template>
-  <div class="modal-coupon-item" :style="{paddingTop: paddingTop * 100 + '%',backgroundImage: bgImage}">
+  <div class="modal-coupon-item">
+    <div class="coupon-bg">
+      <img class="coupon-bg-img" v-if="imageUrl" :src="imageUrl + '/zd-image/ai-2.1/pic-coupon_bg@2x.png'" alt="">
+    </div>
     <div class="wrapper">
       <section class="left">
         <div class="money-wrapper">
@@ -9,7 +12,7 @@
         </div>
         <div v-if="dataInfo.condition" class="explain">满{{dataInfo.condition}}元可用</div>
       </section>
-      <ul class="right" :style="{flex: rightFlex}">
+      <ul class="right">
         <li class="title">{{dataInfo.name}}</li>
         <li class="date">{{dataInfo.range_type === 0? '全商品可用' : '指定商品可用'}}</li>
         <li class="date">有效期{{dataInfo.start_at}}至{{dataInfo.end_at}}</li>
@@ -19,7 +22,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import { baseURL } from 'api/config'
   const COMPONENT_NAME = 'MODAL_COUPON_ITEM'
 
   export default {
@@ -29,13 +31,6 @@
         type: Object,
         default: () => {}
       }
-    },
-    data() {
-      return {
-        bgImage: `url("${baseURL.image}/zd-image/ai-2.1/pic-coupon_bg@2x.png")`,
-        rightFlex: 2.15,
-        paddingTop: 67 / 232
-      }
     }
   }
 </script>
@@ -43,11 +38,16 @@
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
 
+  .coupon-bg
+    fill-box(absolute)
+    .coupon-bg-img
+      width :100%
+      height :100%
+
   .modal-coupon-item
     width: 100%
     height :0
-    background-size :100% 100%
-    background-position :center center
+    padding-top :28.879310344827587%
     position :relative
     z-index :2
     .wrapper
@@ -76,6 +76,7 @@
             margin :0 1px
             font-size: 26px;
       .right
+        flex: 2.15
         overflow :hidden
         padding :8px
         layout(column,block,nowrap)

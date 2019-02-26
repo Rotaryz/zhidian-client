@@ -44,21 +44,16 @@
         maskAnimation: '',
         modalAnimation: '',
         dataInfo: {},
-        configType: ''
-      }
-    },
-    computed: {
-      config() {
-        return CONFIG.get(this.configType)
+        config: {}
       }
     },
     methods: {
       update(configType) {
-        this.configType = configType
+        this.config = CONFIG.get(configType)
       },
       show(dataInfo, configType) {
         if (!dataInfo || !configType) return
-        this.configType = configType
+        this.config = CONFIG.get(configType)
         this.dataInfo = dataInfo
         this._showAnimation()
       },
