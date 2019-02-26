@@ -1,5 +1,8 @@
 <template>
-  <div class="discount-coupon" :style="{paddingTop: paddingTop * 100 + '%',backgroundImage: bgImage}">
+  <div class="discount-coupon">
+    <div class="coupon-bg">
+      <img class="coupon-bg-img" v-if="imageUrl" :src="imageUrl + '/zd-image/ai-2.1/pic-couponlq@2x.png'" alt="">
+    </div>
     <div class="wrapper">
       <section class="left">
         <div class="money-wrapper">
@@ -19,7 +22,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import { baseURL } from 'api/config'
   const COMPONENT_NAME = 'DISCOUNT_COUPON'
   export default {
     name: COMPONENT_NAME,
@@ -31,9 +33,9 @@
     },
     data() {
       return {
-        bgImage: `url("${baseURL.image}/zd-image/ai-2.1/pic-couponlq@2x.png")`,
-        rightFlex: 2.3,
-        paddingTop: 85 / 315
+        // bgImage: `url("${baseURL.image}/zd-image/ai-2.1/pic-couponlq@2x.png")`,
+        // rightFlex: 2.3,
+        // paddingTop: 85 / 315
       }
     }
   }
@@ -42,12 +44,17 @@
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/private"
 
+  .coupon-bg
+    fill-box(absolute)
+    .coupon-bg-img
+      width :100%
+      height :100%
+
   .discount-coupon
     width: 100%
     height :0
-    background-size :100% 100%
-    background-position :center center
     position :relative
+    padding-top :26.984126984126984%
     .wrapper
       fill-box(absolute)
       layout(row,block,nowrap)
@@ -77,6 +84,7 @@
         padding :2.933333333333333vw
         layout(column,block,nowrap)
         justify-content :space-around
+        flex: 2.3
         .title
           font-family: $font-family-medium
           font-size: 4.266666666666667vw

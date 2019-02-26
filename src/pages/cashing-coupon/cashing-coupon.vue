@@ -11,7 +11,7 @@
         </div>
         <div class="line" :style="{backgroundImage: imageUrl && 'url(' + imageUrl+ '/zd-image/ai-2.1/pic-wire@2x.png)'}"></div>
         <!--<div class="explain">优惠券已放入账号</div>-->
-        <div class="button take" :class="{active: !hasReceiveCount}" @click="takeHandle">{{hasReceiveCount? '马上领取': '已领取'}}</div>
+        <div class="button take" @click="takeHandle">马上领取</div>
         <div class="button use" @click="useHandle">立即使用</div>
       </article>
     </article>
@@ -34,8 +34,8 @@
       return {
         marketId: -1,
         couponId: -1,
-        dataInfo: {},
-        hasReceiveCount: 100
+        dataInfo: {}
+        // hasReceiveCount: 100
       }
     },
     async onLoad(options) {
@@ -56,10 +56,10 @@
         return res
       },
       async takeHandle() {
-        if (this.hasReceiveCount <= 0) {
-          // this.$wechat.showToast('已达到优惠券限领张数.')
-          return
-        }
+        // if (this.hasReceiveCount <= 0) {
+        //   // this.$wechat.showToast('已达到优惠券限领张数.')
+        //   return
+        // }
         await this._takeCoupon()
       },
       useHandle() {
@@ -76,7 +76,8 @@
           return null
         }
         Market.sendModalEvent({ type: 1, activity_id: this.marketId })
-        this.hasReceiveCount = res.data.has_receive_count
+        // this.hasReceiveCount = res.data.has_receive_count
+        this.$wechat.showToast('领取成功！')
         return res.data
       }
     }
