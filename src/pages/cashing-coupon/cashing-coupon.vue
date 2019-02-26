@@ -11,7 +11,7 @@
         </div>
         <div class="line" :style="{backgroundImage: imageUrl && 'url(' + imageUrl+ '/zd-image/ai-2.1/pic-wire@2x.png)'}"></div>
         <!--<div class="explain">优惠券已放入账号</div>-->
-        <div class="button take" :class="{active: !hasReceiveCount}" @click="takeHandle">{{hasReceiveCount? '马上领取': '已经抢光'}}</div>
+        <div class="button take" :class="{active: !hasReceiveCount}" @click="takeHandle">{{hasReceiveCount? '马上领取': '已领取'}}</div>
         <div class="button use" @click="useHandle">立即使用</div>
       </article>
     </article>
