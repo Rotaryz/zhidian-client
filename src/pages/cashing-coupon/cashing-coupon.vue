@@ -72,7 +72,7 @@
         this.$wechat.hideLoading()
         if (res.error !== this.$ERR_OK) {
           this.$wechat.showToast(res.message)
-          this.hasReceiveCount = 0
+          // this.hasReceiveCount = 0
           return null
         }
         Market.sendModalEvent({ type: 1, activity_id: this.marketId })

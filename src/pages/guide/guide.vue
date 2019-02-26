@@ -205,6 +205,7 @@
           this.$wechat.pageScrollTo()
           this.oldShopId = this.$wx.getStorageSync('shopId')
           this._verdictRole()
+          getApp().globalData.$isAlert = [true, true] // 弹窗初始化
         } else {
           this.shopChange = false
         }

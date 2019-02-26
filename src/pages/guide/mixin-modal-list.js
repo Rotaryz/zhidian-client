@@ -1,5 +1,5 @@
 import { Market } from 'api'
-
+getApp().globalData.$isAlert = [true, true]
 export default {
   data() {
     return {
@@ -13,6 +13,7 @@ export default {
       modalTypeVal: -1,
       currentRes: {},
       resFailed: false
+      // isAlert: [true, true]
     }
   },
   onShow() {
@@ -26,6 +27,7 @@ export default {
   methods: {
     // 取消
     cancelHandleModal(flag = true) {
+      getApp().globalData.$isAlert[this.modalIndex] = false // 不弹窗
       if (!flag) return
       setTimeout(() => {
         this._action()
@@ -54,6 +56,15 @@ export default {
     _action() {
       this._actionPlus()
       let val = this.modalIndex
+      // 同一小程序,同一店铺弹窗逻辑
+      if (!getApp().globalData.$isAlert[val]) {
+        let length = getApp().globalData.$isAlert.length
+        if (val < length) {
+          return this._action()
+        } else {
+          return
+        }
+      }
       if (!this._checkAction()) {
         this.modalIndex = -1
         this._hideCurrentModal(false)
