@@ -33,6 +33,7 @@
       await this._checkIsConnect(options)
     },
     onHide() {
+      getApp().globalData.$isAlert = [true, true]
     },
     computed: {
       ...mapGetters([
