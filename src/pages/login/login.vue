@@ -103,6 +103,7 @@
           this.$wx.setStorageSync('token', token)
           this.$wx.setStorageSync('appToken', appToken)
           this._makeConnect()
+          Jwt.updateFormId({form_ids: [this.formId]})
         } catch (e) {
           e && this.$showToast(e.msg)
         }
