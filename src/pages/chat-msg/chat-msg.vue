@@ -946,7 +946,7 @@
         .input-container
           flex: 1
           min-height: 36px
-          border: 1px solid rgba(0, 0, 0, 0.10)
+          border-radius: 4px
           background: #fff
           overflow-y: auto
           padding: 0 10px
