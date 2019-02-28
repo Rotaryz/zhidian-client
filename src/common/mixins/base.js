@@ -91,6 +91,7 @@ export default {
     },
     // 手机formId
     $getFormId(e) {
+      console.log(e, '---------------收集formId-------------')
       let id = e.mp.detail.formId
       Jwt.updateFormId({form_ids: [id]})
     },
