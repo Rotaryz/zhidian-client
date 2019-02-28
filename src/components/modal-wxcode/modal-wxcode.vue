@@ -1,7 +1,7 @@
 <template>
   <div class="base-modal" v-if="isShow" :animation="maskAnimation">
-    <article class="modal-content" :animation="modalAnimation" @click.stop>
-      <div class="wrapper">
+    <form report-submit @submit="$getFormId" class="modal-content" :animation="modalAnimation" @click.stop>
+      <button formType="submit" class="wrapper">
         <section class="top">
           <div class="avatar-wrapper">
             <img class="icon-img" mode="aspectFill" v-if="dataInfo.avatar" :src="dataInfo.avatar" alt="">
@@ -21,8 +21,8 @@
             </section>
           </div>
         </section>
-      </div>
-    </article>
+      </button>
+    </form>
   </div>
 </template>
 
@@ -98,6 +98,7 @@
     background-color: rgba(32, 32, 46, 0.8)
 
   .wrapper
+    reset-button()
     position :relative
     background: #FFFFFF;
     border-radius: 6px;

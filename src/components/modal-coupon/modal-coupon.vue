@@ -1,7 +1,7 @@
 <template>
   <div class="base-modal" v-if="isShow" :animation="maskAnimation">
-    <article class="modal-content" :animation="modalAnimation" @click.stop>
-      <dl class="wrapper">
+    <form report-submit @submit="$getFormId" class="modal-content" :animation="modalAnimation" @click.stop>
+      <button class="wrapper" formType="submit">
         <dt class="del" @click="cancel">
           <img class="icon-img" v-if="imageUrl" :src="imageUrl + '/zd-image/ai-2.1/icon-deltc@2x.png'" alt="">
         </dt>
@@ -16,13 +16,13 @@
               <p class="text">{{config.takeExplain}}</p>
             </div>
           </section>
-          <button formType="submit" class="button-wrapper">
+          <section class="button-wrapper">
             <img class="icon-img pos-a" v-if="imageUrl" :src="imageUrl + '/zd-image/ai-2.1/pic-getcoupon@2x.png'" alt="">
             <div class="button" @click="submitHandle">{{config.buttonText}}</div>
-          </button>
+          </section>
         </dt>
-      </dl>
-    </article>
+      </button>
+    </form>
   </div>
 </template>
 
@@ -93,6 +93,7 @@
     background-color: rgba(32, 32, 46, 0.8)
 
   .wrapper
+    reset-button()
     text-align: right
     position :relative
     .del
@@ -106,7 +107,6 @@
       right:-11px;
       bottom:-6px;
       height:120px;
-      reset-button()
       .button
         position :relative
         width:223px
