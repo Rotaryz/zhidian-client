@@ -16,10 +16,10 @@
               <p class="text">{{config.takeExplain}}</p>
             </div>
           </section>
-          <section class="button-wrapper">
+          <button formType="submit" class="button-wrapper">
             <img class="icon-img pos-a" v-if="imageUrl" :src="imageUrl + '/zd-image/ai-2.1/pic-getcoupon@2x.png'" alt="">
             <div class="button" @click="submitHandle">{{config.buttonText}}</div>
-          </section>
+          </button>
         </dt>
       </dl>
     </article>
@@ -106,6 +106,7 @@
       right:-11px;
       bottom:-6px;
       height:120px;
+      reset-button()
       .button
         position :relative
         width:223px

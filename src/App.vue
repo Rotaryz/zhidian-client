@@ -52,11 +52,14 @@
       ]),
       // 发送事件
       _initMarketEvent(options) {
+        console.warn(options, '====')
         let marketId = options.query.marketId
+        console.warn(this.lastMarketId, marketId)
         if (!marketId || this.lastMarketId === marketId) return
         this.lastMarketId = marketId
         Market.sendModalEvent({ type: 0, activity_id: marketId })
         Market.sendModalEvent({ type: 2, activity_id: marketId })
+        console.warn('sasassssssssssssssssssssssssssssssssssssssssssss')
       },
       _getSystemInfo() {
         try {

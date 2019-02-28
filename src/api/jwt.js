@@ -16,8 +16,9 @@ export default {
     const url = `/api/customer/checkout-shop`
     return request.get(url, data, loading)
   },
-  // 获取默认店铺
+  // 发送formId
   updateFormId(data, loading = false) {
+    console.error('发送form_id了!!!!!!!!!!!!!!!!!!!!!!!')
     const url = `/api/customer/templates/forms`
     return request.post(url, data, loading)
   },
