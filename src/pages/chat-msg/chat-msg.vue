@@ -139,7 +139,7 @@
           <textarea auto-height="true" class="textarea" maxlength="-1" @input="textInput" :value="inputMsg" cursor-spacing="15" :focus="focus" @focus="textFocus"></textarea>
         </div>
         <div class="addimg-box" v-if="!inputMsg" @click.stop="showMoreList">
-          <img :src="imgUrl + '/ws-image/radar/icon-add_im@2x.png'" v-if="imgUrl" class="addimg-icon">
+          <img :src="imgUrl + '/zd-image/ai-2.1/icon-addnews@2x.png'" v-if="imgUrl" class="addimg-icon">
         </div>
         <div class="submit-btn" @click="sendMsg" v-if="inputMsg">发送</div>
       </div>
@@ -946,7 +946,7 @@
         .input-container
           flex: 1
           min-height: 36px
-          border: 1px solid rgba(0, 0, 0, 0.10)
+          border-radius: 4px
           background: #fff
           overflow-y: auto
           padding: 0 10px
