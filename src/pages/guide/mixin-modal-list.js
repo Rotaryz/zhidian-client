@@ -77,8 +77,9 @@ export default {
         this.modalTypeVal = type
         this.currentRes = res
         let content = res.data.content
+        let time = res.data.time
         this.$refs[key] && this.$refs[key].show(content, this.modalShowKey[val])
-        Market.sendModalEvent({ type: 0, activity_id: res.data.activity_id })
+        Market.sendModalEvent({ type: 0, activity_id: res.data.activity_id, time })
       })
     },
     // 获取弹框信息
@@ -102,6 +103,7 @@ export default {
     async _takeCoupon() {
       let couponId = this.currentRes.data.content.id
       let activityId = this.currentRes.data.activity_id
+      let time = this.currentRes.data.time
       let res = await Market.takeCoupon({ coupon_id: couponId })
       // try {
       //   res = await Market.takeCoupon({ coupon_id: couponId })
@@ -115,14 +117,15 @@ export default {
       if (res.biz_error_code === 1001) {
         this.$wechat.showToast(res.message)
         let activityId = this.currentRes.data.activity_id
-        Market.sendModalEvent({ type: 1, activity_id: activityId })
+        Market.sendModalEvent({ type: 1, activity_id: activityId, time })
         return
       }
       if (!res || res.error !== this.$ERR_OK) {
         this.$wechat.showToast(res.message)
         return null
       }
-      Market.sendModalEvent({ type: 1, activity_id: activityId })
+      Market.sendModalEvent({ type: 1, activity_id: activityId, time })
+      if (res.data.has_receive_count > 0) return
       let key = this.modalRefShow[this.modalIndex]
       let submitKey = this.modalSubmitKey[this.modalIndex]
       this.$refs[key] && this.$refs[key].update(submitKey)
@@ -135,7 +138,8 @@ export default {
     // 复制二维码页面
     copyWxHandle() {
       let activityId = this.currentRes.data.activity_id
-      Market.sendModalEvent({ type: 3, activity_id: activityId })
+      let time = this.currentRes.data.time
+      Market.sendModalEvent({ type: 3, activity_id: activityId, time })
       setTimeout(() => {
         this._hideCurrentModal(false)
       }, 200)
