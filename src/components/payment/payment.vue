@@ -263,10 +263,10 @@
           if (res.error === this.$ERR_OK) {
             switch (this.type) {
               case 'group':
-                this.sendCustomMsg(30009, msgData)
+                // this.sendCustomMsg(30009, msgData)
                 break
               case 'bargain':
-                this.sendCustomMsg(30022, msgData)
+                // this.sendCustomMsg(30022, msgData)
                 break
             }
             let payRes = res.data
