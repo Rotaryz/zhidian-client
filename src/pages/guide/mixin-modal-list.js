@@ -27,7 +27,8 @@ export default {
   methods: {
     // 取消
     cancelHandleModal(flag = true) {
-      getApp().globalData.$isAlert[this.modalIndex] = false // 不弹窗
+      let index = Math.max(0, this.modalIndex)
+      getApp().globalData.$isAlert[index] = false // 不弹窗
       if (!flag) return
       setTimeout(() => {
         this._action()
@@ -70,6 +71,7 @@ export default {
         this._hideCurrentModal(false)
         return
       }
+      // console.warn(val, this.modalIndex, getApp().globalData.$isAlert)
       let type = this.modalTypeList[val]
       let key = this.modalRefShow[val]
       if (!type) return
@@ -91,6 +93,7 @@ export default {
           return
         }
         if (res.data.is_popup === 0) {
+          // getApp().globalData.$isAlert[this.modalIndex] = false // 不弹窗
           this._action()
           return
         }
