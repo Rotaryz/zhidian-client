@@ -180,7 +180,7 @@ const mutations = {
     state.checkoutCouponList = resultList
     state.canUseNum = resultList.canUse.length
   },
-  [types.SET_PAGE_JUPM](state, val) {
+  [types.SET_PAGE_JUMP](state, val) {
     state.pageIsJump = val
   }
 }
