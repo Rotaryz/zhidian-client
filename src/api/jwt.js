@@ -18,7 +18,6 @@ export default {
   },
   // 发送formId
   updateFormId(data, loading = false) {
-    console.error('发送form_id了!!!!!!!!!!!!!!!!!!!!!!!')
     const url = `/api/customer/templates/forms`
     return request.post(url, data, loading)
   },
