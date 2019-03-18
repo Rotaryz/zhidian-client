@@ -145,6 +145,7 @@
       }
     },
     onLoad() {
+      if (!wx.getStorageSync('token')) return
       this._getWheelInfo()
       this._getShopInfo({}, false)
       this.sendCustomMsg(20001)
